@@ -31,10 +31,10 @@ import {
 } from 'lucide-react';
 
 /**
- * KETENKOMPAS V1.4.7 - DEFINITIEVE SECURITY & IP UPDATE
+ * KETENKOMPAS V1.4.8 - HERSTEL DASHBOARD & SECURITY
+ * - Volledige UI hersteld (Landelijke Robuustheid + Stat-kaarten)
  * - Automatische login voor jouw IP-adressen (IPv4 & IPv6)
  * - Handmatige login voor anderen (Code: AGV2026)
- * - Taal hersteld naar Nederlands
  */
 
 const App = () => {
@@ -47,11 +47,9 @@ const App = () => {
 
   // CONFIGURATIE
   const CORRECT_PASSWORD = "AGV2026"; 
-  // Vertrouwde IP-adressen (Jouw IPv4 en IPv6)
   const TRUSTED_IPS = ["89.99.231.85", "2001:4860:7:61f::f8"]; 
 
   useEffect(() => {
-    // Tailwind CSS laden
     if (!document.getElementById('tailwind-cdn')) {
       const script = document.createElement('script');
       script.id = 'tailwind-cdn';
@@ -73,13 +71,11 @@ const App = () => {
   }, []);
 
   const setupApp = async () => {
-    // IP Check via api64 (ondersteunt IPv4 en IPv6)
     try {
       const response = await fetch('https://api64.ipify.org?format=json');
       const data = await response.json();
       setDetectedIP(data.ip);
       
-      // Controleer of het gedetecteerde IP in de lijst met vertrouwde IP's staat
       if (TRUSTED_IPS.includes(data.ip)) {
         setIsAuthenticated(true);
       }
@@ -228,7 +224,7 @@ const App = () => {
         </div>
         <div className="flex items-center gap-4">
             <div className="hidden md:flex flex-col items-end border-r border-white/20 pr-4">
-                <span className="text-[9px] opacity-60 uppercase font-bold tracking-widest leading-none">v1.4.7 Stabiel</span>
+                <span className="text-[9px] opacity-60 uppercase font-bold tracking-widest leading-none">v1.4.8 Stabiel</span>
                 <span className="text-xs font-bold flex items-center gap-1 tracking-tight mt-1"><User size={12} /> Gizan Ezra (AGV)</span>
             </div>
             <button onClick={() => { setIsAuthenticated(false); setDetectedIP(''); }} className="bg-white/10 hover:bg-white/20 p-2 rounded-lg transition-colors"><LogOut size={16} /></button>
@@ -242,7 +238,8 @@ const App = () => {
         </button>
       </div>
 
-      <main className="flex-1 p-6 max-w-[1600px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 z-10">
+      <main className="flex-1 p-6 max-w-[1600px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 z-10 relative">
+        {/* SIDEBAR */}
         <div className="lg:col-span-3 space-y-4">
           <section className="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
             <h2 className="text-xs font-black text-[#004a89] mb-6 uppercase tracking-widest flex justify-between items-center border-b pb-2">Scenario Settings <Settings size={14} /></h2>
@@ -263,9 +260,16 @@ const App = () => {
               </div>
             </div>
           </section>
+          <div className="bg-slate-100 border border-slate-200 p-5 rounded-xl shadow-sm">
+             <h3 className="font-black text-[10px] text-slate-500 mb-3 flex items-center gap-1 uppercase tracking-widest"><MessageSquareText size={14} /> Strategisch Advies</h3>
+             <p className="text-[10px] leading-relaxed text-slate-600 mb-4 italic">Ontvang een toelichting op maat voor dit scenario.</p>
+             <button className="w-full bg-white hover:bg-slate-50 text-[#004a89] text-[9px] font-bold py-2.5 px-4 rounded-lg border border-slate-300 transition-all flex items-center justify-center gap-2 shadow-sm uppercase tracking-tighter leading-none">Vraag toelichting aan</button>
+          </div>
         </div>
 
+        {/* MAIN CONTENT AREA */}
         <div className="lg:col-span-9 space-y-6">
+          {/* THERMOMETER CARD */}
           <div className={`bg-white border-l-[12px] ${simulation.grStatus.color.replace('bg-', 'border-')} p-6 rounded-xl shadow-sm flex flex-col md:flex-row justify-between items-center gap-6 relative`}>
             <div>
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Keten Thermometer</span>
@@ -285,9 +289,12 @@ const App = () => {
                 </div>
             </div>
           </div>
+
+          {/* MULTI-LAYER ROBUSTNESS SECTION */}
           <section className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <h2 className="text-[10px] font-black text-slate-400 mb-10 uppercase tracking-[0.3em] text-center leading-none"><Layers size={14} className="inline mr-2" /> Gelaagde Robuustheid (v1.4.7)</h2>
+            <h2 className="text-[10px] font-black text-slate-400 mb-10 uppercase tracking-[0.3em] text-center leading-none"><Layers size={14} className="inline mr-2" /> Gelaagde Robuustheid (v1.4.8)</h2>
             <div className="space-y-12">
+              {/* LAAG 1 */}
               <div className="relative">
                 <div className="flex justify-between items-center mb-4 px-2 italic">
                     <span className="text-[10px] font-black uppercase text-[#004a89] tracking-widest">1. Robuustheid GR Slib (Regionaal)</span>
@@ -307,14 +314,56 @@ const App = () => {
                     <ChainNode icon={HardHat} label="Calamiteitenopvang" status={simulation.daysInSilos < 3 ? 'danger' : 'inactive'} />
                 </div>
               </div>
+
+              {/* LAAG 2 */}
+              <div className="relative pt-6 border-t border-dashed border-slate-200">
+                <div className="flex justify-between items-center mb-4 px-2 italic">
+                    <span className="text-[10px] font-black uppercase text-red-800 tracking-widest">2. Landelijke Robuustheid (Vangnet)</span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${simulation.natStatus.color} text-white`}>{simulation.natStatus.label.toUpperCase()}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                    <ChainNode icon={Droplet} label="Waterschappen" status="active" />
+                    <ArrowRight className="text-slate-200" size={16} />
+                    <ChainNode icon={Warehouse} label="Overslag locaties" status="active" />
+                    <ArrowRight className="text-slate-200" size={16} />
+                    <ChainNode icon={Factory} label="Verwerkers" status={(!isQualityProcessable || outageDays > 0) ? 'warning' : 'active'} />
+                    <ArrowRight className="text-slate-200" size={16} />
+                    <ChainNode icon={Globe} label="Externe verwerkers" status="active" />
+                    <ArrowRight className="text-slate-200" size={16} />
+                    <ChainNode icon={Database} label="Opslag" status="active" />
+                    <ArrowRight className="text-slate-200" size={16} />
+                    <ChainNode icon={MapPin} label="Calamiteiten" status={simulation.daysInSilos < 4 ? 'danger' : 'inactive'} />
+                </div>
+              </div>
             </div>
           </section>
+
+          {/* STATS GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-3">
+              <div className="bg-red-50 p-2 rounded text-red-600"><Euro size={18} /></div>
+              <div><p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">Escalatiekosten</p><p className="text-sm font-black text-slate-800 mt-1 leading-none">€ {isDataVisible ? Math.round(simulation.costImpact).toLocaleString() : '***'} <span className="text-[8px] opacity-40 font-bold uppercase">/ dag</span></p></div>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-3">
+              <div className="bg-green-50 p-2 rounded text-green-600"><Leaf size={18} /></div>
+              <div><p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">CO2 Monitor</p><p className={`text-[10px] font-black mt-1 leading-none ${simulation.netDailyChange > 0 ? 'text-orange-500' : 'text-green-600'}`}>{simulation.netDailyChange > 0 ? 'IMPACT STIJGEND' : 'CONFORM DOEL'}</p></div>
+            </div>
+            <div className="bg-slate-900 p-4 rounded-xl shadow-lg border border-slate-700 flex items-center gap-3">
+              <div className="bg-white/10 p-2 rounded text-blue-400"><Lock size={18} /></div>
+              <div><p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">Privacy</p><p className="text-[10px] font-bold text-white mt-1 uppercase tracking-widest leading-none">AES-256 Active</p></div>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-center px-4 text-center">
+                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Referentie</span>
+                <span className="text-[10px] font-mono text-slate-600 uppercase tracking-tighter leading-none">AGV-GRS-2026</span>
+            </div>
+          </div>
+          
+          <footer className="pt-4 border-t border-slate-200 flex justify-between items-center text-[9px] text-slate-400 font-black uppercase tracking-[0.2em]">
+            <div className="flex gap-6"><span>CERT-REF: GRS-2026-STABLE-V1.4.8</span><span className="text-red-500/50 italic underline tracking-tighter leading-none">Strict Vertrouwelijk</span></div>
+            <div className="flex items-center gap-1 text-[#004a89]"><ShieldCheck size={10} /> Certified: AGV-Cloud-Authorized</div>
+          </footer>
         </div>
       </main>
-      <footer className="p-4 border-t border-slate-200 flex justify-between items-center text-[9px] text-slate-400 font-black uppercase tracking-[0.2em]">
-        <div>CERT-REF: GRS-2026-STABLE-V1.4.7</div>
-        <div className="flex items-center gap-1 text-[#004a89]"><ShieldCheck size={10} /> Certified: AGV-Cloud-Authorized</div>
-      </footer>
     </div>
   );
 };
