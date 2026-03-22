@@ -26,35 +26,42 @@ import {
   HardHat,
   Database,
   MessageSquareText,
-  KeyRound
+  KeyRound,
+  Loader2
 } from 'lucide-react';
 
 /**
- * KETENKOMPAS V1.4.3 - SECURITY UPDATE
- * - Ingebouwd Wachtwoord-hek (Geen Cloudflare Zero Trust meer nodig)
- * - Anti-flikker laadscherm
+ * KETENKOMPAS V1.4.7 - DEFINITIEVE SECURITY & IP UPDATE
+ * - Automatische login voor jouw IP-adressen (IPv4 & IPv6)
+ * - Handmatige login voor anderen (Code: AGV2026)
+ * - Taal hersteld naar Nederlands
  */
 
 const App = () => {
   const [isReady, setIsReady] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginError, setLoginError] = useState(false);
+  const [detectedIP, setDetectedIP] = useState('');
 
-  // HET WACHTWOORD VOOR TOEGANG
-  const CORRECT_PASSWORD = "Waternet2026"; 
+  // CONFIGURATIE
+  const CORRECT_PASSWORD = "AGV2026"; 
+  // Vertrouwde IP-adressen (Jouw IPv4 en IPv6)
+  const TRUSTED_IPS = ["89.99.231.85", "2001:4860:7:61f::f8"]; 
 
   useEffect(() => {
+    // Tailwind CSS laden
     if (!document.getElementById('tailwind-cdn')) {
       const script = document.createElement('script');
       script.id = 'tailwind-cdn';
       script.src = 'https://cdn.tailwindcss.com';
       script.onload = () => {
-        setTimeout(() => setIsReady(true), 100);
+        setupApp();
       };
       document.head.appendChild(script);
     } else {
-      setIsReady(true);
+      setupApp();
     }
 
     const style = document.createElement('style');
@@ -64,6 +71,25 @@ const App = () => {
     `;
     document.head.appendChild(style);
   }, []);
+
+  const setupApp = async () => {
+    // IP Check via api64 (ondersteunt IPv4 en IPv6)
+    try {
+      const response = await fetch('https://api64.ipify.org?format=json');
+      const data = await response.json();
+      setDetectedIP(data.ip);
+      
+      // Controleer of het gedetecteerde IP in de lijst met vertrouwde IP's staat
+      if (TRUSTED_IPS.includes(data.ip)) {
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
+      console.error("Fout bij IP-controle:", error);
+    } finally {
+      setIsReady(true);
+      setIsCheckingAuth(false);
+    }
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -75,6 +101,7 @@ const App = () => {
     }
   };
 
+  // --- SIMULATIE LOGICA ---
   const [isQualityProcessable, setIsQualityProcessable] = useState(true); 
   const [outageDays, setOutageDays] = useState(0); 
   const [siloCount, setSiloCount] = useState(2); 
@@ -131,7 +158,14 @@ const App = () => {
     </div>
   );
 
-  if (!isReady) return <div className="min-h-screen bg-[#f1f5f9] flex items-center justify-center font-bold text-slate-400 animate-pulse uppercase tracking-widest text-xs">Systeem laden...</div>;
+  if (!isReady || isCheckingAuth) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
+         <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-4" />
+         <div className="text-white font-black uppercase tracking-widest text-[10px] animate-pulse">Identiteit controleren...</div>
+      </div>
+    );
+  }
 
   // LOGIN SCHERM
   if (!isAuthenticated) {
@@ -143,11 +177,13 @@ const App = () => {
               <Compass className="text-white w-10 h-10" />
             </div>
             <h1 className="text-2xl font-black text-white tracking-tight italic uppercase">KetenKompas Portaal</h1>
-            <p className="text-blue-200 text-xs mt-2 font-bold tracking-widest uppercase opacity-70 flex items-center justify-center gap-2"><Lock size={12}/> Beveiligde Toegang</p>
+            <p className="text-blue-200 text-[10px] mt-2 font-bold tracking-widest uppercase opacity-70 flex items-center justify-center gap-2">
+              <Activity size={12}/> Jouw IP: {detectedIP || 'Onbekend'}
+            </p>
           </div>
           <form onSubmit={handleLogin} className="p-8 space-y-6">
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Toegangscode vereist</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 text-center">Onbekende verbinding. Voer code in:</label>
               <div className="relative">
                 <input 
                   type="password" 
@@ -158,13 +194,13 @@ const App = () => {
                 />
                 <KeyRound className="absolute right-4 top-4 text-slate-300" size={20} />
               </div>
-              {loginError && <p className="text-red-500 text-[10px] font-black uppercase mt-2 text-center tracking-widest animate-bounce">Onjuiste code</p>}
+              {loginError && <p className="text-red-500 text-[10px] font-black uppercase mt-2 text-center tracking-widest animate-bounce">Onjuist wachtwoord</p>}
             </div>
             <button type="submit" className="w-full bg-[#004a89] hover:bg-blue-800 text-white font-black py-4 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 uppercase tracking-widest text-sm">
               Dashboard Openen <ArrowRight size={18} />
             </button>
             <p className="text-center text-[9px] text-slate-400 font-bold uppercase tracking-widest leading-relaxed">
-              Dit dashboard bevat vertrouwelijke informatie<br/>behorend bij AGV / GR Slib.
+              Extern IP gedetecteerd. Login vereist voor toegang tot AGV / GR Slib data.
             </p>
           </form>
         </div>
@@ -172,7 +208,7 @@ const App = () => {
     );
   }
 
-  // HET DASHBOARD (na inloggen)
+  // DASHBOARD
   return (
     <div className="min-h-screen bg-[#f1f5f9] font-sans text-slate-900 flex flex-col relative overflow-hidden w-full">
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.02] select-none rotate-[-30deg] z-0">
@@ -184,20 +220,23 @@ const App = () => {
           <div className="bg-white/10 p-1.5 rounded-md border border-white/20"><Compass className="w-6 h-6" /></div>
           <div>
             <h1 className="text-lg font-bold tracking-tight">KetenKompas.nl</h1>
-            <p className="text-[9px] uppercase opacity-70 flex items-center gap-1 leading-none"><ShieldCheck size={8} /> Beveiligd Portaal (Aandeelhouders B)</p>
+            <p className="text-[9px] uppercase opacity-70 flex items-center gap-1 leading-none">
+              <ShieldCheck size={8} /> 
+              {TRUSTED_IPS.includes(detectedIP) ? 'Automatisch geautoriseerd via IP' : 'Sessie geautoriseerd'}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-4">
             <div className="hidden md:flex flex-col items-end border-r border-white/20 pr-4">
-                <span className="text-[9px] opacity-60 uppercase font-bold tracking-widest leading-none">v1.4.3 Stabiel</span>
+                <span className="text-[9px] opacity-60 uppercase font-bold tracking-widest leading-none">v1.4.7 Stabiel</span>
                 <span className="text-xs font-bold flex items-center gap-1 tracking-tight mt-1"><User size={12} /> Gizan Ezra (AGV)</span>
             </div>
-            <button onClick={() => setIsAuthenticated(false)} className="bg-white/10 hover:bg-white/20 p-2 rounded-lg transition-colors"><LogOut size={16} /></button>
+            <button onClick={() => { setIsAuthenticated(false); setDetectedIP(''); }} className="bg-white/10 hover:bg-white/20 p-2 rounded-lg transition-colors"><LogOut size={16} /></button>
         </div>
       </header>
 
       <div className="bg-slate-800 text-white p-2 px-6 flex justify-between items-center z-20">
-        <div className="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase leading-none"><Activity size={14} className="text-blue-400" /> Data-Classificatie: Intern (GR Slib)</div>
+        <div className="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase leading-none"><Activity size={14} className="text-blue-400" /> Classificatie: Intern (GR Slib)</div>
         <button onClick={() => setIsDataVisible(!isDataVisible)} className="text-[9px] font-bold uppercase tracking-widest flex items-center gap-1 bg-white/10 px-3 py-1 rounded border border-white/20 hover:bg-white/20 transition-all">
             {isDataVisible ? <><EyeOff size={12} /> Maskeer waarden</> : "Toon waarden"}
         </button>
@@ -224,15 +263,10 @@ const App = () => {
               </div>
             </div>
           </section>
-          <div className="bg-slate-100 border border-slate-200 p-5 rounded-xl shadow-sm">
-             <h3 className="font-black text-[10px] text-slate-500 mb-3 flex items-center gap-1 uppercase tracking-widest"><MessageSquareText size={14} /> Strategisch Advies</h3>
-             <p className="text-[10px] leading-relaxed text-slate-600 mb-4 italic">Ontvang een toelichting op maat voor dit scenario.</p>
-             <button className="w-full bg-white hover:bg-slate-50 text-[#004a89] text-[9px] font-bold py-2.5 px-4 rounded-lg border border-slate-300 transition-all flex items-center justify-center gap-2 shadow-sm uppercase tracking-tighter leading-none">Vraag toelichting aan</button>
-          </div>
         </div>
 
         <div className="lg:col-span-9 space-y-6">
-          <div className={`bg-white border-l-[12px] ${simulation.grStatus.color.replace('bg-', 'border-')} p-6 rounded-xl shadow-sm flex flex-col md:flex-row justify-between items-center gap-6 z-10 relative`}>
+          <div className={`bg-white border-l-[12px] ${simulation.grStatus.color.replace('bg-', 'border-')} p-6 rounded-xl shadow-sm flex flex-col md:flex-row justify-between items-center gap-6 relative`}>
             <div>
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Keten Thermometer</span>
               <h2 className="text-2xl font-black text-slate-800 mt-1 uppercase italic tracking-tight">{simulation.grStatus.label}</h2>
@@ -251,9 +285,8 @@ const App = () => {
                 </div>
             </div>
           </div>
-
-          <section className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 z-10 relative">
-            <h2 className="text-[10px] font-black text-slate-400 mb-10 uppercase tracking-[0.3em] text-center leading-none"><Layers size={14} className="inline mr-2" /> Gelaagde Robuustheid (v1.4.3)</h2>
+          <section className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h2 className="text-[10px] font-black text-slate-400 mb-10 uppercase tracking-[0.3em] text-center leading-none"><Layers size={14} className="inline mr-2" /> Gelaagde Robuustheid (v1.4.7)</h2>
             <div className="space-y-12">
               <div className="relative">
                 <div className="flex justify-between items-center mb-4 px-2 italic">
@@ -274,52 +307,14 @@ const App = () => {
                     <ChainNode icon={HardHat} label="Calamiteitenopvang" status={simulation.daysInSilos < 3 ? 'danger' : 'inactive'} />
                 </div>
               </div>
-              <div className="relative pt-6 border-t border-dashed border-slate-200">
-                <div className="flex justify-between items-center mb-4 px-2 italic">
-                    <span className="text-[10px] font-black uppercase text-red-800 tracking-widest">2. Landelijke Robuustheid (Vangnet)</span>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${simulation.natStatus.color} text-white`}>{simulation.natStatus.label.toUpperCase()}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                    <ChainNode icon={Droplet} label="Waterschappen" status="active" />
-                    <ArrowRight className="text-slate-200" size={16} />
-                    <ChainNode icon={Warehouse} label="Overslag locaties" status="active" />
-                    <ArrowRight className="text-slate-200" size={16} />
-                    <ChainNode icon={Factory} label="Verwerkers" status={(!isQualityProcessable || outageDays > 0) ? 'warning' : 'active'} />
-                    <ArrowRight className="text-slate-200" size={16} />
-                    <ChainNode icon={Globe} label="Externe verwerkers" status="active" />
-                    <ArrowRight className="text-slate-200" size={16} />
-                    <ChainNode icon={Database} label="Opslag" status="active" />
-                    <ArrowRight className="text-slate-200" size={16} />
-                    <ChainNode icon={MapPin} label="Calamiteiten" status={simulation.daysInSilos < 4 ? 'danger' : 'inactive'} />
-                </div>
-              </div>
             </div>
           </section>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 z-10 relative">
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-3">
-              <div className="bg-red-50 p-2 rounded text-red-600"><Euro size={18} /></div>
-              <div><p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">Escalatiekosten</p><p className="text-sm font-black text-slate-800 mt-1 leading-none">€ {isDataVisible ? Math.round(simulation.costImpact).toLocaleString() : '***'} <span className="text-[8px] opacity-40 font-bold uppercase">/ dag</span></p></div>
-            </div>
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-3">
-              <div className="bg-green-50 p-2 rounded text-green-600"><Leaf size={18} /></div>
-              <div><p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">CO2 Monitor</p><p className={`text-[10px] font-black mt-1 leading-none ${simulation.netDailyChange > 0 ? 'text-orange-500' : 'text-green-600'}`}>{simulation.netDailyChange > 0 ? 'IMPACT STIJGEND' : 'CONFORM DOEL'}</p></div>
-            </div>
-            <div className="bg-slate-900 p-4 rounded-xl shadow-lg border border-slate-700 flex items-center gap-3">
-              <div className="bg-white/10 p-2 rounded text-blue-400"><Lock size={18} /></div>
-              <div><p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">Privacy</p><p className="text-[10px] font-bold text-white mt-1 uppercase tracking-widest leading-none">AES-256 Active</p></div>
-            </div>
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-center px-4">
-                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1 text-center">Referentie</span>
-                <span className="text-[10px] font-mono text-slate-600 text-center leading-none uppercase tracking-tighter">AGV-GRS-2026</span>
-            </div>
-          </div>
-          <footer className="pt-4 border-t border-slate-200 flex justify-between items-center text-[9px] text-slate-400 px-2 font-black uppercase tracking-[0.2em] z-10 relative">
-            <div className="flex gap-6"><span>CERT-REF: GRS-2026-STABLE-V1.4.3</span><span className="text-red-500/50 italic underline tracking-tighter">Strict Vertrouwelijk</span></div>
-            <div className="flex items-center gap-1 text-[#004a89]"><ShieldCheck size={10} /> Certified Environment: AGV-Cloud-Authorized</div>
-          </footer>
         </div>
       </main>
+      <footer className="p-4 border-t border-slate-200 flex justify-between items-center text-[9px] text-slate-400 font-black uppercase tracking-[0.2em]">
+        <div>CERT-REF: GRS-2026-STABLE-V1.4.7</div>
+        <div className="flex items-center gap-1 text-[#004a89]"><ShieldCheck size={10} /> Certified: AGV-Cloud-Authorized</div>
+      </footer>
     </div>
   );
 };
