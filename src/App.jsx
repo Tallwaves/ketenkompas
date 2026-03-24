@@ -1,18 +1,18 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { 
-  Compass, 
-  AlertTriangle, 
-  Droplet, 
-  Truck, 
-  Euro, 
-  Leaf, 
+import {
+  Compass,
+  AlertTriangle,
+  Droplet,
+  Truck,
+  Euro,
+  Leaf,
   Info,
   ShieldCheck,
   Settings,
   ArrowRight,
-  Factory, 
+  Factory,
   Globe,
-  MapPin, 
+  MapPin,
   Lock,
   User,
   LogOut,
@@ -27,8 +27,32 @@ import {
   Database,
   MessageSquareText,
   KeyRound,
-  Loader2
+  Loader2,
+  CalendarDays
 } from 'lucide-react';
+
+// ISO weeknummer berekening
+function getISOWeek(date) {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
+  const week1 = new Date(d.getFullYear(), 0, 4);
+  return 1 + Math.round(((d.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+}
+
+const DAGEN_NL = ['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag'];
+
+function useDagWeek() {
+  const [nu, setNu] = useState(new Date());
+  useEffect(() => {
+    const interval = setInterval(() => setNu(new Date()), 60000);
+    return () => clearInterval(interval);
+  }, []);
+  return {
+    dag: DAGEN_NL[nu.getDay()],
+    weeknummer: getISOWeek(nu),
+  };
+}
 
 /**
  * KETENKOMPAS V1.4.8 - HERSTEL DASHBOARD & SECURITY
@@ -38,6 +62,7 @@ import {
  */
 
 const App = () => {
+  const { dag, weeknummer } = useDagWeek();
   const [isReady, setIsReady] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [password, setPassword] = useState('');
@@ -223,6 +248,13 @@ const App = () => {
           </div>
         </div>
         <div className="flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-2 border-r border-white/20 pr-4">
+              <div className="bg-white/10 p-1.5 rounded-md border border-white/20"><CalendarDays className="w-4 h-4 text-blue-200" /></div>
+              <div className="text-right">
+                <p className="text-xs font-black text-white leading-none">{dag}</p>
+                <p className="text-[9px] text-blue-200 font-bold uppercase tracking-widest leading-none mt-0.5">Week {weeknummer}</p>
+              </div>
+            </div>
             <div className="hidden md:flex flex-col items-end border-r border-white/20 pr-4">
                 <span className="text-[9px] opacity-60 uppercase font-bold tracking-widest leading-none">v1.4.8 Stabiel</span>
                 <span className="text-xs font-bold flex items-center gap-1 tracking-tight mt-1"><User size={12} /> Gizan Ezra (AGV)</span>
@@ -339,7 +371,15 @@ const App = () => {
           </section>
 
           {/* STATS GRID */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="bg-[#004a89] p-4 rounded-xl shadow-sm border border-blue-700 flex items-center gap-3">
+              <div className="bg-white/10 p-2 rounded text-white"><CalendarDays size={18} /></div>
+              <div>
+                <p className="text-[8px] font-black text-blue-200 uppercase tracking-widest leading-none">Dag / Week</p>
+                <p className="text-sm font-black text-white mt-1 leading-none">{dag}</p>
+                <p className="text-[9px] font-bold text-blue-200 mt-0.5 leading-none uppercase tracking-widest">Week {weeknummer}</p>
+              </div>
+            </div>
             <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-3">
               <div className="bg-red-50 p-2 rounded text-red-600"><Euro size={18} /></div>
               <div><p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">Escalatiekosten</p><p className="text-sm font-black text-slate-800 mt-1 leading-none">€ {isDataVisible ? Math.round(simulation.costImpact).toLocaleString() : '***'} <span className="text-[8px] opacity-40 font-bold uppercase">/ dag</span></p></div>
