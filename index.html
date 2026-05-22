@@ -190,7 +190,9 @@
   /* ---------- HORIZONTAL SECTIONS ---------- */
   .ket-section{background:#fff;border:.5px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow);margin-bottom:0}
   .ket-section-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint);margin-bottom:12px}
-  .ket-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .ket-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+  .ket-grid > div{padding:12px;background:#fafbfc;border-radius:8px;border-right:1px solid #e8edf0}
+  .ket-grid > div:last-child{border-right:none}
   .ket-arrows{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:5px 0}
   .ket-arrow{text-align:center;color:#cdd5dc;font-size:13px;line-height:1}
   .ket-badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 10px;border-radius:20px;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
