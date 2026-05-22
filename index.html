@@ -190,29 +190,30 @@
   /* ---------- FUNNELS ---------- */
   .funnel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
   .funnel-col{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 12px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:stretch}
-  .funnel-header{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-align:center;padding:5px 10px;border-radius:20px;margin-bottom:11px}
-  .funnel-ws{display:flex;flex-direction:column;gap:3px;margin-bottom:4px}
-  .funnel-ws-tag{display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--surface-2);border-radius:6px;font-size:11px}
-  .funnel-ws-ton{font-weight:600;color:var(--ink-faint)}
-  .funnel-tot{text-align:center;font-size:11.5px;font-weight:600;color:var(--ink-soft);margin:3px 0}
-  .funnel-arr{text-align:center;color:var(--line);font-size:18px;line-height:1;margin:4px 0}
-  .funnel-hub{text-align:center;background:var(--surface-2);border-radius:8px;padding:5px 8px;font-size:11.5px;font-weight:700;color:var(--ink-soft);letter-spacing:.07em;text-transform:uppercase}
-  .fn-nodes{display:flex;flex-direction:column;gap:5px;margin-top:2px}
-  .fn-node{border-radius:8px;padding:8px 10px;border-left:3px solid}
-  .fn-node.ok{background:var(--ok-bg);border-color:var(--ok)}
-  .fn-node.warning{background:var(--warn-bg);border-color:var(--warn)}
-  .fn-node.danger{background:var(--danger-bg);border-color:var(--danger)}
-  .fn-node.neutral{background:var(--surface-2);border-color:var(--neutral)}
-  .fn-name{font-size:12px;font-weight:600}
-  .fn-node.ok .fn-name{color:#27500a}.fn-node.warning .fn-name{color:#633806}.fn-node.danger .fn-name{color:#791f1f}.fn-node.neutral .fn-name{color:var(--ink-soft)}
-  .fn-sub{font-size:10.5px;margin-top:2px;opacity:.8}
-  .fn-node.ok .fn-sub{color:var(--ok-ink)}.fn-node.warning .fn-sub{color:var(--warn-ink)}.fn-node.danger .fn-sub{color:var(--danger-ink)}.fn-node.neutral .fn-sub{color:var(--ink-faint)}
-  .fn-flag{font-size:10px;margin-top:3px;opacity:.85}
-  .fn-ds{margin-top:5px;padding-left:10px;border-left:2px dashed var(--line)}
-  .fn-ds-node{background:var(--surface-2);border-radius:6px;padding:5px 8px;margin-top:3px}
+  .funnel-header{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-align:center;padding:5px 10px;border-radius:20px;margin-bottom:10px}
+  .funnel-ws-wrap{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+  .funnel-ws-chip{display:flex;align-items:center;gap:4px;padding:3px 7px;background:var(--surface-2);border-radius:5px;font-size:11px;white-space:nowrap}
+  .funnel-ws-chip span{font-weight:700;color:var(--ink-faint);font-size:10.5px}
+  .funnel-badge{display:flex;justify-content:center;margin-bottom:4px}
+  .funnel-badge-pill{display:inline-flex;align-items:center;color:#fff;font-size:12.5px;font-weight:700;padding:4px 14px;border-radius:20px;letter-spacing:.01em}
+  .funnel-arr{text-align:center;color:var(--line);font-size:18px;line-height:1;margin:5px 0}
+  .funnel-hub-box{text-align:center;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-size:13px;font-weight:700;color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase;align-self:center;min-width:55%}
+  .fn-inst-row{display:flex;gap:6px;align-items:flex-start;margin-top:2px}
+  .fn-inst-col{flex:1;display:flex;flex-direction:column;align-items:center}
+  .fn-inst{border-radius:8px;padding:8px 9px;border-left:3px solid;width:100%}
+  .fn-inst.ok{background:var(--ok-bg);border-color:var(--ok)}
+  .fn-inst.warning{background:var(--warn-bg);border-color:var(--warn)}
+  .fn-inst.danger{background:var(--danger-bg);border-color:var(--danger)}
+  .fn-inst.neutral{background:var(--surface-2);border-color:var(--neutral)}
+  .fn-inst-name{font-size:12px;font-weight:600}
+  .fn-inst.ok .fn-inst-name{color:#27500a}.fn-inst.warning .fn-inst-name{color:#633806}.fn-inst.danger .fn-inst-name{color:#791f1f}.fn-inst.neutral .fn-inst-name{color:var(--ink-soft)}
+  .fn-inst-sub{font-size:10.5px;margin-top:2px;opacity:.8}
+  .fn-inst.ok .fn-inst-sub{color:var(--ok-ink)}.fn-inst.warning .fn-inst-sub{color:var(--warn-ink)}.fn-inst.danger .fn-inst-sub{color:var(--danger-ink)}
+  .fn-inst-flag{font-size:10px;margin-top:3px;opacity:.8}
+  .fn-ds-mini{background:var(--surface-2);border-radius:6px;padding:5px 8px;width:100%;border:1px dashed var(--line);margin-top:2px}
   .fn-ds-name{font-size:11px;font-weight:600;color:var(--ink-soft)}
   .fn-ds-sub{font-size:10px;color:var(--ink-faint);margin-top:1px}
-  @media(max-width:820px){.funnel-grid{grid-template-columns:1fr}}
+  @media(max-width:820px){.funnel-grid{grid-template-columns:1fr}.fn-inst-row{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -272,12 +273,6 @@
       <div id="funnels" class="funnel-grid"></div>
 
       <div class="section-label">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
-        Landelijke noodopslag (incidentencapaciteit via Aquaminerals)
-      </div>
-      <div class="grid-4" id="noodopslag"></div>
-
-      <div class="section-label">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 19H4.8a2 2 0 0 1-1.7-3l1.3-2M9.5 4l1.4-2.4M14 4l-2.6 4.5M5.4 11 7 8M17 5.2 18.4 8M21 12h2.2M16.5 20l-1.4 2.4M10 20l2.6-4.5"/></svg>
         Reststromen — wat er overblijft
       </div>
@@ -325,7 +320,12 @@
         <div class="page-title">Robuust Plan</div>
         <div class="page-sub">Structurele maatregelen voor een robuuste slibketen</div>
       </div>
-      <p style="color:var(--ink-faint);font-size:14px;padding:60px 0;text-align:center">Komt bron</p>
+      <div class="section-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
+        Landelijke noodopslag (incidentencapaciteit via Aquaminerals)
+      </div>
+      <div class="grid-4" id="noodopslag"></div>
+      <p style="color:var(--ink-faint);font-size:13px;padding:40px 0 0;text-align:center">Meer inhoud volgt binnenkort</p>
     </section>
 
     <!-- BESTUUR -->
@@ -588,62 +588,67 @@ function renderFunnels(){
     {
       kleur:'#0f6e56',naam:'GR Slibverwerking 2009',
       ws:DATA.clusters[0].waterschappen,hub:'HVC',
-      nodes:[
+      installaties:[
         {naam:'SVI — Dordrecht',sub:'verbranding · 948 t/dag',status:'warning',
-         flags:['Onderhoud lijn v.a. week 24'],ds:null},
+         flag:'Onderhoud v.a. week 24',ds:null},
         {naam:'SDI — Alkmaar',sub:'droging · 633 t/dag',status:'danger',
-         flags:['Opstart vertraagd'],
-         ds:[{naam:'Granulaat → BEC Alkmaar',sub:'Bio-energiecentrales · 34 kton/jr'}]}
+         flag:'Opstart vertraagd',
+         ds:{naam:'Granulaat → BEC Alkmaar',sub:'Bio-energiecentrales · 34 kton/jr'}}
       ]
     },
     {
       kleur:'#534ab7',naam:'SNB Moerdijk',
       ws:DATA.clusters[1].waterschappen,hub:'SNB',
-      nodes:[
+      installaties:[
         {naam:'Moerdijk',sub:'verbranding · ~1.150 t/dag',status:'ok',
-         flags:["Europa's grootste slibverbrander"],
-         ds:[{naam:'Vliegas → fosfaat',sub:'Puraloop · 504 ton P2O5'}]}
+         flag:"Europa's grootste slibverbrander",
+         ds:{naam:'Vliegas → fosfaat',sub:'Puraloop · 504 ton P2O5'}}
       ]
     },
     {
       kleur:'#d85a30',naam:'SNON Noord-Nederland',
       ws:DATA.clusters[2].waterschappen,hub:'SNON',
-      nodes:[
+      installaties:[
         {naam:'GMB — Zutphen',sub:'biologisch drogen',status:'ok',
-         flags:['Voordroging → biogranulaat'],
-         ds:[{naam:'EEW — Delfzijl',sub:'thermische eindverwerking'}]}
+         flag:'Voordroging → biogranulaat',ds:null},
+        {naam:'EEW — Delfzijl',sub:'thermische eindverwerking',status:'ok',
+         flag:'Kritiek eindpunt',ds:null}
       ]
     },
     {
       kleur:'#888780',naam:'GMB — direct contract',
       ws:DATA.clusters[3].waterschappen,hub:'GMB',
-      nodes:[
+      installaties:[
         {naam:'GMB BioEnergie Zutphen',sub:'biologisch drogen · 70 kton/jr',status:'ok',
-         flags:['tot 2032'],ds:null}
+         flag:'tot 2032',ds:null}
       ]
     }
   ];
   document.getElementById('funnels').innerHTML=defs.map(d=>{
     const tot=d.ws.reduce((s,w)=>s+w.ton,0);
     const wsHtml=d.ws.map(w=>
-      `<div class="funnel-ws-tag"><span>${w.naam}</span><span class="funnel-ws-ton">${w.ton}</span></div>`
+      `<div class="funnel-ws-chip">${w.naam}<span>${w.ton}</span></div>`
     ).join('');
-    const nodesHtml=d.nodes.map((n,i)=>{
-      const fl=n.flags.map(f=>`<div class="fn-flag">▸ ${f}</div>`).join('');
-      const ds=n.ds?`<div class="fn-ds">${n.ds.map(x=>
-        `<div class="funnel-arr" style="font-size:13px">↓</div><div class="fn-ds-node"><div class="fn-ds-name">${x.naam}</div><div class="fn-ds-sub">${x.sub}</div></div>`
-      ).join('')}</div>`:'';
-      return (i>0?'<div class="funnel-arr">↓</div>':'')+
-        `<div class="fn-node ${n.status}"><div class="fn-name">${n.naam}</div><div class="fn-sub">${n.sub}</div>${fl}</div>${ds}`;
+    const instHtml=d.installaties.map(inst=>{
+      const ds=inst.ds
+        ?`<div class="funnel-arr" style="font-size:14px;margin:3px 0">↓</div><div class="fn-ds-mini"><div class="fn-ds-name">${inst.ds.naam}</div><div class="fn-ds-sub">${inst.ds.sub}</div></div>`
+        :'';
+      return `<div class="fn-inst-col">
+        <div class="fn-inst ${inst.status}">
+          <div class="fn-inst-name">${inst.naam}</div>
+          <div class="fn-inst-sub">${inst.sub}</div>
+          ${inst.flag?`<div class="fn-inst-flag">▸ ${inst.flag}</div>`:''}
+        </div>${ds}
+      </div>`;
     }).join('');
     return `<div class="funnel-col">
       <div class="funnel-header" style="background:${d.kleur}18;color:${d.kleur};border:1px solid ${d.kleur}35">${d.naam}</div>
-      <div class="funnel-ws">${wsHtml}</div>
-      <div class="funnel-tot">${tot.toLocaleString()} t/dag</div>
+      <div class="funnel-ws-wrap">${wsHtml}</div>
+      <div class="funnel-badge"><span class="funnel-badge-pill" style="background:${d.kleur}">${tot.toLocaleString()} t/dag</span></div>
       <div class="funnel-arr">↓</div>
-      <div class="funnel-hub">${d.hub}</div>
+      <div class="funnel-hub-box">${d.hub}</div>
       <div class="funnel-arr">↓</div>
-      <div class="fn-nodes">${nodesHtml}</div>
+      <div class="fn-inst-row">${instHtml}</div>
     </div>`;
   }).join('');
 }
