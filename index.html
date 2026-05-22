@@ -187,38 +187,40 @@
     header{padding:0 16px}
   }
 
-  /* ---------- LAYER COLUMNS ---------- */
-  .funnel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
-  .funnel-col{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 12px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:stretch}
-  .funnel-header{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-align:center;padding:5px 10px;border-radius:20px;margin-bottom:10px}
-  .layer-box{background:var(--surface);border:.5px solid var(--line);border-radius:12px;padding:10px 11px}
-  .layer-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint);margin-bottom:6px}
-  .layer-arr{text-align:center;color:#cdd5dc;font-size:15px;line-height:1;margin:4px 0}
-  .layer-tot{font-size:10.5px;font-weight:700;color:var(--ink-soft);text-align:right;margin-top:5px}
-  .funnel-ws-wrap{display:flex;flex-wrap:wrap;gap:4px}
-  .funnel-ws-chip{display:flex;align-items:center;gap:4px;padding:3px 7px;background:var(--surface-2);border-radius:5px;font-size:11px;white-space:nowrap}
-  .funnel-ws-chip span{font-weight:700;color:var(--ink-faint);font-size:10.5px}
-  .fn-inst-row{display:flex;gap:5px;align-items:flex-start}
-  .fn-inst-col{flex:1;display:flex;flex-direction:column;align-items:center}
-  .fn-inst{border-radius:7px;padding:7px 8px;border-left:3px solid;width:100%}
-  .fn-inst.ok{background:var(--ok-bg);border-color:var(--ok)}
-  .fn-inst.warning{background:var(--warn-bg);border-color:var(--warn)}
-  .fn-inst.danger{background:var(--danger-bg);border-color:var(--danger)}
-  .fn-inst.neutral{background:var(--surface-2);border-color:var(--neutral)}
-  .fn-inst-name{font-size:11px;font-weight:600}
-  .fn-inst.ok .fn-inst-name{color:#27500a}.fn-inst.warning .fn-inst-name{color:#633806}.fn-inst.danger .fn-inst-name{color:#791f1f}.fn-inst.neutral .fn-inst-name{color:var(--ink-soft)}
-  .fn-inst-sub{font-size:10px;margin-top:2px;opacity:.8}
-  .fn-inst.ok .fn-inst-sub{color:var(--ok-ink)}.fn-inst.warning .fn-inst-sub{color:var(--warn-ink)}.fn-inst.danger .fn-inst-sub{color:var(--danger-ink)}
-  .opsl-item{margin-bottom:7px}.opsl-item:last-child{margin-bottom:0}
-  .opsl-nm{font-size:11px;font-weight:600;color:var(--ink);margin-bottom:3px}
-  .opsl-meta{font-size:10px;color:var(--ink-faint);display:flex;justify-content:space-between;margin-top:2px}
-  .opsl-chip{font-size:11px;padding:3px 8px;border-radius:5px;display:inline-block;margin-bottom:3px}
-  .opsl-chip.ok{background:var(--ok-bg);color:var(--ok-ink)}
-  .opsl-chip.warning{background:var(--warn-bg);color:var(--warn-ink)}
-  .opsl-chip.neutral{background:var(--surface-2);color:var(--ink-faint)}
+  /* ---------- HORIZONTAL SECTIONS ---------- */
+  .ket-section{background:#fff;border:.5px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow);margin-bottom:0}
+  .ket-section-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint);margin-bottom:12px}
+  .ket-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .ket-arrows{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:5px 0}
+  .ket-arrow{text-align:center;color:#cdd5dc;font-size:13px;line-height:1}
+  .ket-badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 10px;border-radius:20px;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .ws-chips{display:flex;flex-direction:column;gap:3px}
+  .ws-chip-row{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:var(--surface-2);border-radius:6px;font-size:11px}
+  .ws-chip-nm{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ws-chip-ton{font-weight:700;color:var(--ink-faint);font-size:10.5px;margin-left:6px;flex-shrink:0}
+  .ws-total-pill{display:inline-block;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:7px}
+  .vw-card{border-radius:8px;padding:9px 11px;border-left:3px solid}
+  .vw-card.ok{background:var(--ok-bg);border-color:var(--ok)}.vw-card.warning{background:var(--warn-bg);border-color:var(--warn)}.vw-card.danger{background:var(--danger-bg);border-color:var(--danger)}
+  .vw-card-nm{font-size:12px;font-weight:600}
+  .vw-card.ok .vw-card-nm{color:#27500a}.vw-card.warning .vw-card-nm{color:#633806}.vw-card.danger .vw-card-nm{color:#791f1f}
+  .vw-card-sub{font-size:10.5px;margin-top:3px;line-height:1.4}
+  .vw-card.ok .vw-card-sub{color:var(--ok-ink)}.vw-card.warning .vw-card-sub{color:var(--warn-ink)}.vw-card.danger .vw-card-sub{color:var(--danger-ink)}
+  .inst-chips{display:flex;flex-wrap:wrap;gap:4px}
+  .inst-chip{font-size:11px;padding:4px 9px;border-radius:6px;border-left:3px solid;font-weight:500;white-space:nowrap}
+  .inst-chip.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok-ink)}
+  .inst-chip.warning{background:var(--warn-bg);border-color:var(--warn);color:var(--warn-ink)}
+  .inst-chip.danger{background:var(--danger-bg);border-color:var(--danger);color:var(--danger-ink)}
+  .opsl-items{display:flex;flex-direction:column;gap:6px}
+  .opsl-item{background:var(--surface-2);border-radius:7px;padding:6px 9px}
+  .opsl-item-nm{font-size:11px;font-weight:600;color:var(--ink);margin-bottom:4px}
+  .bar{height:4px;background:var(--line-soft);border-radius:2px;overflow:hidden;margin-bottom:3px}
+  .bar i{display:block;height:100%;border-radius:2px}
+  .bar i.ok{background:var(--ok)}.bar i.warning{background:var(--warn)}.bar i.danger{background:var(--danger)}
+  .opsl-item-meta{font-size:10px;color:var(--ink-faint);display:flex;justify-content:space-between}
+  .opsl-neutral{font-size:11px;padding:4px 8px;background:var(--surface-2);border-radius:6px;color:var(--ink-faint);display:inline-block}
   .rst-chips{display:flex;flex-wrap:wrap;gap:4px}
   .rst-chip{font-size:10.5px;padding:3px 8px;background:var(--surface-2);border-radius:5px;color:var(--ink-soft)}
-  @media(max-width:820px){.funnel-grid{grid-template-columns:1fr}.fn-inst-row{flex-direction:column}}
+  @media(max-width:820px){.ket-grid,.ket-arrows{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -283,7 +285,7 @@
         <span>Landelijke krapte — HVC SDI Alkmaar beperkt operationeel · onderhoud SVI Dordrecht vanaf week 24 · incidentenopslag 4.500 ton bezet, Dico Beverwijk vergunning geblokkeerd</span>
       </div>
       <div class="stats" id="stats"></div>
-      <div id="funnels" class="funnel-grid"></div>
+      <div id="ket-sections"></div>
 
       <div class="legend">
         <span><span class="sw" style="background:var(--ok)"></span> operationeel</span>
@@ -480,7 +482,7 @@ function renderDashboard(){
     <div class="stat"><div class="stat-label">Noodopslag beschikbaar</div><div class="stat-val warn">${beschikbaar.toLocaleString()} <span class="stat-unit">ton</span></div></div>
     <div class="stat"><div class="stat-label">Geblokkeerd (vergunning)</div><div class="stat-val danger">${geblok.toLocaleString()} <span class="stat-unit">ton</span></div></div>`;
 
-  renderFunnels();
+  renderSections();
 
   document.getElementById('noodopslag').innerHTML=DATA.noodopslag.map(n=>{
     const pct=Math.round(n.bezet/n.cap*100);
@@ -586,80 +588,89 @@ function copyMemo(){
   const o=b.innerHTML; b.innerHTML=I.check+' Gekopieerd'; setTimeout(()=>b.innerHTML=o,1600);
 }
 
-/* ============ FUNNELS ============ */
-function renderFunnels(){
-  const defs=[
+/* ============ SECTIONS ============ */
+function renderSections(){
+  const C=[
     {
       kleur:'#0f6e56', naam:'GR Slibverwerking 2009',
       ws:DATA.clusters[0].waterschappen,
-      verwerkers:[{naam:'HVC', sub:'SVI Dordrecht · SDI Alkmaar', status:'danger', note:'SVI onderhoud week 24 · SDI beperkt operationeel'}],
-      installaties:[
-        {naam:'SVI — Dordrecht', sub:'verbranding · 948 t/dag', status:'warning'},
-        {naam:'SDI — Alkmaar', sub:'droging · 633 t/dag', status:'danger'}
-      ],
+      verwerker:{naam:'HVC', sub:'SVI Dordrecht · SDI Alkmaar', status:'danger', note:'SVI onderhoud week 24 · SDI beperkt operationeel'},
+      installaties:[{naam:'SVI — Dordrecht',status:'warning'},{naam:'SDI — Alkmaar',status:'danger'}],
       opslaglocaties:[
-        {naam:'Indaver Delfzijl', cap:6000, bezet:2500, status:'warning'},
-        {naam:'Indaver Groningen', cap:6000, bezet:2000, status:'ok'},
-        {naam:'Zwolle', cap:2000, bezet:800, status:'warning'}
+        {naam:'Indaver Delfzijl',cap:6000,bezet:2500,status:'warning'},
+        {naam:'Indaver Groningen',cap:6000,bezet:2000,status:'ok'},
+        {naam:'Zwolle',cap:2000,bezet:800,status:'warning'}
       ],
       reststromen:['Granulaat BEC','Fosfaat Puraloop','Warmte warmtenet']
     },
     {
       kleur:'#534ab7', naam:'SNB Moerdijk',
       ws:DATA.clusters[1].waterschappen,
-      verwerkers:[{naam:'SNB', sub:'Moerdijk', status:'ok', note:"Europa's grootste slibverbrander · 410–430 kton/jr"}],
-      installaties:[
-        {naam:'Moerdijk', sub:'verbranding · ~1.150 t/dag', status:'ok'}
-      ],
-      opslaglocaties:[{naam:'Eigen opslag Moerdijk', cap:null, status:'ok'}],
+      verwerker:{naam:'SNB', sub:'Moerdijk', status:'ok', note:"Europa's grootste slibverbrander · 410–430 kton/jr"},
+      installaties:[{naam:'Moerdijk',status:'ok'}],
+      opslaglocaties:[{naam:'Eigen opslag Moerdijk',cap:null,status:'ok'}],
       reststromen:['Vliegas fosfaat','Bodemas bouwstof']
     },
     {
       kleur:'#d85a30', naam:'SNON Noord-Nederland',
       ws:DATA.clusters[2].waterschappen,
-      verwerkers:[{naam:'SNON', sub:'route GMB → EEW', status:'ok', note:'Voordroging biogranulaat → thermische eindverwerking'}],
-      installaties:[
-        {naam:'GMB — Zutphen', sub:'biologisch drogen', status:'ok'},
-        {naam:'EEW — Delfzijl', sub:'thermische eindverwerking', status:'ok'}
-      ],
-      opslaglocaties:[{naam:'EEW Delfzijl opslag', cap:null, status:'ok'}],
+      verwerker:{naam:'SNON', sub:'route GMB → EEW', status:'ok', note:'Voordroging biogranulaat → thermische eindverwerking'},
+      installaties:[{naam:'GMB — Zutphen',status:'ok'},{naam:'EEW — Delfzijl',status:'ok'}],
+      opslaglocaties:[{naam:'EEW Delfzijl opslag',cap:null,status:'ok'}],
       reststromen:['Biogranulaat']
     },
     {
-      kleur:'#888780', naam:'GMB — direct contract',
+      kleur:'#888780', naam:'GMB Direct Contract',
       ws:DATA.clusters[3].waterschappen,
-      verwerkers:[{naam:'GMB', sub:'Zutphen', status:'ok', note:'Biologisch drogen op locatie · 70 kton/jr tot 2032'}],
-      installaties:[
-        {naam:'GMB BioEnergie', sub:'biologisch drogen · 70 kton/jr', status:'ok'}
-      ],
-      opslaglocaties:[{naam:'Geen bekend', cap:null, status:'neutral'}],
+      verwerker:{naam:'GMB', sub:'Zutphen', status:'ok', note:'Biologisch drogen op locatie · 70 kton/jr tot 2032'},
+      installaties:[{naam:'GMB BioEnergie',status:'ok'}],
+      opslaglocaties:[{naam:'Geen bekend',cap:null,status:'neutral'}],
       reststromen:['Biogranulaat']
     }
   ];
-  document.getElementById('funnels').innerHTML=defs.map(d=>{
-    const tot=d.ws.reduce((s,w)=>s+w.ton,0);
-    const wsHtml=d.ws.map(w=>`<div class="funnel-ws-chip">${w.naam}<span>${w.ton}</span></div>`).join('');
-    const vwHtml=d.verwerkers.map(v=>`<div class="vw ${v.status}"><div class="vw-nm">${v.naam} — ${v.sub}</div><div class="vw-sub">${v.note}</div></div>`).join('');
-    const instHtml=`<div class="fn-inst-row">${d.installaties.map(i=>`<div class="fn-inst-col"><div class="fn-inst ${i.status}"><div class="fn-inst-name">${i.naam}</div><div class="fn-inst-sub">${i.sub}</div></div></div>`).join('')}</div>`;
-    const opslHtml=d.opslaglocaties.map(o=>{
-      if(o.cap===null)return `<span class="opsl-chip ${o.status}">${o.naam}</span>`;
+
+  const arrowRow=`<div class="ket-arrows">${C.map(()=>'<div class="ket-arrow">↓</div>').join('')}</div>`;
+
+  const s1=`<div class="ket-section">
+    <div class="ket-section-lbl">Waterschappen</div>
+    <div class="ket-grid">${C.map(c=>{
+      const tot=c.ws.reduce((s,w)=>s+w.ton,0);
+      return `<div>
+        <div class="ket-badge" style="background:${c.kleur}18;color:${c.kleur};border:1px solid ${c.kleur}35">${c.naam}</div>
+        <div class="ws-chips">${c.ws.map(w=>`<div class="ws-chip-row"><span class="ws-chip-nm">${w.naam}</span><span class="ws-chip-ton">${w.ton}</span></div>`).join('')}</div>
+        <div><span class="ws-total-pill" style="background:${c.kleur}">${tot.toLocaleString()} t/dag</span></div>
+      </div>`;
+    }).join('')}</div>
+  </div>`;
+
+  const s2=`<div class="ket-section">
+    <div class="ket-section-lbl">Verwerkers</div>
+    <div class="ket-grid">${C.map(c=>`<div class="vw-card ${c.verwerker.status}">
+      <div class="vw-card-nm">${c.verwerker.naam} — ${c.verwerker.sub}</div>
+      <div class="vw-card-sub">${c.verwerker.note}</div>
+    </div>`).join('')}</div>
+  </div>`;
+
+  const s3=`<div class="ket-section">
+    <div class="ket-section-lbl">Installaties</div>
+    <div class="ket-grid">${C.map(c=>`<div class="inst-chips">${c.installaties.map(i=>`<span class="inst-chip ${i.status}">${i.naam}</span>`).join('')}</div>`).join('')}</div>
+  </div>`;
+
+  const s4=`<div class="ket-section">
+    <div class="ket-section-lbl">Opslaglocaties</div>
+    <div class="ket-grid">${C.map(c=>`<div class="opsl-items">${c.opslaglocaties.map(o=>{
+      if(o.cap===null)return `<span class="opsl-neutral">${o.naam}</span>`;
       const pct=Math.round(o.bezet/o.cap*100);
-      return `<div class="opsl-item"><div class="opsl-nm">${o.naam}</div><div class="bar"><i class="${o.status}" style="width:${pct}%"></i></div><div class="opsl-meta"><span>${o.bezet.toLocaleString()}/${o.cap.toLocaleString()} ton</span><span>${(o.cap-o.bezet).toLocaleString()} vrij</span></div></div>`;
-    }).join('');
-    const rstHtml=d.reststromen.map(r=>`<span class="rst-chip">${r}</span>`).join('');
-    return `<div class="funnel-col">
-      <div class="funnel-header" style="background:${d.kleur}18;color:${d.kleur};border:1px solid ${d.kleur}35">${d.naam}</div>
-      <div class="layer-box"><div class="layer-lbl">Waterschappen</div><div class="funnel-ws-wrap">${wsHtml}</div><div class="layer-tot">${tot.toLocaleString()} t/dag</div></div>
-      <div class="layer-arr">↓</div>
-      <div class="layer-box"><div class="layer-lbl">Verwerker</div>${vwHtml}</div>
-      <div class="layer-arr">↓</div>
-      <div class="layer-box"><div class="layer-lbl">Installaties</div>${instHtml}</div>
-      <div class="layer-arr">↓</div>
-      <div class="layer-box"><div class="layer-lbl">Opslaglocaties</div>${opslHtml}</div>
-      <div class="layer-arr">↓</div>
-      <div class="layer-box"><div class="layer-lbl">Reststromen</div><div class="rst-chips">${rstHtml}</div></div>
-    </div>`;
-  }).join('');
+      return `<div class="opsl-item"><div class="opsl-item-nm">${o.naam}</div><div class="bar"><i class="${o.status}" style="width:${pct}%"></i></div><div class="opsl-item-meta"><span>${o.bezet.toLocaleString()}/${o.cap.toLocaleString()} ton</span><span>${(o.cap-o.bezet).toLocaleString()} vrij</span></div></div>`;
+    }).join('')}</div>`).join('')}</div>
+  </div>`;
+
+  const s5=`<div class="ket-section">
+    <div class="ket-section-lbl">Reststromen</div>
+    <div class="ket-grid">${C.map(c=>`<div class="rst-chips">${c.reststromen.map(r=>`<span class="rst-chip">${r}</span>`).join('')}</div>`).join('')}</div>
+  </div>`;
+
+  document.getElementById('ket-sections').innerHTML=s1+arrowRow+s2+arrowRow+s3+arrowRow+s4+arrowRow+s5;
 }
 
 /* ============ INIT ============ */
