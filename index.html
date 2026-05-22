@@ -646,10 +646,10 @@ function renderSections(){
 
   const s2=`<div class="ket-section">
     <div class="ket-section-lbl">Verwerkers</div>
-    <div class="ket-grid">${C.map(c=>`<div class="vw-card ${c.verwerker.status}">
+    <div class="ket-grid">${C.map(c=>`<div><div class="vw-card ${c.verwerker.status}">
       <div class="vw-card-nm">${c.verwerker.naam} — ${c.verwerker.sub}</div>
       <div class="vw-card-sub">${c.verwerker.note}</div>
-    </div>`).join('')}</div>
+    </div></div>`).join('')}</div>
   </div>`;
 
   const s3=`<div class="ket-section">
