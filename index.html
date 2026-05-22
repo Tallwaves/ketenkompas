@@ -481,6 +481,17 @@ function renderDashboard(){
     <div class="stat"><div class="stat-label">Geblokkeerd (vergunning)</div><div class="stat-val danger">${geblok.toLocaleString()} <span class="stat-unit">ton</span></div></div>`;
 
   renderFunnels();
+
+  document.getElementById('noodopslag').innerHTML=DATA.noodopslag.map(n=>{
+    const pct=Math.round(n.bezet/n.cap*100);
+    const vrij=n.cap-n.bezet;
+    const meta=n.status==='danger'?'geblokkeerd':`${vrij.toLocaleString()} ton vrij`;
+    return `<div class="no-card ${n.status}">
+      <div class="no-nm">${n.naam}</div><div class="no-sub">${n.sub}</div>
+      <div class="bar"><i class="${n.status}" style="width:${n.status==='danger'?100:pct}%"></i></div>
+      <div class="no-meta"><span>${n.bezet.toLocaleString()}/${n.cap.toLocaleString()}</span><span>${meta}</span></div>
+    </div>`;
+  }).join('');
 }
 
 /* ============ SCENARIO ============ */
