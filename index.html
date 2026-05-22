@@ -240,15 +240,30 @@
 <div id="app">
   <header>
     <div class="brand">
-      <span class="logo-dot">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C12 2 5 9 5 14a7 7 0 0 0 14 0c0-5-7-12-7-12z" fill="#fff" opacity=".95"/></svg>
-      </span>
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="34" height="34" rx="9" fill="#0a1520" stroke="#5dcaa5" stroke-width="1.5"/>
+        <polygon points="17,4 27,10 27,24 17,30 7,24 7,10" fill="none" stroke="#1d3a52" stroke-width="0.5"/>
+        <circle cx="17" cy="4" r="3" fill="#5dcaa5"/>
+        <circle cx="27" cy="10" r="2.5" fill="#3a7bd5"/>
+        <circle cx="27" cy="24" r="2.5" fill="#3a7bd5"/>
+        <circle cx="17" cy="30" r="3" fill="#5dcaa5"/>
+        <circle cx="7" cy="24" r="2.5" fill="#3a7bd5"/>
+        <circle cx="7" cy="10" r="2.5" fill="#3a7bd5"/>
+        <circle cx="17" cy="17" r="9" fill="#0a1520" stroke="#5dcaa5" stroke-width="1.5"/>
+        <line x1="17" y1="9" x2="17" y2="12" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="17" y1="22" x2="17" y2="25" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="9" y1="17" x2="12" y2="17" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="22" y1="17" x2="25" y2="17" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
+        <polygon points="17,10 19,17 17,24 15,17" fill="#e8a44a"/>
+        <circle cx="17" cy="17" r="2" fill="#0a1520"/>
+      </svg>
       <span class="brand-name">Keten<span>Kompas</span></span>
     </div>
     <nav class="tabs">
       <button class="active" data-v="dashboard">Ketenoverzicht</button>
       <button data-v="scenario">Scenario's</button>
-      <button data-v="bestuur">Bestuurlijk</button>
+      <button data-v="robuust">Robuust Plan</button>
+      <button data-v="bestuur">Rapportage</button>
     </nav>
     <div class="header-right">
       <span class="stand">Stand: 21 mei 2026</span>
@@ -268,13 +283,7 @@
         <span>Landelijke krapte — HVC SDI Alkmaar beperkt operationeel · onderhoud SVI Dordrecht vanaf week 24 · incidentenopslag 4.500 ton bezet, Dico Beverwijk vergunning geblokkeerd</span>
       </div>
       <div class="stats" id="stats"></div>
-      <div id="clusters"></div>
-
-      <div class="section-label">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
-        Landelijke noodopslag (incidentencapaciteit via Aquaminerals)
-      </div>
-      <div class="grid-4" id="noodopslag"></div>
+      <div id="funnels" class="funnel-grid"></div>
 
       <div class="legend">
         <span><span class="sw" style="background:var(--ok)"></span> operationeel</span>
@@ -312,10 +321,24 @@
       </button>
     </section>
 
+    <!-- ROBUUST PLAN -->
+    <section class="view" id="view-robuust">
+      <div class="page-head">
+        <div class="page-title">Robuust Plan</div>
+        <div class="page-sub">Structurele maatregelen voor een robuuste slibketen</div>
+      </div>
+      <div class="section-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
+        Landelijke noodopslag (incidentencapaciteit via Aquaminerals)
+      </div>
+      <div class="grid-4" id="noodopslag"></div>
+      <p style="color:var(--ink-faint);font-size:13px;padding:40px 0 0;text-align:center">Meer inhoud volgt binnenkort</p>
+    </section>
+
     <!-- BESTUUR -->
     <section class="view" id="view-bestuur">
       <div class="page-head">
-        <div class="page-title">Bestuurlijke samenvatting</div>
+        <div class="page-title">Rapportage</div>
         <div class="page-sub">Het laatst doorgerekende scenario, vertaald naar bestuurstaal</div>
       </div>
       <div class="memo" id="memo">
@@ -457,36 +480,7 @@ function renderDashboard(){
     <div class="stat"><div class="stat-label">Noodopslag beschikbaar</div><div class="stat-val warn">${beschikbaar.toLocaleString()} <span class="stat-unit">ton</span></div></div>
     <div class="stat"><div class="stat-label">Geblokkeerd (vergunning)</div><div class="stat-val danger">${geblok.toLocaleString()} <span class="stat-unit">ton</span></div></div>`;
 
-  document.getElementById('clusters').innerHTML=DATA.clusters.map(c=>{
-    const ct=c.waterschappen.reduce((s,w)=>s+w.ton,0);
-    const ws=c.waterschappen.map(w=>`<div class="ws-chip"><span class="nm">${w.naam}</span><span class="tn">${w.ton}</span></div>`).join('');
-    const vw=c.verwerkers.map(v=>{
-      const fl=v.flags.map(f=>`<div class="vw-flag"><span class="bullet"></span>${f}</div>`).join('');
-      return `<div class="vw ${v.status}"><div class="vw-nm">${v.naam}</div><div class="vw-sub">${v.sub}</div>${fl}</div>`;
-    }).join('');
-    return `<div class="cluster">
-      <div class="cluster-head">
-        <span class="cluster-title"><span class="dot" style="background:${c.kleur}"></span>${c.naam}</span>
-        <span class="cluster-meta">${c.aandeel} · ${ct.toLocaleString()} t/dag</span>
-      </div>
-      <div class="cluster-grid">
-        <div class="col-ws">${ws}</div>
-        <div class="col-arrow">${I.right}</div>
-        <div class="col-vw">${vw}</div>
-      </div></div>`;
-  }).join('');
-
-  document.getElementById('noodopslag').innerHTML=DATA.noodopslag.map(n=>{
-    const pct=Math.round(n.bezet/n.cap*100);
-    const vrij=n.cap-n.bezet;
-    const meta=n.status==='danger'?'geblokkeerd':`${vrij.toLocaleString()} ton vrij`;
-    return `<div class="no-card ${n.status}">
-      <div class="no-nm">${n.naam}</div><div class="no-sub">${n.sub}</div>
-      <div class="bar"><i class="${n.status}" style="width:${n.status==='danger'?100:pct}%"></i></div>
-      <div class="no-meta"><span>${n.bezet.toLocaleString()}/${n.cap.toLocaleString()}</span><span>${meta}</span></div>
-    </div>`;
-  }).join('');
-
+  renderFunnels();
 }
 
 /* ============ SCENARIO ============ */
