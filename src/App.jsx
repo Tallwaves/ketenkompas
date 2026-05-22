@@ -1,18 +1,17 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { 
-  Compass, 
-  AlertTriangle, 
-  Droplet, 
-  Truck, 
-  Euro, 
-  Leaf, 
+import {
+  AlertTriangle,
+  Droplet,
+  Truck,
+  Euro,
+  Leaf,
   Info,
   ShieldCheck,
   Settings,
   ArrowRight,
-  Factory, 
+  Factory,
   Globe,
-  MapPin, 
+  MapPin,
   Lock,
   User,
   LogOut,
@@ -29,6 +28,28 @@ import {
   KeyRound,
   Loader2
 } from 'lucide-react';
+
+const KetenKompasLogo = ({ size = 40, className = "" }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 48 48"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    {/* Outer chain ring — dashed segments represent keten (chain) links */}
+    <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="3" strokeDasharray="6.5 2.5" strokeLinecap="round" />
+    {/* Inner compass bezel */}
+    <circle cx="24" cy="24" r="11.5" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.4" />
+    {/* North needle — solid */}
+    <path d="M24 12.5L27.5 24L24 21.5L20.5 24L24 12.5Z" fill="currentColor" />
+    {/* South needle — faded */}
+    <path d="M24 35.5L27.5 24L24 26.5L20.5 24L24 35.5Z" fill="currentColor" fillOpacity="0.3" />
+    {/* Center pivot */}
+    <circle cx="24" cy="24" r="2.5" fill="currentColor" />
+  </svg>
+);
 
 /**
  * KETENKOMPAS V1.4.8 - HERSTEL DASHBOARD & SECURITY
@@ -170,7 +191,7 @@ const App = () => {
         <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/20">
           <div className="bg-[#004a89] p-8 text-center">
             <div className="inline-flex p-4 rounded-2xl bg-white/10 mb-4 border border-white/20">
-              <Compass className="text-white w-10 h-10" />
+              <KetenKompasLogo size={40} />
             </div>
             <h1 className="text-2xl font-black text-white tracking-tight italic uppercase">KetenKompas Portaal</h1>
             <p className="text-blue-200 text-[10px] mt-2 font-bold tracking-widest uppercase opacity-70 flex items-center justify-center gap-2">
@@ -213,7 +234,7 @@ const App = () => {
 
       <header className="bg-[#004a89] text-white p-3 shadow-md flex justify-between items-center px-6 z-20">
         <div className="flex items-center gap-3">
-          <div className="bg-white/10 p-1.5 rounded-md border border-white/20"><Compass className="w-6 h-6" /></div>
+          <div className="bg-white/10 p-1.5 rounded-md border border-white/20"><KetenKompasLogo size={24} /></div>
           <div>
             <h1 className="text-lg font-bold tracking-tight">KetenKompas.nl</h1>
             <p className="text-[9px] uppercase opacity-70 flex items-center gap-1 leading-none">
