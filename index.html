@@ -200,12 +200,10 @@
   .ws-chip-nm{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .ws-chip-ton{font-weight:700;color:var(--ink-faint);font-size:10.5px;margin-left:6px;flex-shrink:0}
   .ws-total-pill{display:inline-block;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:7px}
-  .vw-card{border-radius:8px;padding:9px 11px;border-left:3px solid}
+  .vw-card{border-radius:8px;padding:14px 11px;border-left:3px solid;text-align:center}
   .vw-card.ok{background:var(--ok-bg);border-color:var(--ok)}.vw-card.warning{background:var(--warn-bg);border-color:var(--warn)}.vw-card.danger{background:var(--danger-bg);border-color:var(--danger)}
-  .vw-card-nm{font-size:12px;font-weight:600}
+  .vw-card-nm{font-size:16px;font-weight:700;letter-spacing:-.01em}
   .vw-card.ok .vw-card-nm{color:#27500a}.vw-card.warning .vw-card-nm{color:#633806}.vw-card.danger .vw-card-nm{color:#791f1f}
-  .vw-card-sub{font-size:10.5px;margin-top:3px;line-height:1.4}
-  .vw-card.ok .vw-card-sub{color:var(--ok-ink)}.vw-card.warning .vw-card-sub{color:var(--warn-ink)}.vw-card.danger .vw-card-sub{color:var(--danger-ink)}
   .inst-chips{display:flex;flex-wrap:wrap;gap:4px}
   .inst-chip{font-size:11px;padding:4px 9px;border-radius:6px;border-left:3px solid;font-weight:500;white-space:nowrap}
   .inst-chip.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok-ink)}
@@ -615,7 +613,7 @@ function renderSections(){
     {
       kleur:'#d85a30', naam:'SNON Noord-Nederland',
       ws:DATA.clusters[2].waterschappen,
-      verwerker:{naam:'SNON', sub:'route GMB → EEW', status:'ok', note:'Voordroging biogranulaat → thermische eindverwerking'},
+      verwerker:{naam:'GMB — EEW', sub:'route GMB → EEW', status:'ok', note:'Voordroging biogranulaat → thermische eindverwerking'},
       installaties:[{naam:'GMB — Zutphen',status:'ok'},{naam:'EEW — Delfzijl',status:'ok'}],
       opslaglocaties:[{naam:'EEW Delfzijl opslag',cap:null,status:'ok'}],
       reststromen:['Biogranulaat']
@@ -647,8 +645,7 @@ function renderSections(){
   const s2=`<div class="ket-section">
     <div class="ket-section-lbl">Verwerkers</div>
     <div class="ket-grid">${C.map(c=>`<div><div class="vw-card ${c.verwerker.status}">
-      <div class="vw-card-nm">${c.verwerker.naam} — ${c.verwerker.sub}</div>
-      <div class="vw-card-sub">${c.verwerker.note}</div>
+      <div class="vw-card-nm">${c.verwerker.naam}</div>
     </div></div>`).join('')}</div>
   </div>`;
 
