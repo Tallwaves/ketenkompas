@@ -323,7 +323,7 @@
       </div>
       <div class="kk-layout">
         <div class="kk-cvs">
-          <svg id="kk-svg" viewBox="0 0 760 460" xmlns="http://www.w3.org/2000/svg"></svg>
+          <svg id="kk-svg" viewBox="0 0 760 510" xmlns="http://www.w3.org/2000/svg"></svg>
         </div>
         <div class="kk-panel" id="kk-panel">
           <div class="kk-pi" id="kk-pi"></div>
@@ -396,10 +396,13 @@ const DATA = {
     { naam:"GR Slibverwerking 2009", kleur:"#0f6e56", aandeel:"~7% landelijk · 8 waterschappen",
       waterschappen:[
         {naam:"AGV", ton:277},
-        {naam:"HHNK", ton:150},
-        {naam:"Rijnland", ton:175},
-        {naam:"HHSK", ton:75},
-        {naam:"Waternet/overig", ton:90},
+        {naam:"HHNK", ton:272},
+        {naam:"Delfland", ton:240},
+        {naam:"Hollandse Delta", ton:233},
+        {naam:"Rijnland", ton:298},
+        {naam:"Rivierenland", ton:45},
+        {naam:"HHSK", ton:76},
+        {naam:"Zuiderzeeland", ton:110},
       ],
       verwerkers:[
         {naam:"HVC SVI — Dordrecht", sub:"948 ton/dag · monoverbranding", status:"warning",
@@ -711,11 +714,14 @@ function renderSections(){
 
 /* ============ KETENKAART ============ */
 const KK_DET={
-  agv:      {naam:'AGV',              type:'Waterschap',  cap:'277 ton/dag',  status:'ok',      flags:[]},
-  hhnk:     {naam:'HHNK',             type:'Waterschap',  cap:'150 ton/dag',  status:'ok',      flags:[]},
-  rijnland: {naam:'Rijnland',          type:'Waterschap',  cap:'175 ton/dag',  status:'ok',      flags:[]},
-  hhsk:     {naam:'HHSK',             type:'Waterschap',  cap:'75 ton/dag',   status:'ok',      flags:[]},
-  waternet: {naam:'Waternet / Overig', type:'Waterschap',  cap:'90 ton/dag',   status:'ok',      flags:[]},
+  agv:           {naam:'AGV',            type:'Waterschap', cap:'277 ton/dag', status:'ok', flags:[]},
+  hhnk:          {naam:'HHNK',           type:'Waterschap', cap:'272 ton/dag', status:'ok', flags:[]},
+  delfland:      {naam:'Delfland',        type:'Waterschap', cap:'240 ton/dag', status:'ok', flags:[]},
+  hollandsdelta: {naam:'Hollandse Delta', type:'Waterschap', cap:'233 ton/dag', status:'ok', flags:[]},
+  rijnland:      {naam:'Rijnland',        type:'Waterschap', cap:'298 ton/dag', status:'ok', flags:[]},
+  rivierenland:  {naam:'Rivierenland',    type:'Waterschap', cap:'45 ton/dag',  status:'ok', flags:[]},
+  hhsk:          {naam:'HHSK',           type:'Waterschap', cap:'76 ton/dag',  status:'ok', flags:[]},
+  zuiderzeeland: {naam:'Zuiderzeeland',   type:'Waterschap', cap:'110 ton/dag', status:'ok', flags:[]},
   hvc:      {naam:'HVC',              type:'Verwerker',   cap:'~450 ton/dag', status:'warning', flags:['Enige verwerker GR Slib','Contract afloop 2026','Hoge afhankelijkheidsgraad']},
   svi:      {naam:'SVI — Dordrecht',   type:'Installatie', cap:'948 ton/dag',  status:'warning', flags:['Onderhoud lijn vanaf week 24 (8 juni)']},
   sdi:      {naam:'SDI — Alkmaar',     type:'Installatie', cap:'633 ton/dag',  status:'danger',  flags:['Opstart vertraagd — zeer beperkt operationeel']},
@@ -725,12 +731,25 @@ const KK_DET={
 const KK_ST={ok:{c:'#1d9e75',bg:'#eaf3de',l:'Stabiel'},warning:{c:'#ba7517',bg:'#faeeda',l:'Aandacht vereist'},danger:{c:'#e24b4a',bg:'#fcebeb',l:'Kritiek'}};
 
 /* mutable positions & sizes */
-const KKP={agv:{x:62,y:20},hhnk:{x:192,y:20},rijnland:{x:322,y:20},hhsk:{x:452,y:20},waternet:{x:582,y:20},hvc:{x:290,y:130},svi:{x:153,y:268},sdi:{x:453,y:268},fosfaat:{x:156,y:400},granulaat:{x:456,y:400}};
-const KKS={agv:{w:116,h:52},hhnk:{w:116,h:52},rijnland:{w:116,h:52},hhsk:{w:116,h:52},waternet:{w:116,h:52},hvc:{w:180,h:68},svi:{w:154,h:56},sdi:{w:154,h:56},fosfaat:{w:148,h:46},granulaat:{w:148,h:46}};
+const KKP={
+  agv:{x:5,y:12},hhnk:{x:195,y:12},delfland:{x:385,y:12},hollandsdelta:{x:575,y:12},
+  rijnland:{x:5,y:76},rivierenland:{x:195,y:76},hhsk:{x:385,y:76},zuiderzeeland:{x:575,y:76},
+  hvc:{x:290,y:165},svi:{x:88,y:308},sdi:{x:488,y:308},fosfaat:{x:88,y:442},granulaat:{x:488,y:442}
+};
+const KKS={
+  agv:{w:165,h:48},hhnk:{w:165,h:48},delfland:{w:165,h:48},hollandsdelta:{w:165,h:48},
+  rijnland:{w:165,h:48},rivierenland:{w:165,h:48},hhsk:{w:165,h:48},zuiderzeeland:{w:165,h:48},
+  hvc:{w:180,h:68},svi:{w:154,h:56},sdi:{w:154,h:56},fosfaat:{w:148,h:46},granulaat:{w:148,h:46}
+};
 const KK_EDGES=[
-  {src:'agv',dst:'hvc',label:'277',color:'#93c5fd'},{src:'hhnk',dst:'hvc',label:'150',color:'#93c5fd'},
-  {src:'rijnland',dst:'hvc',label:'175',color:'#93c5fd'},{src:'hhsk',dst:'hvc',label:'75',color:'#93c5fd'},
-  {src:'waternet',dst:'hvc',label:'90',color:'#93c5fd'},
+  {src:'agv',dst:'hvc',label:'277',color:'#93c5fd'},
+  {src:'hhnk',dst:'hvc',label:'272',color:'#93c5fd'},
+  {src:'delfland',dst:'hvc',label:'240',color:'#93c5fd'},
+  {src:'hollandsdelta',dst:'hvc',label:'233',color:'#93c5fd'},
+  {src:'rijnland',dst:'hvc',label:'298',color:'#93c5fd'},
+  {src:'rivierenland',dst:'hvc',label:'45',color:'#93c5fd'},
+  {src:'hhsk',dst:'hvc',label:'76',color:'#93c5fd'},
+  {src:'zuiderzeeland',dst:'hvc',label:'110',color:'#93c5fd'},
   {src:'hvc',dst:'svi',color:'#185fa5'},{src:'hvc',dst:'sdi',color:'#185fa5'},
   {src:'svi',dst:'fosfaat',color:'#ba7517',dashed:true},{src:'sdi',dst:'granulaat',color:'#e24b4a',dashed:true},
 ];
