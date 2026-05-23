@@ -220,6 +220,26 @@
   .rst-chips{display:flex;flex-wrap:wrap;gap:4px}
   .rst-chip{font-size:10.5px;padding:3px 8px;background:var(--surface-2);border-radius:5px;color:var(--ink-soft)}
   @media(max-width:820px){.ket-grid,.ket-arrows{flex-direction:column}}
+
+  /* ---------- KETENKAART ---------- */
+  .kk-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+  .kk-svg-outer{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  #kk-svg{display:block;min-width:580px;width:100%}
+  .kk-node{cursor:pointer}
+  .kk-node .kk-bg{transition:opacity .12s}
+  .kk-node:hover .kk-bg{opacity:.82}
+  .kk-node.kk-sel .kk-bg{stroke-width:2.5}
+  .kk-hint{font-size:12px;color:var(--ink-faint);margin-bottom:12px}
+  .kk-detail{margin-top:14px;padding:15px 18px;border-radius:var(--radius-sm);border:1px solid var(--line);border-left:4px solid;background:var(--surface-2);display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start}
+  .kk-det-main{flex:1;min-width:160px}
+  .kk-det-type{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:3px}
+  .kk-det-name{font-size:19px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px}
+  .kk-det-badge{font-size:11px;font-weight:600;padding:2px 10px;border-radius:12px;display:inline-block;margin-bottom:8px}
+  .kk-det-row{font-size:13px;color:var(--ink-soft);margin-top:4px}
+  .kk-det-flags{flex:1.5;min-width:180px}
+  .kk-det-flags-lbl{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px}
+  .kk-det-flag{font-size:12px;padding:4px 9px;background:var(--danger-bg);color:var(--danger-ink);border-radius:6px;margin-bottom:4px}
+  .kk-det-none{font-size:12px;color:var(--ink-faint);font-style:italic}
 </style>
 </head>
 <body>
@@ -262,6 +282,7 @@
     </div>
     <nav class="tabs">
       <button class="active" data-v="dashboard">Ketenoverzicht</button>
+      <button data-v="ketenkaart">Ketenkaart</button>
       <button data-v="scenario">Scenario's</button>
       <button data-v="robuust">Robuust Plan</button>
       <button data-v="bestuur">Rapportage</button>
@@ -291,6 +312,21 @@
         <span><span class="sw" style="background:var(--warn)"></span> risico / beperkt</span>
         <span><span class="sw" style="background:var(--danger)"></span> kritiek / uitval</span>
         <span><span class="sw" style="background:var(--neutral)"></span> indicatief</span>
+      </div>
+    </section>
+
+    <!-- KETENKAART -->
+    <section class="view" id="view-ketenkaart">
+      <div class="page-head">
+        <div class="page-title">Ketenkaart</div>
+        <div class="page-sub">GR Slib keten — van waterschap tot reststroom · klik een node voor details</div>
+      </div>
+      <div class="kk-wrap">
+        <p class="kk-hint">Klik op een node voor details</p>
+        <div class="kk-svg-outer">
+          <svg id="kk-svg" viewBox="0 0 875 270" xmlns="http://www.w3.org/2000/svg" aria-label="GR Slib ketenkaart"></svg>
+        </div>
+        <div id="kk-detail" style="display:none"></div>
       </div>
     </section>
 
@@ -455,6 +491,7 @@ function showApp(){
   document.getElementById('app').style.display='flex';
   renderDashboard();
   buildScenario();
+  renderKetenKaart();
 }
 document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
 
@@ -669,6 +706,100 @@ function renderSections(){
   </div>`;
 
   document.getElementById('ket-sections').innerHTML=s1+arrowRow+s2+arrowRow+s3+arrowRow+s4+arrowRow+s5;
+}
+
+/* ============ KETENKAART ============ */
+const KK_DET={
+  agv:      {naam:'AGV',              type:'Waterschap',  cap:'277 ton/dag',  status:'ok',      flags:[]},
+  hhnk:     {naam:'HHNK',             type:'Waterschap',  cap:'150 ton/dag',  status:'ok',      flags:[]},
+  rijnland: {naam:'Rijnland',          type:'Waterschap',  cap:'175 ton/dag',  status:'ok',      flags:[]},
+  hhsk:     {naam:'HHSK',             type:'Waterschap',  cap:'75 ton/dag',   status:'ok',      flags:[]},
+  waternet: {naam:'Waternet / Overig', type:'Waterschap',  cap:'90 ton/dag',   status:'ok',      flags:[]},
+  hvc:      {naam:'HVC',              type:'Verwerker',   cap:'~450 ton/dag', status:'warning', flags:['Enige verwerker GR Slib','Contract afloop 2026','Hoge afhankelijkheidsgraad']},
+  svi:      {naam:'SVI — Dordrecht',   type:'Installatie', cap:'948 ton/dag',  status:'warning', flags:['Onderhoud lijn vanaf week 24 (8 juni)']},
+  sdi:      {naam:'SDI — Alkmaar',     type:'Installatie', cap:'633 ton/dag',  status:'danger',  flags:['Opstart vertraagd — zeer beperkt operationeel']},
+  fosfaat:  {naam:'Fosfaat Puraloop',  type:'Reststroom',  cap:'n.v.t.',       status:'ok',      flags:[]},
+  granulaat:{naam:'Granulaat BEC',     type:'Reststroom',  cap:'n.v.t.',       status:'ok',      flags:[]},
+};
+const KK_ST={
+  ok:     {c:'#1d9e75',bg:'#eaf3de',l:'Stabiel'},
+  warning:{c:'#ba7517',bg:'#faeeda',l:'Aandacht vereist'},
+  danger: {c:'#e24b4a',bg:'#fcebeb',l:'Kritiek'},
+};
+
+function renderKetenKaart(){
+  const ff='font-family="Inter,-apple-system,BlinkMacSystemFont,sans-serif"';
+
+  // Cubic bezier edge (optional label)
+  function mkEdge(x1,y1,x2,y2,col,dash,lbl,lx,ly){
+    const cx=(x1+x2)/2;
+    let s=`<path d="M${x1},${y1} C${cx},${y1} ${cx},${y2} ${x2},${y2}" fill="none" stroke="${col}" stroke-width="${dash?1.5:2}" ${dash?'stroke-dasharray="5 3"':''} stroke-linecap="round"/>`;
+    if(lbl) s+=`<text x="${lx}" y="${ly}" font-size="9" font-weight="600" ${ff} fill="${col}" opacity=".9">${lbl}</text>`;
+    return s;
+  }
+
+  // ws→HVC edges with ton labels
+  const WS=[{cy:29,ton:'277 t/d'},{cy:81,ton:'150 t/d'},{cy:133,ton:'175 t/d'},{cy:185,ton:'75 t/d'},{cy:237,ton:'90 t/d'}];
+  let e='';
+  WS.forEach(n=>e+=mkEdge(188,n.cy,250,121,'#93c5fd',false,n.ton,200,n.cy-3));
+  e+=mkEdge(435,121,474,69, '#185fa5',false);
+  e+=mkEdge(435,121,474,197,'#185fa5',false);
+  e+=`<line x1="639" y1="69"  x2="690" y2="69"  stroke="#ba7517" stroke-width="1.5" stroke-dasharray="5 3" stroke-linecap="round"/>`;
+  e+=`<line x1="639" y1="197" x2="690" y2="197" stroke="#e24b4a" stroke-width="1.5" stroke-dasharray="5 3" stroke-linecap="round"/>`;
+
+  // Node builders
+  function wsN(id,y,nm,sub){
+    return `<g class="kk-node" onclick="kkSel('${id}')" id="kkn-${id}"><rect class="kk-bg" x="8" y="${y}" width="180" height="42" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/><rect x="9" y="${y+9}" width="4" height="24" rx="2" fill="#185fa5"/><text x="21" y="${y+17}" font-size="8" font-weight="700" ${ff} fill="#185fa5" letter-spacing="1">WATERSCHAP</text><text x="21" y="${y+33}" font-size="13" font-weight="600" ${ff} fill="#1e40af">${nm}</text><text x="182" y="${y+33}" font-size="10" ${ff} fill="#6b7280" text-anchor="end">${sub}</text></g>`;
+  }
+  function hvcN(){
+    return `<g class="kk-node" onclick="kkSel('hvc')" id="kkn-hvc"><rect class="kk-bg" x="250" y="79" width="185" height="84" rx="10" fill="#0e1b2a" stroke="#185fa5" stroke-width="1.5"/><text x="342" y="100" font-size="8.5" font-weight="700" ${ff} fill="#93c5fd" text-anchor="middle" letter-spacing="1.5">VERWERKER</text><text x="342" y="131" font-size="23" font-weight="700" ${ff} fill="white" text-anchor="middle">HVC</text><text x="342" y="150" font-size="10" ${ff} fill="#94a3b8" text-anchor="middle">~450 ton/dag</text></g>`;
+  }
+  function instN(id,y,nm,sub,st){
+    const c=st==='warning'?{f:'#fefce8',s:'#ba7517',a:'#ba7517',t:'#633806'}:{f:'#fef2f2',s:'#fca5a5',a:'#e24b4a',t:'#791f1f'};
+    return `<g class="kk-node" onclick="kkSel('${id}')" id="kkn-${id}"><rect class="kk-bg" x="474" y="${y}" width="165" height="50" rx="8" fill="${c.f}" stroke="${c.s}" stroke-width="1.5"/><rect x="475" y="${y+9}" width="4" height="32" rx="2" fill="${c.a}"/><text x="488" y="${y+18}" font-size="8" font-weight="700" ${ff} fill="${c.a}" letter-spacing="1">INSTALLATIE</text><text x="488" y="${y+34}" font-size="12.5" font-weight="600" ${ff} fill="${c.t}">${nm}</text><text x="488" y="${y+46}" font-size="9.5" ${ff} fill="${c.a}" opacity=".85">${sub}</text></g>`;
+  }
+  function rstN(id,y,nm){
+    return `<g class="kk-node" onclick="kkSel('${id}')" id="kkn-${id}"><rect class="kk-bg" x="690" y="${y}" width="163" height="42" rx="21" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/><text x="771" y="${y+15}" font-size="8" font-weight="700" ${ff} fill="#888780" text-anchor="middle" letter-spacing=".8">RESTSTROOM</text><text x="771" y="${y+32}" font-size="12" font-weight="600" ${ff} fill="#475569" text-anchor="middle">${nm}</text></g>`;
+  }
+
+  let n='';
+  n+=wsN('agv',     8,  'AGV',            '277 t/d');
+  n+=wsN('hhnk',    60, 'HHNK',           '150 t/d');
+  n+=wsN('rijnland',112,'Rijnland',        '175 t/d');
+  n+=wsN('hhsk',    164,'HHSK',           '75 t/d');
+  n+=wsN('waternet',216,'Waternet/Overig','90 t/d');
+  n+=hvcN();
+  n+=instN('svi',44, 'SVI — Dordrecht','948 t/dag','warning');
+  n+=instN('sdi',172,'SDI — Alkmaar',  '633 t/dag','danger');
+  n+=rstN('fosfaat',  48, 'Fosfaat Puraloop');
+  n+=rstN('granulaat',176,'Granulaat BEC');
+
+  document.getElementById('kk-svg').innerHTML=e+n;
+}
+
+function kkSel(id){
+  document.querySelectorAll('#kk-svg .kk-node').forEach(n=>n.classList.remove('kk-sel'));
+  const nd=document.getElementById('kkn-'+id);
+  if(nd) nd.classList.add('kk-sel');
+  const d=KK_DET[id]; if(!d) return;
+  const st=KK_ST[d.status]||KK_ST.ok;
+  const det=document.getElementById('kk-detail');
+  det.style.display='flex';
+  det.style.borderLeftColor=st.c;
+  const flags=d.flags.length
+    ?d.flags.map(f=>`<div class="kk-det-flag">⚑ ${f}</div>`).join('')
+    :`<div class="kk-det-none">Geen actieve risicovlaggen</div>`;
+  det.innerHTML=`
+    <div class="kk-det-main">
+      <div class="kk-det-type">${d.type}</div>
+      <div class="kk-det-name">${d.naam}</div>
+      <span class="kk-det-badge" style="background:${st.bg};color:${st.c};border:1px solid ${st.c}40">${st.l}</span>
+      <div class="kk-det-row"><span style="font-size:11px;color:var(--ink-faint);text-transform:uppercase;font-weight:600;letter-spacing:.06em">Capaciteit</span><br><strong style="font-size:14px">${d.cap}</strong></div>
+    </div>
+    <div class="kk-det-flags">
+      <div class="kk-det-flags-lbl">Risicovlaggen</div>
+      ${flags}
+    </div>`;
 }
 
 /* ============ INIT ============ */
