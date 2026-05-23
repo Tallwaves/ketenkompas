@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import KetenKaart from './components/KetenKaart';
 import {
   AlertTriangle,
   Droplet,
@@ -123,6 +124,7 @@ const App = () => {
   const [outageDays, setOutageDays] = useState(0); 
   const [siloCount, setSiloCount] = useState(2); 
   const [isDataVisible, setIsDataVisible] = useState(true);
+  const [activeTab, setActiveTab] = useState('overzicht');
 
   const PRODUCTION = 500; 
   const HVC_BASE_CAP = 450; 
@@ -289,7 +291,44 @@ const App = () => {
         </div>
 
         {/* MAIN CONTENT AREA */}
-        <div className="lg:col-span-9 space-y-6">
+        <div className="lg:col-span-9 space-y-4">
+          {/* TAB NAVIGATION */}
+          <div className="flex gap-1 border-b border-slate-200">
+            {[
+              { id: 'overzicht',  label: 'Ketenoverzicht' },
+              { id: 'ketenkaart', label: 'Ketenkaart' },
+              { id: 'scenarios',  label: "Scenario's" },
+            ].map(({ id, label }) => (
+              <button
+                key={id}
+                onClick={() => setActiveTab(id)}
+                className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-all border-b-2 -mb-px ${
+                  activeTab === id
+                    ? 'border-[#004a89] text-[#004a89]'
+                    : 'border-transparent text-slate-400 hover:text-slate-600'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {/* KETENKAART TAB */}
+          {activeTab === 'ketenkaart' && (
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+              <KetenKaart />
+            </div>
+          )}
+
+          {/* SCENARIO'S TAB */}
+          {activeTab === 'scenarios' && (
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center py-16">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Scenario's — binnenkort beschikbaar</p>
+            </div>
+          )}
+
+          {/* KETENOVERZICHT TAB */}
+          {activeTab === 'overzicht' && <>
           {/* THERMOMETER CARD */}
           <div className={`bg-white border-l-[12px] ${simulation.grStatus.color.replace('bg-', 'border-')} p-6 rounded-xl shadow-sm flex flex-col md:flex-row justify-between items-center gap-6 relative`}>
             <div>
@@ -383,6 +422,7 @@ const App = () => {
             <div className="flex gap-6"><span>CERT-REF: GRS-2026-STABLE-V1.4.8</span><span className="text-red-500/50 italic underline tracking-tighter leading-none">Strict Vertrouwelijk</span></div>
             <div className="flex items-center gap-1 text-[#004a89]"><ShieldCheck size={10} /> Certified: AGV-Cloud-Authorized</div>
           </footer>
+          </>}
         </div>
       </main>
     </div>
