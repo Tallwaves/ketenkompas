@@ -219,7 +219,32 @@
   .ws-chip-row{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:var(--surface-2);border-radius:6px;font-size:11px}
   .ws-chip-nm{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .ws-chip-ton{font-weight:700;color:var(--ink-faint);font-size:10.5px;margin-left:6px;flex-shrink:0}
+  .ws-chip-row.clickable{cursor:pointer;transition:background .12s}
+  .ws-chip-row.clickable:hover{background:#e2eaf2}
+  .ws-coming-soon{font-size:11px;color:#795713;background:#fef3cd;border:.5px solid #f5c842;border-radius:6px;padding:4px 9px;margin-top:4px}
   .ws-total-pill{display:inline-block;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:7px}
+  /* ---------- LANDELIJKE SITUATIE ---------- */
+  .landelijke-situatie{background:#eef6f3;border:.5px solid #c5e0d8;border-radius:12px;padding:16px 20px;margin-bottom:18px}
+  .ls-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#5a8070;margin-bottom:12px}
+  .landelijke-situatie .stats{margin-bottom:0}
+  /* ---------- SCENARIO INLINE ---------- */
+  .scenario-inline{background:#fdf6e8;border:.5px solid #f0d090;border-radius:12px;padding:14px 18px;margin-bottom:18px}
+  .si-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;-webkit-user-select:none}
+  .si-title{font-size:13.5px;font-weight:600;color:#7a5000}
+  .si-hr{display:flex;align-items:center;gap:10px}
+  .si-badge{font-size:11.5px;font-weight:600;color:#9a5f00;background:#fde0a0;border-radius:20px;padding:3px 10px;white-space:nowrap}
+  .si-reset{font-size:11.5px;padding:3px 10px;border:1px solid #e0a040;border-radius:6px;background:#fff8ec;color:#9a5f00;cursor:pointer;font-family:var(--font);font-weight:600;flex-shrink:0}
+  .si-reset:hover{background:#fde0a0}
+  .si-chevron{width:18px;height:18px;color:#9a6f20;transition:transform .2s;flex-shrink:0}
+  .scenario-inline.si-open .si-chevron{transform:rotate(180deg)}
+  .si-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+  .scenario-inline.si-open .si-body{max-height:220px}
+  .si-btns{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .si-btn{font-size:12.5px;padding:7px 14px;border:1px solid #e0c070;border-radius:8px;background:#fff8ec;color:#7a5000;cursor:pointer;font-family:var(--font);font-weight:500;transition:all .12s}
+  .si-btn:hover{border-color:#c9992c;background:#fde9c0}
+  .si-btn.si-btn-active{border-color:#e07010;color:#7a2000;font-weight:600;background:#fde9c0}
+  .si-effect{font-size:11px;color:#c05000;background:#fff3cc;border-radius:5px;padding:3px 8px;margin-top:5px;display:inline-block}
+  .opsl-item.si-full{border:1px solid var(--danger)}
   .vw-card{border-radius:8px;padding:14px 11px;border-left:3px solid;text-align:center}
   .vw-card.ok{background:var(--ok-bg);border-color:var(--ok)}.vw-card.warning{background:var(--warn-bg);border-color:var(--warn)}.vw-card.danger{background:var(--danger-bg);border-color:var(--danger)}
   .vw-card-nm{font-size:16px;font-weight:700;letter-spacing:-.01em}
@@ -304,7 +329,11 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
         <span>Landelijke krapte — HVC SDI Alkmaar beperkt operationeel · onderhoud SVI Dordrecht vanaf week 24 · incidentenopslag 4.500 ton bezet, Dico Beverwijk vergunning geblokkeerd</span>
       </div>
-      <div class="stats" id="stats"></div>
+      <div class="landelijke-situatie">
+        <div class="ls-label">LANDELIJKE SITUATIE</div>
+        <div class="stats" id="stats"></div>
+      </div>
+      <div id="scenario-inline"></div>
       <div id="ket-sections"></div>
 
       <div class="legend">
@@ -523,6 +552,7 @@ function renderDashboard(){
     <div class="stat"><div class="stat-label">Geblokkeerd (vergunning)</div><div class="stat-val danger">${geblok.toLocaleString()} <span class="stat-unit">ton</span></div></div>`;
 
   renderSections();
+  renderScenarioInline();
 
   document.getElementById('noodopslag').innerHTML=DATA.noodopslag.map(n=>{
     const pct=Math.round(n.bezet/n.cap*100);
@@ -673,11 +703,12 @@ function renderSections(){
 
   const s1=`<div class="ket-section">
     <div class="ket-section-lbl">Waterschappen</div>
-    <div class="ket-grid">${C.map(c=>{
+    <div class="ket-grid">${C.map((c,ci)=>{
       const tot=c.ws.reduce((s,w)=>s+w.ton,0);
       return `<div>
         <div class="ket-badge" style="background:${c.kleur}18;color:${c.kleur};border:1px solid ${c.kleur}35">${c.naam}</div>
-        <div class="ws-chips">${c.ws.map(w=>`<div class="ws-chip-row"><span class="ws-chip-nm">${w.naam}</span><span class="ws-chip-ton">${w.ton}</span></div>`).join('')}</div>
+        <div class="ws-chips">${c.ws.map(w=>`<div class="ws-chip-row clickable" onclick="wsChipClick(${ci})"><span class="ws-chip-nm">${w.naam}</span><span class="ws-chip-ton">${w.ton}</span></div>`).join('')}</div>
+        <div id="ws-cs-${ci}" class="ws-coming-soon" style="display:none">Ketenkaart voor dit cluster komt binnenkort</div>
         <div><span class="ws-total-pill" style="background:${c.kleur}">${tot.toLocaleString()} t/dag</span></div>
       </div>`;
     }).join('')}</div>
@@ -685,9 +716,9 @@ function renderSections(){
 
   const s2=`<div class="ket-section">
     <div class="ket-section-lbl">Verwerkers</div>
-    <div class="ket-grid">${C.map(c=>`<div><div class="vw-card ${c.verwerker.status}">
+    <div class="ket-grid">${C.map((c,ci)=>`<div><div class="vw-card ${c.verwerker.status}">
       <div class="vw-card-nm">${c.verwerker.naam}</div>
-    </div></div>`).join('')}</div>
+    </div>${siScenario&&ci===0?`<div class="si-effect">⚠️ ${DATA.scenarios[siScenario].naam} — scenario actief</div>`:''}</div>`).join('')}</div>
   </div>`;
 
   const s3=`<div class="ket-section">
@@ -697,10 +728,18 @@ function renderSections(){
 
   const s4=`<div class="ket-section">
     <div class="ket-section-lbl">Opslaglocaties</div>
-    <div class="ket-grid">${C.map(c=>`<div class="opsl-items">${c.opslaglocaties.map(o=>{
+    <div class="ket-grid">${C.map((c,ci)=>`<div class="opsl-items">${c.opslaglocaties.map(o=>{
       if(o.cap===null)return `<span class="opsl-neutral">${o.naam}</span>`;
-      const pct=Math.round(o.bezet/o.cap*100);
-      return `<div class="opsl-item"><div class="opsl-item-nm">${o.naam}</div><div class="bar"><i class="${o.status}" style="width:${pct}%"></i></div><div class="opsl-item-meta"><span>${o.bezet.toLocaleString()}/${o.cap.toLocaleString()} ton</span><span>${(o.cap-o.bezet).toLocaleString()} vrij</span></div></div>`;
+      let bezet=o.bezet,status=o.status;
+      if(siScenario&&ci===0&&DATA.scenarios[siScenario].wegval>0){
+        const nCap=c.opslaglocaties.filter(x=>x.cap).length||1;
+        const extra=Math.round(DATA.scenarios[siScenario].wegval*siDagen/nCap);
+        bezet=Math.min(o.bezet+extra,o.cap);
+        status=bezet>=o.cap?'danger':(bezet/o.cap>.85?'warning':o.status);
+      }
+      const pct=Math.min(Math.round(bezet/o.cap*100),100);
+      const vrij=Math.max(o.cap-bezet,0);
+      return `<div class="opsl-item${bezet>=o.cap?' si-full':''}"><div class="opsl-item-nm">${o.naam}</div><div class="bar"><i class="${status}" style="width:${pct}%"></i></div><div class="opsl-item-meta"><span>${bezet.toLocaleString()}/${o.cap.toLocaleString()} ton</span><span>${vrij===0?'<b style="color:var(--danger)">VOL</b>':vrij.toLocaleString()+' vrij'}</span></div></div>`;
     }).join('')}</div>`).join('')}</div>
   </div>`;
 
@@ -710,6 +749,70 @@ function renderSections(){
   </div>`;
 
   document.getElementById('ket-sections').innerHTML=s1+arrowRow+s2+arrowRow+s3+arrowRow+s4+arrowRow+s5;
+}
+
+/* ============ SCENARIO INLINE ============ */
+let siScenario=null,siDagen=14;
+
+function renderScenarioInline(){
+  const el=document.getElementById('scenario-inline');
+  if(!el)return;
+  const badge=siScenario?`<span class="si-badge">Actief: ${DATA.scenarios[siScenario].naam} — ${siDagen} dag${siDagen!==1?'en':''}</span>`:'';
+  const reset=siScenario?`<button class="si-reset" onclick="event.stopPropagation();resetScenarioInline()">Reset scenario</button>`:'';
+  const btns=Object.entries(DATA.scenarios).map(([k,s])=>
+    `<button class="si-btn${siScenario===k?' si-btn-active':''}" onclick="setScenarioInline('${k}')">${s.naam}</button>`
+  ).join('');
+  el.innerHTML=`
+    <div class="si-header" onclick="toggleScenarioInline()">
+      <span class="si-title">⚡ Scenario simulatie — klik om in te stellen</span>
+      <div class="si-hr">${badge}${reset}<svg class="si-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    </div>
+    <div class="si-body">
+      <div class="ctrl-label" style="margin-top:14px">Kies een verstoring</div>
+      <div class="si-btns">${btns}</div>
+      <div class="slider-row">
+        <label>Duur verstoring</label>
+        <input type="range" id="si-duur" min="1" max="30" value="${siDagen}" step="1" oninput="siSetDagen(this.value)">
+        <span class="slider-out" id="si-duur-out">${siDagen} dag${siDagen!==1?'en':''}</span>
+      </div>
+    </div>`;
+}
+
+function toggleScenarioInline(){
+  document.getElementById('scenario-inline').classList.toggle('si-open');
+}
+
+function setScenarioInline(k){
+  siScenario=k;
+  renderScenarioInline();
+  renderSections();
+}
+
+function resetScenarioInline(){
+  siScenario=null;
+  renderScenarioInline();
+  renderSections();
+}
+
+function siSetDagen(v){
+  siDagen=parseInt(v);
+  const out=document.getElementById('si-duur-out');
+  if(out)out.textContent=siDagen+' dag'+(siDagen!==1?'en':'');
+  const badge=document.querySelector('#scenario-inline .si-badge');
+  if(badge&&siScenario)badge.textContent=`Actief: ${DATA.scenarios[siScenario].naam} — ${siDagen} dag${siDagen!==1?'en':''}`;
+  if(siScenario)renderSections();
+}
+
+function wsChipClick(ci){
+  if(ci===0){
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.querySelector('nav.tabs button[data-v="ketenkaart"]').classList.add('active');
+    document.getElementById('view-ketenkaart').classList.add('active');
+  }else{
+    const m=document.getElementById('ws-cs-'+ci);
+    if(m){m.style.display='block';clearTimeout(m._t);m._t=setTimeout(()=>m.style.display='none',2800);}
+  }
 }
 
 /* ============ KETENKAART ============ */
