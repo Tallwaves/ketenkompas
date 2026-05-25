@@ -752,7 +752,7 @@ function renderSections(){
       kleur:'#0f6e56', naam:'GR Slibverwerking 2009',
       ws:DATA.clusters[0].waterschappen,
       verwerker:{naam:'HVC', sub:'SVI Dordrecht · SDI Alkmaar', status:'danger', note:'SVI onderhoud week 24 · SDI beperkt operationeel'},
-      installaties:DATA.clusters[0].installaties||[],
+      installaties:DATA.clusters[0].installaties||FALLBACK_DATA.clusters[0].installaties,
       opslaglocaties:[
         {naam:'Indaver Delfzijl',cap:6000,bezet:2500,status:'warning'},
         {naam:'Indaver Groningen',cap:6000,bezet:2000,status:'ok'},
@@ -764,7 +764,7 @@ function renderSections(){
       kleur:'#534ab7', naam:'SNB Moerdijk',
       ws:DATA.clusters[1].waterschappen,
       verwerker:{naam:'SNB', sub:'Moerdijk', status:'ok', note:"Europa's grootste slibverbrander · 410–430 kton/jr"},
-      installaties:DATA.clusters[1].installaties||[],
+      installaties:DATA.clusters[1].installaties||FALLBACK_DATA.clusters[1].installaties,
       opslaglocaties:[{naam:'Eigen opslag Moerdijk',cap:null,status:'ok'}],
       reststromen:['Vliegas fosfaat','Bodemas bouwstof']
     },
@@ -772,7 +772,7 @@ function renderSections(){
       kleur:'#d85a30', naam:'SNON Noord-Nederland',
       ws:DATA.clusters[2].waterschappen,
       verwerker:{naam:'GMB — EEW', sub:'route GMB → EEW', status:'ok', note:'Voordroging biogranulaat → thermische eindverwerking'},
-      installaties:DATA.clusters[2].installaties||[],
+      installaties:DATA.clusters[2].installaties||FALLBACK_DATA.clusters[2].installaties,
       opslaglocaties:[{naam:'EEW Delfzijl opslag',cap:null,status:'ok'}],
       reststromen:['Biogranulaat']
     },
@@ -780,7 +780,7 @@ function renderSections(){
       kleur:'#888780', naam:'GMB Direct Contract',
       ws:DATA.clusters[3].waterschappen,
       verwerker:{naam:'GMB', sub:'Zutphen', status:'ok', note:'Biologisch drogen op locatie · 70 kton/jr tot 2032'},
-      installaties:DATA.clusters[3].installaties||[],
+      installaties:DATA.clusters[3].installaties||FALLBACK_DATA.clusters[3].installaties,
       opslaglocaties:[{naam:'Geen bekend',cap:null,status:'neutral'}],
       reststromen:['Biogranulaat']
     }
