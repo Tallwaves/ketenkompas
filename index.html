@@ -801,40 +801,47 @@ function renderSections(){
     }).join('')}</div>
   </div>`;
 
-  const midBlock=`<div class="ket-section">
-    <div class="ket-grid">${C.map((c,ci)=>{
-      const instCards=c.installaties.map(i=>`<div class="inst-card ${i.status}">
+  const clData=C.map((c,ci)=>{
+    const instCards=c.installaties.map(i=>`<div class="inst-card ${i.status}">
         <div class="inst-card-nm">${i.naam}</div>
         <div class="inst-card-row"><span class="inst-card-lbl">Capaciteit</span><span class="inst-card-val">${i.capaciteit}</span></div>
         <div class="inst-card-row"><span class="inst-card-lbl">Techniek</span><span class="inst-card-val">${i.techniek}</span></div>
         <div class="inst-card-row"><span class="inst-card-lbl">Onderhoud</span><span class="inst-card-val">${i.onderhoud}</span></div>
         <div class="inst-card-row"><span class="inst-card-lbl">Contract</span><span class="inst-card-val">${i.contract}</span></div>
       </div>`).join('');
-      const opslHtml=c.opslaglocaties.map(o=>{
-        if(o.cap===null)return `<span class="opsl-neutral">${o.naam}</span>`;
-        let bezet=o.bezet,status=o.status;
-        if(siScenario&&ci===0&&DATA.scenarios[siScenario].wegval>0){
-          const nCap=c.opslaglocaties.filter(x=>x.cap).length||1;
-          const extra=Math.round(DATA.scenarios[siScenario].wegval*siDagen/nCap);
-          bezet=Math.min(o.bezet+extra,o.cap);
-          status=bezet>=o.cap?'danger':(bezet/o.cap>.85?'warning':o.status);
-        }
-        const pct=Math.min(Math.round(bezet/o.cap*100),100);
-        const vrij=Math.max(o.cap-bezet,0);
-        return `<div class="opsl-item${bezet>=o.cap?' si-full':''}"><div class="opsl-item-nm">${o.naam}</div><div class="bar"><i class="${status}" style="width:${pct}%"></i></div><div class="opsl-item-meta"><span>${bezet.toLocaleString()}/${o.cap.toLocaleString()} ton</span><span>${vrij===0?'<b style="color:var(--danger)">VOL</b>':vrij.toLocaleString()+' vrij'}</span></div></div>`;
-      }).join('');
-      return `<div class="ket-col-wrap" style="background:${c.kleur}0a;border:.5px solid ${c.kleur}35;border-radius:10px;padding:12px">
+    const opslHtml=c.opslaglocaties.map(o=>{
+      if(o.cap===null)return `<span class="opsl-neutral">${o.naam}</span>`;
+      let bezet=o.bezet,status=o.status;
+      if(siScenario&&ci===0&&DATA.scenarios[siScenario].wegval>0){
+        const nCap=c.opslaglocaties.filter(x=>x.cap).length||1;
+        const extra=Math.round(DATA.scenarios[siScenario].wegval*siDagen/nCap);
+        bezet=Math.min(o.bezet+extra,o.cap);
+        status=bezet>=o.cap?'danger':(bezet/o.cap>.85?'warning':o.status);
+      }
+      const pct=Math.min(Math.round(bezet/o.cap*100),100);
+      const vrij=Math.max(o.cap-bezet,0);
+      return `<div class="opsl-item${bezet>=o.cap?' si-full':''}"><div class="opsl-item-nm">${o.naam}</div><div class="bar"><i class="${status}" style="width:${pct}%"></i></div><div class="opsl-item-meta"><span>${bezet.toLocaleString()}/${o.cap.toLocaleString()} ton</span><span>${vrij===0?'<b style="color:var(--danger)">VOL</b>':vrij.toLocaleString()+' vrij'}</span></div></div>`;
+    }).join('');
+    return {c,ci,instCards,opslHtml};
+  });
+  const cst=c=>`background:${c.kleur}0a;border:.5px solid ${c.kleur}35;border-radius:8px;padding:12px`;
+  const arrowCols=`<div class="ket-arrows">${C.map(()=>'<div class="ket-arrow">↓</div>').join('')}</div>`;
+  const midBlock=`<div class="ket-section">
+    <div class="ket-grid">${clData.map(({c,ci})=>`<div style="${cst(c)}">
         <div class="ket-mid-lbl">Verwerker</div>
         <div class="vw-card ${c.verwerker.status}"><div class="vw-card-nm">${c.verwerker.naam}</div></div>
         ${siScenario&&ci===0?`<div class="si-effect">⚠️ ${DATA.scenarios[siScenario].naam} — scenario actief</div>`:''}
-        <div class="ket-mid-arrow">↓</div>
+      </div>`).join('')}</div>
+    ${arrowCols}
+    <div class="ket-grid">${clData.map(({c,instCards})=>`<div style="${cst(c)}">
         <div class="ket-mid-lbl">Installaties</div>
         ${instCards}
-        <div class="ket-mid-arrow">↓</div>
+      </div>`).join('')}</div>
+    ${arrowCols}
+    <div class="ket-grid">${clData.map(({c,opslHtml})=>`<div style="${cst(c)}">
         <div class="ket-mid-lbl">Opslaglocaties</div>
         <div class="opsl-items">${opslHtml}</div>
-      </div>`;
-    }).join('')}</div>
+      </div>`).join('')}</div>
   </div>`;
 
   const s5=`<div class="ket-section">
