@@ -794,7 +794,7 @@ function renderSections(){
       const tot=c.ws.reduce((s,w)=>s+w.ton,0);
       return `<div>
         <div class="ket-badge" style="background:${c.kleur}18;color:${c.kleur};border:1px solid ${c.kleur}35">${c.naam}</div>
-        ${DATA.clusters[ci].juridischeVorm?`<div style="font-size:10px;color:var(--ink-faint);margin:-4px 0 6px 1px">${DATA.clusters[ci].juridischeVorm}</div>`:''}
+        ${(DATA.clusters[ci].juridischeVorm||FALLBACK_DATA.clusters[ci].juridischeVorm)?`<div style="font-size:10px;color:var(--ink-faint);margin:-4px 0 6px 1px">${DATA.clusters[ci].juridischeVorm||FALLBACK_DATA.clusters[ci].juridischeVorm}</div>`:''}
         <div class="ws-chips">${c.ws.map(w=>`<div class="ws-chip-row clickable" onclick="wsChipClick(${ci})"><span class="ws-chip-nm">${w.naam}</span><span class="ws-chip-ton">${w.ton}</span></div>`).join('')}</div>
         <div id="ws-cs-${ci}" class="ws-coming-soon" style="display:none">Ketenkaart voor dit cluster komt binnenkort</div>
         <div><span class="ws-total-pill" style="background:${c.kleur}">${tot.toLocaleString()} t/dag</span></div>
