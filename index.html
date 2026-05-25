@@ -295,6 +295,23 @@
   .adm-logout:hover{color:var(--danger)}
   .adm-header-row{display:flex;align-items:center;margin-bottom:20px}
   .adm-header-row .page-title{margin:0}
+
+  /* ---------- KOLOM-OMLIJNING + INSTALLATIE CARDS ---------- */
+  .ket-col-wrap{display:flex;flex-direction:column;gap:0}
+  .ket-mid-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint);margin-bottom:5px;margin-top:10px}
+  .ket-col-wrap .ket-mid-lbl:first-child{margin-top:0}
+  .ket-mid-arrow{text-align:center;color:#b0bec5;font-size:14px;padding:6px 0}
+  .inst-card{border-radius:7px;padding:8px 10px;border-left:3px solid;margin-bottom:4px}
+  .inst-card.ok{background:var(--ok-bg);border-color:var(--ok)}
+  .inst-card.warning{background:var(--warn-bg);border-color:var(--warn)}
+  .inst-card.danger{background:var(--danger-bg);border-color:var(--danger)}
+  .inst-card-nm{font-size:12px;font-weight:600;margin-bottom:4px}
+  .inst-card.ok .inst-card-nm{color:var(--ok-ink)}
+  .inst-card.warning .inst-card-nm{color:var(--warn-ink)}
+  .inst-card.danger .inst-card-nm{color:var(--danger-ink)}
+  .inst-card-row{display:flex;gap:4px;margin-bottom:1px;font-size:10.5px;line-height:1.4;align-items:flex-start}
+  .inst-card-lbl{color:var(--ink-faint);min-width:58px;flex-shrink:0}
+  .inst-card-val{color:var(--ink-soft)}
 </style>
 </head>
 <body>
@@ -481,6 +498,10 @@ const FALLBACK_DATA = {
          flags:["Onderhoud lijn vanaf week 24 (8 juni)"]},
         {naam:"HVC SDI — Alkmaar", sub:"633 ton/dag nominaal · droging", status:"danger",
          flags:["Opstart vertraagd — zeer beperkt operationeel"]},
+      ],
+      installaties:[
+        {naam:"SVI — Dordrecht", status:"warning", capaciteit:"948 ton/dag", techniek:"Monoverbranding", onderhoud:"Lijn 1 offline week 24 (8 juni)", contract:"GR Slib 2009 · afloop 2026"},
+        {naam:"SDI — Alkmaar", status:"danger", capaciteit:"633 ton/dag nominaal", techniek:"Droging + monoverbranding", onderhoud:"Opstart vertraagd — beperkt operationeel", contract:"GR Slib 2009 · afloop 2026"},
       ]},
     { naam:"SNB Moerdijk", kleur:"#534ab7", aandeel:"~30% landelijk · 7 waterschappen",
       waterschappen:[
@@ -494,6 +515,9 @@ const FALLBACK_DATA = {
       verwerkers:[
         {naam:"SNB — Moerdijk", sub:"~1.150 ton/dag · monoverbranding", status:"ok",
          flags:["Europa's grootste slibverbrander","410–430 kton/jaar"]},
+      ],
+      installaties:[
+        {naam:"SNB — Moerdijk", status:"ok", capaciteit:"~1.150 ton/dag", techniek:"Monoverbranding", onderhoud:"Operationeel", contract:"SNB · doorlopend"},
       ]},
     { naam:"SNON — Noord-Nederland", kleur:"#d85a30", aandeel:"~10% landelijk · 3–4 waterschappen",
       waterschappen:[
@@ -505,6 +529,10 @@ const FALLBACK_DATA = {
       verwerkers:[
         {naam:"GMB — Zutphen", sub:"biologisch drogen", status:"ok", flags:["Voordroging → biogranulaat"]},
         {naam:"EEW — Delfzijl", sub:"thermische eindverwerking", status:"ok", flags:["Kritiek eindpunt van de route"]},
+      ],
+      installaties:[
+        {naam:"GMB — Zutphen", status:"ok", capaciteit:"n.v.t.", techniek:"Biologisch drogen", onderhoud:"Operationeel", contract:"SNON route · tot 2027+"},
+        {naam:"EEW — Delfzijl", status:"ok", capaciteit:"n.v.t.", techniek:"Thermische eindverwerking", onderhoud:"Operationeel", contract:"SNON route · doorlopend"},
       ]},
     { naam:"GMB Zutphen — direct contract", kleur:"#888780", aandeel:"~5% landelijk · 2 waterschappen",
       waterschappen:[
@@ -513,6 +541,9 @@ const FALLBACK_DATA = {
       ],
       verwerkers:[
         {naam:"GMB BioEnergie — Zutphen", sub:"70 kton/jaar tot 2032", status:"ok", flags:["Biologisch drogen op locatie"]},
+      ],
+      installaties:[
+        {naam:"GMB BioEnergie — Zutphen", status:"ok", capaciteit:"70 kton/jaar", techniek:"Biologisch drogen", onderhoud:"Operationeel", contract:"Direct · tot 2032"},
       ]},
   ],
   noodopslag:[
@@ -721,7 +752,7 @@ function renderSections(){
       kleur:'#0f6e56', naam:'GR Slibverwerking 2009',
       ws:DATA.clusters[0].waterschappen,
       verwerker:{naam:'HVC', sub:'SVI Dordrecht · SDI Alkmaar', status:'danger', note:'SVI onderhoud week 24 · SDI beperkt operationeel'},
-      installaties:[{naam:'SVI — Dordrecht',status:'warning'},{naam:'SDI — Alkmaar',status:'danger'}],
+      installaties:DATA.clusters[0].installaties,
       opslaglocaties:[
         {naam:'Indaver Delfzijl',cap:6000,bezet:2500,status:'warning'},
         {naam:'Indaver Groningen',cap:6000,bezet:2000,status:'ok'},
@@ -733,7 +764,7 @@ function renderSections(){
       kleur:'#534ab7', naam:'SNB Moerdijk',
       ws:DATA.clusters[1].waterschappen,
       verwerker:{naam:'SNB', sub:'Moerdijk', status:'ok', note:"Europa's grootste slibverbrander · 410–430 kton/jr"},
-      installaties:[{naam:'Moerdijk',status:'ok'}],
+      installaties:DATA.clusters[1].installaties,
       opslaglocaties:[{naam:'Eigen opslag Moerdijk',cap:null,status:'ok'}],
       reststromen:['Vliegas fosfaat','Bodemas bouwstof']
     },
@@ -741,7 +772,7 @@ function renderSections(){
       kleur:'#d85a30', naam:'SNON Noord-Nederland',
       ws:DATA.clusters[2].waterschappen,
       verwerker:{naam:'GMB — EEW', sub:'route GMB → EEW', status:'ok', note:'Voordroging biogranulaat → thermische eindverwerking'},
-      installaties:[{naam:'GMB — Zutphen',status:'ok'},{naam:'EEW — Delfzijl',status:'ok'}],
+      installaties:DATA.clusters[2].installaties,
       opslaglocaties:[{naam:'EEW Delfzijl opslag',cap:null,status:'ok'}],
       reststromen:['Biogranulaat']
     },
@@ -749,7 +780,7 @@ function renderSections(){
       kleur:'#888780', naam:'GMB Direct Contract',
       ws:DATA.clusters[3].waterschappen,
       verwerker:{naam:'GMB', sub:'Zutphen', status:'ok', note:'Biologisch drogen op locatie · 70 kton/jr tot 2032'},
-      installaties:[{naam:'GMB BioEnergie',status:'ok'}],
+      installaties:DATA.clusters[3].installaties,
       opslaglocaties:[{naam:'Geen bekend',cap:null,status:'neutral'}],
       reststromen:['Biogranulaat']
     }
@@ -770,33 +801,40 @@ function renderSections(){
     }).join('')}</div>
   </div>`;
 
-  const s2=`<div class="ket-section">
-    <div class="ket-section-lbl">Verwerkers</div>
-    <div class="ket-grid">${C.map((c,ci)=>`<div><div class="vw-card ${c.verwerker.status}">
-      <div class="vw-card-nm">${c.verwerker.naam}</div>
-    </div>${siScenario&&ci===0?`<div class="si-effect">⚠️ ${DATA.scenarios[siScenario].naam} — scenario actief</div>`:''}</div>`).join('')}</div>
-  </div>`;
-
-  const s3=`<div class="ket-section">
-    <div class="ket-section-lbl">Installaties</div>
-    <div class="ket-grid">${C.map(c=>`<div class="inst-chips">${c.installaties.map(i=>`<span class="inst-chip ${i.status}">${i.naam}</span>`).join('')}</div>`).join('')}</div>
-  </div>`;
-
-  const s4=`<div class="ket-section">
-    <div class="ket-section-lbl">Opslaglocaties</div>
-    <div class="ket-grid">${C.map((c,ci)=>`<div class="opsl-items">${c.opslaglocaties.map(o=>{
-      if(o.cap===null)return `<span class="opsl-neutral">${o.naam}</span>`;
-      let bezet=o.bezet,status=o.status;
-      if(siScenario&&ci===0&&DATA.scenarios[siScenario].wegval>0){
-        const nCap=c.opslaglocaties.filter(x=>x.cap).length||1;
-        const extra=Math.round(DATA.scenarios[siScenario].wegval*siDagen/nCap);
-        bezet=Math.min(o.bezet+extra,o.cap);
-        status=bezet>=o.cap?'danger':(bezet/o.cap>.85?'warning':o.status);
-      }
-      const pct=Math.min(Math.round(bezet/o.cap*100),100);
-      const vrij=Math.max(o.cap-bezet,0);
-      return `<div class="opsl-item${bezet>=o.cap?' si-full':''}"><div class="opsl-item-nm">${o.naam}</div><div class="bar"><i class="${status}" style="width:${pct}%"></i></div><div class="opsl-item-meta"><span>${bezet.toLocaleString()}/${o.cap.toLocaleString()} ton</span><span>${vrij===0?'<b style="color:var(--danger)">VOL</b>':vrij.toLocaleString()+' vrij'}</span></div></div>`;
-    }).join('')}</div>`).join('')}</div>
+  const midBlock=`<div class="ket-section">
+    <div class="ket-grid">${C.map((c,ci)=>{
+      const instCards=c.installaties.map(i=>`<div class="inst-card ${i.status}">
+        <div class="inst-card-nm">${i.naam}</div>
+        <div class="inst-card-row"><span class="inst-card-lbl">Capaciteit</span><span class="inst-card-val">${i.capaciteit}</span></div>
+        <div class="inst-card-row"><span class="inst-card-lbl">Techniek</span><span class="inst-card-val">${i.techniek}</span></div>
+        <div class="inst-card-row"><span class="inst-card-lbl">Onderhoud</span><span class="inst-card-val">${i.onderhoud}</span></div>
+        <div class="inst-card-row"><span class="inst-card-lbl">Contract</span><span class="inst-card-val">${i.contract}</span></div>
+      </div>`).join('');
+      const opslHtml=c.opslaglocaties.map(o=>{
+        if(o.cap===null)return `<span class="opsl-neutral">${o.naam}</span>`;
+        let bezet=o.bezet,status=o.status;
+        if(siScenario&&ci===0&&DATA.scenarios[siScenario].wegval>0){
+          const nCap=c.opslaglocaties.filter(x=>x.cap).length||1;
+          const extra=Math.round(DATA.scenarios[siScenario].wegval*siDagen/nCap);
+          bezet=Math.min(o.bezet+extra,o.cap);
+          status=bezet>=o.cap?'danger':(bezet/o.cap>.85?'warning':o.status);
+        }
+        const pct=Math.min(Math.round(bezet/o.cap*100),100);
+        const vrij=Math.max(o.cap-bezet,0);
+        return `<div class="opsl-item${bezet>=o.cap?' si-full':''}"><div class="opsl-item-nm">${o.naam}</div><div class="bar"><i class="${status}" style="width:${pct}%"></i></div><div class="opsl-item-meta"><span>${bezet.toLocaleString()}/${o.cap.toLocaleString()} ton</span><span>${vrij===0?'<b style="color:var(--danger)">VOL</b>':vrij.toLocaleString()+' vrij'}</span></div></div>`;
+      }).join('');
+      return `<div class="ket-col-wrap" style="background:${c.kleur}0a;border:.5px solid ${c.kleur}35;border-radius:10px;padding:12px">
+        <div class="ket-mid-lbl">Verwerker</div>
+        <div class="vw-card ${c.verwerker.status}"><div class="vw-card-nm">${c.verwerker.naam}</div></div>
+        ${siScenario&&ci===0?`<div class="si-effect">⚠️ ${DATA.scenarios[siScenario].naam} — scenario actief</div>`:''}
+        <div class="ket-mid-arrow">↓</div>
+        <div class="ket-mid-lbl">Installaties</div>
+        ${instCards}
+        <div class="ket-mid-arrow">↓</div>
+        <div class="ket-mid-lbl">Opslaglocaties</div>
+        <div class="opsl-items">${opslHtml}</div>
+      </div>`;
+    }).join('')}</div>
   </div>`;
 
   const s5=`<div class="ket-section">
@@ -804,7 +842,7 @@ function renderSections(){
     <div class="ket-grid">${C.map(c=>`<div class="rst-chips">${c.reststromen.map(r=>`<span class="rst-chip">${r}</span>`).join('')}</div>`).join('')}</div>
   </div>`;
 
-  document.getElementById('ket-sections').innerHTML=s1+arrowRow+s2+arrowRow+s3+arrowRow+s4+arrowRow+s5;
+  document.getElementById('ket-sections').innerHTML=s1+arrowRow+midBlock+arrowRow+s5;
 }
 
 /* ============ SCENARIO INLINE ============ */
@@ -1091,14 +1129,23 @@ function renderAdminPanel(){
 
   const clInst=DATA.clusters.map((c,ci)=>`
     <div class="adm-cluster-nm">${c.naam}</div>
-    ${c.verwerkers.map((v,vi)=>`
-      <div class="adm-field-row">
-        <span>${v.naam}</span>
-        <select id="adm-vw-${ci}-${vi}" class="adm-sel">
-          <option value="ok"${v.status==='ok'?' selected':''}>ok</option>
-          <option value="warning"${v.status==='warning'?' selected':''}>warning</option>
-          <option value="danger"${v.status==='danger'?' selected':''}>danger</option>
-        </select>
+    ${(c.installaties||[]).map((inst,ii)=>`
+      <div style="background:var(--surface-2);border-radius:8px;padding:10px 12px;margin-bottom:8px">
+        <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:6px">${inst.naam}</div>
+        <div class="adm-field-row"><label>Status</label>
+          <select id="adm-inst-${ci}-${ii}-status" class="adm-sel">
+            <option value="ok"${inst.status==='ok'?' selected':''}>ok</option>
+            <option value="warning"${inst.status==='warning'?' selected':''}>warning</option>
+            <option value="danger"${inst.status==='danger'?' selected':''}>danger</option>
+          </select></div>
+        <div class="adm-field-row"><label>Capaciteit</label>
+          <input type="text" id="adm-inst-${ci}-${ii}-capaciteit" value="${inst.capaciteit||''}" class="adm-txt"></div>
+        <div class="adm-field-row"><label>Techniek</label>
+          <input type="text" id="adm-inst-${ci}-${ii}-techniek" value="${inst.techniek||''}" class="adm-txt"></div>
+        <div class="adm-field-row"><label>Onderhoud</label>
+          <input type="text" id="adm-inst-${ci}-${ii}-onderhoud" value="${inst.onderhoud||''}" class="adm-txt"></div>
+        <div class="adm-field-row"><label>Contract</label>
+          <input type="text" id="adm-inst-${ci}-${ii}-contract" value="${inst.contract||''}" class="adm-txt"></div>
       </div>`).join('')}`).join('');
 
   const wsRows=DATA.clusters.map((c,ci)=>`
@@ -1144,7 +1191,7 @@ function renderAdminPanel(){
       </div>
 
       <div class="adm-section">
-        <div class="adm-section-title">Installatie statussen</div>
+        <div class="adm-section-title">Installaties</div>
         ${clInst}
       </div>
 
@@ -1175,9 +1222,12 @@ function collectAdminData(){
     n.status=document.getElementById('adm-no-status-'+i).value;
   });
   d.clusters.forEach((c,ci)=>{
-    c.verwerkers.forEach((v,vi)=>{
-      const el=document.getElementById(`adm-vw-${ci}-${vi}`);
-      if(el)v.status=el.value;
+    (c.installaties||[]).forEach((inst,ii)=>{
+      const fields=['status','capaciteit','techniek','onderhoud','contract'];
+      fields.forEach(f=>{
+        const el=document.getElementById(`adm-inst-${ci}-${ii}-${f}`);
+        if(el)inst[f]=el.value;
+      });
     });
     c.waterschappen.forEach((w,wi)=>{
       const el=document.getElementById(`adm-ws-${ci}-${wi}`);
