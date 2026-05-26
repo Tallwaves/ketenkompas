@@ -570,9 +570,9 @@ const FALLBACK_DATA = {
         {naam:"Zuiderzeeland", ton:110},
       ],
       verwerkers:[
-        {naam:"HVC SVI — Dordrecht", sub:"948 ton/dag · monoverbranding", status:"warning", capaciteitTonDag:948,
+        {naam:"SVI — Dordrecht", sub:"948 ton/dag · monoverbranding", status:"warning", capaciteitTonDag:948,
          flags:["Onderhoud lijn vanaf week 24 (8 juni)"]},
-        {naam:"HVC SDI — Alkmaar", sub:"633 ton/dag nominaal · droging", status:"danger", capaciteitTonDag:633,
+        {naam:"SDI — Alkmaar", sub:"633 ton/dag nominaal · droging", status:"danger", capaciteitTonDag:633,
          flags:["Opstart vertraagd — zeer beperkt operationeel"]},
       ],
       installaties:[
@@ -592,11 +592,11 @@ const FALLBACK_DATA = {
         {naam:"Waterschap Limburg", ton:180},
       ],
       verwerkers:[
-        {naam:"SNB — Moerdijk", sub:"~1.150 ton/dag · monoverbranding", status:"ok", capaciteitTonDag:1150,
+        {naam:"SVI — Moerdijk", sub:"~1.150 ton/dag · monoverbranding", status:"ok", capaciteitTonDag:1150,
          flags:["Europa's grootste slibverbrander","410–430 kton/jaar"]},
       ],
       installaties:[
-        {naam:"SNB — Moerdijk", status:"ok", capaciteit:"~1.150 ton/dag", techniek:"Monoverbranding", onderhoud:"Operationeel", contract:"SNB · doorlopend",
+        {naam:"SVI — Moerdijk", status:"ok", capaciteit:"~1.150 ton/dag", techniek:"Monoverbranding", onderhoud:"Operationeel", contract:"SNB · doorlopend",
          reststromen:["Vliegas → fosfaat kunstmest (SusPhos)","CO₂ → witmaker papier","Natrium → industriële soda","Elektriciteit (energieneutraal)"]},
       ]},
     { naam:"SNON — Noord-Nederland", kleur:"#d85a30", aandeel:"~10% landelijk · 3–4 waterschappen", juridischeVorm:"Directe contracten",
@@ -607,13 +607,13 @@ const FALLBACK_DATA = {
         {naam:"Wetterskip Fryslân (v.a. 2027)", ton:140},
       ],
       verwerkers:[
-        {naam:"GMB — Zutphen", sub:"biologisch drogen", status:"ok", capaciteitTonDag:240, flags:["Voordroging → biogranulaat"]},
-        {naam:"EEW — Delfzijl", sub:"thermische eindverwerking", status:"ok", capaciteitTonDag:250, flags:["Kritiek eindpunt van de route"]},
+        {naam:"SDI — Zutphen", sub:"biologisch drogen", status:"ok", capaciteitTonDag:240, flags:["Voordroging → biogranulaat"]},
+        {naam:"SVI — Delfzijl", sub:"thermische eindverwerking", status:"ok", capaciteitTonDag:250, flags:["Kritiek eindpunt van de route"]},
       ],
       installaties:[
-        {naam:"GMB — Zutphen", status:"ok", capaciteit:"n.v.t.", techniek:"Biologisch drogen", onderhoud:"Operationeel", contract:"SNON route · tot 2027+",
-         reststromen:["Biogranulaat → EEW Delfzijl (biobrandstof)","Ammoniumsulfaat → kunstmestvervanger landbouw"]},
-        {naam:"EEW — Delfzijl", status:"ok", capaciteit:"n.v.t.", techniek:"Thermische eindverwerking", onderhoud:"Operationeel", contract:"SNON route · doorlopend",
+        {naam:"SDI — Zutphen", status:"ok", capaciteit:"n.v.t.", techniek:"Biologisch drogen", onderhoud:"Operationeel", contract:"SNON route · tot 2027+",
+         reststromen:["Biogranulaat → SVI Delfzijl (biobrandstof)","Ammoniumsulfaat → kunstmestvervanger landbouw"]},
+        {naam:"SVI — Delfzijl", status:"ok", capaciteit:"n.v.t.", techniek:"Thermische eindverwerking", onderhoud:"Operationeel", contract:"SNON route · doorlopend",
          reststromen:["Bodemas → bouwstof","Elektriciteit → net","Stoom → perslucht omliggende bedrijven"]},
       ]},
     { naam:"GMB Zutphen — direct contract", kleur:"#888780", aandeel:"~5% landelijk · 2 waterschappen", juridischeVorm:"Directe contracten",
@@ -622,10 +622,10 @@ const FALLBACK_DATA = {
         {naam:"Rijn en IJssel", ton:120},
       ],
       verwerkers:[
-        {naam:"GMB BioEnergie — Zutphen", sub:"70 kton/jaar tot 2032", status:"ok", capaciteitTonDag:200, flags:["Biologisch drogen op locatie"]},
+        {naam:"SDI — Zutphen", sub:"70 kton/jaar tot 2032", status:"ok", capaciteitTonDag:200, flags:["Biologisch drogen op locatie"]},
       ],
       installaties:[
-        {naam:"GMB BioEnergie — Zutphen", status:"ok", capaciteit:"70 kton/jaar", techniek:"Biologisch drogen", onderhoud:"Operationeel", contract:"Direct · tot 2032",
+        {naam:"SDI — Zutphen", status:"ok", capaciteit:"70 kton/jaar", techniek:"Biologisch drogen", onderhoud:"Operationeel", contract:"Direct · tot 2032",
          reststromen:["Biogranulaat → energiecentrales (AVR, RWE, Remondis)","Ammoniumsulfaat → landbouw","Groen gas → elektriciteit en warmte"]},
       ]},
   ],
