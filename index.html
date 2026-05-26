@@ -732,7 +732,7 @@ function renderDashboard(){
   const ae=document.getElementById('alert-tekst');
   if(ae&&DATA.alertTekst)ae.textContent=DATA.alertTekst;
   const totaal=DATA.clusters.reduce((a,c)=>a+c.waterschappen.reduce((s,w)=>s+w.ton,0),0);
-  const verwCap=DATA.clusters.reduce((a,c)=>a+(c.verwerkers||[]).reduce((s,v)=>s+(v.capaciteitTonDag||0),0),0);
+  const verwCap=DATA.clusters.reduce((a,c,ci)=>a+(c.verwerkers||FALLBACK_DATA.clusters[ci].verwerkers).reduce((s,v,vi)=>s+(v.capaciteitTonDag||(FALLBACK_DATA.clusters[ci].verwerkers[vi]&&FALLBACK_DATA.clusters[ci].verwerkers[vi].capaciteitTonDag)||0),0),0);
   const opslagTotaal=DATA.noodopslag.reduce((a,n)=>a+n.cap,0);
   const calBezet=DATA.calamiteitenOpslagBezet||FALLBACK_DATA.calamiteitenOpslagBezet;
   const calTotaal=DATA.calamiteitenOpslagTotaal||FALLBACK_DATA.calamiteitenOpslagTotaal;
