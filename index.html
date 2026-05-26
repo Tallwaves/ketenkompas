@@ -1165,11 +1165,7 @@ function kkSvgPt(e){
   pt.x=ev.clientX;pt.y=ev.clientY;return pt.matrixTransform(svg.getScreenCTM().inverse());
 }
 function kkDragStart(e,id){
-  e.preventDefault();e.stopPropagation();
-  /* waterschap in overview → direct drill, skip drag machinery */
-  if(!kkView&&KK_DET[id]&&KK_DET[id].type==='Waterschap'&&KK_RWZI[id]){
-    kkDrillDown(id);return;
-  }
+  if(e.touches)e.preventDefault(); // prevent scroll on touch; omit for mouse so click event fires
   const pt=kkSvgPt(e),pos=kkCurPos();
   kkLastMoved=false;
   kkDrag={id,ox:pos[id].x,oy:pos[id].y,sx:pt.x,sy:pt.y};kkMoved=false;
@@ -1185,13 +1181,15 @@ function kkMouseMove(e){
   if(g){g.setAttribute('transform',`translate(${pos[kkDrag.id].x},${pos[kkDrag.id].y})`);g.style.cursor='grabbing';}
   kkUpdateEdges();
 }
-function kkMouseUp(){
+function kkMouseUp(e){
   if(!kkDrag)return;
   const id=kkDrag.id;
   const g=document.getElementById('kkn-'+id);
   if(g)g.style.cursor=(!kkView&&KK_RWZI[id])?'pointer':'grab';
+  const wasDrag=kkLastMoved;
   kkDrag=null;kkMoved=false;
-  if(!kkLastMoved){
+  // Touch taps: handle drill/select here (no reliable click event on touch)
+  if(!wasDrag&&e&&e.type==='touchend'){
     if(!kkView&&KK_DET[id]&&KK_DET[id].type==='Waterschap'&&KK_RWZI[id]){
       kkDrillDown(id);
     } else {
@@ -1288,6 +1286,19 @@ function renderKetenKaart(){
     svg.addEventListener('mouseleave',kkMouseUp);
     svg.addEventListener('touchmove',e=>{e.preventDefault();kkMouseMove(e);},{passive:false});
     svg.addEventListener('touchend',kkMouseUp);
+    // Click handler for mouse: e.preventDefault on mousedown blocks click, so we use delegation here
+    svg.addEventListener('click',e=>{
+      if(kkLastMoved){kkLastMoved=false;return;}
+      let node=e.target;
+      while(node&&node!==svg){if(node.classList&&node.classList.contains('kk-node'))break;node=node.parentNode;}
+      if(!node||node===svg)return;
+      const nid=node.id.replace('kkn-','');
+      if(!kkView&&KK_DET[nid]&&KK_DET[nid].type==='Waterschap'&&KK_RWZI[nid]){
+        kkDrillDown(nid);
+      } else {
+        kkSel(nid);
+      }
+    });
     renderKetenKaart._init=true;
   }
 }
