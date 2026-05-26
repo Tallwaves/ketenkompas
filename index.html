@@ -215,7 +215,7 @@
 
   /* ---------- KETENKAART ---------- */
   .kk-layout{display:flex;gap:20px;align-items:flex-start}
-  .kk-cvs{flex:1;min-width:0;background:#f0f4f7;border-radius:var(--radius);border:1px solid var(--line);overflow:hidden;box-shadow:var(--shadow)}
+  .kk-cvs{flex:1;min-width:0;background:#f0f4f7;border-radius:var(--radius);border:1px solid var(--line);overflow:hidden;box-shadow:var(--shadow);position:relative}
   #kk-svg{display:block;width:100%;height:auto}
   .kk-node{cursor:grab;user-select:none;-webkit-user-select:none}
   .kk-node .kk-bg{transition:filter .15s}
@@ -231,6 +231,10 @@
   .kk-p-val{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px}
   .kk-p-flag{font-size:12px;padding:4px 9px;background:var(--danger-bg);color:var(--danger-ink);border-radius:6px;margin-bottom:4px}
   .kk-p-none{font-size:12px;color:var(--ink-faint);font-style:italic;margin:0}
+  .kk-back{position:absolute;top:10px;left:10px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:#185fa5;cursor:pointer;display:none;align-items:center;gap:6px;z-index:10;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+  .kk-back:hover{background:#eff6ff}
+  .kk-footnote{position:absolute;bottom:6px;right:10px;font-size:10px;color:var(--ink-faint);display:none;pointer-events:none}
+  .kk-ws-hint{position:absolute;bottom:6px;left:10px;font-size:10px;color:var(--ink-faint);pointer-events:none}
   @media(max-width:860px){.kk-layout{flex-direction:column}.kk-panel{width:100%}}
 
   /* ---------- HORIZONTAL SECTIONS ---------- */
@@ -465,11 +469,14 @@
     <section class="view" id="view-ketenkaart">
       <div class="page-head">
         <div class="page-title">Ketenkaart</div>
-        <div class="page-sub">GR Slib keten — klik een node voor details, sleep om te verplaatsen</div>
+        <div class="page-sub" id="kk-page-sub">GR Slib keten — klik een waterschap voor RWZI-detail, sleep om te verplaatsen</div>
       </div>
       <div class="kk-layout">
         <div class="kk-cvs">
+          <button class="kk-back" id="kk-back" onclick="kkBackToOverview()">← Terug naar overzicht</button>
           <svg id="kk-svg" viewBox="0 0 760 510" xmlns="http://www.w3.org/2000/svg"></svg>
+          <div class="kk-footnote" id="kk-footnote">* indicatieve locaties op basis van openbare gegevens</div>
+          <div class="kk-ws-hint" id="kk-ws-hint">Klik een waterschap om in te zoomen op RWZI's</div>
         </div>
         <div class="kk-panel" id="kk-panel">
           <div class="kk-pi" id="kk-pi"></div>
@@ -1028,7 +1035,7 @@ const KK_DET={
 };
 const KK_ST={ok:{c:'#1d9e75',bg:'#eaf3de',l:'Stabiel'},warning:{c:'#ba7517',bg:'#faeeda',l:'Aandacht vereist'},danger:{c:'#e24b4a',bg:'#fcebeb',l:'Kritiek'}};
 
-/* mutable positions & sizes */
+/* overview positions & sizes */
 const KKP={
   agv:{x:5,y:12},hhnk:{x:195,y:12},delfland:{x:385,y:12},hollandsdelta:{x:575,y:12},
   rijnland:{x:5,y:76},rivierenland:{x:195,y:76},hhsk:{x:385,y:76},zuiderzeeland:{x:575,y:76},
@@ -1052,10 +1059,91 @@ const KK_EDGES=[
   {src:'svi',dst:'fosfaat',color:'#ba7517',dashed:true},{src:'sdi',dst:'granulaat',color:'#e24b4a',dashed:true},
 ];
 
+/* RWZI drill-down dataset */
+const KK_RWZI={
+  agv:{naam:'AGV',
+    centralen:[
+      {id:'ca-1',naam:'Amsterdam-West'},{id:'ca-2',naam:'Amstelveen'},{id:'ca-3',naam:'Horstermeer'},
+    ],
+    satellieten:[
+      {id:'sa-1',naam:'De Ronde Venen',naar:'ca-1'},{id:'sa-2',naam:'Uithoorn',naar:'ca-1'},
+      {id:'sa-3',naam:'Weesp',naar:'ca-1'},{id:'sa-4',naam:'Loenen',naar:'ca-1'},
+      {id:'sa-5',naam:'Breukelen',naar:'ca-1'},{id:'sa-6',naam:'Hilversum',naar:'ca-1'},
+      {id:'sa-7',naam:'Muiden',naar:'ca-1'},{id:'sa-8',naam:'Purmerend-AGV',naar:'ca-1'},
+    ]},
+  hhnk:{naam:'HHNK',
+    centralen:[{id:'ch-1',naam:'Beverwijk'}],
+    satellieten:[
+      {id:'sh-1',naam:'Alkmaar/Geestmerambacht',naar:'ch-1'},{id:'sh-2',naam:'Zaandam',naar:'ch-1'},
+      {id:'sh-3',naam:'Hoorn',naar:'ch-1'},{id:'sh-4',naam:'Den Helder',naar:'ch-1'},
+      {id:'sh-5',naam:'Purmerend',naar:'ch-1'},{id:'sh-6',naam:'Schagen',naar:'ch-1'},
+      {id:'sh-7',naam:'Enkhuizen',naar:'ch-1'},{id:'sh-8',naam:'Den Oever',naar:'ch-1'},
+      {id:'sh-9',naam:'Texel',naar:'ch-1'},{id:'sh-10',naam:'Middenmeer',naar:'ch-1'},
+      {id:'sh-11',naam:'Heerhugowaard',naar:'ch-1'},{id:'sh-12',naam:'Heiloo',naar:'ch-1'},
+      {id:'sh-13',naam:'Edam',naar:'ch-1'},{id:'sh-14',naam:'Volendam',naar:'ch-1'},
+    ]},
+  hollandsdelta:{naam:'Hollandse Delta',
+    centralen:[
+      {id:'cd-1',naam:'Sluisjesdijk Rotterdam',sub:'eigen vergisting + HVC Dordrecht'},
+      {id:'cd-2',naam:'Dokhaven Rotterdam',sub:'ondergrondse leiding → Sluisjesdijk',naar:'cd-1'},
+    ],
+    satellieten:[
+      {id:'sd-1',naam:'Dordrecht',naar:'cd-1'},{id:'sd-2',naam:'Heenvliet',naar:'cd-1'},
+      {id:'sd-3',naam:'Hellevoetsluis',naar:'cd-1'},{id:'sd-4',naam:'Ridderkerk',naar:'cd-1'},
+      {id:'sd-5',naam:'Barendrecht',naar:'cd-1'},{id:'sd-6',naam:'Spijkenisse',naar:'cd-1'},
+      {id:'sd-7',naam:'Goeree-Overflakkee',naar:'cd-1'},{id:'sd-8',naam:'Hoeksche Waard',naar:'cd-1'},
+    ]},
+  delfland:{naam:'Delfland',
+    centralen:[
+      {id:'cdf-1',naam:'Houtrust Den Haag'},{id:'cdf-2',naam:'Harnaschpolder Delft'},
+    ],
+    satellieten:[
+      {id:'sdf-1',naam:'Delft',naar:'cdf-2'},{id:'sdf-2',naam:'Westland',naar:'cdf-2'},
+      {id:'sdf-3',naam:'Zoetermeer',naar:'cdf-2'},{id:'sdf-4',naam:'Schiedam',naar:'cdf-1'},
+      {id:'sdf-5',naam:'Pijnacker',naar:'cdf-2'},{id:'sdf-6',naam:'Nootdorp',naar:'cdf-2'},
+    ]},
+  rijnland:{naam:'Rijnland',
+    centralen:[
+      {id:'cr-1',naam:'Leiden-Noord'},{id:'cr-2',naam:'Katwijk'},{id:'cr-3',naam:'Nieuw-Vossemeer'},
+    ],
+    satellieten:[
+      {id:'sr-1',naam:'Alphen a/d Rijn',naar:'cr-1'},{id:'sr-2',naam:'Gouda',naar:'cr-1'},
+      {id:'sr-3',naam:'Zoetermeer-Rijnland',naar:'cr-1'},{id:'sr-4',naam:'Bodegraven',naar:'cr-1'},
+      {id:'sr-5',naam:'Woerden',naar:'cr-1'},{id:'sr-6',naam:'Lisse',naar:'cr-2'},
+      {id:'sr-7',naam:'Hillegom',naar:'cr-2'},{id:'sr-8',naam:'Noordwijk',naar:'cr-2'},
+      {id:'sr-9',naam:'Katwijk',naar:'cr-2'},{id:'sr-10',naam:'Wassenaar',naar:'cr-2'},
+    ]},
+  hhsk:{naam:'HHSK',
+    centralen:[{id:'ck-1',naam:'Kralingseveer Rotterdam'}],
+    satellieten:[
+      {id:'sk-1',naam:'Capelle a/d IJssel',naar:'ck-1'},{id:'sk-2',naam:'Krimpen',naar:'ck-1'},
+      {id:'sk-3',naam:'Gouda-HHSK',naar:'ck-1'},{id:'sk-4',naam:'Schoonhoven',naar:'ck-1'},
+    ]},
+  rivierenland:{naam:'Rivierenland',
+    centralen:[{id:'crv-1',naam:'Tiel'},{id:'crv-2',naam:'Gorinchem'}],
+    satellieten:[
+      {id:'srv-1',naam:'Nijmegen-Rivierenland',naar:'crv-1'},{id:'srv-2',naam:'Culemborg',naar:'crv-1'},
+      {id:'srv-3',naam:'Geldermalsen',naar:'crv-1'},{id:'srv-4',naam:'Druten',naar:'crv-1'},
+      {id:'srv-5',naam:'Zaltbommel',naar:'crv-2'},{id:'srv-6',naam:'Buren',naar:'crv-1'},
+    ]},
+  zuiderzeeland:{naam:'Zuiderzeeland',
+    centralen:[{id:'cz-1',naam:'Almere (AWZI)',sub:'slib deels naar AGV v.a. 2027'}],
+    satellieten:[
+      {id:'sz-1',naam:'Lelystad',naar:'cz-1'},{id:'sz-2',naam:'Emmeloord',naar:'cz-1'},
+      {id:'sz-3',naam:'Dronten',naar:'cz-1'},
+    ]},
+};
+
 let kkDrag=null,kkMoved=false;
+let kkView=null; // null=overview, string=wsId for drill
+let kkDrillPos={},kkDrillSizes={},kkDrillEdges=[],kkDrillDet={};
+
+function kkCurPos(){return kkView?kkDrillPos:KKP;}
+function kkCurSizes(){return kkView?kkDrillSizes:KKS;}
 
 function kkPt(id,side){
-  const p=KKP[id],s=KKS[id];
+  const p=kkCurPos()[id],s=kkCurSizes()[id];
+  if(!p||!s)return{x:0,y:0};
   return side==='bottom'?{x:p.x+s.w/2,y:p.y+s.h}:{x:p.x+s.w/2,y:p.y};
 }
 function kkPath(src,dst){
@@ -1065,9 +1153,10 @@ function kkPath(src,dst){
     :`M${s.x},${s.y} C${s.x},${my} ${d.x},${my} ${d.x},${d.y-6}`;
 }
 function kkUpdateEdges(){
-  KK_EDGES.forEach((e,i)=>{
+  const edges=kkView?kkDrillEdges:KK_EDGES;
+  edges.forEach((e,i)=>{
     const el=document.getElementById('kke-'+i);
-    if(el) el.setAttribute('d',kkPath(e.src,e.dst));
+    if(el)el.setAttribute('d',kkPath(e.src,e.dst));
     if(e.label){const t=document.getElementById('kkel-'+i);if(t){const p=kkPt(e.src,'bottom');t.setAttribute('x',p.x);t.setAttribute('y',p.y+13);}}
   });
 }
@@ -1077,17 +1166,18 @@ function kkSvgPt(e){
 }
 function kkDragStart(e,id){
   e.preventDefault();e.stopPropagation();
-  const pt=kkSvgPt(e);
-  kkDrag={id,ox:KKP[id].x,oy:KKP[id].y,sx:pt.x,sy:pt.y};kkMoved=false;
+  const pt=kkSvgPt(e),pos=kkCurPos();
+  kkDrag={id,ox:pos[id].x,oy:pos[id].y,sx:pt.x,sy:pt.y};kkMoved=false;
 }
 function kkMouseMove(e){
   if(!kkDrag)return;
   const pt=kkSvgPt(e),dx=pt.x-kkDrag.sx,dy=pt.y-kkDrag.sy;
-  if(Math.abs(dx)>3||Math.abs(dy)>3) kkMoved=true;
+  if(Math.abs(dx)>3||Math.abs(dy)>3)kkMoved=true;
   if(!kkMoved)return;
-  KKP[kkDrag.id].x=kkDrag.ox+dx;KKP[kkDrag.id].y=kkDrag.oy+dy;
+  const pos=kkCurPos();
+  pos[kkDrag.id].x=kkDrag.ox+dx;pos[kkDrag.id].y=kkDrag.oy+dy;
   const g=document.getElementById('kkn-'+kkDrag.id);
-  if(g){g.setAttribute('transform',`translate(${KKP[kkDrag.id].x},${KKP[kkDrag.id].y})`);g.style.cursor='grabbing';}
+  if(g){g.setAttribute('transform',`translate(${pos[kkDrag.id].x},${pos[kkDrag.id].y})`);g.style.cursor='grabbing';}
   kkUpdateEdges();
 }
 function kkMouseUp(){
@@ -1098,15 +1188,26 @@ function kkMouseUp(){
   kkDrag=null;kkMoved=false;
 }
 
+function kkSplitText(naam,maxLen){
+  if(naam.length<=maxLen)return[naam];
+  const words=naam.split(' ');let l1='',l2='';
+  for(const w of words){if((l1+(l1?' ':'')+w).length<=maxLen)l1+=(l1?' ':'')+w;else l2+=(l2?' ':'')+w;}
+  return l2?[l1,l2]:[naam];
+}
+
 function kkNodeSvg(id){
   const ff='font-family="Inter,-apple-system,BlinkMacSystemFont,sans-serif"';
-  const d=KK_DET[id],{w,h}=KKS[id];
+  const det=kkView?kkDrillDet:KK_DET;
+  const siz=kkView?kkDrillSizes:KKS;
+  const d=det[id];if(!d)return'';
+  const{w,h}=siz[id];
   if(d.type==='Waterschap')return(
     `<rect width="${w}" height="${h}" rx="10" fill="#fff" stroke="#bfdbfe" stroke-width="1.5" class="kk-bg"/>
     <rect x="0" y="10" width="4" height="32" rx="2" fill="#185fa5"/>
     <text x="12" y="19" font-size="8" font-weight="700" ${ff} fill="#185fa5" letter-spacing="1">WATERSCHAP</text>
     <text x="12" y="36" font-size="13" font-weight="600" ${ff} fill="#1e40af">${d.naam}</text>
-    <text x="${w-5}" y="36" font-size="10" ${ff} fill="#6b7280" text-anchor="end">${d.cap.replace(' ton/dag','')}</text>`
+    <text x="${w-5}" y="36" font-size="10" ${ff} fill="#6b7280" text-anchor="end">${d.cap.replace(' ton/dag','')}</text>
+    <text x="${w/2}" y="${h-4}" font-size="7.5" ${ff} fill="#93c5fd" text-anchor="middle" opacity=".8">▼ klik voor RWZI's</text>`
   );
   if(d.type==='Verwerker')return(
     `<rect width="${w}" height="${h}" rx="12" fill="#0e1b2a" stroke="#185fa5" stroke-width="1.5" class="kk-bg"/>
@@ -1122,6 +1223,21 @@ function kkNodeSvg(id){
     <text x="12" y="36" font-size="12.5" font-weight="600" ${ff} fill="${c.t}">${d.naam}</text>
     <text x="12" y="50" font-size="9.5" ${ff} fill="${c.a}" opacity=".85">${d.cap}</text>`
   );
+  if(d.type==='Satelliet')return(
+    `<rect width="${w}" height="${h}" rx="7" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1" class="kk-bg"/>
+    <text x="${w/2}" y="12" font-size="6.5" font-weight="700" ${ff} fill="#93c5fd" text-anchor="middle" letter-spacing=".7">RWZI *</text>
+    <text x="${w/2}" y="25" font-size="9.5" font-weight="500" ${ff} fill="#1e40af" text-anchor="middle">${d.naam}</text>`
+  );
+  if(d.type==='Centrale'){
+    const lines=kkSplitText(d.naam,20);
+    const ly=lines.length>1?[h/2-4,h/2+9]:[h/2+5];
+    return(
+      `<rect width="${w}" height="${h}" rx="10" fill="#fff" stroke="#60a5fa" stroke-width="1.5" class="kk-bg"/>
+      <rect x="0" y="8" width="4" height="${h-16}" rx="2" fill="#185fa5"/>
+      <text x="10" y="13" font-size="7" font-weight="700" ${ff} fill="#185fa5" letter-spacing=".6">CENTRALE ONTWATERING</text>
+      ${lines.map((l,i)=>`<text x="${w/2}" y="${ly[i]}" font-size="10.5" font-weight="600" ${ff} fill="#1e40af" text-anchor="middle">${l}</text>`).join('')}`
+    );
+  }
   return(
     `<rect width="${w}" height="${h}" rx="${h/2}" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" class="kk-bg"/>
     <text x="${w/2}" y="17" font-size="8" font-weight="700" ${ff} fill="#888780" text-anchor="middle" letter-spacing=".8">RESTSTROOM</text>
@@ -1138,14 +1254,16 @@ function renderKetenKaart(){
     <marker id="arr-wn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,1 L9,5 L0,9 Z" fill="#ba7517"/></marker>
     <marker id="arr-dn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,1 L9,5 L0,9 Z" fill="#e24b4a"/></marker>
   </defs>`;
+  const edges=kkView?kkDrillEdges:KK_EDGES;
+  const pos=kkView?kkDrillPos:KKP;
   out+='<g id="kk-edges">';
-  KK_EDGES.forEach((e,i)=>{
-    out+=`<path id="kke-${i}" d="${kkPath(e.src,e.dst)}" fill="none" stroke="${e.color}" stroke-width="${e.dashed?1.5:2}" ${e.dashed?'stroke-dasharray="5 3"':''} stroke-linecap="round" marker-end="url(#${mmap[e.color]})"/>`;
+  edges.forEach((e,i)=>{
+    out+=`<path id="kke-${i}" d="${kkPath(e.src,e.dst)}" fill="none" stroke="${e.color}" stroke-width="${e.dashed?1.5:2}" ${e.dashed?'stroke-dasharray="5 3"':''} stroke-linecap="round" marker-end="url(#${mmap[e.color]||'arr-bl'})"/>`;
     if(e.label){const p=kkPt(e.src,'bottom');out+=`<text id="kkel-${i}" x="${p.x}" y="${p.y+13}" font-size="9" font-weight="600" ${ff} fill="${e.color}" text-anchor="middle" opacity=".9">${e.label} t/d</text>`;}
   });
   out+='</g><g id="kk-nodes">';
-  Object.keys(KKP).forEach(id=>{
-    const p=KKP[id];
+  Object.keys(pos).forEach(id=>{
+    const p=pos[id];
     out+=`<g class="kk-node" id="kkn-${id}" transform="translate(${p.x},${p.y})" onmousedown="kkDragStart(event,'${id}')" ontouchstart="kkDragStart(event,'${id}')" style="cursor:grab">${kkNodeSvg(id)}</g>`;
   });
   out+='</g>';
@@ -1161,10 +1279,82 @@ function renderKetenKaart(){
   }
 }
 
+function kkDrillDown(wsId){
+  const ws=KK_RWZI[wsId];if(!ws)return;
+  kkView=wsId;
+  kkDrillPos={};kkDrillSizes={};kkDrillEdges=[];kkDrillDet={};
+
+  const VW=760,SW=90,SH=32,SGAPX=7,CW=162,CH=46,CGAPX=12,HW=180,HH=62;
+  const MAX_PER_ROW=7,SAT_ROW_GAP=13,SECTION_GAP=30,CENT_HVC_GAP=46,TOP=14;
+
+  const sats=ws.satellieten||[];
+  const cents=ws.centralen||[];
+
+  /* satellite rows */
+  let y=TOP;
+  for(let i=0;i<sats.length;i+=MAX_PER_ROW){
+    const row=sats.slice(i,i+MAX_PER_ROW);
+    const rowW=row.length*(SW+SGAPX)-SGAPX;
+    let x=Math.max(8,(VW-rowW)/2);
+    row.forEach(s=>{
+      kkDrillPos[s.id]={x,y};kkDrillSizes[s.id]={w:SW,h:SH};
+      kkDrillDet[s.id]={naam:s.naam,type:'Satelliet',cap:'indicatief',status:'ok',flags:[]};
+      x+=SW+SGAPX;
+    });
+    y+=SH+SAT_ROW_GAP;
+  }
+
+  /* central row */
+  const centY=sats.length>0?y+SECTION_GAP-SAT_ROW_GAP:TOP;
+  const centRowW=cents.length*(CW+CGAPX)-CGAPX;
+  let cx=Math.max(8,(VW-centRowW)/2);
+  cents.forEach(c=>{
+    kkDrillPos[c.id]={x:cx,y:centY};kkDrillSizes[c.id]={w:CW,h:CH};
+    kkDrillDet[c.id]={naam:c.naam,type:'Centrale',cap:c.sub||'Centrale ontwatering',status:'ok',flags:[]};
+    cx+=CW+CGAPX;
+  });
+
+  /* HVC node */
+  const hvcY=centY+CH+CENT_HVC_GAP;
+  kkDrillPos['d-hvc']={x:(VW-HW)/2,y:hvcY};kkDrillSizes['d-hvc']={w:HW,h:HH};
+  kkDrillDet['d-hvc']={naam:'HVC',type:'Verwerker',cap:'~450 ton/dag',status:'warning',flags:['Enige verwerker GR Slib','Contract afloop 2026']};
+
+  /* edges */
+  sats.forEach(s=>kkDrillEdges.push({src:s.id,dst:s.naar,color:'#93c5fd'}));
+  cents.forEach(c=>{
+    const dst=(c.naar&&kkDrillPos[c.naar])?c.naar:'d-hvc';
+    kkDrillEdges.push({src:c.id,dst,color:c.naar?'#93c5fd':'#185fa5',dashed:!!c.naar});
+  });
+
+  document.getElementById('kk-svg').setAttribute('viewBox',`0 0 ${VW} ${hvcY+HH+20}`);
+  document.getElementById('kk-page-sub').textContent=`${ws.naam} — RWZI's → centrale ontwatering → HVC · klik een node voor details`;
+  document.getElementById('kk-back').style.display='flex';
+  document.getElementById('kk-footnote').style.display='block';
+  document.getElementById('kk-ws-hint').style.display='none';
+  document.getElementById('kk-panel').classList.remove('open');
+  renderKetenKaart();
+}
+
+function kkBackToOverview(){
+  kkView=null;
+  document.getElementById('kk-svg').setAttribute('viewBox','0 0 760 510');
+  document.getElementById('kk-page-sub').textContent="GR Slib keten — klik een waterschap voor RWZI-detail, sleep om te verplaatsen";
+  document.getElementById('kk-back').style.display='none';
+  document.getElementById('kk-footnote').style.display='none';
+  document.getElementById('kk-ws-hint').style.display='block';
+  document.getElementById('kk-panel').classList.remove('open');
+  renderKetenKaart();
+}
+
 function kkSel(id){
+  /* waterschap click in overview → drill */
+  if(!kkView&&KK_DET[id]&&KK_DET[id].type==='Waterschap'&&KK_RWZI[id]){
+    kkDrillDown(id);return;
+  }
   document.querySelectorAll('#kk-svg .kk-node').forEach(n=>n.classList.remove('kk-sel'));
   const nd=document.getElementById('kkn-'+id);if(nd)nd.classList.add('kk-sel');
-  const d=KK_DET[id];if(!d)return;
+  const det=kkView?kkDrillDet:KK_DET;
+  const d=det[id];if(!d)return;
   const st=KK_ST[d.status]||KK_ST.ok;
   const panel=document.getElementById('kk-panel'),pi=document.getElementById('kk-pi');
   panel.classList.add('open');
