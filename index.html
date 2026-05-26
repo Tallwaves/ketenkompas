@@ -1173,7 +1173,7 @@ function kkDragStart(e,id){
 function kkMouseMove(e){
   if(!kkDrag)return;
   const pt=kkSvgPt(e),dx=pt.x-kkDrag.sx,dy=pt.y-kkDrag.sy;
-  if(Math.abs(dx)>3||Math.abs(dy)>3){kkMoved=true;kkLastMoved=true;}
+  if(Math.abs(dx)>8||Math.abs(dy)>8){kkMoved=true;kkLastMoved=true;}
   if(!kkMoved)return;
   const pos=kkCurPos();
   pos[kkDrag.id].x=kkDrag.ox+dx;pos[kkDrag.id].y=kkDrag.oy+dy;
@@ -1183,10 +1183,17 @@ function kkMouseMove(e){
 }
 function kkMouseUp(){
   if(!kkDrag)return;
-  const g=document.getElementById('kkn-'+kkDrag.id);
-  if(g)g.style.cursor='grab';
-  if(!kkMoved)kkSel(kkDrag.id);
+  const id=kkDrag.id;
+  const g=document.getElementById('kkn-'+id);
+  if(g)g.style.cursor=(!kkView&&KK_RWZI[id])?'pointer':'grab';
   kkDrag=null;kkMoved=false;
+  if(!kkLastMoved){
+    if(!kkView&&KK_DET[id]&&KK_DET[id].type==='Waterschap'&&KK_RWZI[id]){
+      kkDrillDown(id);
+    } else {
+      kkSel(id);
+    }
+  }
 }
 
 function kkSplitText(naam,maxLen){
@@ -1266,8 +1273,7 @@ function renderKetenKaart(){
   Object.keys(pos).forEach(id=>{
     const p=pos[id];
     const isDrill=!kkView&&KK_DET[id]&&KK_DET[id].type==='Waterschap'&&KK_RWZI[id];
-    const clickAttr=isDrill?`onclick="if(!kkLastMoved)kkDrillDown('${id}')"`:'';
-    out+=`<g class="kk-node" id="kkn-${id}" transform="translate(${p.x},${p.y})" onmousedown="kkDragStart(event,'${id}')" ontouchstart="kkDragStart(event,'${id}')" ${clickAttr} style="cursor:${isDrill?'pointer':'grab'}">${kkNodeSvg(id)}</g>`;
+    out+=`<g class="kk-node" id="kkn-${id}" transform="translate(${p.x},${p.y})" onmousedown="kkDragStart(event,'${id}')" ontouchstart="kkDragStart(event,'${id}')" style="cursor:${isDrill?'pointer':'grab'}">${kkNodeSvg(id)}</g>`;
   });
   out+='</g>';
   document.getElementById('kk-svg').innerHTML=out;
