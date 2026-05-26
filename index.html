@@ -573,6 +573,12 @@ const FALLBACK_DATA = {
          reststromen:["Warmte → warmtenet Dordrecht/Sliedrecht (7.000 won.)","Vliegas → fosfaatterugwinning (pilot)","Elektriciteit → net"]},
         {naam:"SDI — Alkmaar", status:"danger", capaciteit:"633 ton/dag nominaal", techniek:"Droging + monoverbranding", onderhoud:"Opstart vertraagd — beperkt operationeel", contract:"GR Slib 2009 · afloop 2026",
          reststromen:["Granulaat → BEC Alkmaar (biobrandstof)","Warmte → warmtenet Alkmaar","Fosfaatrijke as → P-terugwinning"]},
+      ],
+      opslaglocaties:[
+        {naam:"Indaver Delfzijl", sub:"Groningen · indicatieve capaciteit", cap:6000, bezet:2500, status:"warning"},
+        {naam:"Indaver Groningen", sub:"Stainkoeln · indicatieve capaciteit", cap:6000, bezet:2000, status:"ok"},
+        {naam:"Zwolle", sub:"Achtervang noord · indicatieve capaciteit", cap:2000, bezet:800, status:"warning"},
+        {naam:"Dico Beverwijk", sub:"Vergunning geblokkeerd · indicatieve capaciteit", cap:8000, bezet:0, status:"danger"},
       ]},
     { naam:"SNB Moerdijk", kleur:"#534ab7", aandeel:"~30% landelijk · 7 waterschappen", juridischeVorm:"NV — 7 waterschappen als aandeelhouder",
       waterschappen:[
@@ -591,6 +597,9 @@ const FALLBACK_DATA = {
       installaties:[
         {naam:"SNB — Moerdijk", status:"ok", capaciteit:"~1.150 ton/dag", techniek:"Monoverbranding", onderhoud:"Operationeel", contract:"SNB · doorlopend",
          reststromen:["Vliegas → fosfaat kunstmest (SusPhos)","CO₂ → witmaker papier","Natrium → industriële soda","Elektriciteit (energieneutraal)"]},
+      ],
+      opslaglocaties:[
+        {naam:"Eigen opslag SNB Moerdijk", sub:"Op eigen terrein · 16.000 ton capaciteit", cap:16000, bezet:4000, status:"ok"},
       ]},
     { naam:"SNON — Noord-Nederland", kleur:"#d85a30", aandeel:"~10% landelijk · 3–4 waterschappen", juridischeVorm:"Directe contracten",
       waterschappen:[
@@ -608,6 +617,9 @@ const FALLBACK_DATA = {
          reststromen:["Biogranulaat → EEW Delfzijl (biobrandstof)","Ammoniumsulfaat → kunstmestvervanger landbouw"]},
         {naam:"EEW — Delfzijl", status:"ok", capaciteit:"n.v.t.", techniek:"Thermische eindverwerking", onderhoud:"Operationeel", contract:"SNON route · doorlopend",
          reststromen:["Bodemas → bouwstof","Elektriciteit → net","Stoom → perslucht omliggende bedrijven"]},
+      ],
+      opslaglocaties:[
+        {naam:"EEW Delfzijl opslag", sub:"Op locatie", cap:null, bezet:null, status:"ok"},
       ]},
     { naam:"GMB Zutphen — direct contract", kleur:"#888780", aandeel:"~5% landelijk · 2 waterschappen", juridischeVorm:"Directe contracten",
       waterschappen:[
@@ -620,6 +632,9 @@ const FALLBACK_DATA = {
       installaties:[
         {naam:"GMB BioEnergie — Zutphen", status:"ok", capaciteit:"70 kton/jaar", techniek:"Biologisch drogen", onderhoud:"Operationeel", contract:"Direct · tot 2032",
          reststromen:["Biogranulaat → energiecentrales (AVR, RWE, Remondis)","Ammoniumsulfaat → landbouw","Groen gas → elektriciteit en warmte"]},
+      ],
+      opslaglocaties:[
+        {naam:"Geen bekend", sub:"", cap:null, bezet:null, status:"neutral"},
       ]},
   ],
   calamiteitenOpslagBezet: 4500,
@@ -858,32 +873,28 @@ function renderSections(){
       ws:DATA.clusters[0].waterschappen,
       verwerker:{naam:'HVC', sub:'SVI Dordrecht · SDI Alkmaar', status:'danger', note:'SVI onderhoud week 24 · SDI beperkt operationeel'},
       installaties:DATA.clusters[0].installaties||FALLBACK_DATA.clusters[0].installaties,
-      opslaglocaties:[
-        {naam:'Indaver Delfzijl',cap:6000,bezet:2500,status:'warning'},
-        {naam:'Indaver Groningen',cap:6000,bezet:2000,status:'ok'},
-        {naam:'Zwolle',cap:2000,bezet:800,status:'warning'}
-      ]
+      opslaglocaties:DATA.clusters[0].opslaglocaties||FALLBACK_DATA.clusters[0].opslaglocaties,
     },
     {
       kleur:'#534ab7', naam:'SNB Moerdijk',
       ws:DATA.clusters[1].waterschappen,
       verwerker:{naam:'SNB', sub:'Moerdijk', status:'ok', note:"Europa's grootste slibverbrander · 410–430 kton/jr"},
       installaties:DATA.clusters[1].installaties||FALLBACK_DATA.clusters[1].installaties,
-      opslaglocaties:[{naam:'Eigen opslag Moerdijk',cap:null,status:'ok'}]
+      opslaglocaties:DATA.clusters[1].opslaglocaties||FALLBACK_DATA.clusters[1].opslaglocaties,
     },
     {
       kleur:'#d85a30', naam:'SNON Noord-Nederland',
       ws:DATA.clusters[2].waterschappen,
       verwerker:{naam:'GMB — EEW', sub:'route GMB → EEW', status:'ok', note:'Voordroging biogranulaat → thermische eindverwerking'},
       installaties:DATA.clusters[2].installaties||FALLBACK_DATA.clusters[2].installaties,
-      opslaglocaties:[{naam:'EEW Delfzijl opslag',cap:null,status:'ok'}]
+      opslaglocaties:DATA.clusters[2].opslaglocaties||FALLBACK_DATA.clusters[2].opslaglocaties,
     },
     {
       kleur:'#888780', naam:'GMB Direct Contract',
       ws:DATA.clusters[3].waterschappen,
       verwerker:{naam:'GMB', sub:'Zutphen', status:'ok', note:'Biologisch drogen op locatie · 70 kton/jr tot 2032'},
       installaties:DATA.clusters[3].installaties||FALLBACK_DATA.clusters[3].installaties,
-      opslaglocaties:[{naam:'Geen bekend',cap:null,status:'neutral'}]
+      opslaglocaties:DATA.clusters[3].opslaglocaties||FALLBACK_DATA.clusters[3].opslaglocaties,
     }
   ];
 
@@ -913,7 +924,7 @@ function renderSections(){
         ${(i.reststromen&&i.reststromen.length)?`<div class="inst-card-rst"><div class="inst-card-rst-lbl">↩ Reststromen</div><div class="inst-card-rst-chips">${i.reststromen.map(r=>`<span class="inst-card-rst-chip">${r}</span>`).join('')}</div></div>`:''}
       </div>`).join('');
     const opslHtml=c.opslaglocaties.map(o=>{
-      if(o.cap===null)return `<span class="opsl-neutral">${o.naam}</span>`;
+      if(o.cap===null)return `<span class="opsl-neutral">${o.naam}${o.sub?`<span style="display:block;font-size:10px;color:var(--ink-faint);font-weight:400">${o.sub}</span>`:''}</span>`;
       let bezet=o.bezet,status=o.status;
       if(siScenario&&ci===0&&DATA.scenarios[siScenario].wegval>0){
         const nCap=c.opslaglocaties.filter(x=>x.cap).length||1;
@@ -923,7 +934,7 @@ function renderSections(){
       }
       const pct=Math.min(Math.round(bezet/o.cap*100),100);
       const vrij=Math.max(o.cap-bezet,0);
-      return `<div class="opsl-item${bezet>=o.cap?' si-full':''}"><div class="opsl-item-nm">${o.naam}</div><div class="bar"><i class="${status}" style="width:${pct}%"></i></div><div class="opsl-item-meta"><span>${bezet.toLocaleString()}/${o.cap.toLocaleString()} ton</span><span>${vrij===0?'<b style="color:var(--danger)">VOL</b>':vrij.toLocaleString()+' vrij'}</span></div></div>`;
+      return `<div class="opsl-item${bezet>=o.cap?' si-full':''}"><div class="opsl-item-nm">${o.naam}${o.sub?`<span style="display:block;font-size:10px;color:var(--ink-faint);font-weight:400;margin-top:1px">${o.sub}</span>`:''}</div><div class="bar"><i class="${status}" style="width:${pct}%"></i></div><div class="opsl-item-meta"><span>${bezet.toLocaleString()}/${o.cap.toLocaleString()} ton</span><span>${vrij===0?'<b style="color:var(--danger)">VOL</b>':vrij.toLocaleString()+' vrij'}</span></div></div>`;
     }).join('');
     return {c,ci,instCards,opslHtml};
   });
