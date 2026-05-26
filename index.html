@@ -98,8 +98,20 @@
   .page-title{font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px}
   .page-sub{font-size:14px;color:var(--ink-soft)}
 
-  .alert-bar{display:flex;align-items:center;gap:9px;padding:11px 15px;background:var(--danger-bg);border:1px solid #f6c9c9;border-radius:var(--radius-sm);font-size:13px;color:var(--danger-ink);margin-bottom:22px}
-  .alert-bar svg{width:17px;height:17px;flex-shrink:0}
+  .ka-card{background:#fff;border:1px solid #fca5a5;border-radius:var(--radius);margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow)}
+  .ka-header{display:flex;align-items:center;gap:10px;padding:9px 16px;background:linear-gradient(135deg,#fef2f2 0%,#fef6ec 100%);border-bottom:1px solid #fca5a5}
+  .ka-header svg{width:15px;height:15px;color:var(--danger);flex-shrink:0}
+  .ka-titel{font-size:12.5px;font-weight:700;color:var(--danger-ink)}
+  .ka-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+  .ka-col{padding:10px 14px;border-right:1px solid var(--line-soft)}
+  .ka-col:last-child{border-right:none}
+  .ka-col-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
+  .ka-lbl-danger{color:var(--danger-ink)}.ka-lbl-warning{color:var(--warn-ink)}.ka-lbl-info{color:#185fa5}
+  .ka-item{display:flex;align-items:flex-start;gap:6px;margin-bottom:5px;font-size:11px;line-height:1.4;color:var(--ink-soft)}
+  .ka-item:last-child{margin-bottom:0}
+  .ka-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+  .ka-dot.danger{background:var(--danger)}.ka-dot.warning{background:var(--warn)}.ka-dot.ok{background:var(--ok)}.ka-dot.info{background:#3b82f6}
+  @media(max-width:680px){.ka-body{grid-template-columns:1fr}.ka-col{border-right:none;border-bottom:1px solid var(--line-soft)}.ka-col:last-child{border-bottom:none}}
 
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
   .stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:15px 17px;box-shadow:var(--shadow)}
@@ -464,10 +476,7 @@
         <div class="page-title">Ketenoverzicht</div>
         <div class="page-sub">De Nederlandse slibketen per samenwerkingscluster · eenheid: ton ontwaterd slib per dag</div>
       </div>
-      <div class="alert-bar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
-        <span id="alert-tekst">Landelijke krapte — HVC SDI Alkmaar beperkt operationeel · onderhoud SVI Dordrecht vanaf week 24 · incidentenopslag 4.500 ton bezet, Dico Beverwijk vergunning geblokkeerd</span>
-      </div>
+      <div id="keten-alert-card"></div>
       <div class="landelijke-situatie">
         <div class="ls-label">LANDELIJKE SITUATIE</div>
         <div class="stats" id="stats"></div>
@@ -574,7 +583,24 @@ const TOEGANGSCODE = "ketenkompas2026";
 /* ============ DATA (pas hier aan) ============ */
 const FALLBACK_DATA = {
   standDatum: "2026-05-24",
-  alertTekst: "Landelijke krapte — HVC SDI Alkmaar beperkt operationeel · onderhoud SVI Dordrecht vanaf week 24 · incidentenopslag 4.500 ton bezet, Dico Beverwijk vergunning geblokkeerd",
+  ketenAlert:{
+    titel:"Ketenalert — Stand 21 mei 2026",
+    verstoringen:[
+      {status:"danger",  tekst:"SDI Alkmaar beperkt operationeel — opstart vertraagd"},
+      {status:"warning", tekst:"SVI Dordrecht — lijn 1 offline vanaf week 24 (8 juni)"},
+      {status:"danger",  tekst:"Dico Beverwijk — vergunningsblokkade, 8.000 ton opslag niet beschikbaar"},
+    ],
+    risicos:[
+      "Verwerkingscapaciteit onder druk — marge <5%",
+      "Incidentenopslag 4.500/22.500 ton bezet — aanspraak verwacht",
+      "Afhankelijkheid buitenlandse verwerkers neemt toe (HMB Lixhe, Remondis)",
+    ],
+    inzichten:[
+      "Extra slibopslagsilos RWZI West vergroot robuustheid",
+      "SOK HVC — deadline 1 september 2026",
+      "SNB Moerdijk — 16.000 ton eigen buffer beschikbaar als achtervang",
+    ],
+  },
   clusters: [
     { naam:"GR Slibverwerking 2009", kleur:"#0f6e56", aandeel:"~7% landelijk · 8 waterschappen", juridischeVorm:"Gemeenschappelijke Regeling",
       waterschappen:[
@@ -784,8 +810,31 @@ document.querySelectorAll('nav.tabs button').forEach(b=>{
 
 /* ============ DASHBOARD ============ */
 function renderDashboard(){
-  const ae=document.getElementById('alert-tekst');
-  if(ae&&DATA.alertTekst)ae.textContent=DATA.alertTekst;
+  const ka=DATA.ketenAlert||FALLBACK_DATA.ketenAlert;
+  const kaCard=document.getElementById('keten-alert-card');
+  if(ka&&kaCard){
+    const dot=s=>`<div class="ka-dot ${s}"></div>`;
+    kaCard.innerHTML=`<div class="ka-card">
+      <div class="ka-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <span class="ka-titel">${ka.titel||'Ketenalert'}</span>
+      </div>
+      <div class="ka-body">
+        <div class="ka-col">
+          <div class="ka-col-lbl ka-lbl-danger">Actuele verstoringen</div>
+          ${(ka.verstoringen||[]).map(v=>`<div class="ka-item">${dot(v.status)}<span>${v.tekst}</span></div>`).join('')}
+        </div>
+        <div class="ka-col">
+          <div class="ka-col-lbl ka-lbl-warning">Ketenrisico's</div>
+          ${(ka.risicos||[]).map(r=>`<div class="ka-item">${dot('warning')}<span>${r}</span></div>`).join('')}
+        </div>
+        <div class="ka-col">
+          <div class="ka-col-lbl ka-lbl-info">Strategische inzichten</div>
+          ${(ka.inzichten||[]).map(i=>`<div class="ka-item">${dot('info')}<span>${i}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  }
   const totaal=DATA.clusters.reduce((a,c)=>a+c.waterschappen.reduce((s,w)=>s+w.ton,0),0);
   const verwCap=DATA.clusters.reduce((a,c,ci)=>a+(c.verwerkers||FALLBACK_DATA.clusters[ci].verwerkers).reduce((s,v,vi)=>s+(v.capaciteitTonDag||(FALLBACK_DATA.clusters[ci].verwerkers[vi]&&FALLBACK_DATA.clusters[ci].verwerkers[vi].capaciteitTonDag)||0),0),0);
   const opslagTotaal=DATA.noodopslag.reduce((a,n)=>a+n.cap,0);
@@ -1545,8 +1594,28 @@ function renderAdminPanel(){
         <div class="adm-section-title">Algemeen</div>
         <div class="adm-field-row"><label>Stand-datum</label>
           <input type="date" id="adm-datum" value="${DATA.standDatum||''}" class="adm-txt" style="max-width:180px"></div>
-        <div class="adm-field-row"><label>Alert-tekst</label>
-          <textarea id="adm-alert" class="adm-area">${DATA.alertTekst||''}</textarea></div>
+        <div class="adm-field-row"><label>Alert titel</label>
+          <input type="text" id="adm-ka-titel" value="${(DATA.ketenAlert||FALLBACK_DATA.ketenAlert).titel||''}" class="adm-txt"></div>
+        <div style="margin-top:4px">
+          <div style="font-size:10px;font-weight:600;color:var(--danger-ink);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Actuele verstoringen</div>
+          ${((DATA.ketenAlert||FALLBACK_DATA.ketenAlert).verstoringen||[]).map((v,i)=>`<div class="adm-tl-row">
+            <select id="adm-ka-v-${i}-status" class="adm-sel" style="flex:0 0 90px">
+              <option value="danger"${v.status==='danger'?' selected':''}>🔴 kritiek</option>
+              <option value="warning"${v.status==='warning'?' selected':''}>🟠 gepland</option>
+            </select>
+            <input type="text" id="adm-ka-v-${i}-tekst" value="${v.tekst||''}" class="adm-txt" style="flex:1">
+          </div>`).join('')}
+        </div>
+        <div style="margin-top:6px">
+          <div style="font-size:10px;font-weight:600;color:var(--warn-ink);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Ketenrisico's</div>
+          ${((DATA.ketenAlert||FALLBACK_DATA.ketenAlert).risicos||[]).map((r,i)=>`
+            <input type="text" id="adm-ka-r-${i}" value="${r||''}" class="adm-txt" style="margin-bottom:4px">`).join('')}
+        </div>
+        <div style="margin-top:6px">
+          <div style="font-size:10px;font-weight:600;color:#185fa5;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Strategische inzichten</div>
+          ${((DATA.ketenAlert||FALLBACK_DATA.ketenAlert).inzichten||[]).map((ins,i)=>`
+            <input type="text" id="adm-ka-i-${i}" value="${ins||''}" class="adm-txt" style="margin-bottom:4px">`).join('')}
+        </div>
         <div class="adm-field-row"><label>Noodbuffer basis (ton)</label>
           <input type="number" id="adm-noodbasis" value="${DATA.noodBasis}" class="adm-num"></div>
       </div>
@@ -1589,7 +1658,15 @@ function renderAdminPanel(){
 function collectAdminData(){
   const d=JSON.parse(JSON.stringify(DATA));
   d.standDatum=document.getElementById('adm-datum').value;
-  d.alertTekst=document.getElementById('adm-alert').value;
+  const ka=d.ketenAlert||{};
+  ka.titel=(document.getElementById('adm-ka-titel')||{value:ka.titel}).value;
+  ka.verstoringen=(ka.verstoringen||[]).map((v,i)=>({
+    status:(document.getElementById(`adm-ka-v-${i}-status`)||{value:v.status}).value,
+    tekst:(document.getElementById(`adm-ka-v-${i}-tekst`)||{value:v.tekst}).value,
+  }));
+  ka.risicos=(ka.risicos||[]).map((_,i)=>(document.getElementById(`adm-ka-r-${i}`)||{value:''}).value).filter(Boolean);
+  ka.inzichten=(ka.inzichten||[]).map((_,i)=>(document.getElementById(`adm-ka-i-${i}`)||{value:''}).value).filter(Boolean);
+  d.ketenAlert=ka;
   d.noodBasis=parseInt(document.getElementById('adm-noodbasis').value)||d.noodBasis;
   d.noodopslag.forEach((n,i)=>{
     n.bezet=parseInt(document.getElementById('adm-no-bezet-'+i).value)||n.bezet;
