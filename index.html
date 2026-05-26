@@ -80,7 +80,8 @@
   .brand .logo-dot svg{width:15px;height:15px}
   .brand-name{font-size:15px;font-weight:600;letter-spacing:-.01em}
   .brand-name span{color:#5dcaa5}
-  nav.tabs{display:flex;gap:4px}
+  nav.tabs{display:flex;gap:4px;align-items:center}
+  .tab-group{display:flex;gap:4px;border:1px solid #28425c;border-radius:10px;padding:3px}
   nav.tabs button{background:transparent;border:none;color:#9fb4c5;font-size:13.5px;font-family:var(--font);padding:7px 14px;border-radius:8px;cursor:pointer;font-weight:500;transition:all .12s}
   nav.tabs button:hover{color:#fff;background:#1c3450}
   nav.tabs button.active{color:#fff;background:#1f3a58}
@@ -523,9 +524,11 @@
     <nav class="tabs">
       <button class="active" data-v="dashboard">Ketenoverzicht</button>
       <button data-v="ketenkaart">Ketenkaart</button>
-      <button data-v="scenario">Scenario's</button>
       <button data-v="robuust">Robuust Plan</button>
-      <button data-v="bestuur">Rapportage</button>
+      <div class="tab-group">
+        <button data-v="scenario">Scenario's</button>
+        <button data-v="bestuur">Rapportage</button>
+      </div>
       <button data-v="beheer">⚙ Beheer</button>
     </nav>
     <div class="header-right">
