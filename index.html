@@ -563,9 +563,9 @@ const FALLBACK_DATA = {
         {naam:"Zuiderzeeland", ton:110},
       ],
       verwerkers:[
-        {naam:"HVC SVI — Dordrecht", sub:"948 ton/dag · monoverbranding", status:"warning",
+        {naam:"HVC SVI — Dordrecht", sub:"948 ton/dag · monoverbranding", status:"warning", capaciteitTonDag:948,
          flags:["Onderhoud lijn vanaf week 24 (8 juni)"]},
-        {naam:"HVC SDI — Alkmaar", sub:"633 ton/dag nominaal · droging", status:"danger",
+        {naam:"HVC SDI — Alkmaar", sub:"633 ton/dag nominaal · droging", status:"danger", capaciteitTonDag:633,
          flags:["Opstart vertraagd — zeer beperkt operationeel"]},
       ],
       installaties:[
@@ -585,7 +585,7 @@ const FALLBACK_DATA = {
         {naam:"Waterschap Limburg", ton:180},
       ],
       verwerkers:[
-        {naam:"SNB — Moerdijk", sub:"~1.150 ton/dag · monoverbranding", status:"ok",
+        {naam:"SNB — Moerdijk", sub:"~1.150 ton/dag · monoverbranding", status:"ok", capaciteitTonDag:1150,
          flags:["Europa's grootste slibverbrander","410–430 kton/jaar"]},
       ],
       installaties:[
@@ -600,8 +600,8 @@ const FALLBACK_DATA = {
         {naam:"Wetterskip Fryslân (v.a. 2027)", ton:140},
       ],
       verwerkers:[
-        {naam:"GMB — Zutphen", sub:"biologisch drogen", status:"ok", flags:["Voordroging → biogranulaat"]},
-        {naam:"EEW — Delfzijl", sub:"thermische eindverwerking", status:"ok", flags:["Kritiek eindpunt van de route"]},
+        {naam:"GMB — Zutphen", sub:"biologisch drogen", status:"ok", capaciteitTonDag:200, flags:["Voordroging → biogranulaat"]},
+        {naam:"EEW — Delfzijl", sub:"thermische eindverwerking", status:"ok", capaciteitTonDag:250, flags:["Kritiek eindpunt van de route"]},
       ],
       installaties:[
         {naam:"GMB — Zutphen", status:"ok", capaciteit:"n.v.t.", techniek:"Biologisch drogen", onderhoud:"Operationeel", contract:"SNON route · tot 2027+",
@@ -615,13 +615,15 @@ const FALLBACK_DATA = {
         {naam:"Rijn en IJssel", ton:120},
       ],
       verwerkers:[
-        {naam:"GMB BioEnergie — Zutphen", sub:"70 kton/jaar tot 2032", status:"ok", flags:["Biologisch drogen op locatie"]},
+        {naam:"GMB BioEnergie — Zutphen", sub:"70 kton/jaar tot 2032", status:"ok", capaciteitTonDag:200, flags:["Biologisch drogen op locatie"]},
       ],
       installaties:[
         {naam:"GMB BioEnergie — Zutphen", status:"ok", capaciteit:"70 kton/jaar", techniek:"Biologisch drogen", onderhoud:"Operationeel", contract:"Direct · tot 2032",
          reststromen:["Biogranulaat → energiecentrales (AVR, RWE, Remondis)","Ammoniumsulfaat → landbouw","Groen gas → elektriciteit en warmte"]},
       ]},
   ],
+  calamiteitenOpslagBezet: 4500,
+  calamiteitenOpslagTotaal: 22500,
   noodopslag:[
     {naam:"Indaver Delfzijl", sub:"Groningen", cap:6000, bezet:2500, status:"warning"},
     {naam:"Indaver Groningen", sub:"Stainkoeln", cap:6000, bezet:2000, status:"ok"},
@@ -730,15 +732,16 @@ function renderDashboard(){
   const ae=document.getElementById('alert-tekst');
   if(ae&&DATA.alertTekst)ae.textContent=DATA.alertTekst;
   const totaal=DATA.clusters.reduce((a,c)=>a+c.waterschappen.reduce((s,w)=>s+w.ton,0),0);
-  const gr=DATA.clusters[0].waterschappen.reduce((s,w)=>s+w.ton,0);
-  const beschikbaar=DATA.noodopslag.filter(n=>n.status!=='danger').reduce((a,n)=>a+(n.cap-n.bezet),0);
-  const geblok=DATA.noodopslag.filter(n=>n.status==='danger').reduce((a,n)=>a+n.cap,0);
+  const verwCap=DATA.clusters.reduce((a,c)=>a+(c.verwerkers||[]).reduce((s,v)=>s+(v.capaciteitTonDag||0),0),0);
+  const opslagTotaal=DATA.noodopslag.reduce((a,n)=>a+n.cap,0);
+  const calBezet=DATA.calamiteitenOpslagBezet||FALLBACK_DATA.calamiteitenOpslagBezet;
+  const calTotaal=DATA.calamiteitenOpslagTotaal||FALLBACK_DATA.calamiteitenOpslagTotaal;
 
   document.getElementById('stats').innerHTML=`
     <div class="stat"><div class="stat-label">Landelijke dagproductie</div><div class="stat-val">${totaal.toLocaleString()} <span class="stat-unit">t/dag</span></div></div>
-    <div class="stat"><div class="stat-label">Productie GR Slib</div><div class="stat-val">${gr.toLocaleString()} <span class="stat-unit">t/dag</span></div></div>
-    <div class="stat"><div class="stat-label">Noodopslag beschikbaar</div><div class="stat-val warn">${beschikbaar.toLocaleString()} <span class="stat-unit">ton</span></div></div>
-    <div class="stat"><div class="stat-label">Geblokkeerd (vergunning)</div><div class="stat-val danger">${geblok.toLocaleString()} <span class="stat-unit">ton</span></div></div>`;
+    <div class="stat"><div class="stat-label">Verwerkingscapaciteit</div><div class="stat-val">${verwCap.toLocaleString()} <span class="stat-unit">t/dag</span></div></div>
+    <div class="stat"><div class="stat-label">Opslagcapaciteit</div><div class="stat-val">${opslagTotaal.toLocaleString()} <span class="stat-unit">ton</span></div></div>
+    <div class="stat"><div class="stat-label">Calamiteitenopslag</div><div class="stat-val warn">${calBezet.toLocaleString()} / ${calTotaal.toLocaleString()} <span class="stat-unit">ton</span></div></div>`;
 
   renderSections();
   renderScenarioInline();
