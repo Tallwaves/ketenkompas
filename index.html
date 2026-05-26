@@ -1200,6 +1200,7 @@ function renderAdminView(){
   }else{
     lw.innerHTML='';
     renderAdminPanel();
+    loadContactRequests();
   }
 }
 
@@ -1309,6 +1310,11 @@ function renderAdminPanel(){
         </table>
       </div>
 
+      <div class="adm-section" id="adm-contact-section">
+        <div class="adm-section-title">Toegangsverzoeken <span id="adm-contact-badge"></span></div>
+        <div id="adm-contact-list" style="font-size:13px;color:var(--ink-faint)">Laden…</div>
+      </div>
+
       <button class="adm-save" id="adm-save-btn" onclick="saveToCloud()">Opslaan naar cloud ↑</button>
     </div>`;
 }
@@ -1367,6 +1373,28 @@ async function saveToCloud(){
   }catch(e){
     btn.textContent='Verbindingsfout';
     setTimeout(()=>{btn.textContent='Opslaan naar cloud ↑';btn.disabled=false;},2200);
+  }
+}
+
+/* ============ CONTACT REQUESTS ============ */
+async function loadContactRequests(){
+  const el=document.getElementById('adm-contact-list');
+  if(!el)return;
+  try{
+    const r=await fetch('/api/contact',{headers:{'X-Admin-Key':'kkadmin2026'}});
+    if(!r.ok){el.textContent='Laden mislukt ('+r.status+')';return;}
+    const list=await r.json();
+    const badge=document.getElementById('adm-contact-badge');
+    if(badge)badge.textContent=list.length?'('+list.length+')':'';
+    if(!list.length){el.textContent='Geen verzoeken ontvangen.';return;}
+    el.innerHTML=list.map(v=>`
+      <div style="padding:10px 0;border-bottom:1px solid var(--line-soft)">
+        <div style="font-weight:600;color:var(--ink)">${v.naam}${v.organisatie?' · <span style="font-weight:400;color:var(--ink-soft)">'+v.organisatie+'</span>':''}</div>
+        <div style="font-size:12px;color:var(--water);margin-top:1px">${v.email}</div>
+        <div style="font-size:11px;color:var(--ink-faint);margin-top:2px">${new Date(v.datum).toLocaleString('nl-NL')}</div>
+      </div>`).join('');
+  }catch(e){
+    if(el)el.textContent='Fout: '+e.message;
   }
 }
 

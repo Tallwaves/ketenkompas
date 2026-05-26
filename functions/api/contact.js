@@ -1,14 +1,29 @@
 const CORS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
 };
 
 export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: CORS });
 }
 
-export async function onRequestPost({ request }) {
+export async function onRequestGet({ request, env }) {
+  if (request.headers.get('X-Admin-Key') !== 'kkadmin2026') {
+    return new Response('Unauthorized', { status: 401, headers: CORS });
+  }
+  try {
+    const raw = await env.KK_KV.get('kk_contact_requests');
+    const list = raw ? JSON.parse(raw) : [];
+    return new Response(JSON.stringify(list), {
+      headers: { ...CORS, 'Content-Type': 'application/json' },
+    });
+  } catch (e) {
+    return new Response('KV error: ' + e.message, { status: 500, headers: CORS });
+  }
+}
+
+export async function onRequestPost({ request, env }) {
   let body;
   try {
     body = await request.json();
@@ -22,26 +37,17 @@ export async function onRequestPost({ request }) {
   }
 
   try {
-    const res = await fetch('https://api.mailchannels.net/tx/v1/send', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: 'gizanezra@gmail.com' }] }],
-        from: { email: 'noreply@ketenkompas.nl', name: 'KetenKompas' },
-        subject: 'Toegangsverzoek KetenKompas',
-        content: [{
-          type: 'text/plain',
-          value: `Naam: ${naam}\nOrganisatie: ${organisatie || '—'}\nEmail: ${email}`,
-        }],
-      }),
+    const raw = await env.KK_KV.get('kk_contact_requests');
+    const list = raw ? JSON.parse(raw) : [];
+    list.unshift({
+      naam,
+      organisatie: organisatie || '',
+      email,
+      datum: new Date().toISOString(),
     });
-
-    if (res.status === 202) {
-      return new Response('OK', { status: 200, headers: CORS });
-    }
-    const errText = await res.text();
-    return new Response('Mail error: ' + errText, { status: 500, headers: CORS });
+    await env.KK_KV.put('kk_contact_requests', JSON.stringify(list));
+    return new Response('OK', { status: 200, headers: CORS });
   } catch (e) {
-    return new Response('Error: ' + e.message, { status: 500, headers: CORS });
+    return new Response('KV error: ' + e.message, { status: 500, headers: CORS });
   }
 }
