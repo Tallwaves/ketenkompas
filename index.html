@@ -346,6 +346,24 @@
   .inst-card-rst-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:4px}
   .inst-card-rst-chips{display:flex;flex-wrap:wrap;gap:3px}
   .inst-card-rst-chip{font-size:10px;padding:2px 7px;background:rgba(0,0,0,.05);border-radius:4px;color:var(--ink-soft);line-height:1.5}
+  .inst-card-cap{font-size:13px;font-weight:700;margin-bottom:5px;padding-bottom:4px;border-bottom:1px solid rgba(0,0,0,.08)}
+  .inst-card.ok .inst-card-cap{color:var(--ok-ink)}.inst-card.warning .inst-card-cap{color:var(--warn-ink)}.inst-card.danger .inst-card-cap{color:var(--danger-ink)}
+  .inst-tl{margin-top:7px;padding-top:6px;border-top:1px solid rgba(0,0,0,.08)}
+  .inst-tl-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:5px}
+  .inst-tl-items{position:relative;padding-left:17px}
+  .inst-tl-items::before{content:'';position:absolute;left:4px;top:8px;bottom:8px;width:1px;background:rgba(0,0,0,.15)}
+  .inst-tl-item{position:relative;margin-bottom:6px;padding:3px 6px;background:rgba(0,0,0,.04);border-radius:5px}
+  .inst-tl-item:last-child{margin-bottom:0}
+  .inst-tl-dot{position:absolute;left:-17px;top:7px;width:9px;height:9px;border-radius:50%;border:2px solid;z-index:1}
+  .inst-tl-dot.ok{border-color:var(--ok);background:var(--ok-bg)}.inst-tl-dot.warning{border-color:var(--warn);background:var(--warn-bg)}.inst-tl-dot.danger{border-color:var(--danger);background:var(--danger-bg)}
+  .inst-tl-periode{font-size:9.5px;font-weight:700;line-height:1.3}
+  .inst-tl-item.ok .inst-tl-periode{color:var(--ok-ink)}.inst-tl-item.warning .inst-tl-periode{color:var(--warn-ink)}.inst-tl-item.danger .inst-tl-periode{color:var(--danger-ink)}
+  .inst-tl-omschr{font-size:9.5px;color:var(--ink-faint);line-height:1.3}
+  .inst-tl-impact{font-size:9px;font-weight:700;margin-top:1px}
+  .inst-tl-item.ok .inst-tl-impact{color:var(--ok-ink)}.inst-tl-item.warning .inst-tl-impact{color:var(--warn-ink)}.inst-tl-item.danger .inst-tl-impact{color:var(--danger-ink)}
+  .adm-tl-row{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+  .adm-tl-row .adm-txt{padding:4px 7px;font-size:11.5px}
+  .adm-tl-row .adm-sel{padding:4px 6px;font-size:11.5px}
 </style>
 </head>
 <body>
@@ -576,9 +594,19 @@ const FALLBACK_DATA = {
          flags:["Opstart vertraagd — zeer beperkt operationeel"]},
       ],
       installaties:[
-        {naam:"SVI — Dordrecht", status:"warning", capaciteit:"948 ton/dag", techniek:"Monoverbranding", onderhoud:"Lijn 1 offline week 24 (8 juni)",
+        {naam:"SVI — Dordrecht", status:"warning", capaciteit:"948 ton/dag", techniek:"Monoverbranding",
+         onderhoudsMomenten:[
+           {status:"danger",  periode:"Week 24 (8 jun)", omschrijving:"Lijn 1 onderhoud",          impact:"−300 ton/dag"},
+           {status:"warning", periode:"Week 32 (aug)",   omschrijving:"Regulier onderhoud lijn 2", impact:"−300 ton/dag"},
+           {status:"ok",      periode:"Week 44 (okt)",   omschrijving:"Inspectie ketel",           impact:"−100 ton/dag"},
+         ],
          reststromen:["Warmte → warmtenet Dordrecht/Sliedrecht (7.000 won.)","Vliegas → fosfaatterugwinning (pilot)","Elektriciteit → net"]},
-        {naam:"SDI — Alkmaar", status:"danger", capaciteit:"633 ton/dag nominaal", techniek:"Droging + monoverbranding", onderhoud:"Opstart vertraagd — beperkt operationeel",
+        {naam:"SDI — Alkmaar", status:"danger", capaciteit:"633 ton/dag nominaal", techniek:"Droging + monoverbranding",
+         onderhoudsMomenten:[
+           {status:"danger",  periode:"Nu actief",     omschrijving:"Opstart vertraagd — beperkt operationeel", impact:"−400 ton/dag"},
+           {status:"warning", periode:"Week 28 (jul)", omschrijving:"Volledig operationeel verwacht",           impact:""},
+           {status:"ok",      periode:"Week 40 (sep)", omschrijving:"Eerste regulier onderhoud",               impact:"−150 ton/dag"},
+         ],
          reststromen:["Granulaat → BEC Alkmaar (biobrandstof)","Warmte → warmtenet Alkmaar","Fosfaatrijke as → P-terugwinning"]},
       ]},
     { naam:"SNB Moerdijk", kleur:"#534ab7", aandeel:"~30% landelijk · 7 waterschappen", juridischeVorm:"NV — 7 waterschappen als aandeelhouder",
@@ -596,7 +624,12 @@ const FALLBACK_DATA = {
          flags:["Europa's grootste slibverbrander","410–430 kton/jaar"]},
       ],
       installaties:[
-        {naam:"SVI — Moerdijk", status:"ok", capaciteit:"~1.150 ton/dag", techniek:"Monoverbranding", onderhoud:"Operationeel",
+        {naam:"SVI — Moerdijk", status:"ok", capaciteit:"~1.150 ton/dag", techniek:"Monoverbranding",
+         onderhoudsMomenten:[
+           {status:"ok",      periode:"Q2 2026",       omschrijving:"Geen gepland onderhoud",  impact:""},
+           {status:"warning", periode:"Week 35 (aug)", omschrijving:"Jaarlijks onderhoud",     impact:"−400 ton/dag"},
+           {status:"ok",      periode:"Week 40 (sep)", omschrijving:"Herstart volledig",       impact:"+400 ton/dag"},
+         ],
          reststromen:["Vliegas → fosfaat kunstmest (SusPhos)","CO₂ → witmaker papier","Natrium → industriële soda","Elektriciteit (energieneutraal)"]},
       ]},
     { naam:"SNON — Noord-Nederland", kleur:"#d85a30", aandeel:"~10% landelijk · 3–4 waterschappen", juridischeVorm:"Directe contracten",
@@ -611,9 +644,19 @@ const FALLBACK_DATA = {
         {naam:"SVI — Delfzijl", sub:"thermische eindverwerking", status:"ok", capaciteitTonDag:250, flags:["Kritiek eindpunt van de route"]},
       ],
       installaties:[
-        {naam:"SDI — Zutphen", status:"ok", capaciteit:"n.v.t.", techniek:"Biologisch drogen", onderhoud:"Operationeel",
+        {naam:"SDI — Zutphen", status:"ok", capaciteit:"n.v.t.", techniek:"Biologisch drogen",
+         onderhoudsMomenten:[
+           {status:"ok", periode:"Nu",              omschrijving:"Geen gepland onderhoud", impact:""},
+           {status:"ok", periode:"Week 38 (sep)",   omschrijving:"Inspectie droger",       impact:"−50 ton/dag"},
+           {status:"ok", periode:"Week 50 (dec)",   omschrijving:"Jaarlijks onderhoud",    impact:"−50 ton/dag"},
+         ],
          reststromen:["Biogranulaat → SVI Delfzijl (biobrandstof)","Ammoniumsulfaat → kunstmestvervanger landbouw"]},
-        {naam:"SVI — Delfzijl", status:"ok", capaciteit:"n.v.t.", techniek:"Thermische eindverwerking", onderhoud:"Operationeel",
+        {naam:"SVI — Delfzijl", status:"ok", capaciteit:"n.v.t.", techniek:"Thermische eindverwerking",
+         onderhoudsMomenten:[
+           {status:"ok",      periode:"Nu",              omschrijving:"Volledig operationeel", impact:""},
+           {status:"warning", periode:"Week 30 (jul)",   omschrijving:"Onderhoud ketel 1",     impact:"−100 ton/dag"},
+           {status:"ok",      periode:"Week 45 (nov)",   omschrijving:"Inspectie",             impact:"−50 ton/dag"},
+         ],
          reststromen:["Bodemas → bouwstof","Elektriciteit → net","Stoom → perslucht omliggende bedrijven"]},
       ]},
     { naam:"GMB Zutphen — direct contract", kleur:"#888780", aandeel:"~5% landelijk · 2 waterschappen", juridischeVorm:"Directe contracten",
@@ -625,7 +668,12 @@ const FALLBACK_DATA = {
         {naam:"SDI — Zutphen", sub:"70 kton/jaar tot 2032", status:"ok", capaciteitTonDag:200, flags:["Biologisch drogen op locatie"]},
       ],
       installaties:[
-        {naam:"SDI — Zutphen", status:"ok", capaciteit:"70 kton/jaar", techniek:"Biologisch drogen", onderhoud:"Operationeel",
+        {naam:"SDI — Zutphen", status:"ok", capaciteit:"70 kton/jaar", techniek:"Biologisch drogen",
+         onderhoudsMomenten:[
+           {status:"ok", periode:"Nu",              omschrijving:"Geen gepland onderhoud", impact:""},
+           {status:"ok", periode:"Week 38 (sep)",   omschrijving:"Inspectie droger",       impact:"−50 ton/dag"},
+           {status:"ok", periode:"Week 50 (dec)",   omschrijving:"Jaarlijks onderhoud",    impact:"−50 ton/dag"},
+         ],
          reststromen:["Biogranulaat → energiecentrales (AVR, RWE, Remondis)","Ammoniumsulfaat → landbouw","Groen gas → elektriciteit en warmte"]},
       ]},
   ],
@@ -913,9 +961,9 @@ function renderSections(){
   const clData=C.map((c,ci)=>{
     const instCards=c.installaties.map(i=>`<div class="inst-card ${i.status}">
         <div class="inst-card-nm">${i.naam}</div>
-        <div class="inst-card-row"><span class="inst-card-lbl">Capaciteit</span><span class="inst-card-val">${i.capaciteit}</span></div>
+        <div class="inst-card-cap">${i.capaciteit}</div>
         <div class="inst-card-row"><span class="inst-card-lbl">Techniek</span><span class="inst-card-val">${i.techniek}</span></div>
-        <div class="inst-card-row"><span class="inst-card-lbl">Onderhoud</span><span class="inst-card-val">${i.onderhoud}</span></div>
+        ${(i.onderhoudsMomenten&&i.onderhoudsMomenten.length)?`<div class="inst-tl"><div class="inst-tl-lbl">▸ Planning</div><div class="inst-tl-items">${i.onderhoudsMomenten.map(m=>`<div class="inst-tl-item ${m.status}"><div class="inst-tl-dot ${m.status}"></div><div class="inst-tl-periode">${m.periode}</div><div class="inst-tl-omschr">${m.omschrijving}</div>${m.impact?`<div class="inst-tl-impact">${m.impact}</div>`:''}</div>`).join('')}</div></div>`:''}
         ${(i.reststromen&&i.reststromen.length)?`<div class="inst-card-rst"><div class="inst-card-rst-lbl">↩ Reststromen</div><div class="inst-card-rst-chips">${i.reststromen.map(r=>`<span class="inst-card-rst-chip">${r}</span>`).join('')}</div></div>`:''}
       </div>`).join('');
     const opslHtml=c.opslaglocaties.map(o=>{
@@ -1453,8 +1501,19 @@ function renderAdminPanel(){
           <input type="text" id="adm-inst-${ci}-${ii}-capaciteit" value="${inst.capaciteit||''}" class="adm-txt"></div>
         <div class="adm-field-row"><label>Techniek</label>
           <input type="text" id="adm-inst-${ci}-${ii}-techniek" value="${inst.techniek||''}" class="adm-txt"></div>
-        <div class="adm-field-row"><label>Onderhoud</label>
-          <input type="text" id="adm-inst-${ci}-${ii}-onderhoud" value="${inst.onderhoud||''}" class="adm-txt"></div>
+        <div style="margin-top:6px">
+          <div style="font-size:10px;font-weight:600;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Planning onderhoud</div>
+          ${(inst.onderhoudsMomenten||[]).map((m,mi)=>`<div class="adm-tl-row">
+            <select id="adm-tl-${ci}-${ii}-${mi}-status" class="adm-sel" style="flex:0 0 82px">
+              <option value="ok"${m.status==='ok'?' selected':''}>🟢 ok</option>
+              <option value="warning"${m.status==='warning'?' selected':''}>🟠 plan</option>
+              <option value="danger"${m.status==='danger'?' selected':''}>🔴 actief</option>
+            </select>
+            <input type="text" id="adm-tl-${ci}-${ii}-${mi}-periode" value="${m.periode||''}" placeholder="Periode" class="adm-txt" style="flex:1">
+            <input type="text" id="adm-tl-${ci}-${ii}-${mi}-omschrijving" value="${m.omschrijving||''}" placeholder="Omschrijving" class="adm-txt" style="flex:2">
+            <input type="text" id="adm-tl-${ci}-${ii}-${mi}-impact" value="${m.impact||''}" placeholder="Impact" class="adm-txt" style="flex:1">
+          </div>`).join('')}
+        </div>
 
       </div>`).join('')}`).join('');
 
@@ -1538,11 +1597,16 @@ function collectAdminData(){
   });
   d.clusters.forEach((c,ci)=>{
     (c.installaties||[]).forEach((inst,ii)=>{
-      const fields=['status','capaciteit','techniek','onderhoud'];
-      fields.forEach(f=>{
+      ['status','capaciteit','techniek'].forEach(f=>{
         const el=document.getElementById(`adm-inst-${ci}-${ii}-${f}`);
         if(el)inst[f]=el.value;
       });
+      inst.onderhoudsMomenten=(inst.onderhoudsMomenten||[]).map((m,mi)=>({
+        status:(document.getElementById(`adm-tl-${ci}-${ii}-${mi}-status`)||{value:m.status}).value,
+        periode:(document.getElementById(`adm-tl-${ci}-${ii}-${mi}-periode`)||{value:m.periode}).value,
+        omschrijving:(document.getElementById(`adm-tl-${ci}-${ii}-${mi}-omschrijving`)||{value:m.omschrijving}).value,
+        impact:(document.getElementById(`adm-tl-${ci}-${ii}-${mi}-impact`)||{value:m.impact||''}).value,
+      }));
     });
     c.waterschappen.forEach((w,wi)=>{
       const el=document.getElementById(`adm-ws-${ci}-${wi}`);
