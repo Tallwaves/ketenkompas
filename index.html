@@ -56,6 +56,18 @@
   .lc-box button:hover{background:#7fdcbb}
   .lc-btn-sec{background:transparent!important;border:1px solid #28425c!important;color:#7fa8c4!important;font-weight:500!important}
   .lc-btn-sec:hover{background:#13263b!important;border-color:#3a5a72!important}
+  .lc-contact{max-height:0;overflow:hidden;transition:max-height .3s ease}
+  .lc-contact.open{max-height:320px}
+  .lc-contact-inner{padding-top:12px;border-top:1px solid #1d3a52;margin-top:10px}
+  .lc-field{margin-bottom:8px}
+  .lc-field-lbl{display:block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7fa8c4;margin-bottom:5px}
+  .lc-field-inp{width:100%;height:40px;border-radius:7px;border:1px solid #28425c;background:#0e1b2a;color:#fff;padding:0 12px;font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s;box-sizing:border-box}
+  .lc-field-inp:focus{border-color:#5dcaa5}
+  .lc-field-inp::placeholder{color:#5d7388}
+  .lc-btn-send{width:100%;height:42px;margin-top:6px;border:none;border-radius:8px;background:#5dcaa5;color:#04342c;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
+  .lc-btn-send:hover{background:#7fdcbb}
+  .lc-btn-send:disabled{background:#3a7a65;cursor:not-allowed}
+  .lc-contact-msg{font-size:12px;margin-top:9px;min-height:0}
   .lc-err{color:#f09595;font-size:12px;margin-top:10px;min-height:16px}
   .lc-foot{margin-top:18px;font-size:11px;color:#5d8fa8;display:flex;align-items:center;justify-content:center;gap:6px}
   .lc-foot-dot{width:6px;height:6px;border-radius:50%;background:#2a6a52;flex-shrink:0}
@@ -370,7 +382,16 @@
       <div class="lc-access-lbl">Toegang</div>
       <input type="password" id="pw" placeholder="Toegangscode" autocomplete="current-password" onkeydown="if(event.key==='Enter')tryLogin()">
       <button onclick="tryLogin()">Toegang tot dashboard</button>
-      <button class="lc-btn-sec" onclick="window.location.href='mailto:gizanezra@gmail.com?subject=Toegangsverzoek%20KetenKompas&body=Ik%20wil%20graag%20toegang%20tot%20KetenKompas.%0A%0ANaam%3A%20%5Bnaam%5D%0AOrganisatie%3A%20%5Borganisatie%5D'">Toegang aanvragen</button>
+      <button class="lc-btn-sec" onclick="toggleContact()">Toegang aanvragen</button>
+      <div class="lc-contact" id="lc-contact">
+        <div class="lc-contact-inner">
+          <div class="lc-field"><label class="lc-field-lbl">Naam</label><input type="text" id="lc-naam" class="lc-field-inp" placeholder="Uw naam"></div>
+          <div class="lc-field"><label class="lc-field-lbl">Organisatie</label><input type="text" id="lc-org" class="lc-field-inp" placeholder="Waterschap / organisatie"></div>
+          <div class="lc-field"><label class="lc-field-lbl">E-mailadres</label><input type="email" id="lc-email" class="lc-field-inp" placeholder="uw@email.nl"></div>
+          <button class="lc-btn-send" id="lc-send-btn" onclick="sendContactForm()">Verzoek versturen</button>
+          <div class="lc-contact-msg" id="lc-contact-msg"></div>
+        </div>
+      </div>
       <div class="lc-err" id="err"></div>
     </div>
     <div class="lc-foot"><span class="lc-foot-dot"></span>Voor de waterschappen die de keten beheren · 2026</div>
@@ -646,6 +667,32 @@ const I = {
 };
 
 /* ============ LOGIN ============ */
+function toggleContact(){
+  document.getElementById('lc-contact').classList.toggle('open');
+}
+async function sendContactForm(){
+  const naam=document.getElementById('lc-naam').value.trim();
+  const org=document.getElementById('lc-org').value.trim();
+  const email=document.getElementById('lc-email').value.trim();
+  const msg=document.getElementById('lc-contact-msg');
+  const btn=document.getElementById('lc-send-btn');
+  if(!naam||!email){msg.style.color='#f09595';msg.textContent='Naam en e-mailadres zijn verplicht';return;}
+  btn.textContent='Versturen…';btn.disabled=true;
+  try{
+    const r=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({naam,organisatie:org,email})});
+    if(r.ok){
+      document.getElementById('lc-contact').classList.remove('open');
+      msg.style.color='#5dcaa5';
+      msg.textContent='Verzoek ontvangen — je hoort snel van ons';
+    }else{
+      msg.style.color='#f09595';msg.textContent='Er ging iets mis — probeer het opnieuw';
+      btn.textContent='Verzoek versturen';btn.disabled=false;
+    }
+  }catch(e){
+    msg.style.color='#f09595';msg.textContent='Verbindingsfout — probeer het opnieuw';
+    btn.textContent='Verzoek versturen';btn.disabled=false;
+  }
+}
 function tryLogin(){
   const v=document.getElementById('pw').value;
   if(v===TOEGANGSCODE){
