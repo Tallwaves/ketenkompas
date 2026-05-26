@@ -360,10 +360,17 @@
   .inst-card-rst-chip{font-size:10px;padding:2px 7px;background:rgba(0,0,0,.05);border-radius:4px;color:var(--ink-soft);line-height:1.5}
   .inst-card-cap{font-size:13px;font-weight:700;margin-bottom:5px;padding-bottom:4px;border-bottom:1px solid rgba(0,0,0,.08)}
   .inst-card.ok .inst-card-cap{color:var(--ok-ink)}.inst-card.warning .inst-card-cap{color:var(--warn-ink)}.inst-card.danger .inst-card-cap{color:var(--danger-ink)}
+  /* dividers inside the card tinted to match card status */
+  .inst-card.ok .inst-card-cap,.inst-card.ok .inst-tl,.inst-card.ok .inst-card-rst{border-color:rgba(29,158,117,.25)}
+  .inst-card.warning .inst-card-cap,.inst-card.warning .inst-tl,.inst-card.warning .inst-card-rst{border-color:rgba(186,117,23,.25)}
+  .inst-card.danger .inst-card-cap,.inst-card.danger .inst-tl,.inst-card.danger .inst-card-rst{border-color:rgba(226,75,74,.25)}
   .inst-tl{margin-top:7px;padding-top:6px;border-top:1px solid rgba(0,0,0,.08)}
   .inst-tl-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:5px}
   .inst-tl-items{position:relative;padding-left:17px}
   .inst-tl-items::before{content:'';position:absolute;left:4px;top:8px;bottom:8px;width:1px;background:rgba(0,0,0,.15)}
+  .inst-card.ok .inst-tl-items::before{background:rgba(29,158,117,.3)}
+  .inst-card.warning .inst-tl-items::before{background:rgba(186,117,23,.3)}
+  .inst-card.danger .inst-tl-items::before{background:rgba(226,75,74,.3)}
   .inst-tl-item{position:relative;margin-bottom:6px;padding:3px 6px;background:rgba(0,0,0,.04);border-radius:5px}
   .inst-tl-item:last-child{margin-bottom:0}
   .inst-tl-dot{position:absolute;left:-17px;top:7px;width:9px;height:9px;border-radius:50%;border:2px solid;z-index:1}
