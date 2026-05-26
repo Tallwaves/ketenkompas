@@ -1134,7 +1134,7 @@ const KK_RWZI={
     ]},
 };
 
-let kkDrag=null,kkMoved=false;
+let kkDrag=null,kkMoved=false,kkLastMoved=false;
 let kkView=null; // null=overview, string=wsId for drill
 let kkDrillPos={},kkDrillSizes={},kkDrillEdges=[],kkDrillDet={};
 
@@ -1167,12 +1167,13 @@ function kkSvgPt(e){
 function kkDragStart(e,id){
   e.preventDefault();e.stopPropagation();
   const pt=kkSvgPt(e),pos=kkCurPos();
+  kkLastMoved=false; // reset on new press
   kkDrag={id,ox:pos[id].x,oy:pos[id].y,sx:pt.x,sy:pt.y};kkMoved=false;
 }
 function kkMouseMove(e){
   if(!kkDrag)return;
   const pt=kkSvgPt(e),dx=pt.x-kkDrag.sx,dy=pt.y-kkDrag.sy;
-  if(Math.abs(dx)>3||Math.abs(dy)>3)kkMoved=true;
+  if(Math.abs(dx)>3||Math.abs(dy)>3){kkMoved=true;kkLastMoved=true;}
   if(!kkMoved)return;
   const pos=kkCurPos();
   pos[kkDrag.id].x=kkDrag.ox+dx;pos[kkDrag.id].y=kkDrag.oy+dy;
@@ -1264,7 +1265,9 @@ function renderKetenKaart(){
   out+='</g><g id="kk-nodes">';
   Object.keys(pos).forEach(id=>{
     const p=pos[id];
-    out+=`<g class="kk-node" id="kkn-${id}" transform="translate(${p.x},${p.y})" onmousedown="kkDragStart(event,'${id}')" ontouchstart="kkDragStart(event,'${id}')" style="cursor:grab">${kkNodeSvg(id)}</g>`;
+    const isDrill=!kkView&&KK_DET[id]&&KK_DET[id].type==='Waterschap'&&KK_RWZI[id];
+    const clickAttr=isDrill?`onclick="if(!kkLastMoved)kkDrillDown('${id}')"`:'';
+    out+=`<g class="kk-node" id="kkn-${id}" transform="translate(${p.x},${p.y})" onmousedown="kkDragStart(event,'${id}')" ontouchstart="kkDragStart(event,'${id}')" ${clickAttr} style="cursor:${isDrill?'pointer':'grab'}">${kkNodeSvg(id)}</g>`;
   });
   out+='</g>';
   document.getElementById('kk-svg').innerHTML=out;
@@ -1347,10 +1350,6 @@ function kkBackToOverview(){
 }
 
 function kkSel(id){
-  /* waterschap click in overview → drill */
-  if(!kkView&&KK_DET[id]&&KK_DET[id].type==='Waterschap'&&KK_RWZI[id]){
-    kkDrillDown(id);return;
-  }
   document.querySelectorAll('#kk-svg .kk-node').forEach(n=>n.classList.remove('kk-sel'));
   const nd=document.getElementById('kkn-'+id);if(nd)nd.classList.add('kk-sel');
   const det=kkView?kkDrillDet:KK_DET;
