@@ -268,7 +268,8 @@
   /* ---------- LANDELIJKE SITUATIE ---------- */
   .landelijke-situatie{background:#eef6f3;border:.5px solid #c5e0d8;border-radius:12px;padding:16px 20px;margin-bottom:18px}
   .ls-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#5a8070;margin-bottom:12px}
-  .landelijke-situatie .stats{margin-bottom:0}
+  .landelijke-situatie .stats{margin-bottom:4px}
+  .stats-footnote{font-size:10px;color:var(--ink-faint);margin-top:2px}
   /* ---------- SCENARIO INLINE ---------- */
   .scenario-inline{background:#fdf6e8;border:.5px solid #f0d090;border-radius:12px;padding:14px 18px;margin-bottom:18px}
   .si-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;-webkit-user-select:none}
@@ -298,7 +299,8 @@
   .inst-chip.danger{background:var(--danger-bg);border-color:var(--danger);color:var(--danger-ink)}
   .opsl-items{display:flex;flex-direction:column;gap:6px}
   .opsl-item{background:var(--surface-2);border-radius:7px;padding:6px 9px}
-  .opsl-item-nm{font-size:11px;font-weight:600;color:var(--ink);margin-bottom:4px}
+  .opsl-item-nm{font-size:11px;font-weight:600;color:var(--ink);margin-bottom:2px}
+  .opsl-item-sub{display:block;font-size:9.5px;font-weight:400;color:var(--ink-faint);margin-bottom:3px}
   .bar{height:4px;background:var(--line-soft);border-radius:2px;overflow:hidden;margin-bottom:3px}
   .bar i{display:block;height:100%;border-radius:2px}
   .bar i.ok{background:var(--ok)}.bar i.warning{background:var(--warn)}.bar i.danger{background:var(--danger)}
@@ -487,6 +489,7 @@
       <div class="landelijke-situatie">
         <div class="ls-label">LANDELIJKE SITUATIE</div>
         <div class="stats" id="stats"></div>
+        <div class="stats-footnote" id="stats-footnote">* inclusief indicatieve schattingen</div>
       </div>
       <div id="scenario-inline" class="scenario-inline"></div>
       <div id="ket-sections"></div>
@@ -664,6 +667,9 @@ const FALLBACK_DATA = {
            {status:"ok",      periode:"Week 40 (sep)", omschrijving:"Herstart volledig",       impact:"+400 ton/dag"},
          ],
          reststromen:["Vliegas → fosfaat kunstmest (SusPhos)","CO₂ → witmaker papier","Natrium → industriële soda","Elektriciteit (energieneutraal)"]},
+      ],
+      opslaglocaties:[
+        {naam:"Eigen opslag SNB Moerdijk", sub:"Op eigen terrein", cap:16000, bezet:4000, status:"ok"},
       ]},
     { naam:"SNON — Noord-Nederland", kleur:"#d85a30", aandeel:"~10% landelijk · 3–4 waterschappen", juridischeVorm:"Directe contracten",
       waterschappen:[
@@ -691,6 +697,10 @@ const FALLBACK_DATA = {
            {status:"ok",      periode:"Week 45 (nov)",   omschrijving:"Inspectie",             impact:"−50 ton/dag"},
          ],
          reststromen:["Bodemas → bouwstof","Elektriciteit → net","Stoom → perslucht omliggende bedrijven"]},
+      ],
+      opslaglocaties:[
+        {naam:"Bunker EEW — Delfzijl", sub:"Ontvangstbunker op terrein · indicatief", cap:3000, bezet:800, status:"ok"},
+        {naam:"Tussenopslag GMB — Zutphen", sub:"Op terrein biologisch drogen · indicatief", cap:1500, bezet:400, status:"ok"},
       ]},
     { naam:"GMB Zutphen — direct contract", kleur:"#888780", aandeel:"~5% landelijk · 2 waterschappen", juridischeVorm:"Directe contracten",
       waterschappen:[
@@ -708,6 +718,10 @@ const FALLBACK_DATA = {
            {status:"ok", periode:"Week 50 (dec)",   omschrijving:"Jaarlijks onderhoud",    impact:"−50 ton/dag"},
          ],
          reststromen:["Biogranulaat → energiecentrales (AVR, RWE, Remondis)","Ammoniumsulfaat → landbouw","Groen gas → elektriciteit en warmte"]},
+      ],
+      opslaglocaties:[
+        {naam:"Opslag GMB BioEnergie — Zutphen", sub:"Op terrein · indicatief", cap:1000, bezet:200, status:"ok"},
+        {naam:"Tussenopslag Tiel", sub:"Satellietlocatie · indicatief", cap:800, bezet:150, status:"ok"},
       ]},
   ],
   calamiteitenOpslagBezet: 4500,
@@ -844,14 +858,15 @@ function renderDashboard(){
   }
   const totaal=DATA.clusters.reduce((a,c)=>a+c.waterschappen.reduce((s,w)=>s+w.ton,0),0);
   const verwCap=DATA.clusters.reduce((a,c,ci)=>a+(c.verwerkers||FALLBACK_DATA.clusters[ci].verwerkers).reduce((s,v,vi)=>s+(v.capaciteitTonDag||(FALLBACK_DATA.clusters[ci].verwerkers[vi]&&FALLBACK_DATA.clusters[ci].verwerkers[vi].capaciteitTonDag)||0),0),0);
-  const opslagTotaal=DATA.noodopslag.reduce((a,n)=>a+n.cap,0);
+  const opslagVerwerkers=[1,2,3].reduce((a,ci)=>{const locs=(DATA.clusters[ci]&&DATA.clusters[ci].opslaglocaties)||FALLBACK_DATA.clusters[ci].opslaglocaties||[];return a+locs.filter(o=>o.cap).reduce((s,o)=>s+o.cap,0);},0);
+  const opslagTotaal=DATA.noodopslag.reduce((a,n)=>a+n.cap,0)+opslagVerwerkers;
   const calBezet=DATA.calamiteitenOpslagBezet||FALLBACK_DATA.calamiteitenOpslagBezet;
   const calTotaal=DATA.calamiteitenOpslagTotaal||FALLBACK_DATA.calamiteitenOpslagTotaal;
 
   document.getElementById('stats').innerHTML=`
     <div class="stat"><div class="stat-label">Landelijke dagproductie</div><div class="stat-val">${totaal.toLocaleString()} <span class="stat-unit">t/dag</span></div></div>
     <div class="stat"><div class="stat-label">Verwerkingscapaciteit</div><div class="stat-val">${verwCap.toLocaleString()} <span class="stat-unit">t/dag</span></div></div>
-    <div class="stat"><div class="stat-label">Opslag bij verwerkers</div><div class="stat-val">${opslagTotaal.toLocaleString()} <span class="stat-unit">ton</span></div></div>
+    <div class="stat"><div class="stat-label">Opslag bij verwerkers *</div><div class="stat-val">${opslagTotaal.toLocaleString()} <span class="stat-unit">ton</span></div></div>
     <div class="stat"><div class="stat-label">Incidentenopslag (Robuust Plan)</div><div class="stat-val warn">${calBezet.toLocaleString()} / ${calTotaal.toLocaleString()} <span class="stat-unit">ton</span></div></div>`;
 
   renderSections();
@@ -980,21 +995,21 @@ function renderSections(){
       ws:DATA.clusters[1].waterschappen,
       verwerker:{naam:'SNB', sub:'Moerdijk', status:'ok', note:"Europa's grootste slibverbrander · 410–430 kton/jr"},
       installaties:DATA.clusters[1].installaties||FALLBACK_DATA.clusters[1].installaties,
-      opslaglocaties:[{naam:'Eigen opslag Moerdijk',cap:null,status:'ok'}]
+      opslaglocaties:(DATA.clusters[1]&&DATA.clusters[1].opslaglocaties)||FALLBACK_DATA.clusters[1].opslaglocaties
     },
     {
       kleur:'#d85a30', naam:'SNON Noord-Nederland',
       ws:DATA.clusters[2].waterschappen,
       verwerker:{naam:'GMB — EEW', sub:'route GMB → EEW', status:'ok', note:'Voordroging biogranulaat → thermische eindverwerking'},
       installaties:DATA.clusters[2].installaties||FALLBACK_DATA.clusters[2].installaties,
-      opslaglocaties:[{naam:'EEW Delfzijl opslag',cap:null,status:'ok'}]
+      opslaglocaties:(DATA.clusters[2]&&DATA.clusters[2].opslaglocaties)||FALLBACK_DATA.clusters[2].opslaglocaties
     },
     {
       kleur:'#888780', naam:'GMB Direct Contract',
       ws:DATA.clusters[3].waterschappen,
       verwerker:{naam:'GMB', sub:'Zutphen', status:'ok', note:'Biologisch drogen op locatie · 70 kton/jr tot 2032'},
       installaties:DATA.clusters[3].installaties||FALLBACK_DATA.clusters[3].installaties,
-      opslaglocaties:[{naam:'Geen bekend',cap:null,status:'neutral'}]
+      opslaglocaties:(DATA.clusters[3]&&DATA.clusters[3].opslaglocaties)||FALLBACK_DATA.clusters[3].opslaglocaties
     }
   ];
 
@@ -1033,7 +1048,7 @@ function renderSections(){
       }
       const pct=Math.min(Math.round(bezet/o.cap*100),100);
       const vrij=Math.max(o.cap-bezet,0);
-      return `<div class="opsl-item${bezet>=o.cap?' si-full':''}"><div class="opsl-item-nm">${o.naam}</div><div class="bar"><i class="${status}" style="width:${pct}%"></i></div><div class="opsl-item-meta"><span>${bezet.toLocaleString()}/${o.cap.toLocaleString()} ton</span><span>${vrij===0?'<b style="color:var(--danger)">VOL</b>':vrij.toLocaleString()+' vrij'}</span></div></div>`;
+      return `<div class="opsl-item${bezet>=o.cap?' si-full':''}"><div class="opsl-item-nm">${o.naam}${o.sub?`<span class="opsl-item-sub">${o.sub}</span>`:''}</div><div class="bar"><i class="${status}" style="width:${pct}%"></i></div><div class="opsl-item-meta"><span>${bezet.toLocaleString()}/${o.cap.toLocaleString()} ton</span><span>${vrij===0?'<b style="color:var(--danger)">VOL</b>':vrij.toLocaleString()+' vrij'}</span></div></div>`;
     }).join('');
     return {c,ci,instCards,opslHtml};
   });
