@@ -576,9 +576,9 @@ const FALLBACK_DATA = {
          flags:["Opstart vertraagd — zeer beperkt operationeel"]},
       ],
       installaties:[
-        {naam:"SVI — Dordrecht", status:"warning", capaciteit:"948 ton/dag", techniek:"Monoverbranding", onderhoud:"Lijn 1 offline week 24 (8 juni)", contract:"GR Slib 2009 · afloop 2026",
+        {naam:"SVI — Dordrecht", status:"warning", capaciteit:"948 ton/dag", techniek:"Monoverbranding", onderhoud:"Lijn 1 offline week 24 (8 juni)",
          reststromen:["Warmte → warmtenet Dordrecht/Sliedrecht (7.000 won.)","Vliegas → fosfaatterugwinning (pilot)","Elektriciteit → net"]},
-        {naam:"SDI — Alkmaar", status:"danger", capaciteit:"633 ton/dag nominaal", techniek:"Droging + monoverbranding", onderhoud:"Opstart vertraagd — beperkt operationeel", contract:"GR Slib 2009 · afloop 2026",
+        {naam:"SDI — Alkmaar", status:"danger", capaciteit:"633 ton/dag nominaal", techniek:"Droging + monoverbranding", onderhoud:"Opstart vertraagd — beperkt operationeel",
          reststromen:["Granulaat → BEC Alkmaar (biobrandstof)","Warmte → warmtenet Alkmaar","Fosfaatrijke as → P-terugwinning"]},
       ]},
     { naam:"SNB Moerdijk", kleur:"#534ab7", aandeel:"~30% landelijk · 7 waterschappen", juridischeVorm:"NV — 7 waterschappen als aandeelhouder",
@@ -596,7 +596,7 @@ const FALLBACK_DATA = {
          flags:["Europa's grootste slibverbrander","410–430 kton/jaar"]},
       ],
       installaties:[
-        {naam:"SVI — Moerdijk", status:"ok", capaciteit:"~1.150 ton/dag", techniek:"Monoverbranding", onderhoud:"Operationeel", contract:"SNB · doorlopend",
+        {naam:"SVI — Moerdijk", status:"ok", capaciteit:"~1.150 ton/dag", techniek:"Monoverbranding", onderhoud:"Operationeel",
          reststromen:["Vliegas → fosfaat kunstmest (SusPhos)","CO₂ → witmaker papier","Natrium → industriële soda","Elektriciteit (energieneutraal)"]},
       ]},
     { naam:"SNON — Noord-Nederland", kleur:"#d85a30", aandeel:"~10% landelijk · 3–4 waterschappen", juridischeVorm:"Directe contracten",
@@ -611,9 +611,9 @@ const FALLBACK_DATA = {
         {naam:"SVI — Delfzijl", sub:"thermische eindverwerking", status:"ok", capaciteitTonDag:250, flags:["Kritiek eindpunt van de route"]},
       ],
       installaties:[
-        {naam:"SDI — Zutphen", status:"ok", capaciteit:"n.v.t.", techniek:"Biologisch drogen", onderhoud:"Operationeel", contract:"SNON route · tot 2027+",
+        {naam:"SDI — Zutphen", status:"ok", capaciteit:"n.v.t.", techniek:"Biologisch drogen", onderhoud:"Operationeel",
          reststromen:["Biogranulaat → SVI Delfzijl (biobrandstof)","Ammoniumsulfaat → kunstmestvervanger landbouw"]},
-        {naam:"SVI — Delfzijl", status:"ok", capaciteit:"n.v.t.", techniek:"Thermische eindverwerking", onderhoud:"Operationeel", contract:"SNON route · doorlopend",
+        {naam:"SVI — Delfzijl", status:"ok", capaciteit:"n.v.t.", techniek:"Thermische eindverwerking", onderhoud:"Operationeel",
          reststromen:["Bodemas → bouwstof","Elektriciteit → net","Stoom → perslucht omliggende bedrijven"]},
       ]},
     { naam:"GMB Zutphen — direct contract", kleur:"#888780", aandeel:"~5% landelijk · 2 waterschappen", juridischeVorm:"Directe contracten",
@@ -625,7 +625,7 @@ const FALLBACK_DATA = {
         {naam:"SDI — Zutphen", sub:"70 kton/jaar tot 2032", status:"ok", capaciteitTonDag:200, flags:["Biologisch drogen op locatie"]},
       ],
       installaties:[
-        {naam:"SDI — Zutphen", status:"ok", capaciteit:"70 kton/jaar", techniek:"Biologisch drogen", onderhoud:"Operationeel", contract:"Direct · tot 2032",
+        {naam:"SDI — Zutphen", status:"ok", capaciteit:"70 kton/jaar", techniek:"Biologisch drogen", onderhoud:"Operationeel",
          reststromen:["Biogranulaat → energiecentrales (AVR, RWE, Remondis)","Ammoniumsulfaat → landbouw","Groen gas → elektriciteit en warmte"]},
       ]},
   ],
@@ -916,7 +916,6 @@ function renderSections(){
         <div class="inst-card-row"><span class="inst-card-lbl">Capaciteit</span><span class="inst-card-val">${i.capaciteit}</span></div>
         <div class="inst-card-row"><span class="inst-card-lbl">Techniek</span><span class="inst-card-val">${i.techniek}</span></div>
         <div class="inst-card-row"><span class="inst-card-lbl">Onderhoud</span><span class="inst-card-val">${i.onderhoud}</span></div>
-        <div class="inst-card-row"><span class="inst-card-lbl">Contract</span><span class="inst-card-val">${i.contract}</span></div>
         ${(i.reststromen&&i.reststromen.length)?`<div class="inst-card-rst"><div class="inst-card-rst-lbl">↩ Reststromen</div><div class="inst-card-rst-chips">${i.reststromen.map(r=>`<span class="inst-card-rst-chip">${r}</span>`).join('')}</div></div>`:''}
       </div>`).join('');
     const opslHtml=c.opslaglocaties.map(o=>{
@@ -1456,8 +1455,7 @@ function renderAdminPanel(){
           <input type="text" id="adm-inst-${ci}-${ii}-techniek" value="${inst.techniek||''}" class="adm-txt"></div>
         <div class="adm-field-row"><label>Onderhoud</label>
           <input type="text" id="adm-inst-${ci}-${ii}-onderhoud" value="${inst.onderhoud||''}" class="adm-txt"></div>
-        <div class="adm-field-row"><label>Contract</label>
-          <input type="text" id="adm-inst-${ci}-${ii}-contract" value="${inst.contract||''}" class="adm-txt"></div>
+
       </div>`).join('')}`).join('');
 
   const wsRows=DATA.clusters.map((c,ci)=>`
@@ -1540,7 +1538,7 @@ function collectAdminData(){
   });
   d.clusters.forEach((c,ci)=>{
     (c.installaties||[]).forEach((inst,ii)=>{
-      const fields=['status','capaciteit','techniek','onderhoud','contract'];
+      const fields=['status','capaciteit','techniek','onderhoud'];
       fields.forEach(f=>{
         const el=document.getElementById(`adm-inst-${ci}-${ii}-${f}`);
         if(el)inst[f]=el.value;
