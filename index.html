@@ -54,6 +54,8 @@
   .lc-box input::placeholder{color:#5d7388}
   .lc-box button{width:100%;height:46px;margin-top:10px;border:none;border-radius:8px;background:#5dcaa5;color:#04342c;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
   .lc-box button:hover{background:#7fdcbb}
+  .lc-btn-sec{background:transparent!important;border:1px solid #28425c!important;color:#7fa8c4!important;font-weight:500!important}
+  .lc-btn-sec:hover{background:#13263b!important;border-color:#3a5a72!important}
   .lc-err{color:#f09595;font-size:12px;margin-top:10px;min-height:16px}
   .lc-foot{margin-top:18px;font-size:11px;color:#5d8fa8;display:flex;align-items:center;justify-content:center;gap:6px}
   .lc-foot-dot{width:6px;height:6px;border-radius:50%;background:#2a6a52;flex-shrink:0}
@@ -368,9 +370,10 @@
       <div class="lc-access-lbl">Toegang</div>
       <input type="password" id="pw" placeholder="Toegangscode" autocomplete="current-password" onkeydown="if(event.key==='Enter')tryLogin()">
       <button onclick="tryLogin()">Toegang tot dashboard</button>
+      <button class="lc-btn-sec" onclick="window.location.href='mailto:gizanezra@gmail.com?subject=Toegangsverzoek%20KetenKompas&body=Ik%20wil%20graag%20toegang%20tot%20KetenKompas.%0A%0ANaam%3A%20%5Bnaam%5D%0AOrganisatie%3A%20%5Borganisatie%5D'">Toegang aanvragen</button>
       <div class="lc-err" id="err"></div>
     </div>
-    <div class="lc-foot"><span class="lc-foot-dot"></span>Ontwikkeld voor de GR Slibverwerking · 2026</div>
+    <div class="lc-foot"><span class="lc-foot-dot"></span>Voor de waterschappen die de keten beheren · 2026</div>
   </div>
 </div>
 
