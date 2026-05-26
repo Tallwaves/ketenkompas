@@ -33,18 +33,30 @@
 
   /* ---------- LOGIN ---------- */
   #login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:100;padding:24px}
-  .login-card{width:100%;max-width:380px;text-align:center}
-  .login-mark{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:#7fa8c4;margin-bottom:10px}
-  .login-title{font-size:30px;font-weight:600;color:#fff;letter-spacing:-.02em;margin-bottom:6px}
-  .login-title span{color:#5dcaa5}
-  .login-sub{font-size:14px;color:#9fb4c5;margin-bottom:28px}
-  .login-card input{width:100%;height:48px;border-radius:var(--radius-sm);border:1px solid #28425c;background:#13263b;color:#fff;padding:0 16px;font-size:15px;font-family:var(--font);outline:none;transition:border-color .15s}
-  .login-card input:focus{border-color:#5dcaa5}
-  .login-card input::placeholder{color:#5d7388}
-  .login-card button{width:100%;height:48px;margin-top:12px;border:none;border-radius:var(--radius-sm);background:#5dcaa5;color:#04342c;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
-  .login-card button:hover{background:#7fdcbb}
-  .login-err{color:#f09595;font-size:13px;margin-top:14px;min-height:18px}
-  .login-foot{margin-top:32px;font-size:11px;color:#5d7388;letter-spacing:.04em}
+  .lc{width:100%;max-width:400px}
+  .lc-header{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:20px}
+  .lc-logo{width:48px;height:48px;flex-shrink:0}
+  .lc-brand{display:flex;flex-direction:column}
+  .lc-name{font-size:26px;font-weight:600;color:#fff;letter-spacing:-.02em;line-height:1.1}
+  .lc-name span{color:#5dcaa5}
+  .lc-sub{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#4a6a72;margin-top:3px}
+  .lc-divider{height:1px;background:#1d3a52;margin-bottom:22px}
+  .lc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+  .lc-stat{background:#13263b;border:1px solid #1d3a40;border-radius:10px;padding:14px 10px;text-align:center}
+  .lc-stat-val{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
+  .lc-stat-val.green{color:#5dcaa5}
+  .lc-stat-val.amber{color:#e8a44a}
+  .lc-stat-lbl{font-size:11px;color:#7fa8c4;letter-spacing:.03em}
+  .lc-box{background:#13263b;border:1px solid #1d3a40;border-radius:12px;padding:20px}
+  .lc-access-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4a6a72;margin-bottom:8px}
+  .lc-box input{width:100%;height:46px;border-radius:8px;border:1px solid #28425c;background:#0e1b2a;color:#fff;padding:0 14px;font-size:15px;font-family:var(--font);outline:none;transition:border-color .15s;box-sizing:border-box}
+  .lc-box input:focus{border-color:#5dcaa5}
+  .lc-box input::placeholder{color:#3a5a6a}
+  .lc-box button{width:100%;height:46px;margin-top:10px;border:none;border-radius:8px;background:#5dcaa5;color:#04342c;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
+  .lc-box button:hover{background:#7fdcbb}
+  .lc-err{color:#f09595;font-size:12px;margin-top:10px;min-height:16px}
+  .lc-foot{margin-top:18px;font-size:11px;color:#3a5a52;display:flex;align-items:center;justify-content:center;gap:6px}
+  .lc-foot-dot{width:6px;height:6px;border-radius:50%;background:#2a6a52;flex-shrink:0}
 
   /* ---------- APP SHELL ---------- */
   #app{display:none;min-height:100vh;flex-direction:column}
@@ -322,14 +334,43 @@
 
 <!-- LOGIN -->
 <div id="login">
-  <div class="login-card">
-    <div class="login-mark">Nederlandse Waterketen</div>
-    <div class="login-title">Keten<span>Kompas</span></div>
-    <div class="login-sub">Regie in de slibketen — inzicht, scenario's, robuustheid</div>
-    <input type="password" id="pw" placeholder="Toegangscode" autocomplete="current-password">
-    <button onclick="tryLogin()">Toegang</button>
-    <div class="login-err" id="err"></div>
-    <div class="login-foot">Gebaseerd op openbare bronnen en aannames · onafhankelijk</div>
+  <div class="lc">
+    <div class="lc-header">
+      <svg class="lc-logo" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="34" height="34" rx="9" fill="#0a1520" stroke="#5dcaa5" stroke-width="1.5"/>
+        <polygon points="17,4 27,10 27,24 17,30 7,24 7,10" fill="none" stroke="#1d3a52" stroke-width="0.5"/>
+        <circle cx="17" cy="4" r="3" fill="#5dcaa5"/>
+        <circle cx="27" cy="10" r="2.5" fill="#3a7bd5"/>
+        <circle cx="27" cy="24" r="2.5" fill="#3a7bd5"/>
+        <circle cx="17" cy="30" r="3" fill="#5dcaa5"/>
+        <circle cx="7" cy="24" r="2.5" fill="#3a7bd5"/>
+        <circle cx="7" cy="10" r="2.5" fill="#3a7bd5"/>
+        <circle cx="17" cy="17" r="9" fill="#0a1520" stroke="#5dcaa5" stroke-width="1.5"/>
+        <line x1="17" y1="9" x2="17" y2="12" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="17" y1="22" x2="17" y2="25" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="9" y1="17" x2="12" y2="17" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="22" y1="17" x2="25" y2="17" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
+        <polygon points="17,10 19,17 17,24 15,17" fill="#e8a44a"/>
+        <circle cx="17" cy="17" r="2" fill="#0a1520"/>
+      </svg>
+      <div class="lc-brand">
+        <div class="lc-name">Keten<span>Kompas</span></div>
+        <div class="lc-sub">Nederlandse Waterketen</div>
+      </div>
+    </div>
+    <div class="lc-divider"></div>
+    <div class="lc-stats">
+      <div class="lc-stat"><div class="lc-stat-val green">4</div><div class="lc-stat-lbl">clusters</div></div>
+      <div class="lc-stat"><div class="lc-stat-val green">21</div><div class="lc-stat-lbl">waterschappen</div></div>
+      <div class="lc-stat"><div class="lc-stat-val amber">!</div><div class="lc-stat-lbl">actieve risico's</div></div>
+    </div>
+    <div class="lc-box">
+      <div class="lc-access-lbl">Toegang</div>
+      <input type="password" id="pw" placeholder="Toegangscode" autocomplete="current-password" onkeydown="if(event.key==='Enter')tryLogin()">
+      <button onclick="tryLogin()">Toegang tot dashboard</button>
+      <div class="lc-err" id="err"></div>
+    </div>
+    <div class="lc-foot"><span class="lc-foot-dot"></span>Ontwikkeld voor de GR Slibverwerking · 2026</div>
   </div>
 </div>
 
