@@ -1166,8 +1166,12 @@ function kkSvgPt(e){
 }
 function kkDragStart(e,id){
   e.preventDefault();e.stopPropagation();
+  /* waterschap in overview → direct drill, skip drag machinery */
+  if(!kkView&&KK_DET[id]&&KK_DET[id].type==='Waterschap'&&KK_RWZI[id]){
+    kkDrillDown(id);return;
+  }
   const pt=kkSvgPt(e),pos=kkCurPos();
-  kkLastMoved=false; // reset on new press
+  kkLastMoved=false;
   kkDrag={id,ox:pos[id].x,oy:pos[id].y,sx:pt.x,sy:pt.y};kkMoved=false;
 }
 function kkMouseMove(e){
