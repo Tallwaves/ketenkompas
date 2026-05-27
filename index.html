@@ -363,7 +363,15 @@
   .rp-cal-txt{font-size:13px;color:var(--ink-soft);line-height:1.65;margin-bottom:14px}
   .rp-cal-worst{display:flex;align-items:flex-start;gap:8px;background:#f0f0f0;border-radius:7px;padding:9px 12px;font-size:11.5px;color:var(--ink-soft)}
   .rp-cal-worst svg{flex-shrink:0;margin-top:1px;color:var(--ink-faint)}
-  /* section subtitle */
+  .rp-st-block{margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,.08);display:flex;flex-direction:column;gap:7px}
+  .rp-st-row{display:flex;flex-direction:column;gap:2px}
+  .rp-st-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint)}
+  .rp-st-meta{font-size:10px;color:var(--ink-soft);display:flex;justify-content:space-between}
+  .rp-st-nvt{font-size:11px;color:var(--ink-faint);font-style:italic;padding:2px 0}
+  .rp-ph-card{border:1.5px dashed;border-radius:var(--radius);padding:20px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:90px}
+  .rp-ph-icon{font-size:26px;font-weight:300;line-height:1;margin-bottom:6px}
+  .rp-ph-line1{font-size:12px;font-weight:600;margin-bottom:4px}
+  .rp-ph-line2{font-size:10px;color:var(--ink-faint);line-height:1.4}
   .rp-sec-sub{font-size:11px;color:var(--ink-faint);margin-top:-8px;margin-bottom:14px;padding-left:2px;line-height:1.5}
   /* subsection headers */
   .rp-sub-hdr{font-size:10.5px;font-weight:700;padding:5px 12px;border-radius:7px;margin-bottom:10px;display:flex;align-items:center;gap:7px}
@@ -1000,7 +1008,7 @@ function renderRobuust(){
   const opCard=o=>{
     if(!o.cap){
       return `<div class="rp-op-card ${o.status}">
-        <div class="rp-op-nm">${o.naam}${o.label?` <span class="rp-badge geblokkeerd">${o.label}</span>`:''}</div>
+        <div class="rp-op-nm">${o.naam}${o.label?` <span class="rp-badge geblokkeerd">${o.label}</span>`:''}${o.indicatief?` <span class="rp-badge nvt" style="font-size:9px">indicatief</span>`:''}</div>
         ${o.loc?`<div class="rp-op-loc">📍 ${o.loc}</div>`:''}
         ${o.note?`<div class="rp-op-note">${o.note}</div>`:''}
       </div>`;
@@ -1009,7 +1017,7 @@ function renderRobuust(){
     const vrij=Math.max(o.cap-o.bezet,0);
     const metaR=o.status==='danger'?'<b style="color:var(--danger)">geblokkeerd</b>':vrij.toLocaleString()+' ton vrij';
     return `<div class="rp-op-card ${o.status}">
-      <div class="rp-op-nm">${o.naam}${o.label?` <span class="rp-badge geblokkeerd">${o.label}</span>`:''}</div>
+      <div class="rp-op-nm">${o.naam}${o.label?` <span class="rp-badge geblokkeerd">${o.label}</span>`:''}${o.indicatief?` <span class="rp-badge nvt" style="font-size:9px">indicatief</span>`:''}</div>
       <div class="rp-op-loc">📍 ${o.loc}</div>
       <div class="bar" style="margin-bottom:5px"><i class="${o.status}" style="width:${o.status==='danger'?100:pct}%"></i></div>
       <div class="no-meta" style="margin-bottom:10px"><span>${o.bezet.toLocaleString()}/${o.cap.toLocaleString()} ton</span><span>${metaR}</span></div>
@@ -1021,6 +1029,20 @@ function renderRobuust(){
     </div>`;
   };
 
+  // stoffen progress bar (kleur: ≤60% groen, ≤85% oranje, >85% rood)
+  const stBar=(label,huidig,max,eenheid)=>{
+    const pct=Math.min(Math.round(huidig/max*100),100);
+    const st=pct<=60?'ok':(pct<=85?'warning':'danger');
+    return `<div class="rp-st-row"><div class="rp-st-meta"><span class="rp-st-lbl">${label}</span><span>${huidig} / ${max} ${eenheid} · ${pct}%</span></div><div class="bar" style="margin-top:3px"><i class="${st}" style="width:${pct}%"></i></div></div>`;
+  };
+  const pfasBadge=k=>k==='Klasse A'?`<span class="rp-badge ja">${k}</span>`:k==='Klasse B'?`<span class="rp-badge beperkt">${k}</span>`:`<span class="rp-badge nee">${k}</span>`;
+  const stSection=d=>{
+    if(!d||d.gesloten)return `<div class="rp-st-block"><div class="rp-st-nvt">n.v.t. — gesloten</div></div>`;
+    return `<div class="rp-st-block">${stBar('Kwiklimiet',d.kwik_h,d.kwik_max,'mg/kg ds')}${stBar('Arseenlimiet',d.ars_h,d.ars_max,'mg/kg ds')}<div class="rp-st-row"><div class="rp-st-meta"><span class="rp-st-lbl">PFAS-limiet</span><span>${pfasBadge(d.pfas)}</span></div></div></div>`;
+  };
+  const phCard=(bClr,iClr,l1,l2)=>`<div class="rp-ph-card" style="border-color:${bClr};background:${bClr}1a"><div class="rp-ph-icon" style="color:${iClr}">+</div><div class="rp-ph-line1" style="color:${iClr}">${l1}</div>${l2?`<div class="rp-ph-line2">${l2}</div>`:''}</div>`;
+
+  // SUBSECTIE A
   const subA=[
     {naam:"Indaver Delfzijl", loc:"Eemshaven, Groningen", cap:6000, bezet:2501, status:"warning",
      openingstijden:"Ma-Vr 07:00–17:00 · Op afspraak buiten kantooruren",
@@ -1029,28 +1051,58 @@ function renderRobuust(){
      openingstijden:"Ma-Vr 06:00–22:00 · Za beperkt op afspraak",
      vervuild:"Nee", stoffen:"Kwik <1,5 mg/kg ds"},
     {naam:"Zwolle (achtervang noord)", loc:"Zwolle, Overijssel", cap:2000, bezet:800, status:"warning",
-     openingstijden:"Ma-Vr 07:00–18:00",
+     openingstijden:"Ma-Vr 07:00–18:00", indicatief:true,
      vervuild:"Nee", stoffen:"Kwik <1,0 mg/kg ds"},
   ];
+  const gridA=`<div class="rp-opslag-grid">${subA.map(opCard).join('')}${phCard('#145a2a','#1a7a3a','Locatie toevoegen','Klik om een nieuwe opslaglocatie toe te voegen · beheerd via AquaMinerals')}</div>`;
+
+  // SUBSECTIE B — met stoffen bars
   const subB=[
     {naam:"Indaver Groningen (Stainkoeln)", loc:"Hoogezand, Groningen", cap:6000, bezet:2000, status:"ok",
      openingstijden:"Ma-Vr 06:00–22:00 · Za beperkt op afspraak",
-     vervuild:"Beperkt", stoffen:"Kwik <2,0 mg/kg ds · PFAS conform klasse A"},
+     vervuild:"Beperkt", stoffen:"Kwik <2,0 mg/kg ds · PFAS conform klasse A",
+     sd:{kwik_h:1.2, kwik_max:2.0, ars_h:28, ars_max:50, pfas:"Klasse A"}},
     {naam:"Hannover (DE)", cap:null, status:"warning",
-     note:"Accepteert matig verontreinigd slib in beperkte volumes · indicatief"},
+     note:"Accepteert matig verontreinigd slib in beperkte volumes · indicatief",
+     sd:{kwik_h:2.1, kwik_max:3.0, ars_h:45, ars_max:80, pfas:"Klasse B"}},
     {naam:"SDI — Beverwijk (gesloten)", cap:null, status:"danger",
-     note:"Gesloten per 18 dec 2025 · was route voor arseen- en kwikhoudend slib"},
+     note:"Gesloten per 18 dec 2025 · was route voor arseen- en kwikhoudend slib",
+     sd:{gesloten:true}},
   ];
+  const opCardB=o=>{
+    const base=opCard(o);
+    // inject stoffen section before closing </div>
+    return base.slice(0,-6)+stSection(o.sd)+'</div>';
+  };
+  const gridB=`<div class="rp-opslag-grid">${subB.map(opCardB).join('')}${phCard('#7a3800','#b05000','Locatie toevoegen · kwaliteitsopslag','')}</div>`;
+
+  // SUBSECTIE C — specialistische verwerkers
+  const opCardC=o=>{
+    const pct=Math.min(Math.round(o.sd.huidig/o.sd.max*100),100);
+    const st=pct<=60?'ok':(pct<=85?'warning':'danger');
+    return `<div class="rp-op-card ${o.status}">
+      <div class="rp-op-nm">${o.naam}</div>
+      <div class="rp-op-loc">🏭 ${o.verwerker} <span style="font-size:9.5px;color:var(--ink-faint)">· ${o.vsub}</span></div>
+      <div style="font-size:11px;color:var(--ink-soft);margin:5px 0 6px">${o.sub}</div>
+      <span class="rp-badge nvt" style="font-size:9px;display:inline-block;margin-bottom:0">${o.badge}</span>
+      <div class="rp-st-block">${stBar(o.sd.label,o.sd.huidig,o.sd.max,o.sd.eenheid)}</div>
+    </div>`;
+  };
   const subC=[
-    {naam:"Dico Beverwijk", loc:"Beverwijk, Noord-Holland", cap:8000, bezet:0, status:"danger",
-     openingstijden:"Onbekend — vergunning geblokkeerd", label:"Vergunning geblokkeerd",
-     vervuild:"N.v.t.", stoffen:"N.v.t."},
-    {naam:"Specialistische verwerkers (PM)", cap:null, status:"neutral",
-     note:"Voor zwaar verontreinigd slib (kwik >3 mg/kg ds, PFAS klasse C+) — nog nader te identificeren via VvZB/AQM onderzoek 2026"},
+    {naam:"Specialistische verwerker — Kwik", status:"warning",
+     verwerker:"Remondis — Hannover (DE)", vsub:"indicatief",
+     sub:"Verwerker voor kwikhoudend slib · >3 mg/kg ds",
+     badge:"Geaccepteerd volume: beperkt · op aanvraag",
+     sd:{label:"Kwikgehalte", huidig:4.2, max:10, eenheid:"mg/kg ds"}},
+    {naam:"Specialistische verwerker — Arseen", status:"warning",
+     verwerker:"Verwerker Hannover (DE)", vsub:"indicatief — zelfde route als matig verontreinigd",
+     sub:"Verwerker voor arseenhoudend slib · >50 mg/kg ds",
+     badge:"Geaccepteerd volume: beperkt · op aanvraag",
+     sd:{label:"Arseengehalte", huidig:78, max:200, eenheid:"mg/kg ds"}},
   ];
+  const gridC=`<div class="rp-opslag-grid">${subC.map(opCardC).join('')}${phCard('#7a1a1a','#b02020','Specialistische verwerker toevoegen · zware vervuiling','')}${phCard('#7a1a1a','#b02020','Specialistische verwerker toevoegen · overige stoffen','')}</div>`;
 
   const subHdr=(lbl,cls)=>`<div class="rp-sub-hdr ${cls}"><strong>${lbl}</strong></div>`;
-  const subGrid=items=>`<div class="rp-opslag-grid">${items.map(opCard).join('')}</div>`;
 
   /* ---- SECTIE 3 action items ---- */
   const actieItems=[
@@ -1097,15 +1149,15 @@ function renderRobuust(){
       </div>
       <div class="rp-sub-block">
         ${subHdr('A — Normaal verwerkbaar slib','sub-a')}
-        ${subGrid(subA)}
+        ${gridA}
       </div>
       <div class="rp-sub-block">
         ${subHdr('B — Slib met kwaliteitsproblemen (matig verhoogd)','sub-b')}
-        ${subGrid(subB)}
+        ${gridB}
       </div>
       <div class="rp-sub-block">
         ${subHdr('C — Onverwerkbaar slib — specialistische route','sub-c')}
-        ${subGrid(subC)}
+        ${gridC}
       </div>
     </div>
 
