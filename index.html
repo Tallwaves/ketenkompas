@@ -198,6 +198,62 @@
   .gen-btn:hover{background:#cfeee2}
   .gen-btn svg{width:16px;height:16px}
 
+  /* ---------- SCENARIO V2 ---------- */
+  .si-flow{display:flex;flex-direction:column;gap:0}
+  .si-step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);transition:opacity .2s}
+  .si-dimmed{opacity:.38;pointer-events:none}
+  .si-connector{display:flex;justify-content:center;padding:4px 0}
+  .si-conn-line{width:2px;height:22px;background:linear-gradient(to bottom,var(--accent),var(--line))}
+  .si-step-hdr{display:flex;align-items:center;gap:9px;margin-bottom:14px}
+  .si-step-num{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:2px 9px;border-radius:5px;background:var(--surface-2);color:var(--ink-faint)}
+  .si-step-title{font-size:14px;font-weight:700;color:var(--ink)}
+  .si-quick{display:flex;gap:6px;margin-bottom:12px;align-items:center;flex-wrap:wrap}
+  .si-quick-btn{font-size:11.5px;padding:4px 12px;border:1px solid var(--accent);border-radius:6px;background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:var(--font);font-weight:600;transition:all .12s}
+  .si-quick-btn:hover{background:#cfeee2}
+  .si-clear-btn{border-color:var(--line);background:var(--surface);color:var(--ink-faint)}
+  .si-clear-btn:hover{border-color:var(--ink-faint);background:var(--surface-2)}
+  .si-ws-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+  .si-ws-card{border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer;transition:all .12s}
+  .si-ws-card:hover{border-color:var(--accent)}
+  .si-ws-badge{font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .si-ws-nm{font-size:11.5px;font-weight:600;margin-bottom:2px}
+  .si-ws-ton{font-size:10.5px;color:var(--ink-faint)}
+  .si-vw-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .si-vw-card{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--surface)}
+  .si-vw-nm{font-size:13px;font-weight:700;margin-bottom:2px}
+  .si-vw-sub{font-size:10.5px;color:var(--ink-faint);margin-bottom:9px}
+  .si-vw-opts{display:flex;flex-direction:column;gap:4px}
+  .si-vw-opt{font-size:11.5px;padding:5px 9px;border:1px solid var(--line);border-radius:6px;cursor:pointer;background:var(--surface);font-family:var(--font);text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px;transition:all .12s}
+  .si-vw-opt:hover{border-color:var(--ink-faint);background:var(--surface-2)}
+  .si-vw-opt-active{background:var(--warn-bg)!important;border-color:var(--warn)!important;color:var(--warn-ink)!important;font-weight:600}
+  .si-vw-opt-crit{background:var(--danger-bg)!important;border-color:var(--danger)!important;color:var(--danger-ink)!important}
+  .si-vw-opt-desc{font-size:9.5px;opacity:.75;font-weight:400}
+  .si-vw-stof{margin-top:9px;display:flex;align-items:center;gap:8px;padding-top:8px;border-top:1px solid var(--line-soft)}
+  .si-vw-stof label{font-size:11px;color:var(--ink-faint);flex-shrink:0}
+  .si-vw-stof select{font-size:12px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-family:var(--font)}
+  .si-opvang-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:8px}
+  .si-opvang-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+  .si-loc-card{border-radius:8px;padding:9px 11px;border:1px solid var(--line);background:var(--surface)}
+  .si-loc-blocked{opacity:.45}
+  .si-loc-nm{font-size:11.5px;font-weight:600;margin-bottom:5px}
+  .si-totaal{display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--surface-2);border-radius:8px;font-size:12.5px;color:var(--ink-soft)}
+  .si-totaal-val{font-size:17px;font-weight:700;color:var(--ok-ink);margin-left:auto}
+  .si-placeholder{text-align:center;padding:22px 16px;color:var(--ink-faint);font-size:13px;font-style:italic}
+  .si-metrics{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+  .si-metric{background:var(--surface-2);border-radius:8px;padding:10px 14px}
+  .si-metric-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:4px}
+  .si-metric-val{font-size:20px;font-weight:700;color:var(--ink)}
+  .si-buf-box{border-radius:10px;padding:16px 20px;border-left:4px solid;margin-bottom:12px}
+  .si-buf-box.ok{background:var(--ok-bg);border-color:var(--ok)}
+  .si-buf-box.warning{background:var(--warn-bg);border-color:var(--warn)}
+  .si-buf-box.danger{background:var(--danger-bg);border-color:var(--danger)}
+  .si-buf-val{font-size:44px;font-weight:700;line-height:1;letter-spacing:-.03em}
+  .si-buf-box.ok .si-buf-val{color:var(--ok-ink)}.si-buf-box.warning .si-buf-val{color:var(--warn-ink)}.si-buf-box.danger .si-buf-val{color:var(--danger-ink)}
+  .si-buf-lbl{font-size:12px;margin-top:4px;font-weight:600}
+  .si-buf-box.ok .si-buf-lbl{color:var(--ok-ink)}.si-buf-box.warning .si-buf-lbl{color:var(--warn-ink)}.si-buf-box.danger .si-buf-lbl{color:var(--danger-ink)}
+  .si-advies{padding:11px 14px;border-radius:8px;background:var(--surface-2);font-size:13px;color:var(--ink-soft);line-height:1.6;margin-bottom:14px}
+  @media(max-width:820px){.si-ws-grid{grid-template-columns:repeat(2,1fr)}.si-vw-grid{grid-template-columns:1fr}.si-opvang-grid{grid-template-columns:1fr 1fr}}
+
   /* ---------- BESTUUR ---------- */
   .memo{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px 30px;box-shadow:var(--shadow);max-width:760px}
   .memo h3{font-size:17px;font-weight:600;margin-bottom:4px}
@@ -613,29 +669,10 @@
     <!-- SCENARIO -->
     <section class="view" id="view-scenario">
       <div class="page-head">
-        <div class="page-title">Scenario-speler</div>
-        <div class="page-sub">Reken door wat een verstoring betekent voor buffer en doorlooptijd</div>
+        <div class="page-title">Scenario-instrument</div>
+        <div class="page-sub">Doorrekenen van verstoringen in de slibketen · vier stappen</div>
       </div>
-      <div class="controls">
-        <div class="ctrl-label">Kies een verstoring</div>
-        <div class="sbtns" id="sbtns"></div>
-        <div class="slider-row">
-          <label>Duur verstoring</label>
-          <input type="range" id="duur" min="1" max="30" value="14" step="1">
-          <span class="slider-out" id="duur-out">14 dagen</span>
-        </div>
-      </div>
-      <div class="rcards" id="rcards"></div>
-      <div class="timeline">
-        <div class="tl-label">Buffer-tijdlijn</div>
-        <div class="tl-bar" id="tlbar"></div>
-        <div class="tl-scale"><span>dag 0</span><span id="tlmid"></span><span>dag 30</span></div>
-      </div>
-      <div id="verdict"></div>
-      <button class="gen-btn" onclick="genMemo()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
-        Genereer bestuurlijke samenvatting
-      </button>
+      <div id="si-v2-wrap"></div>
     </section>
 
     <!-- ROBUUST PLAN -->
@@ -1177,88 +1214,222 @@ function renderRobuust(){
     </div>`;
 }
 
-/* ============ SCENARIO ============ */
-let huidigScenario="svi", duurDagen=14, laatsteBerekening=null;
+/* ============ SCENARIO V2 ============ */
+let siV2State={ws:new Set(),vw:{}};
+
+const SI_OPV_A=[
+  {naam:"Indaver Delfzijl",cap:6000,bezet:2501,status:"warning"},
+  {naam:"Indaver Groningen (Stainkoeln)",cap:6000,bezet:2000,status:"ok"},
+  {naam:"Zwolle (achtervang)",cap:2000,bezet:800,status:"warning"},
+  {naam:"Dico Beverwijk",cap:8000,bezet:0,status:"danger",geblokkeerd:true},
+];
+const SI_OPV_B=[
+  {naam:"Indaver Groningen (Stainkoeln)",cap:6000,bezet:2000,status:"ok"},
+  {naam:"Hannover (DE)",cap:null,status:"warning"},
+];
+const SI_OPV_C=[
+  {naam:"Remondis — Hannover (kwik)",cap:null,status:"warning"},
+  {naam:"Verwerker Hannover (arseen)",cap:null,status:"warning"},
+];
+const SI_OPTS=[
+  {id:1,lbl:"Onderhoud (gepland)",desc:"−30% capaciteit"},
+  {id:2,lbl:"Verwerking tijdelijk stil",desc:"−50% capaciteit"},
+  {id:3,lbl:"Verwerking geheel stil",desc:"−100% capaciteit"},
+  {id:4,lbl:"Slibkwaliteit — matig verwerkbaar",desc:"Kwaliteitsroute"},
+  {id:5,lbl:"Slib geheel niet verwerkbaar",desc:"Specialistische route"},
+];
+const SI_FACTOR={1:.7,2:.5,3:0,4:0,5:0};
 
 function buildScenario(){
-  document.getElementById('sbtns').innerHTML=Object.entries(DATA.scenarios).map(([k,s],i)=>
-    `<button class="sbtn ${i===0?'active':''}" data-s="${k}">${s.naam}</button>`
-  ).join('');
-  document.querySelectorAll('#sbtns .sbtn').forEach(b=>{
-    b.addEventListener('click',()=>{
-      document.querySelectorAll('#sbtns .sbtn').forEach(x=>x.classList.remove('active'));
-      b.classList.add('active'); huidigScenario=b.dataset.s; renderScenario();
+  const conn=`<div class="si-connector"><div class="si-conn-line"></div></div>`;
+  document.getElementById('si-v2-wrap').innerHTML=`<div class="si-flow">
+    <div class="si-step" id="si-s1">
+      <div class="si-step-hdr"><span class="si-step-num">Stap 1</span><span class="si-step-title">Selecteer een waterschap</span></div>
+      <div class="si-quick">
+        <button class="si-quick-btn" onclick="siSelCluster(0)">✓ Selecteer alle GR Slib</button>
+        <button class="si-quick-btn si-clear-btn" onclick="siClearAll()">Wis selectie</button>
+      </div>
+      <div id="si-ws-grid" class="si-ws-grid"></div>
+    </div>${conn}
+    <div class="si-step si-dimmed" id="si-s2">
+      <div class="si-step-hdr"><span class="si-step-num">Stap 2</span><span class="si-step-title">Kies een verwerker en verstoring</span></div>
+      <div id="si-vw-grid" class="si-vw-grid"></div>
+    </div>${conn}
+    <div class="si-step si-dimmed" id="si-s3">
+      <div class="si-step-hdr"><span class="si-step-num">Stap 3</span><span class="si-step-title">Beschikbare opvangcapaciteit</span></div>
+      <div id="si-opvang"><div class="si-placeholder">Selecteer een waterschap om te beginnen</div></div>
+    </div>${conn}
+    <div class="si-step si-dimmed" id="si-s4">
+      <div class="si-step-hdr"><span class="si-step-num">Stap 4</span><span class="si-step-title">Conclusie scenario</span></div>
+      <div id="si-concl"><div class="si-placeholder">Selecteer een waterschap om te beginnen</div></div>
+    </div>
+  </div>`;
+  siV2State={ws:new Set(),vw:{}};
+  siRenderWS(); siRenderVW();
+}
+
+function siRenderWS(){
+  let h='';
+  DATA.clusters.forEach((c,ci)=>{
+    c.waterschappen.forEach((w,wi)=>{
+      const k=`${ci}-${wi}`,act=siV2State.ws.has(k);
+      const shortNm=c.naam.replace('GR Slibverwerking 2009','GR Slib').replace('SNON — Noord-Nederland','SNON').replace('GMB Zutphen — direct contract','GMB Direct');
+      h+=`<div class="si-ws-card" style="border-color:${act?c.kleur:'var(--line)'};background:${act?c.kleur+'12':'var(--surface)'};border-width:${act?'2px':'1.5px'}" onclick="siToggleWS('${k}')">
+        <span class="si-ws-badge" style="background:${c.kleur}20;color:${c.kleur}">${shortNm}</span>
+        <div class="si-ws-nm">${w.naam}</div>
+        <div class="si-ws-ton">${w.ton} t/dag</div>
+      </div>`;
     });
   });
-  document.getElementById('duur').addEventListener('input',e=>{
-    duurDagen=parseInt(e.target.value);
-    document.getElementById('duur-out').textContent=duurDagen+' dagen';
-    renderScenario();
+  document.getElementById('si-ws-grid').innerHTML=h;
+  const hasWS=siV2State.ws.size>0;
+  ['si-s2','si-s3','si-s4'].forEach(id=>document.getElementById(id).classList.toggle('si-dimmed',!hasWS));
+}
+
+function siRenderVW(){
+  let h='';
+  DATA.clusters.forEach((c,ci)=>{
+    c.verwerkers.forEach((v,vi)=>{
+      const vk=`${ci}-${vi}`,sel=siV2State.vw[vk]||{};
+      const opts=SI_OPTS.map(o=>{
+        const act=sel.type===o.id;
+        return `<button class="si-vw-opt${act?' si-vw-opt-active':''}${act&&o.id>=3?' si-vw-opt-crit':''}" onclick="siToggleV('${vk}',${o.id})">${o.lbl}<span class="si-vw-opt-desc">${o.desc}</span></button>`;
+      }).join('');
+      const stof=(sel.type===4||sel.type===5)?`<div class="si-vw-stof">
+        <label>Vervuilingsstof</label>
+        <select onchange="siSetStof('${vk}',this.value)">
+          <option value="">— kies —</option>
+          ${['Kwik','Arseen','PFAS','Anders'].map(s=>`<option value="${s.toLowerCase()}"${sel.stof===s.toLowerCase()?' selected':''}>${s}</option>`).join('')}
+        </select></div>`:'';
+      h+=`<div class="si-vw-card" style="border-left:3px solid ${c.kleur}">
+        <div class="si-vw-nm">${v.naam}</div>
+        <div class="si-vw-sub">${v.sub} · ${(v.capaciteitTonDag||0).toLocaleString()} t/dag</div>
+        <div class="si-vw-opts">${opts}</div>${stof}
+      </div>`;
+    });
   });
-  renderScenario();
+  document.getElementById('si-vw-grid').innerHTML=h;
 }
 
-function bereken(){
-  const s=DATA.scenarios[huidigScenario];
-  const opslag=DATA.noodBasis-(s.opslagverlies||0);
-  const overschot=Math.max(s.wegval,0);
-  const bufferDagen=overschot>0?Math.floor(opslag/overschot):99;
-  const tekortNa=Math.max(duurDagen-bufferDagen,0);
-  const tekortTon=tekortNa*overschot;
-  return {s,opslag,overschot,bufferDagen,tekortNa,tekortTon,duur:duurDagen};
+function siToggleWS(k){
+  siV2State.ws.has(k)?siV2State.ws.delete(k):siV2State.ws.add(k);
+  siRenderWS(); siUpdateDyn();
+}
+function siSelCluster(ci){
+  DATA.clusters[ci].waterschappen.forEach((_,wi)=>siV2State.ws.add(`${ci}-${wi}`));
+  siRenderWS(); siUpdateDyn();
+}
+function siClearAll(){siV2State={ws:new Set(),vw:{}};siRenderWS();siRenderVW();siUpdateDyn();}
+function siToggleV(vk,type){
+  const cur=siV2State.vw[vk];
+  if(cur&&cur.type===type)delete siV2State.vw[vk];
+  else siV2State.vw[vk]={type,stof:''};
+  siRenderVW(); siUpdateDyn();
+}
+function siSetStof(vk,stof){if(siV2State.vw[vk])siV2State.vw[vk].stof=stof; siUpdateDyn();}
+
+function siCalc(){
+  let selTon=0;
+  siV2State.ws.forEach(k=>{const[ci,wi]=k.split('-').map(Number);selTon+=DATA.clusters[ci].waterschappen[wi].ton;});
+  let remCap=0;
+  DATA.clusters.forEach((c,ci)=>c.verwerkers.forEach((v,vi)=>{
+    const vs=siV2State.vw[`${ci}-${vi}`],cap=v.capaciteitTonDag||0;
+    remCap+=vs?cap*(SI_FACTOR[vs.type]||0):cap;
+  }));
+  const maxType=Object.values(siV2State.vw).reduce((m,v)=>Math.max(m,v.type||0),0);
+  const overshoot=Math.max(selTon-remCap,0);
+  const freeA=SI_OPV_A.filter(o=>!o.geblokkeerd).reduce((s,o)=>s+Math.max(o.cap-o.bezet,0),0);
+  const freeB=SI_OPV_B.filter(o=>o.cap).reduce((s,o)=>s+Math.max(o.cap-o.bezet,0),0);
+  const freeOpvang=maxType>=5?0:maxType>=4?freeB:freeA;
+  const bufDagen=overshoot>0?Math.round(freeOpvang/overshoot):99;
+  const hasV=Object.keys(siV2State.vw).length>0;
+  return{selTon,remCap,overshoot,maxType,freeOpvang,bufDagen,hasV};
 }
 
-function renderScenario(){
-  const r=bereken(); laatsteBerekening=r;
-  const bufKl=r.overschot===0?'good':(r.bufferDagen>=r.duur?(r.bufferDagen>=r.duur+5?'good':'warn'):'alert');
-  document.getElementById('rcards').innerHTML=`
-    <div class="rc"><div class="rc-label">${I.trend} Wegvallende stroom</div><div class="rc-val">${r.overschot} t/dag</div></div>
-    <div class="rc ${bufKl}"><div class="rc-label">${I.hour} Buffer reikt tot</div><div class="rc-val">${r.overschot===0?'—':r.bufferDagen+' dgn'}</div></div>
-    <div class="rc ${r.tekortTon>0?'alert':'good'}"><div class="rc-label">${I.alert} Tekort na ${r.duur} dgn</div><div class="rc-val">${r.tekortTon>0?r.tekortTon.toLocaleString()+' t':'0'}</div></div>`;
-
-  const bufPct=Math.min(r.bufferDagen/30*100,100), shortPct=100-bufPct;
-  let bar=`<div class="tl-seg buffer" style="width:${bufPct}%">${r.overschot===0?'geen tekort':'buffer '+r.bufferDagen+'d'}</div>`;
-  if(r.overschot>0&&shortPct>0)bar+=`<div class="tl-seg shortage" style="width:${shortPct}%">tekort</div>`;
-  document.getElementById('tlbar').innerHTML=bar;
-  document.getElementById('tlmid').textContent='dag '+r.duur+' (gekozen)';
-
-  let v,kl,ic;
-  if(r.overschot===0){kl='warn';ic=I.info;
-    v=`Dico-blokkade kost <strong>${(r.s.opslagverlies||0).toLocaleString()} ton</strong> incidentencapaciteit. Geen directe productie-uitval, maar de marge bij een vólgend incident wordt fors kleiner.`;
-  }else if(r.tekortTon>0){kl='alert';ic=I.alert;
-    v=`Bij <strong>${r.s.naam}</strong> (${r.s.label}) gedurende <strong>${r.duur} dagen</strong> raakt de noodopslag na <strong>${r.bufferDagen} dagen</strong> uitgeput. Tekort: <strong>${r.tekortTon.toLocaleString()} ton</strong>. Alternatieve route of opschaling Indaver nodig.`;
-  }else{kl='good';ic=I.check;
-    v=`Bij <strong>${r.s.naam}</strong> gedurende <strong>${r.duur} dagen</strong> blijft de keten binnen de buffer (${r.bufferDagen} dagen). Geen tekort, maar geen reserve voor een tweede incident.`;
+function siUpdateDyn(){
+  if(siV2State.ws.size===0){
+    const ph='<div class="si-placeholder">Selecteer een waterschap om te beginnen</div>';
+    document.getElementById('si-opvang').innerHTML=ph;
+    document.getElementById('si-concl').innerHTML=ph;
+    return;
   }
-  document.getElementById('verdict').innerHTML=`<div class="verdict ${kl}">${ic}<span>${v}</span></div>`;
+  const r=siCalc();
+
+  // Step 3 — opvang
+  const opvSet=r.maxType>=5?SI_OPV_C:r.maxType>=4?SI_OPV_B:SI_OPV_A;
+  const opvLbl=r.maxType>=5?'Specialistische verwerkers (sub C)':r.maxType>=4?'Kwaliteitsopslag voor vervuild slib (sub B)':'Incidentenopslag normaal slib (sub A)';
+  const locH=opvSet.map(o=>{
+    if(!o.cap)return `<div class="si-loc-card"><div class="si-loc-nm">${o.naam}</div><div style="font-size:10px;color:var(--ink-faint)">Volume onbekend · op aanvraag</div></div>`;
+    const pct=Math.min(Math.round(o.bezet/o.cap*100),100);
+    const vrij=Math.max(o.cap-o.bezet,0);
+    return `<div class="si-loc-card${o.geblokkeerd?' si-loc-blocked':''}">
+      <div class="si-loc-nm">${o.naam}${o.geblokkeerd?` <span class="rp-badge geblokkeerd" style="font-size:8.5px">geblokkeerd</span>`:''}</div>
+      <div class="bar" style="margin:4px 0 3px"><i class="${o.status}" style="width:${pct}%"></i></div>
+      <div style="font-size:10px;color:var(--ink-faint);display:flex;justify-content:space-between"><span>${o.bezet.toLocaleString()}/${o.cap.toLocaleString()} t</span><span>${o.geblokkeerd?'n.v.t.':vrij.toLocaleString()+' vrij'}</span></div>
+    </div>`;
+  }).join('');
+  const totDisp=r.maxType>=5?'onbekend':r.freeOpvang.toLocaleString()+' ton';
+  document.getElementById('si-opvang').innerHTML=`
+    <div class="si-opvang-lbl">${opvLbl}</div>
+    <div class="si-opvang-grid">${locH}</div>
+    <div class="si-totaal"><span>Totaal beschikbare opvangcapaciteit:</span><span class="si-totaal-val">${totDisp}</span></div>`;
+
+  // Step 4 — conclusie
+  if(!r.hasV){
+    document.getElementById('si-concl').innerHTML=`<div class="si-placeholder">Geen verstoring geselecteerd — keten werkt normaal bij huidige waterschap-selectie</div>`;
+    return;
+  }
+  const bufKl=r.maxType>=4?'danger':(r.bufDagen>14?'ok':(r.bufDagen>=7?'warning':'danger'));
+  const bufLbl=r.maxType>=5?'Specialistische route vereist':r.maxType>=4?'Kwaliteitsroute vereist':(r.bufDagen>14?'Ruim voldoende buffer':(r.bufDagen>=7?'Beperkte buffer — actie gewenst':'Kritiek — directe actie vereist'));
+  const bufVal=r.maxType>=4?'—':r.bufDagen>98?'∞':r.bufDagen+' dg';
+  let advies;
+  if(r.maxType>=5)advies=`Isoleer slib op locatie. Neem contact op met specialistische verwerker (Remondis Hannover / Verwerker Hannover). Informeer GR Slib en VvZB.`;
+  else if(r.maxType>=4)advies=`Route slib naar kwaliteitsopslag (Indaver Groningen Stainkoeln). Controleer kwik/arseen-gehalte t.o.v. vergunde limiet. Meld aan AquaMinerals.`;
+  else if(r.bufDagen>14)advies=`Activeer incidentenopslag (Indaver Delfzijl / Indaver Groningen). Buffer ruim voldoende. Monitor dagelijks en evalueer na 7 dagen.`;
+  else if(r.bufDagen>=7)advies=`Activeer opslag bij Indaver Delfzijl en Indaver Groningen. Buffer beperkt — ook alternatieve verwerkingsroute onderzoeken. Directe melding aan AquaMinerals.`;
+  else advies=`Directe activatie incidentenopslag én contact AquaMinerals voor extra capaciteit. Buffer kritiek — mogelijke tekorten na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Escaleer naar GR Slib.`;
+
+  document.getElementById('si-concl').innerHTML=`
+    <div class="si-metrics">
+      <div class="si-metric"><div class="si-metric-lbl">Dagelijks overschot</div><div class="si-metric-val">${r.overshoot} t/dag</div></div>
+      <div class="si-metric"><div class="si-metric-lbl">Beschikbare opvang</div><div class="si-metric-val">${r.maxType>=5?'—':r.freeOpvang.toLocaleString()+' t'}</div></div>
+    </div>
+    <div class="si-buf-box ${bufKl}">
+      <div class="si-buf-val">${bufVal}</div>
+      <div class="si-buf-lbl">${bufLbl}</div>
+    </div>
+    <div class="si-advies"><strong>Aanbevolen actie:</strong> ${advies}</div>
+    <button class="gen-btn" onclick="siGenMemo()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+      Genereer bestuurlijke samenvatting
+    </button>`;
 }
 
-/* ============ BESTUURLIJKE SAMENVATTING ============ */
-function genMemo(){
-  const r=laatsteBerekening||bereken();
-  let kern,advies;
-  if(r.overschot===0){
-    kern=`De blokkade bij ${r.s.naam} onttrekt ${(r.s.opslagverlies||0).toLocaleString()} ton aan de landelijke incidentencapaciteit. Er valt geen productie weg, maar de buffer voor een volgend incident krimpt navenant.`;
-    advies=`Aandringen op spoedige vergunningsafhandeling bij Beverwijk, en de afhankelijkheid van resterende opslag (Indaver) expliciet benoemen richting de GR.`;
-  }else if(r.tekortTon>0){
-    kern=`Bij ${r.s.label} gedurende ${r.duur} dagen is de noodopslag na ${r.bufferDagen} dagen uitgeput. Daarna ontstaat een tekort van ${r.tekortTon.toLocaleString()} ton dat alleen via alternatieve routes of opschaling van de opslag bij Indaver kan worden opgevangen.`;
-    advies=`Dit scenario onderbouwt de noodzaak van extra structurele opslag- of verwerkingscapaciteit. Meenemen als kernargument in het robuustheidsverhaal richting de GR.`;
-  }else{
-    kern=`Bij ${r.s.label} gedurende ${r.duur} dagen blijft de keten binnen de beschikbare buffer (${r.bufferDagen} dagen capaciteit). Er ontstaat geen acuut tekort.`;
-    advies=`De kanttekening is belangrijker dan de geruststelling: na deze verstoring resteert nauwelijks marge voor een tweede gelijktijdig incident. Eén verstoring is opvangbaar, twee tegelijk waarschijnlijk niet.`;
-  }
+function siGenMemo(){
+  const r=siCalc();
+  const wsNames=[...siV2State.ws].map(k=>{const[ci,wi]=k.split('-').map(Number);return DATA.clusters[ci].waterschappen[wi].naam;});
+  const vwNames=Object.entries(siV2State.vw).map(([vk,vs])=>{const[ci,vi]=vk.split('-').map(Number);return DATA.clusters[ci].verwerkers[vi].naam;});
+  const bufTxt=r.maxType>=4?'kwaliteitsroute vereist':r.bufDagen>98?'∞ (geen verstoring)':r.bufDagen+' dagen';
+  const urgentie=r.maxType>=4?'kritiek':r.bufDagen>14?'voldoende':r.bufDagen>=7?'beperkt':'kritiek';
   const d=new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
+  let kern,advies;
+  if(r.maxType>=5){kern=`Er is slib geïdentificeerd dat volledig onverwerkbaar is via reguliere routes. Specialistische verwerkers (Remondis Hannover) dienen te worden ingeschakeld.`;advies=`Isoleer het betreffende slib en schakel specialistische verwerkers in. Informeer GR Slib en VvZB/AQM.`;}
+  else if(r.maxType>=4){kern=`Er is slib met kwaliteitsproblemen geconstateerd. Reguliere verwerking is niet mogelijk. Kwaliteitsopslag (Indaver Groningen Stainkoeln) dient te worden ingezet.`;advies=`Activeer kwaliteitsopslagroute. Controleer contaminantgehalten t.o.v. vergunningsgrenzen. Meld aan AquaMinerals.`;}
+  else if(r.bufDagen>14){kern=`Bij de geselecteerde verstoring (${vwNames.join(', ')}) is een dagelijks overschot van ${r.overshoot} ton/dag. De beschikbare incidentenopslag (${r.freeOpvang.toLocaleString()} ton) biedt een buffer van ${r.bufDagen} dagen.`;advies=`Activeer incidentenopslag bij Indaver Delfzijl / Indaver Groningen. Monitor dagelijks.`;}
+  else if(r.bufDagen>=7){kern=`De buffer is beperkt: ${r.bufDagen} dagen bij ${r.overshoot} ton/dag overschot. Er zijn aanvullende maatregelen nodig.`;advies=`Activeer incidentenopslag en onderzoek alternatieve verwerkingsroutes. Direct melden aan AquaMinerals.`;}
+  else{kern=`Kritieke situatie: bij het huidige overschot (${r.overshoot} ton/dag) is de buffer uitgeput na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Er dreigt een acuut tekort.`;advies=`Directe escalatie naar GR Slib. Activeer alle beschikbare incidentenopslag en contact AquaMinerals voor extra capaciteit.`;}
   document.getElementById('memo').innerHTML=`
-    <h3>Scenario: ${r.s.naam} — ${r.s.label}</h3>
-    <div class="memo-meta">Doorgerekend op ${d} · duur ${r.duur} dagen · KetenKompas</div>
+    <h3>Scenario: verstoring bij ${vwNames.join(' + ')||'—'}</h3>
+    <div class="memo-meta">Doorgerekend op ${d} · KetenKompas Scenario-instrument · urgentie: ${urgentie}</div>
     <p><strong>Situatie.</strong> ${kern}</p>
     <ul>
-      <li>Wegvallende stroom: ${r.overschot} ton/dag${r.overschot===0?' (geen directe uitval)':''}.</li>
-      <li>Buffer reikt tot ${r.overschot===0?'n.v.t.':r.bufferDagen+' dagen'} bij huidige instroom.</li>
-      <li>Resterend tekort na ${r.duur} dagen: ${r.tekortTon>0?r.tekortTon.toLocaleString()+' ton':'geen'}.</li>
+      <li>Betrokken waterschappen: ${wsNames.join(', ')} (samen ${r.selTon} ton/dag).</li>
+      <li>Resterende verwerkingscapaciteit: ${Math.round(r.remCap)} ton/dag.</li>
+      <li>Dagelijks overschot: ${r.overshoot} ton/dag.</li>
+      <li>Buffer (beschikbare opvang): ${bufTxt}.</li>
     </ul>
     <p><strong>Bestuurlijke duiding.</strong> ${advies}</p>
-    <div class="memo-foot">Gebaseerd op openbare bronnen en aannames. Indicatieve doorrekening, geen operationele garantie.</div>
+    <div class="memo-foot">Gebaseerd op KetenKompas indicatieve doorrekening. Geen operationele garantie.</div>
     <button class="copy-btn" onclick="copyMemo()">${I.copy} Kopieer tekst</button>`;
   document.querySelector('nav.tabs button[data-v="bestuur"]').click();
 }
@@ -1266,7 +1437,7 @@ function copyMemo(){
   const t=document.getElementById('memo').innerText.replace(/Kopieer tekst/,'').trim();
   navigator.clipboard.writeText(t);
   const b=document.querySelector('.copy-btn');
-  const o=b.innerHTML; b.innerHTML=I.check+' Gekopieerd'; setTimeout(()=>b.innerHTML=o,1600);
+  const o=b.innerHTML;b.innerHTML=I.check+' Gekopieerd';setTimeout(()=>b.innerHTML=o,1600);
 }
 
 /* ============ SECTIONS ============ */
