@@ -243,6 +243,23 @@
   .si-metric{background:var(--surface-2);border-radius:8px;padding:10px 14px}
   .si-metric-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:4px}
   .si-metric-val{font-size:20px;font-weight:700;color:var(--ink)}
+  .si-metric-sub{font-size:9px;color:var(--ink-faint);margin-top:2px}
+  .si-metric.ok{background:var(--ok-bg)}.si-metric.ok .si-metric-val{color:var(--ok-ink)}
+  .si-metric.warning{background:var(--warn-bg)}.si-metric.warning .si-metric-val{color:var(--warn-ink)}
+  .si-metric.danger{background:var(--danger-bg)}.si-metric.danger .si-metric-val{color:var(--danger-ink)}
+  .si-surplus{display:flex;flex-direction:column;gap:3px;padding:10px 14px;border-radius:8px;border-left:3px solid;margin-bottom:12px;font-size:12px}
+  .si-surplus.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok-ink)}
+  .si-surplus.danger{background:var(--danger-bg);border-color:var(--danger);color:var(--danger-ink)}
+  .si-surplus-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.7}
+  .si-surplus-calc{font-weight:600}
+  .si-surplus-verdict{font-size:11px;font-weight:700}
+  /* stap 2B duur */
+  .si-dagen-display{font-size:26px;font-weight:700;letter-spacing:-.02em;color:var(--ink);margin-bottom:10px;line-height:1}
+  .si-dagen-slider{width:100%;accent-color:var(--accent);height:6px;margin-bottom:10px}
+  .si-dagen-calc{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.55}
+  .si-dagen-calc.ok{background:var(--ok-bg);color:var(--ok-ink)}
+  .si-dagen-calc.warning{background:var(--warn-bg);color:var(--warn-ink)}
+  .si-dagen-calc.danger{background:var(--danger-bg);color:var(--danger-ink)}
   .si-buf-box{border-radius:10px;padding:16px 20px;border-left:4px solid;margin-bottom:12px}
   .si-buf-box.ok{background:var(--ok-bg);border-color:var(--ok)}
   .si-buf-box.warning{background:var(--warn-bg);border-color:var(--warn)}
@@ -1273,7 +1290,7 @@ function renderRobuust(){
 }
 
 /* ============ SCENARIO V2 ============ */
-let siV2State={ws:new Set(),vw:{}};
+let siV2State={ws:new Set(),vw:{},dagen:14};
 
 const SI_OPV_A=[
   {naam:"Indaver Delfzijl",cap:6000,bezet:2501,status:"warning"},
@@ -1313,6 +1330,17 @@ function buildScenario(){
       <div class="si-step-hdr"><span class="si-step-num">Stap 2</span><span class="si-step-title">Kies een verwerker en verstoring</span></div>
       <div id="si-vw-grid" class="si-vw-grid"></div>
     </div>${conn}
+    <div class="si-step si-dimmed" id="si-s2b">
+      <div class="si-step-hdr"><span class="si-step-num">Stap 2B</span><span class="si-step-title">Hoe lang duurt de verstoring?</span></div>
+      <div class="si-dagen-display" id="si-2b-lbl">14 dagen = 2 weken</div>
+      <input type="range" class="si-dagen-slider" id="si-2b-slider" min="1" max="90" value="14" step="1" oninput="siSetDagen2b(this.value)">
+      <div class="si-quick">
+        <button class="si-quick-btn" onclick="siSetDagen2b(7)">1 week</button>
+        <button class="si-quick-btn" onclick="siSetDagen2b(14)">2 weken</button>
+        <button class="si-quick-btn" onclick="siSetDagen2b(30)">1 maand</button>
+      </div>
+      <div class="si-dagen-calc" id="si-2b-calc"></div>
+    </div>${conn}
     <div class="si-step si-dimmed" id="si-s3">
       <div class="si-step-hdr"><span class="si-step-num">Stap 3</span><span class="si-step-title">Beschikbare opvangcapaciteit</span></div>
       <div id="si-opvang"><div class="si-placeholder">Selecteer een waterschap om te beginnen</div></div>
@@ -1322,7 +1350,7 @@ function buildScenario(){
       <div id="si-concl"><div class="si-placeholder">Selecteer een waterschap om te beginnen</div></div>
     </div>
   </div>`;
-  siV2State={ws:new Set(),vw:{}};
+  siV2State={ws:new Set(),vw:{},dagen:14};
   siRenderWS(); siRenderVW();
 }
 
@@ -1341,7 +1369,7 @@ function siRenderWS(){
   });
   document.getElementById('si-ws-grid').innerHTML=h;
   const hasWS=siV2State.ws.size>0;
-  ['si-s2','si-s3','si-s4'].forEach(id=>document.getElementById(id).classList.toggle('si-dimmed',!hasWS));
+  ['si-s2','si-s2b','si-s3','si-s4'].forEach(id=>document.getElementById(id).classList.toggle('si-dimmed',!hasWS));
 }
 
 function siRenderVW(){
@@ -1377,7 +1405,7 @@ function siSelCluster(ci){
   DATA.clusters[ci].waterschappen.forEach((_,wi)=>siV2State.ws.add(`${ci}-${wi}`));
   siRenderWS(); siUpdateDyn();
 }
-function siClearAll(){siV2State={ws:new Set(),vw:{}};siRenderWS();siRenderVW();siUpdateDyn();}
+function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen};siRenderWS();siRenderVW();siUpdateDyn();}
 function siToggleV(vk,type){
   const cur=siV2State.vw[vk];
   if(cur&&cur.type===type)delete siV2State.vw[vk];
@@ -1386,9 +1414,38 @@ function siToggleV(vk,type){
 }
 function siSetStof(vk,stof){if(siV2State.vw[vk])siV2State.vw[vk].stof=stof; siUpdateDyn();}
 
-function siCalc(){
+function siFormatDagen(d){
+  d=parseInt(d);
+  if(d===1)return '1 dag';
+  if(d===7)return '7 dagen = 1 week';
+  if(d===14)return '14 dagen = 2 weken';
+  if(d===30)return '30 dagen = 1 maand';
+  if(d<7)return d+' dagen';
+  if(d<30)return d+' dagen = ~'+Math.round(d/7*10)/10+' weken';
+  return d+' dagen = ~'+Math.round(d/30*10)/10+' maanden';
+}
+function siSetDagen2b(v){
+  siV2State.dagen=parseInt(v);
+  const slider=document.getElementById('si-2b-slider');if(slider)slider.value=v;
+  const lbl=document.getElementById('si-2b-lbl');if(lbl)lbl.textContent=siFormatDagen(siV2State.dagen);
+  siRenderDagenCalc();siUpdateDyn();
+}
+function siRenderDagenCalc(){
+  const el=document.getElementById('si-2b-calc');if(!el)return;
   let selTon=0;
   siV2State.ws.forEach(k=>{const[ci,wi]=k.split('-').map(Number);selTon+=DATA.clusters[ci].waterschappen[wi].ton;});
+  if(!selTon){el.innerHTML='';el.className='si-dagen-calc';return;}
+  const d=siV2State.dagen,total=selTon*d;
+  const cls=total<5000?'ok':total<=15000?'warning':'danger';
+  el.className='si-dagen-calc '+cls;
+  el.innerHTML=`Totaal te verwerken slib gedurende verstoring: <strong>${selTon.toLocaleString()} t/dag</strong> × <strong>${d} dag${d!==1?'en':''}</strong> = <strong>${total.toLocaleString()} ton</strong>`;
+}
+
+function siCalc(){
+  const dagen=siV2State.dagen||14;
+  let selTon=0;
+  siV2State.ws.forEach(k=>{const[ci,wi]=k.split('-').map(Number);selTon+=DATA.clusters[ci].waterschappen[wi].ton;});
+  const totalTon=selTon*dagen;
   let remCap=0;
   DATA.clusters.forEach((c,ci)=>c.verwerkers.forEach((v,vi)=>{
     const vs=siV2State.vw[`${ci}-${vi}`],cap=v.capaciteitTonDag||0;
@@ -1399,12 +1456,14 @@ function siCalc(){
   const freeA=SI_OPV_A.filter(o=>!o.geblokkeerd).reduce((s,o)=>s+Math.max(o.cap-o.bezet,0),0);
   const freeB=SI_OPV_B.filter(o=>o.cap).reduce((s,o)=>s+Math.max(o.cap-o.bezet,0),0);
   const freeOpvang=maxType>=5?0:maxType>=4?freeB:freeA;
+  const surplus=freeOpvang-totalTon;
   const bufDagen=overshoot>0?Math.round(freeOpvang/overshoot):99;
   const hasV=Object.keys(siV2State.vw).length>0;
-  return{selTon,remCap,overshoot,maxType,freeOpvang,bufDagen,hasV};
+  return{selTon,dagen,totalTon,remCap,overshoot,maxType,freeOpvang,surplus,bufDagen,hasV};
 }
 
 function siUpdateDyn(){
+  siRenderDagenCalc();
   if(siV2State.ws.size===0){
     const ph='<div class="si-placeholder">Selecteer een waterschap om te beginnen</div>';
     document.getElementById('si-opvang').innerHTML=ph;
@@ -1447,10 +1506,20 @@ function siUpdateDyn(){
   else if(r.bufDagen>=7)advies=`Activeer opslag bij Indaver Delfzijl en Indaver Groningen. Buffer beperkt — ook alternatieve verwerkingsroute onderzoeken. Directe melding aan AquaMinerals.`;
   else advies=`Directe activatie incidentenopslag én contact AquaMinerals voor extra capaciteit. Buffer kritiek — mogelijke tekorten na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Escaleer naar GR Slib.`;
 
+  const totKl=r.totalTon<5000?'ok':r.totalTon<=15000?'warning':'danger';
+  const surplusKl=r.surplus>=0?'ok':'danger';
+  const surplusLbl=r.surplus>=0?'Voldoende capaciteit':`Capaciteitstekort — ${Math.abs(r.surplus).toLocaleString()} ton extra opslag nodig`;
+  const surplusCalc=r.maxType>=5?'—':`${r.freeOpvang.toLocaleString()} − ${r.totalTon.toLocaleString()} = ${r.surplus>=0?'+':''}${r.surplus.toLocaleString()} ton`;
   document.getElementById('si-concl').innerHTML=`
     <div class="si-metrics">
-      <div class="si-metric"><div class="si-metric-lbl">Dagelijks overschot</div><div class="si-metric-val">${r.overshoot} t/dag</div></div>
-      <div class="si-metric"><div class="si-metric-lbl">Beschikbare opvang</div><div class="si-metric-val">${r.maxType>=5?'—':r.freeOpvang.toLocaleString()+' t'}</div></div>
+      <div class="si-metric"><div class="si-metric-lbl">Dagelijks overschot</div><div class="si-metric-val">${r.overshoot.toLocaleString()} t/dag</div></div>
+      <div class="si-metric ${r.maxType>=5?'':totKl}"><div class="si-metric-lbl">Totale opslagbehoefte</div><div class="si-metric-val">${r.maxType>=5?'—':r.totalTon.toLocaleString()+' ton'}</div><div class="si-metric-sub">${r.maxType>=5?'specialistische route':r.selTon.toLocaleString()+' t/dag × '+r.dagen+' dg'}</div></div>
+      <div class="si-metric"><div class="si-metric-lbl">Beschikbare opvangcapaciteit</div><div class="si-metric-val">${r.maxType>=5?'—':r.freeOpvang.toLocaleString()+' ton'}</div></div>
+    </div>
+    <div class="si-surplus ${r.maxType>=5?'ok':surplusKl}">
+      <span class="si-surplus-lbl">Tekort / Surplus</span>
+      <span class="si-surplus-calc">${surplusCalc}</span>
+      <span class="si-surplus-verdict">${r.maxType>=5?'Specialistische route vereist':surplusLbl}</span>
     </div>
     <div class="si-buf-box ${bufKl}">
       <div class="si-buf-val">${bufVal}</div>
@@ -1459,7 +1528,7 @@ function siUpdateDyn(){
     <div class="si-advies"><strong>Aanbevolen actie:</strong> ${advies}</div>
     <button class="gen-btn" onclick="siGenMemo()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
-      Genereer bestuurlijke samenvatting
+      Genereer scenario rapportage
     </button>`;
 }
 
@@ -1476,15 +1545,22 @@ function siGenMemo(){
   else if(r.bufDagen>14){kern=`Bij de geselecteerde verstoring (${vwNames.join(', ')}) is een dagelijks overschot van ${r.overshoot} ton/dag. De beschikbare incidentenopslag (${r.freeOpvang.toLocaleString()} ton) biedt een buffer van ${r.bufDagen} dagen.`;advies=`Activeer incidentenopslag bij Indaver Delfzijl / Indaver Groningen. Monitor dagelijks.`;}
   else if(r.bufDagen>=7){kern=`De buffer is beperkt: ${r.bufDagen} dagen bij ${r.overshoot} ton/dag overschot. Er zijn aanvullende maatregelen nodig.`;advies=`Activeer incidentenopslag en onderzoek alternatieve verwerkingsroutes. Direct melden aan AquaMinerals.`;}
   else{kern=`Kritieke situatie: bij het huidige overschot (${r.overshoot} ton/dag) is de buffer uitgeput na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Er dreigt een acuut tekort.`;advies=`Directe escalatie naar GR Slib. Activeer alle beschikbare incidentenopslag en contact AquaMinerals voor extra capaciteit.`;}
+  const opvLblMemo=r.maxType>=5?'Specialistische verwerkers (Remondis Hannover / Verwerker Hannover)':r.maxType>=4?'Kwaliteitsopslag: Indaver Groningen (Stainkoeln)':'Incidentenopslag: Indaver Delfzijl, Indaver Groningen (Stainkoeln), Zwolle (achtervang)';
+  const surplusMemo=r.maxType>=5?'niet van toepassing (specialistische route)':r.surplus>=0?`+${r.surplus.toLocaleString()} ton surplus — voldoende capaciteit`:`${r.surplus.toLocaleString()} ton tekort — extra opslag nodig`;
   document.getElementById('memo').innerHTML=`
     <h3>Scenario: verstoring bij ${vwNames.join(' + ')||'—'}</h3>
     <div class="memo-meta">Doorgerekend op ${d} · KetenKompas Scenario-instrument · urgentie: ${urgentie}</div>
     <p><strong>Situatie.</strong> ${kern}</p>
     <ul>
-      <li>Betrokken waterschappen: ${wsNames.join(', ')} (samen ${r.selTon} ton/dag).</li>
-      <li>Resterende verwerkingscapaciteit: ${Math.round(r.remCap)} ton/dag.</li>
-      <li>Dagelijks overschot: ${r.overshoot} ton/dag.</li>
-      <li>Buffer (beschikbare opvang): ${bufTxt}.</li>
+      <li>Betrokken waterschappen: ${wsNames.join(', ')} (samen ${r.selTon.toLocaleString()} ton/dag).</li>
+      <li>Duur verstoring: ${r.dagen} dag${r.dagen!==1?'en':''} (${siFormatDagen(r.dagen)}).</li>
+      <li>Resterende verwerkingscapaciteit: ${Math.round(r.remCap).toLocaleString()} ton/dag.</li>
+      <li>Dagelijks overschot: ${r.overshoot.toLocaleString()} ton/dag.</li>
+      <li>Totale opslagbehoefte: ${r.maxType>=5?'onbekend (specialistische route)':r.totalTon.toLocaleString()+' ton'} (${r.selTon.toLocaleString()} t/dag × ${r.dagen} dagen).</li>
+      <li>Beschikbare opvangcapaciteit: ${r.maxType>=5?'onbekend':r.freeOpvang.toLocaleString()+' ton'}.</li>
+      <li>Tekort / Surplus: ${surplusMemo}.</li>
+      <li>Buffer in tijd: ${bufTxt}.</li>
+      <li>Aanbevolen opslaglocaties: ${opvLblMemo}.</li>
     </ul>
     <p><strong>Bestuurlijke duiding.</strong> ${advies}</p>
     <div class="memo-foot">Gebaseerd op KetenKompas indicatieve doorrekening. Geen operationele garantie.</div>
