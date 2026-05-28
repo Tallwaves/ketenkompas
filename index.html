@@ -452,6 +452,26 @@
   .rp-action-item.warning .rp-action-status{background:rgba(186,117,23,.2);color:var(--warn-ink)}
   .rp-action-txt{font-size:11.5px;color:var(--ink-soft);line-height:1.55}
   @media(max-width:820px){.vw-cap-grid{grid-template-columns:repeat(2,1fr)}.rp-opslag-grid{grid-template-columns:1fr}}
+  /* Sectie 3 — uitgebreid */
+  .rp-s3-blok-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint);margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .rp-s3-blok-lbl:first-of-type{margin-top:4px}
+  .rp-s3-noodgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:4px}
+  .rp-s3-noodcard{border:1px solid var(--line);border-radius:9px;padding:12px 14px;background:var(--surface-2);display:flex;flex-direction:column;gap:6px}
+  .rp-s3-noodcard-nm{font-size:12.5px;font-weight:700;color:var(--ink)}
+  .rp-s3-noodcard-cap{font-size:10.5px;color:var(--ink-faint)}
+  .rp-s3-noodcard-txt{font-size:11px;color:var(--ink-soft);line-height:1.5;flex:1}
+  .rp-s3-noodcard-badge{font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:5px;background:var(--surface);border:1px solid var(--line);color:var(--ink-faint);display:inline-block;margin-top:auto}
+  .rp-s3-status{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:4px;display:inline-block}
+  .rp-s3-status.warning{background:var(--warn-bg);color:var(--warn-ink)}
+  .rp-s3-status.danger{background:var(--danger-bg);color:var(--danger-ink)}
+  .rp-s3-thresh{background:var(--surface-2);border-radius:9px;padding:14px 16px;border:1px solid var(--line);margin-bottom:4px}
+  .rp-s3-thresh-lbl{font-size:11.5px;font-weight:700;color:var(--ink);margin-bottom:10px}
+  .rp-s3-thresh-list{list-style:none;padding:0;margin:0 0 10px;display:flex;flex-direction:column;gap:6px}
+  .rp-s3-thresh-list li{font-size:11.5px;color:var(--ink-soft);display:flex;align-items:flex-start;gap:8px;line-height:1.45}
+  .rp-s3-thresh-list li::before{content:"▸";color:var(--danger);flex-shrink:0;font-size:10px;margin-top:2px}
+  .rp-s3-thresh-drempel{font-size:11.5px;font-weight:700;color:var(--danger-ink);background:var(--danger-bg);border-radius:6px;padding:7px 12px}
+  .rp-s3-kwik-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:4px 10px;border-radius:5px;background:#f0e4ff;color:#5a1a8a;display:inline-block;margin-bottom:12px}
+  @media(max-width:820px){.rp-s3-noodgrid{grid-template-columns:1fr}}
 
   /* ---------- BEHEER TAB ---------- */
   nav.tabs button[data-v="beheer"]{color:#c89b20}
@@ -1199,17 +1219,58 @@ function renderRobuust(){
     </div>
 
     <div class="rp-section rp-s3">
-      <div class="rp-sec-hdr">${secIco3}<span class="rp-sec-num s3">SECTIE 3</span><span class="rp-sec-title">Richtlijn: Noodopvang bij calamiteiten</span></div>
+      <div class="rp-sec-hdr">${secIco3}<span class="rp-sec-num s3">SECTIE 3</span><span class="rp-sec-title">Richtlijn: Noodopvang bij grote calamiteiten — Rijksverantwoordelijkheid</span></div>
+      <div class="rp-sec-sub">Van toepassing wanneer zowel reguliere verwerkingscapaciteit als incidentenopslag (sectie 2) zijn uitgeput</div>
       <div class="rp-cal-card">
         <div class="rp-cal-badge">In ontwikkeling · 2026</div>
-        <div class="rp-cal-title">Calamiteitenopslag vervuild slib</div>
-        <div class="rp-cal-sub">Nog uit te werken — VvZB trekker</div>
-        <div class="rp-cal-txt">Het Robuust Plan Slib II voorziet nog niet in specifieke maatregelen voor slib met kwaliteitsproblemen. Eind 2025 bleek dat vervuild slib (o.a. kwikverontreiniging) niet in de reguliere verwerking én niet in de incidentenopslag terecht kon. De VvZB werkt in 2026 de beheersmaatregelen uit in samenwerking met Aquaminerals.</div>
-        <div class="rp-actions">${actieHtml}</div>
-        <div class="rp-cal-worst" style="margin-top:14px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
-          <span>Maatstaaf worst-case: <b>Grootste RWZI (Harnaschpolder / RWZI West): ~275 ton/dag · ~2.000 ton/week</b></span>
+
+        <div class="rp-s3-blok-lbl">Verantwoordelijkheidsverdeling</div>
+        <div class="rp-cal-txt">De noodopvang bij calamiteiten die de incidentencapaciteit overstijgen valt onder de verantwoordelijkheid van het Rijk (ministerie van I&amp;W en Rijkswaterstaat). Waterschappen kunnen hierop geen beroep doen bij reguliere incidenten — alleen bij zeer grote calamiteiten.</div>
+
+        <div class="rp-s3-blok-lbl">Onderzochte noodopties</div>
+        <div class="rp-s3-noodgrid">
+          <div class="rp-s3-noodcard">
+            <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+              <span class="rp-s3-noodcard-nm">Zandscheidingsbekkens RWS</span>
+              <span class="rp-s3-status warning">In onderzoek</span>
+            </div>
+            <div class="rp-s3-noodcard-cap">Capaciteit: ~80.000 ton indicatief</div>
+            <div class="rp-s3-noodcard-txt">RWS onderzoekt beschikbaarheid voor ~10 jaar als noodoptie. Nog niet formeel vastgelegd.</div>
+            <span class="rp-s3-noodcard-badge">Rijkswaterstaat — niet geactiveerd</span>
+          </div>
+          <div class="rp-s3-noodcard">
+            <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+              <span class="rp-s3-noodcard-nm">Tijdelijk storten</span>
+              <span class="rp-s3-status danger">Niet vergund</span>
+            </div>
+            <div class="rp-s3-noodcard-txt">Storten van zuiveringsslib is onder normale omstandigheden niet vergund. Vereist ministeriële ontheffing. Oplossing van laatste resort.</div>
+            <span class="rp-s3-noodcard-badge">Vereist ontheffing I&amp;W</span>
+          </div>
+          <div class="rp-s3-noodcard">
+            <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+              <span class="rp-s3-noodcard-nm">Calamiteitenregeling I&amp;W</span>
+              <span class="rp-s3-status warning">In voorbereiding</span>
+            </div>
+            <div class="rp-s3-noodcard-txt">Formele afspraken met ministerie I&amp;W over noodmaatregelen zijn nog niet vastgelegd. Onderdeel van Robuust Plan II implementatie 2026.</div>
+            <span class="rp-s3-noodcard-badge">Geen formele afspraken — nog uit te werken</span>
+          </div>
         </div>
+
+        <div class="rp-s3-blok-lbl">Activatiedrempel</div>
+        <div class="rp-s3-thresh">
+          <div class="rp-s3-thresh-lbl">Noodopvang Rijk wordt geactiveerd wanneer:</div>
+          <ul class="rp-s3-thresh-list">
+            <li>Reguliere verwerkingscapaciteit volledig uitgevallen</li>
+            <li>Incidentenopslag (100.000 ton/jaar) volledig bezet</li>
+            <li>Geen alternatieve verwerkingsroutes beschikbaar</li>
+          </ul>
+          <div class="rp-s3-thresh-drempel">Geschatte activatiedrempel: &gt;4 weken volledige uitval bij één grote verwerker</div>
+        </div>
+
+        <div class="rp-s3-blok-lbl">Kwikhoudend slib als nieuw vraagstuk</div>
+        <span class="rp-s3-kwik-lbl">Nieuw vraagstuk 2025/2026 — kwaliteitsincidenten</span>
+        <div class="rp-cal-txt">Dit valt buiten de bestaande drie richtlijnen van het Robuust Plan. Eind 2025 bleek dat vervuild slib (o.a. kwikverontreiniging) niet in de reguliere verwerking én niet in de incidentenopslag terecht kon.</div>
+        <div class="rp-actions">${actieHtml}</div>
       </div>
     </div>`;
 }
