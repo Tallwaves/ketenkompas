@@ -260,6 +260,9 @@
   .si-dagen-calc.ok{background:var(--ok-bg);color:var(--ok-ink)}
   .si-dagen-calc.warning{background:var(--warn-bg);color:var(--warn-ink)}
   .si-dagen-calc.danger{background:var(--danger-bg);color:var(--danger-ink)}
+  .si-opvang-footnote{font-size:9.5px;color:var(--ink-faint);margin-bottom:10px;padding:4px 6px;font-style:italic}
+  .si-demo{background:#f4f5f6;border:1.5px dashed #ccc;border-radius:10px;padding:16px 18px}
+  .si-demo-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#888;margin-bottom:14px;padding-bottom:8px;border-bottom:1px dashed #d0d0d0}
   .si-buf-box{border-radius:10px;padding:16px 20px;border-left:4px solid;margin-bottom:12px}
   .si-buf-box.ok{background:var(--ok-bg);border-color:var(--ok)}
   .si-buf-box.warning{background:var(--warn-bg);border-color:var(--warn)}
@@ -1462,12 +1465,27 @@ function siCalc(){
   return{selTon,dagen,totalTon,remCap,overshoot,maxType,freeOpvang,surplus,bufDagen,hasV};
 }
 
+function siDemoCard(){
+  return `<div class="si-demo">
+    <div class="si-demo-lbl">Voorbeeldscenario · pas de selecties aan voor jouw situatie</div>
+    <div class="si-metrics">
+      <div class="si-metric warning"><div class="si-metric-lbl">Totale opslagbehoefte</div><div class="si-metric-val">8.310 ton</div><div class="si-metric-sub">277 t/dag × 30 dg</div></div>
+      <div class="si-metric"><div class="si-metric-lbl">Beschikbare opvang</div><div class="si-metric-val" style="font-size:13px;line-height:1.3">onbekend *</div><div class="si-metric-sub">op aanvraag bij AQM</div></div>
+    </div>
+    <div class="si-surplus danger">
+      <span class="si-surplus-lbl">Tekort / Surplus</span>
+      <span class="si-surplus-calc">Niet te berekenen — capaciteit specialistische verwerkers onbekend *</span>
+      <span class="si-surplus-verdict">* indicatieve waarde — werkelijke capaciteit op aanvraag bij AQM</span>
+    </div>
+    <div class="si-advies"><strong>Verstoring:</strong> AGV (277 t/dag) · SDI Alkmaar — slib geheel niet verwerkbaar (kwik) · 30 dagen<br><br><strong>Aanbevolen actie:</strong> Isoleer slib op locatie RWZI West. Contact Remondis Hannover voor kwikhoudend slib. Informeer GR Slib en VvZB.</div>
+  </div>`;
+}
+
 function siUpdateDyn(){
   siRenderDagenCalc();
   if(siV2State.ws.size===0){
-    const ph='<div class="si-placeholder">Selecteer een waterschap om te beginnen</div>';
-    document.getElementById('si-opvang').innerHTML=ph;
-    document.getElementById('si-concl').innerHTML=ph;
+    document.getElementById('si-opvang').innerHTML='<div class="si-placeholder">Selecteer een waterschap om te beginnen</div>';
+    document.getElementById('si-concl').innerHTML=siDemoCard();
     return;
   }
   const r=siCalc();
@@ -1493,9 +1511,10 @@ function siUpdateDyn(){
 
   // Step 4 — conclusie
   if(!r.hasV){
-    document.getElementById('si-concl').innerHTML=`<div class="si-placeholder">Geen verstoring geselecteerd — keten werkt normaal bij huidige waterschap-selectie</div>`;
+    document.getElementById('si-concl').innerHTML=siDemoCard();
     return;
   }
+
   const bufKl=r.maxType>=4?'danger':(r.bufDagen>14?'ok':(r.bufDagen>=7?'warning':'danger'));
   const bufLbl=r.maxType>=5?'Specialistische route vereist':r.maxType>=4?'Kwaliteitsroute vereist':(r.bufDagen>14?'Ruim voldoende buffer':(r.bufDagen>=7?'Beperkte buffer — actie gewenst':'Kritiek — directe actie vereist'));
   const bufVal=r.maxType>=4?'—':r.bufDagen>98?'∞':r.bufDagen+' dg';
@@ -1506,20 +1525,31 @@ function siUpdateDyn(){
   else if(r.bufDagen>=7)advies=`Activeer opslag bij Indaver Delfzijl en Indaver Groningen. Buffer beperkt — ook alternatieve verwerkingsroute onderzoeken. Directe melding aan AquaMinerals.`;
   else advies=`Directe activatie incidentenopslag én contact AquaMinerals voor extra capaciteit. Buffer kritiek — mogelijke tekorten na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Escaleer naar GR Slib.`;
 
+  // Display values: indicatief for kwaliteitsroutes
   const totKl=r.totalTon<5000?'ok':r.totalTon<=15000?'warning':'danger';
-  const surplusKl=r.surplus>=0?'ok':'danger';
-  const surplusLbl=r.surplus>=0?'Voldoende capaciteit':`Capaciteitstekort — ${Math.abs(r.surplus).toLocaleString()} ton extra opslag nodig`;
-  const surplusCalc=r.maxType>=5?'—':`${r.freeOpvang.toLocaleString()} − ${r.totalTon.toLocaleString()} = ${r.surplus>=0?'+':''}${r.surplus.toLocaleString()} ton`;
+  const dispOpvang=r.maxType>=5?null:r.maxType>=4?10000:r.freeOpvang;
+  const dispOpvangStr=r.maxType>=5?'onbekend — op aanvraag':r.maxType>=4?'~10.000 ton *':r.freeOpvang.toLocaleString()+' ton';
+  const dispSurplus=dispOpvang!==null?dispOpvang-r.totalTon:null;
+  const surplusKl=dispSurplus===null?'danger':dispSurplus>=0?'ok':'danger';
+  const surplusCalcStr=dispSurplus===null
+    ?'Niet te berekenen — capaciteit specialistische verwerkers onbekend *'
+    :`${dispOpvang.toLocaleString()} − ${r.totalTon.toLocaleString()} = ${dispSurplus>=0?'+':''}${dispSurplus.toLocaleString()} ton`;
+  const surplusVerdict=dispSurplus===null
+    ?'* indicatieve waarde — werkelijke capaciteit op aanvraag bij AQM'
+    :dispSurplus>=0?'Voldoende capaciteit':`Capaciteitstekort — ${Math.abs(dispSurplus).toLocaleString()} ton extra opslag nodig`;
+  const footnote=r.maxType>=4?`<div class="si-opvang-footnote">* indicatieve waarde — werkelijke capaciteit op aanvraag bij AQM</div>`:'';
+
   document.getElementById('si-concl').innerHTML=`
     <div class="si-metrics">
       <div class="si-metric"><div class="si-metric-lbl">Dagelijks overschot</div><div class="si-metric-val">${r.overshoot.toLocaleString()} t/dag</div></div>
-      <div class="si-metric ${r.maxType>=5?'':totKl}"><div class="si-metric-lbl">Totale opslagbehoefte</div><div class="si-metric-val">${r.maxType>=5?'—':r.totalTon.toLocaleString()+' ton'}</div><div class="si-metric-sub">${r.maxType>=5?'specialistische route':r.selTon.toLocaleString()+' t/dag × '+r.dagen+' dg'}</div></div>
-      <div class="si-metric"><div class="si-metric-lbl">Beschikbare opvangcapaciteit</div><div class="si-metric-val">${r.maxType>=5?'—':r.freeOpvang.toLocaleString()+' ton'}</div></div>
+      <div class="si-metric ${totKl}"><div class="si-metric-lbl">Totale opslagbehoefte</div><div class="si-metric-val">${r.totalTon.toLocaleString()} ton</div><div class="si-metric-sub">${r.selTon.toLocaleString()} t/dag × ${r.dagen} dg</div></div>
+      <div class="si-metric"><div class="si-metric-lbl">Beschikbare opvangcapaciteit</div><div class="si-metric-val" style="${r.maxType>=5?'font-size:13px;line-height:1.3':''}">${dispOpvangStr}</div></div>
     </div>
-    <div class="si-surplus ${r.maxType>=5?'ok':surplusKl}">
+    ${footnote}
+    <div class="si-surplus ${surplusKl}">
       <span class="si-surplus-lbl">Tekort / Surplus</span>
-      <span class="si-surplus-calc">${surplusCalc}</span>
-      <span class="si-surplus-verdict">${r.maxType>=5?'Specialistische route vereist':surplusLbl}</span>
+      <span class="si-surplus-calc">${surplusCalcStr}</span>
+      <span class="si-surplus-verdict">${surplusVerdict}</span>
     </div>
     <div class="si-buf-box ${bufKl}">
       <div class="si-buf-val">${bufVal}</div>
@@ -1546,7 +1576,9 @@ function siGenMemo(){
   else if(r.bufDagen>=7){kern=`De buffer is beperkt: ${r.bufDagen} dagen bij ${r.overshoot} ton/dag overschot. Er zijn aanvullende maatregelen nodig.`;advies=`Activeer incidentenopslag en onderzoek alternatieve verwerkingsroutes. Direct melden aan AquaMinerals.`;}
   else{kern=`Kritieke situatie: bij het huidige overschot (${r.overshoot} ton/dag) is de buffer uitgeput na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Er dreigt een acuut tekort.`;advies=`Directe escalatie naar GR Slib. Activeer alle beschikbare incidentenopslag en contact AquaMinerals voor extra capaciteit.`;}
   const opvLblMemo=r.maxType>=5?'Specialistische verwerkers (Remondis Hannover / Verwerker Hannover)':r.maxType>=4?'Kwaliteitsopslag: Indaver Groningen (Stainkoeln)':'Incidentenopslag: Indaver Delfzijl, Indaver Groningen (Stainkoeln), Zwolle (achtervang)';
-  const surplusMemo=r.maxType>=5?'niet van toepassing (specialistische route)':r.surplus>=0?`+${r.surplus.toLocaleString()} ton surplus — voldoende capaciteit`:`${r.surplus.toLocaleString()} ton tekort — extra opslag nodig`;
+  const mDispOpvang=r.maxType>=5?null:r.maxType>=4?10000:r.freeOpvang;
+  const mDispSurplus=mDispOpvang!==null?mDispOpvang-r.totalTon:null;
+  const surplusMemo=mDispSurplus===null?'niet te berekenen — capaciteit specialistische verwerkers onbekend (indicatief)':mDispSurplus>=0?`+${mDispSurplus.toLocaleString()} ton surplus — voldoende capaciteit${r.maxType>=4?' (indicatief)':''}`:` ${mDispSurplus.toLocaleString()} ton tekort — extra opslag nodig${r.maxType>=4?' (indicatief)':''}`;
   document.getElementById('memo').innerHTML=`
     <h3>Scenario: verstoring bij ${vwNames.join(' + ')||'—'}</h3>
     <div class="memo-meta">Doorgerekend op ${d} · KetenKompas Scenario-instrument · urgentie: ${urgentie}</div>
@@ -1557,7 +1589,7 @@ function siGenMemo(){
       <li>Resterende verwerkingscapaciteit: ${Math.round(r.remCap).toLocaleString()} ton/dag.</li>
       <li>Dagelijks overschot: ${r.overshoot.toLocaleString()} ton/dag.</li>
       <li>Totale opslagbehoefte: ${r.maxType>=5?'onbekend (specialistische route)':r.totalTon.toLocaleString()+' ton'} (${r.selTon.toLocaleString()} t/dag × ${r.dagen} dagen).</li>
-      <li>Beschikbare opvangcapaciteit: ${r.maxType>=5?'onbekend':r.freeOpvang.toLocaleString()+' ton'}.</li>
+      <li>Beschikbare opvangcapaciteit: ${r.maxType>=5?'onbekend — op aanvraag (indicatief)':r.maxType>=4?'~10.000 ton (indicatief)':r.freeOpvang.toLocaleString()+' ton'}.</li>
       <li>Tekort / Surplus: ${surplusMemo}.</li>
       <li>Buffer in tijd: ${bufTxt}.</li>
       <li>Aanbevolen opslaglocaties: ${opvLblMemo}.</li>
