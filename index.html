@@ -320,6 +320,9 @@
   .ws-chip-ton{font-weight:700;color:var(--ink-faint);font-size:10.5px;margin-left:6px;flex-shrink:0}
   .ws-chip-row.clickable{cursor:pointer;transition:background .12s}
   .ws-chip-row.clickable:hover{background:#e2eaf2}
+  .ws-chip-row.has-map:hover{background:#d8ebff}
+  .ws-chip-map-hint{display:inline-flex;align-items:center;margin-left:5px;color:var(--accent);opacity:.3;transition:opacity .15s;vertical-align:middle}
+  .ws-chip-row.has-map:hover .ws-chip-map-hint{opacity:1}
   .ws-coming-soon{font-size:11px;color:#795713;background:#fef3cd;border:.5px solid #f5c842;border-radius:6px;padding:4px 9px;margin-top:4px}
   .ws-total-pill{display:inline-block;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:7px}
   /* ---------- LANDELIJKE SITUATIE ---------- */
@@ -629,7 +632,6 @@
     </div>
     <nav class="tabs">
       <button class="active" data-v="dashboard">Ketenoverzicht</button>
-      <button data-v="ketenkaart">Ketenkaart</button>
       <button data-v="robuust">Robuust Plan</button>
       <div class="tab-group">
         <button data-v="scenario">Scenario's</button>
@@ -656,7 +658,6 @@
         <div class="stats" id="stats"></div>
         <div class="stats-footnote" id="stats-footnote">* inclusief indicatieve schattingen</div>
       </div>
-      <div id="scenario-inline" class="scenario-inline"></div>
       <div id="ket-sections"></div>
 
       <div class="legend">
@@ -1543,7 +1544,10 @@ function renderSections(){
       return `<div style="position:relative;padding-bottom:22px;overflow:visible">
         <div class="ket-badge" style="background:${c.kleur}18;color:${c.kleur};border:1px solid ${c.kleur}35">${c.naam}</div>
         ${(DATA.clusters[ci].juridischeVorm||FALLBACK_DATA.clusters[ci].juridischeVorm)?`<div style="font-size:10px;color:var(--ink-faint);margin:-4px 0 6px 1px">${DATA.clusters[ci].juridischeVorm||FALLBACK_DATA.clusters[ci].juridischeVorm}</div>`:''}
-        <div class="ws-chips">${c.ws.map(w=>`<div class="ws-chip-row clickable" onclick="wsChipClick(${ci})"><span class="ws-chip-nm">${w.naam}</span><span class="ws-chip-ton">${w.ton}</span></div>`).join('')}</div>
+        <div class="ws-chips">${c.ws.map(w=>{
+          const mapHint=ci===0?`<span class="ws-chip-map-hint"><svg viewBox="0 0 14 14" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 1a3.5 3.5 0 0 1 3.5 3.5C10.5 8 7 13 7 13S3.5 8 3.5 4.5A3.5 3.5 0 0 1 7 1z"/><circle cx="7" cy="4.5" r="1.2"/></svg></span>`:'';
+          return `<div class="ws-chip-row clickable${ci===0?' has-map':''}" onclick="wsChipClick(${ci})"${ci===0?' title="Bekijk ketenkaart →"':''}><span class="ws-chip-nm">${w.naam}</span><span class="ws-chip-ton">${w.ton}${mapHint}</span></div>`;
+        }).join('')}</div>
         <div id="ws-cs-${ci}" class="ws-coming-soon" style="display:none">Ketenkaart voor dit cluster komt binnenkort</div>
         <span class="ws-total-pill" style="background:${c.kleur};position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);white-space:nowrap">${tot.toLocaleString()} t/dag</span>
       </div>`;
@@ -1648,7 +1652,8 @@ function wsChipClick(ci){
   if(ci===0){
     document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-    document.querySelector('nav.tabs button[data-v="ketenkaart"]').classList.add('active');
+    const kBtn=document.querySelector('nav.tabs button[data-v="ketenkaart"]');
+    if(kBtn)kBtn.classList.add('active');
     document.getElementById('view-ketenkaart').classList.add('active');
   }else{
     const m=document.getElementById('ws-cs-'+ci);
