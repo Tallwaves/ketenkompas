@@ -238,6 +238,9 @@
   .si-vw-nm{font-size:13px;font-weight:700;margin-bottom:2px}
   .si-vw-sub{font-size:10.5px;color:var(--ink-faint);margin-bottom:9px}
   .si-vw-opts{display:flex;flex-direction:column;gap:4px}
+  .si-vw-active-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);margin-bottom:8px;padding:3px 8px;background:var(--accent-soft);border-radius:5px;display:inline-block}
+  .si-vw-card-dim{opacity:.35;pointer-events:none;border-left:3px solid #ccc!important}
+  .si-vw-dim-note{font-size:10px;color:var(--ink-faint);font-style:italic;margin-top:4px}
   .si-vw-opt{font-size:11.5px;padding:5px 9px;border:1px solid var(--line);border-radius:6px;cursor:pointer;background:var(--surface);font-family:var(--font);text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px;transition:all .12s}
   .si-vw-opt:hover{border-color:var(--ink-faint);background:var(--surface-2)}
   .si-vw-opt-active{background:var(--warn-bg)!important;border-color:var(--warn)!important;color:var(--warn-ink)!important;font-weight:600}
@@ -1416,7 +1419,7 @@ function buildScenario(){
     </div>${conn}
     <div class="si-step si-dimmed" id="si-s2">
       <div class="si-step-hdr"><span class="si-step-num">Stap 2</span><span class="si-step-title">Kies een verwerker en verstoring</span></div>
-      <div id="si-vw-grid" class="si-vw-grid"></div>
+      <div id="si-vw-grid"></div>
     </div>${conn}
     <div class="si-step si-dimmed" id="si-s2b">
       <div class="si-step-hdr"><span class="si-step-num">Stap 2B</span><span class="si-step-title">Hoe lang duurt de verstoring?</span></div>
@@ -1488,13 +1491,17 @@ function siRenderWS(){
   document.getElementById('si-ws-grid').innerHTML=h;
   const hasWS=siV2State.ws.size>0;
   ['si-s2','si-s2b','si-s3','si-s4'].forEach(id=>document.getElementById(id).classList.toggle('si-dimmed',!hasWS));
+  siRenderVW();
 }
 
 function siRenderVW(){
-  let h='';
+  const activeClusters=new Set([...siV2State.ws].map(k=>parseInt(k.split('-')[0])));
+  const hasSel=siV2State.ws.size>0;
+  let activeH='',inactiveH='';
   DATA.clusters.forEach((c,ci)=>{
     c.verwerkers.forEach((v,vi)=>{
       const vk=`${ci}-${vi}`,sel=siV2State.vw[vk]||{};
+      const isAct=!hasSel||activeClusters.has(ci);
       const opts=SI_OPTS.map(o=>{
         const act=sel.type===o.id;
         return `<button class="si-vw-opt${act?' si-vw-opt-active':''}${act&&o.id>=3?' si-vw-opt-crit':''}" onclick="siToggleV('${vk}',${o.id})">${o.lbl}<span class="si-vw-opt-desc">${o.desc}</span></button>`;
@@ -1505,14 +1512,29 @@ function siRenderVW(){
           <option value="">— kies —</option>
           ${['Kwik','Arseen','PFAS','Anders'].map(s=>`<option value="${s.toLowerCase()}"${sel.stof===s.toLowerCase()?' selected':''}>${s}</option>`).join('')}
         </select></div>`:'';
-      h+=`<div class="si-vw-card" style="border-left:3px solid ${c.kleur}">
-        <div class="si-vw-nm">${v.naam}</div>
-        <div class="si-vw-sub">${v.sub} · ${(v.capaciteitTonDag||0).toLocaleString()} t/dag</div>
-        <div class="si-vw-opts">${opts}</div>${stof}
-      </div>`;
+      if(isAct){
+        activeH+=`<div class="si-vw-card" style="border-left:3px solid ${c.kleur}">
+          <div class="si-vw-nm">${v.naam}</div>
+          <div class="si-vw-sub">${v.sub} · ${(v.capaciteitTonDag||0).toLocaleString()} t/dag</div>
+          <div class="si-vw-opts">${opts}</div>${stof}
+        </div>`;
+      } else {
+        inactiveH+=`<div class="si-vw-card si-vw-card-dim">
+          <div class="si-vw-nm">${v.naam}</div>
+          <div class="si-vw-sub">${v.sub} · ${(v.capaciteitTonDag||0).toLocaleString()} t/dag</div>
+          <div class="si-vw-dim-note">niet van toepassing voor selectie</div>
+        </div>`;
+      }
     });
   });
-  document.getElementById('si-vw-grid').innerHTML=h;
+  let finalH='';
+  if(!hasSel){
+    finalH=`<div class="si-vw-grid">${activeH}</div>`;
+  } else {
+    if(activeH)finalH+=`<div class="si-vw-active-lbl">Primaire verwerker voor uw selectie</div><div class="si-vw-grid" style="margin-bottom:12px">${activeH}</div>`;
+    if(inactiveH)finalH+=`<div class="si-vw-grid">${inactiveH}</div>`;
+  }
+  document.getElementById('si-vw-grid').innerHTML=finalH;
 }
 
 function siToggleWS(k){
