@@ -212,12 +212,27 @@
   .si-quick-btn:hover{background:#cfeee2}
   .si-clear-btn{border-color:var(--line);background:var(--surface);color:var(--ink-faint)}
   .si-clear-btn:hover{border-color:var(--ink-faint);background:var(--surface-2)}
-  .si-ws-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+  .si-ws-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;align-items:start}
   .si-ws-card{border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer;transition:all .12s}
   .si-ws-card:hover{border-color:var(--accent)}
   .si-ws-badge{font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .si-ws-nm{font-size:11.5px;font-weight:600;margin-bottom:2px}
   .si-ws-ton{font-size:10.5px;color:var(--ink-faint)}
+  .si-ws-card-hdr{display:flex;justify-content:space-between;align-items:flex-start}
+  .si-ws-chevron{width:12px;height:12px;flex-shrink:0;color:var(--ink-faint);transition:transform .15s;margin-top:1px}
+  .si-ws-chevron.open{transform:rotate(180deg)}
+  .si-rwzi-list{margin-top:8px;padding-top:8px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:2px}
+  .si-rwzi-hdr{display:flex;gap:5px;margin-bottom:6px;flex-wrap:wrap}
+  .si-rwzi-selall{font-size:9.5px;padding:2px 8px;border:1px solid var(--accent);border-radius:5px;background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:var(--font);font-weight:600}
+  .si-rwzi-desel{font-size:9.5px;padding:2px 8px;border:1px solid var(--line);border-radius:5px;background:var(--surface);color:var(--ink-faint);cursor:pointer;font-family:var(--font)}
+  .si-rwzi-item{display:flex;align-items:center;gap:6px;padding:3px 4px;border-radius:5px;font-size:11px;transition:background .1s}
+  .si-rwzi-item:hover{background:rgba(0,0,0,.04)}
+  .si-rwzi-item.checked{background:var(--accent-soft)}
+  .si-rwzi-item input[type=checkbox]{accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+  .si-rwzi-nm{flex:1;color:var(--ink);line-height:1.35}
+  .si-rwzi-ton{color:var(--ink-faint);font-size:10px;white-space:nowrap;flex-shrink:0}
+  .si-rwzi-centraal{font-size:7.5px;font-weight:700;padding:1px 5px;border-radius:3px;background:#e8f0fe;color:#1a56a0;display:inline-block;margin-left:4px;vertical-align:middle;line-height:1.6}
+  .si-rwzi-foot{font-size:9px;color:var(--ink-faint);margin-top:6px;padding-top:5px;border-top:1px solid var(--line-soft);font-style:italic}
   .si-vw-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
   .si-vw-card{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--surface)}
   .si-vw-nm{font-size:13px;font-weight:700;margin-bottom:2px}
@@ -1293,7 +1308,7 @@ function renderRobuust(){
 }
 
 /* ============ SCENARIO V2 ============ */
-let siV2State={ws:new Set(),vw:{},dagen:14};
+let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set()};
 
 const SI_OPV_A=[
   {naam:"Indaver Delfzijl",cap:6000,bezet:2501,status:"warning"},
@@ -1317,6 +1332,76 @@ const SI_OPTS=[
   {id:5,lbl:"Slib geheel niet verwerkbaar",desc:"Specialistische route"},
 ];
 const SI_FACTOR={1:.7,2:.5,3:0,4:0,5:0};
+const SI_RWZI={
+  "AGV":[
+    {naam:"RWZI Amsterdam-West",ton:120,centraal:true},
+    {naam:"RWZI Amstelveen",ton:55,centraal:true},
+    {naam:"RWZI Horstermeer",ton:45,centraal:true},
+    {naam:"RWZI Hilversum",ton:20,centraal:false},
+    {naam:"RWZI De Ronde Venen",ton:12,centraal:false},
+    {naam:"RWZI Weesp",ton:10,centraal:false},
+    {naam:"RWZI Uithoorn",ton:8,centraal:false},
+    {naam:"RWZI Loenen",ton:4,centraal:false},
+    {naam:"RWZI Muiden",ton:3,centraal:false},
+  ],
+  "HHNK":[
+    {naam:"RWZI Beverwijk",ton:80,centraal:true},
+    {naam:"RWZI Zaandam",ton:55,centraal:false},
+    {naam:"RWZI Hoorn",ton:35,centraal:false},
+    {naam:"RWZI Den Helder",ton:30,centraal:false},
+    {naam:"RWZI Purmerend",ton:25,centraal:false},
+    {naam:"RWZI Heerhugowaard",ton:18,centraal:false},
+    {naam:"RWZI Schagen",ton:10,centraal:false},
+    {naam:"RWZI Enkhuizen",ton:7,centraal:false},
+    {naam:"RWZI Texel",ton:5,centraal:false},
+    {naam:"RWZI Middenmeer",ton:4,centraal:false},
+    {naam:"RWZI Den Oever",ton:3,centraal:false},
+  ],
+  "Delfland":[
+    {naam:"RWZI Houtrust Den Haag",ton:90,centraal:false},
+    {naam:"RWZI Harnaschpolder Delft",ton:85,centraal:false},
+    {naam:"RWZI Westland",ton:30,centraal:false},
+    {naam:"RWZI Schiedam",ton:20,centraal:false},
+    {naam:"RWZI Pijnacker",ton:15,centraal:false},
+  ],
+  "Hollandse Delta":[
+    {naam:"RWZI Sluisjesdijk Rotterdam",ton:80,centraal:false},
+    {naam:"RWZI Dokhaven Rotterdam",ton:50,centraal:false},
+    {naam:"RWZI Dordrecht",ton:35,centraal:false},
+    {naam:"RWZI Heenvliet",ton:20,centraal:false},
+    {naam:"RWZI Hellevoetsluis",ton:18,centraal:false},
+    {naam:"RWZI Ridderkerk",ton:15,centraal:false},
+    {naam:"RWZI Barendrecht",ton:10,centraal:false},
+    {naam:"RWZI Spijkenisse",ton:5,centraal:false},
+  ],
+  "Rijnland":[
+    {naam:"RWZI Leiden-Noord",ton:95,centraal:false},
+    {naam:"RWZI Alphen a/d Rijn",ton:60,centraal:false},
+    {naam:"RWZI Katwijk",ton:45,centraal:false},
+    {naam:"RWZI Gouda",ton:40,centraal:false},
+    {naam:"RWZI Bodegraven",ton:20,centraal:false},
+    {naam:"RWZI Woerden",ton:18,centraal:false},
+    {naam:"RWZI Lisse",ton:10,centraal:false},
+    {naam:"RWZI Noordwijk",ton:10,centraal:false},
+  ],
+  "HHSK":[
+    {naam:"RWZI Kralingseveer",ton:40,centraal:false},
+    {naam:"RWZI Capelle a/d IJssel",ton:18,centraal:false},
+    {naam:"RWZI Krimpen",ton:10,centraal:false},
+    {naam:"RWZI Gouda-HHSK",ton:8,centraal:false},
+  ],
+  "Rivierenland":[
+    {naam:"RWZI Tiel",ton:20,centraal:false},
+    {naam:"RWZI Gorinchem",ton:15,centraal:false},
+    {naam:"RWZI Culemborg",ton:10,centraal:false},
+  ],
+  "Zuiderzeeland":[
+    {naam:"RWZI Almere",ton:70,centraal:false},
+    {naam:"RWZI Lelystad",ton:25,centraal:false},
+    {naam:"RWZI Emmeloord",ton:10,centraal:false},
+    {naam:"RWZI Dronten",ton:5,centraal:false},
+  ],
+};
 
 function buildScenario(){
   const conn=`<div class="si-connector"><div class="si-conn-line"></div></div>`;
@@ -1353,7 +1438,7 @@ function buildScenario(){
       <div id="si-concl"><div class="si-placeholder">Selecteer een waterschap om te beginnen</div></div>
     </div>
   </div>`;
-  siV2State={ws:new Set(),vw:{},dagen:14};
+  siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set()};
   siRenderWS(); siRenderVW();
 }
 
@@ -1362,11 +1447,41 @@ function siRenderWS(){
   DATA.clusters.forEach((c,ci)=>{
     c.waterschappen.forEach((w,wi)=>{
       const k=`${ci}-${wi}`,act=siV2State.ws.has(k);
+      const rwziData=SI_RWZI[w.naam];
+      const isExp=rwziData&&siV2State.expanded.has(k);
+      const selRWZI=siV2State.rwzi[k]||new Set();
       const shortNm=c.naam.replace('GR Slibverwerking 2009','GR Slib').replace('SNON — Noord-Nederland','SNON').replace('GMB Zutphen — direct contract','GMB Direct');
-      h+=`<div class="si-ws-card" style="border-color:${act?c.kleur:'var(--line)'};background:${act?c.kleur+'12':'var(--surface)'};border-width:${act?'2px':'1.5px'}" onclick="siToggleWS('${k}')">
-        <span class="si-ws-badge" style="background:${c.kleur}20;color:${c.kleur}">${shortNm}</span>
+      let dispTon=w.ton;
+      if(rwziData&&selRWZI.size>0)dispTon=[...selRWZI].reduce((s,ri)=>s+rwziData[ri].ton,0);
+      const clickFn=rwziData?`siExpandWS('${k}')`:`siToggleWS('${k}')`;
+      const chevron=rwziData?`<svg class="si-ws-chevron${isExp?' open':''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>`:'';
+      let rwziHtml='';
+      if(isExp){
+        const rows=rwziData.map((r,ri)=>{
+          const chk=selRWZI.has(ri);
+          return `<label class="si-rwzi-item${chk?' checked':''}" onclick="event.stopPropagation()">
+            <input type="checkbox"${chk?' checked':''} onchange="siToggleRWZI('${k}',${ri})">
+            <span class="si-rwzi-nm">${r.naam}${r.centraal?'<span class="si-rwzi-centraal">centrale ophaal</span>':''}</span>
+            <span class="si-rwzi-ton">${r.ton} t/dag</span>
+          </label>`;
+        }).join('');
+        rwziHtml=`<div class="si-rwzi-list" onclick="event.stopPropagation()">
+          <div class="si-rwzi-hdr">
+            <button class="si-rwzi-selall" onclick="siSelAllRWZI('${k}')">✓ Alle RWZI's selecteren</button>
+            ${selRWZI.size>0?`<button class="si-rwzi-desel" onclick="siDeselAllRWZI('${k}')">Wis</button>`:''}
+          </div>
+          ${rows}
+          <div class="si-rwzi-foot">* indicatieve tonnages per RWZI</div>
+        </div>`;
+      }
+      h+=`<div class="si-ws-card" style="border-color:${act?c.kleur:'var(--line)'};background:${act?c.kleur+'12':'var(--surface)'};border-width:${act?'2px':'1.5px'}" onclick="${clickFn}">
+        <div class="si-ws-card-hdr">
+          <span class="si-ws-badge" style="background:${c.kleur}20;color:${c.kleur}">${shortNm}</span>
+          ${chevron}
+        </div>
         <div class="si-ws-nm">${w.naam}</div>
-        <div class="si-ws-ton">${w.ton} t/dag</div>
+        <div class="si-ws-ton">${dispTon} t/dag${rwziData&&selRWZI.size>0?` <span style="font-size:9px">(${selRWZI.size}/${rwziData.length} RWZI's)</span>`:''}</div>
+        ${rwziHtml}
       </div>`;
     });
   });
@@ -1404,11 +1519,42 @@ function siToggleWS(k){
   siV2State.ws.has(k)?siV2State.ws.delete(k):siV2State.ws.add(k);
   siRenderWS(); siUpdateDyn();
 }
-function siSelCluster(ci){
-  DATA.clusters[ci].waterschappen.forEach((_,wi)=>siV2State.ws.add(`${ci}-${wi}`));
+function siExpandWS(k){
+  siV2State.expanded.has(k)?siV2State.expanded.delete(k):siV2State.expanded.add(k);
+  siRenderWS();
+}
+function siToggleRWZI(wsKey,ri){
+  if(!siV2State.rwzi[wsKey])siV2State.rwzi[wsKey]=new Set();
+  siV2State.rwzi[wsKey].has(ri)?siV2State.rwzi[wsKey].delete(ri):siV2State.rwzi[wsKey].add(ri);
+  siV2State.rwzi[wsKey].size>0?siV2State.ws.add(wsKey):siV2State.ws.delete(wsKey);
   siRenderWS(); siUpdateDyn();
 }
-function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen};siRenderWS();siRenderVW();siUpdateDyn();}
+function siSelAllRWZI(wsKey){
+  const[ci,wi]=wsKey.split('-').map(Number);
+  const rwziData=SI_RWZI[DATA.clusters[ci].waterschappen[wi].naam];
+  if(!rwziData)return;
+  siV2State.rwzi[wsKey]=new Set(rwziData.map((_,i)=>i));
+  siV2State.ws.add(wsKey);
+  siRenderWS(); siUpdateDyn();
+}
+function siDeselAllRWZI(wsKey){
+  siV2State.rwzi[wsKey]=new Set();
+  siV2State.ws.delete(wsKey);
+  siRenderWS(); siUpdateDyn();
+}
+function siSelCluster(ci){
+  DATA.clusters[ci].waterschappen.forEach((w,wi)=>{
+    const k=`${ci}-${wi}`;
+    const rwziData=SI_RWZI[w.naam];
+    if(rwziData){
+      siV2State.rwzi[k]=new Set(rwziData.map((_,i)=>i));
+      siV2State.expanded.add(k);
+    }
+    siV2State.ws.add(k);
+  });
+  siRenderWS(); siUpdateDyn();
+}
+function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set()};siRenderWS();siRenderVW();siUpdateDyn();}
 function siToggleV(vk,type){
   const cur=siV2State.vw[vk];
   if(cur&&cur.type===type)delete siV2State.vw[vk];
@@ -1416,6 +1562,18 @@ function siToggleV(vk,type){
   siRenderVW(); siUpdateDyn();
 }
 function siSetStof(vk,stof){if(siV2State.vw[vk])siV2State.vw[vk].stof=stof; siUpdateDyn();}
+
+function siGetSelTon(){
+  let t=0;
+  siV2State.ws.forEach(k=>{
+    const[ci,wi]=k.split('-').map(Number);
+    const w=DATA.clusters[ci].waterschappen[wi];
+    const rd=SI_RWZI[w.naam],sr=siV2State.rwzi[k];
+    if(rd&&sr&&sr.size>0)[...sr].forEach(ri=>t+=rd[ri].ton);
+    else t+=w.ton;
+  });
+  return t;
+}
 
 function siFormatDagen(d){
   d=parseInt(d);
@@ -1435,8 +1593,7 @@ function siSetDagen2b(v){
 }
 function siRenderDagenCalc(){
   const el=document.getElementById('si-2b-calc');if(!el)return;
-  let selTon=0;
-  siV2State.ws.forEach(k=>{const[ci,wi]=k.split('-').map(Number);selTon+=DATA.clusters[ci].waterschappen[wi].ton;});
+  const selTon=siGetSelTon();
   if(!selTon){el.innerHTML='';el.className='si-dagen-calc';return;}
   const d=siV2State.dagen,total=selTon*d;
   const cls=total<5000?'ok':total<=15000?'warning':'danger';
@@ -1446,8 +1603,7 @@ function siRenderDagenCalc(){
 
 function siCalc(){
   const dagen=siV2State.dagen||14;
-  let selTon=0;
-  siV2State.ws.forEach(k=>{const[ci,wi]=k.split('-').map(Number);selTon+=DATA.clusters[ci].waterschappen[wi].ton;});
+  const selTon=siGetSelTon();
   const totalTon=selTon*dagen;
   let remCap=0;
   DATA.clusters.forEach((c,ci)=>c.verwerkers.forEach((v,vi)=>{
@@ -1564,7 +1720,13 @@ function siUpdateDyn(){
 
 function siGenMemo(){
   const r=siCalc();
-  const wsNames=[...siV2State.ws].map(k=>{const[ci,wi]=k.split('-').map(Number);return DATA.clusters[ci].waterschappen[wi].naam;});
+  const wsNames=[...siV2State.ws].map(k=>{
+    const[ci,wi]=k.split('-').map(Number);
+    const w=DATA.clusters[ci].waterschappen[wi];
+    const rd=SI_RWZI[w.naam],sr=siV2State.rwzi[k];
+    if(rd&&sr&&sr.size>0&&sr.size<rd.length)return `${w.naam} (${[...sr].map(ri=>rd[ri].naam).join(', ')})`;
+    return w.naam;
+  });
   const vwNames=Object.entries(siV2State.vw).map(([vk,vs])=>{const[ci,vi]=vk.split('-').map(Number);return DATA.clusters[ci].verwerkers[vi].naam;});
   const bufTxt=r.maxType>=4?'kwaliteitsroute vereist':r.bufDagen>98?'∞ (geen verstoring)':r.bufDagen+' dagen';
   const urgentie=r.maxType>=4?'kritiek':r.bufDagen>14?'voldoende':r.bufDagen>=7?'beperkt':'kritiek';
