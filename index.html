@@ -306,18 +306,95 @@
   @media(max-width:820px){.si-ws-grid{grid-template-columns:repeat(2,1fr)}.si-vw-grid{grid-template-columns:1fr}.si-opvang-grid{grid-template-columns:1fr 1fr}}
 
   /* ---------- BESTUUR ---------- */
-  .memo{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px 30px;box-shadow:var(--shadow);max-width:760px}
-  .memo h3{font-size:17px;font-weight:600;margin-bottom:4px}
-  .memo .memo-meta{font-size:12px;color:var(--ink-faint);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line)}
-  .memo p{font-size:14px;color:var(--ink);margin-bottom:14px}
-  .memo ul{margin:0 0 16px 0;padding-left:4px;list-style:none}
-  .memo li{font-size:14px;margin-bottom:12px;padding-left:20px;position:relative;line-height:1.55}
-  .memo li::before{content:'';position:absolute;left:2px;top:8px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
-  .memo .memo-foot{font-size:11px;color:var(--ink-faint);margin-top:20px;padding-top:14px;border-top:1px solid var(--line)}
+  .memo{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:0;box-shadow:var(--shadow);max-width:800px;overflow:hidden}
   .memo-empty{color:var(--ink-faint);font-size:14px;text-align:center;padding:40px 0}
   .copy-btn{margin-top:18px;padding:9px 18px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink-soft);font-size:13px;cursor:pointer;font-family:var(--font);font-weight:500;display:inline-flex;align-items:center;gap:6px}
   .copy-btn:hover{border-color:var(--ink-faint)}
   .copy-btn svg{width:14px;height:14px}
+  /* RAPPORT */
+  .rpt{font-family:var(--font);color:#0e1b2a;background:#fff;line-height:1.55}
+  .rpt-hdr{background:#0e1b2a;color:#fff;padding:22px 30px 18px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .rpt-hdr-logo{font-size:16px;font-weight:700;letter-spacing:-.01em}
+  .rpt-hdr-logo span{color:#4ade80;margin-right:6px}
+  .rpt-hdr-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:3px;font-weight:400}
+  .rpt-hdr-right{text-align:right;flex-shrink:0}
+  .rpt-hdr-badge{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:4px;padding:3px 8px;color:rgba(255,255,255,.8);display:inline-block;margin-bottom:6px}
+  .rpt-hdr-date{font-size:11px;color:rgba(255,255,255,.5)}
+  .rpt-body{padding:26px 30px}
+  .rpt-section{margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid #e8eaed}
+  .rpt-section:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .rpt-sec-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#0e1b2a;opacity:.45;margin-bottom:12px}
+  .rpt-summary-text{font-size:14.5px;line-height:1.7;color:#1a2e3a}
+  .rpt-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  .rpt-col{background:#f6f8fa;border-radius:8px;padding:14px 16px}
+  .rpt-col-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#0e1b2a;opacity:.45;margin-bottom:6px}
+  .rpt-col-val{font-size:13px;color:#0e1b2a;font-weight:500;line-height:1.45}
+  .rpt-col-sub{font-size:11px;color:#6b7a8d;margin-top:3px}
+  .rpt-urgentie{border-radius:8px;padding:14px 16px;text-align:center}
+  .rpt-urgentie.ok{background:#d1fae5;border:1px solid #6ee7b7}
+  .rpt-urgentie.warning{background:#fef3c7;border:1px solid #fcd34d}
+  .rpt-urgentie.danger{background:#fee2e2;border:1px solid #fca5a5}
+  .rpt-urg-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.6;margin-bottom:4px}
+  .rpt-urg-val{font-size:17px;font-weight:700;line-height:1.2}
+  .rpt-urg-sub{font-size:10px;margin-top:4px;opacity:.7}
+  .rpt-cap-table{width:100%;border-collapse:collapse}
+  .rpt-cap-table tr{border-bottom:1px solid #f0f2f4}
+  .rpt-cap-table td{padding:10px 0;font-size:13.5px;vertical-align:middle}
+  .rpt-cap-table td:first-child{width:18px;padding-right:10px}
+  .rpt-cap-table td:last-child{text-align:right;font-weight:600;white-space:nowrap}
+  .rpt-cap-table td:nth-child(2){color:#1a2e3a;flex:1}
+  .rpt-cap-table td:nth-child(3){font-size:11.5px;color:#6b7a8d;text-align:right;padding-right:14px}
+  .rpt-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}
+  .rpt-dot.ok{background:#0f6e56}
+  .rpt-dot.warning{background:#d97706}
+  .rpt-dot.danger{background:#e24b4a}
+  .rpt-dot.neutral{background:#9ca3af}
+  .rpt-surplus{font-size:14px;font-weight:700;padding:10px 14px;border-radius:6px;margin-top:8px;display:flex;justify-content:space-between;align-items:center}
+  .rpt-surplus.ok{background:#d1fae5;color:#065f46}
+  .rpt-surplus.danger{background:#fee2e2;color:#991b1b}
+  .rpt-opvang-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .rpt-opvang-card{border:1px solid #e8eaed;border-radius:8px;padding:12px 14px;position:relative}
+  .rpt-opvang-card.aanbevolen{border-color:#0f6e56;background:#f0fdf8}
+  .rpt-opvang-nm{font-size:12.5px;font-weight:600;color:#0e1b2a;margin-bottom:4px}
+  .rpt-opvang-cap{font-size:12px;color:#6b7a8d}
+  .rpt-opvang-act{position:absolute;top:8px;right:8px;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:#0f6e56;color:#fff;border-radius:4px;padding:2px 6px}
+  .rpt-opvang-blok{font-size:11px;color:#e24b4a;margin-top:3px}
+  /* TIJDLIJN */
+  .rpt-tl{margin-top:4px}
+  .rpt-tl-bar{height:22px;border-radius:6px;display:flex;overflow:hidden;margin-bottom:8px}
+  .rpt-tl-seg{height:100%;transition:width .3s}
+  .rpt-tl-labels{display:flex;justify-content:space-between;font-size:10.5px;color:#6b7a8d;position:relative}
+  .rpt-tl-mk{display:flex;flex-direction:column;align-items:center;font-size:10px}
+  .rpt-tl-mk-dag{font-weight:700;color:#0e1b2a;font-size:11px}
+  .rpt-tl-mk-lbl{color:#6b7a8d;text-align:center;max-width:80px;line-height:1.2}
+  /* AANBEVELINGEN */
+  .rpt-aanbev{display:flex;flex-direction:column;gap:12px}
+  .rpt-aanbev-item{display:flex;gap:14px;align-items:flex-start}
+  .rpt-aanbev-num{width:28px;height:28px;border-radius:50%;background:#0e1b2a;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .rpt-aanbev-body{flex:1}
+  .rpt-aanbev-title{font-size:13px;font-weight:600;color:#0e1b2a;margin-bottom:2px}
+  .rpt-aanbev-txt{font-size:13px;color:#374151;line-height:1.55}
+  /* EXPORT KNOPPEN */
+  .rpt-export{display:flex;gap:10px;margin-top:6px;padding-top:20px;border-top:1px solid #e8eaed;flex-wrap:wrap}
+  .rpt-btn{padding:9px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;gap:7px;border:none}
+  .rpt-btn-pdf{background:#0e1b2a;color:#fff}
+  .rpt-btn-pdf:hover{background:#1e3040}
+  .rpt-btn-copy{background:var(--surface);border:1px solid var(--line)!important;color:var(--ink-soft)}
+  .rpt-btn-copy:hover{border-color:var(--ink-faint)!important}
+  .rpt-btn svg{width:14px;height:14px;stroke:currentColor}
+  /* FOOTER */
+  .rpt-foot{background:#f6f8fa;padding:14px 30px;font-size:10.5px;color:#9ca3af;line-height:1.6;border-top:1px solid #e8eaed}
+  /* PRINT */
+  @media print{
+    @page{size:A4;margin:18mm 20mm}
+    .topbar,.tabs-bar,nav.tabs,aside,.page-head,.rpt-export{display:none!important}
+    body,html{background:#fff!important}
+    main,.content-wrap{padding:0!important;margin:0!important;box-shadow:none!important}
+    .view{display:none!important}
+    #view-bestuur{display:block!important;padding:0!important}
+    .memo{box-shadow:none!important;border:none!important;max-width:100%!important}
+    .rpt-tl-bar,.rpt-urgentie,.rpt-surplus,.rpt-aanbev-num{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
 
   .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:11px;color:var(--ink-faint)}
   .legend span{display:flex;align-items:center;gap:5px}
@@ -1880,6 +1957,9 @@ function siUpdateDyn(){
 
 function siGenMemo(){
   const r=siCalc();
+  const d=new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
+
+  // Waterschap labels incl. RWZI detail
   const wsNames=[...siV2State.ws].map(k=>{
     const[ci,wi]=k.split('-').map(Number);
     const w=DATA.clusters[ci].waterschappen[wi];
@@ -1887,45 +1967,203 @@ function siGenMemo(){
     if(rd&&sr&&sr.size>0&&sr.size<rd.length)return `${w.naam} (${[...sr].map(ri=>rd[ri].naam).join(', ')})`;
     return w.naam;
   });
-  const vwNames=Object.entries(siV2State.vw).map(([vk,vs])=>{const[ci,vi]=vk.split('-').map(Number);return DATA.clusters[ci].verwerkers[vi].naam;});
-  const bufTxt=r.maxType>=4?'kwaliteitsroute vereist':r.bufDagen>98?'∞ (geen verstoring)':r.bufDagen+' dagen';
-  const urgentie=r.maxType>=4?'kritiek':r.bufDagen>14?'voldoende':r.bufDagen>=7?'beperkt':'kritiek';
-  const d=new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
-  let kern,advies;
-  if(r.maxType>=5){kern=`Er is slib geïdentificeerd dat volledig onverwerkbaar is via reguliere routes. Specialistische verwerkers (Remondis Hannover) dienen te worden ingeschakeld.`;advies=`Isoleer het betreffende slib en schakel specialistische verwerkers in. Informeer GR Slib en VvZB/AQM.`;}
-  else if(r.maxType>=4){kern=`Er is slib met kwaliteitsproblemen geconstateerd. Reguliere verwerking is niet mogelijk. Kwaliteitsopslag (Indaver Groningen Stainkoeln) dient te worden ingezet.`;advies=`Activeer kwaliteitsopslagroute. Controleer contaminantgehalten t.o.v. vergunningsgrenzen. Meld aan AquaMinerals.`;}
-  else if(r.bufDagen>14){kern=`Bij de geselecteerde verstoring (${vwNames.join(', ')}) is een dagelijks overschot van ${r.overshoot} ton/dag. De beschikbare incidentenopslag (${r.freeOpvang.toLocaleString()} ton) biedt een buffer van ${r.bufDagen} dagen.`;advies=`Activeer incidentenopslag bij Indaver Delfzijl / Indaver Groningen. Monitor dagelijks.`;}
-  else if(r.bufDagen>=7){kern=`De buffer is beperkt: ${r.bufDagen} dagen bij ${r.overshoot} ton/dag overschot. Er zijn aanvullende maatregelen nodig.`;advies=`Activeer incidentenopslag en onderzoek alternatieve verwerkingsroutes. Direct melden aan AquaMinerals.`;}
-  else{kern=`Kritieke situatie: bij het huidige overschot (${r.overshoot} ton/dag) is de buffer uitgeput na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Er dreigt een acuut tekort.`;advies=`Directe escalatie naar GR Slib. Activeer alle beschikbare incidentenopslag en contact AquaMinerals voor extra capaciteit.`;}
-  const opvLblMemo=r.maxType>=5?'Specialistische verwerkers (Remondis Hannover / Verwerker Hannover)':r.maxType>=4?'Kwaliteitsopslag: Indaver Groningen (Stainkoeln)':'Incidentenopslag: Indaver Delfzijl, Indaver Groningen (Stainkoeln), Zwolle (achtervang)';
-  const mDispOpvang=r.maxType>=5?null:r.maxType>=4?10000:r.freeOpvang;
-  const mDispSurplus=mDispOpvang!==null?mDispOpvang-r.totalTon:null;
-  const surplusMemo=mDispSurplus===null?'niet te berekenen — capaciteit specialistische verwerkers onbekend (indicatief)':mDispSurplus>=0?`+${mDispSurplus.toLocaleString()} ton surplus — voldoende capaciteit${r.maxType>=4?' (indicatief)':''}`:` ${mDispSurplus.toLocaleString()} ton tekort — extra opslag nodig${r.maxType>=4?' (indicatief)':''}`;
-  document.getElementById('memo').innerHTML=`
-    <h3>Scenario: verstoring bij ${vwNames.join(' + ')||'—'}</h3>
-    <div class="memo-meta">Doorgerekend op ${d} · KetenKompas Scenario-instrument · urgentie: ${urgentie}</div>
-    <p><strong>Situatie.</strong> ${kern}</p>
-    <ul>
-      <li>Betrokken waterschappen: ${wsNames.join(', ')} (samen ${r.selTon.toLocaleString()} ton/dag).</li>
-      <li>Duur verstoring: ${r.dagen} dag${r.dagen!==1?'en':''} (${siFormatDagen(r.dagen)}).</li>
-      <li>Resterende verwerkingscapaciteit: ${Math.round(r.remCap).toLocaleString()} ton/dag.</li>
-      <li>Dagelijks overschot: ${r.overshoot.toLocaleString()} ton/dag.</li>
-      <li>Totale opslagbehoefte: ${r.maxType>=5?'onbekend (specialistische route)':r.totalTon.toLocaleString()+' ton'} (${r.selTon.toLocaleString()} t/dag × ${r.dagen} dagen).</li>
-      <li>Beschikbare opvangcapaciteit: ${r.maxType>=5?'onbekend — op aanvraag (indicatief)':r.maxType>=4?'~10.000 ton (indicatief)':r.freeOpvang.toLocaleString()+' ton'}.</li>
-      <li>Tekort / Surplus: ${surplusMemo}.</li>
-      <li>Buffer in tijd: ${bufTxt}.</li>
-      <li>Aanbevolen opslaglocaties: ${opvLblMemo}.</li>
-    </ul>
-    <p><strong>Bestuurlijke duiding.</strong> ${advies}</p>
-    <div class="memo-foot">Gebaseerd op KetenKompas indicatieve doorrekening. Geen operationele garantie.</div>
-    <button class="copy-btn" onclick="copyMemo()">${I.copy} Kopieer tekst</button>`;
+  const vwEntries=Object.entries(siV2State.vw).map(([vk,vs])=>{
+    const[ci,vi]=vk.split('-').map(Number);
+    return{naam:DATA.clusters[ci].verwerkers[vi].naam,type:vs.type,stof:vs.stof||'—'};
+  });
+  const vwNames=vwEntries.map(v=>v.naam);
+  const SI_OPTS_LBL={1:'Onderhoud (gepland) — −30% cap',2:'Verwerking tijdelijk stil — −50% cap',3:'Verwerking geheel stil — −100% cap',4:'Slibkwaliteit — matig verwerkbaar',5:'Slib geheel niet verwerkbaar'};
+
+  // Eigen opslag
+  const activeClusters=new Set([...siV2State.ws].map(k=>parseInt(k.split('-')[0])));
+  const{locs,eigenVrij}=siGetEigenOpslag(activeClusters);
+  const eoNeed=r.hasV?r.overshoot*r.dagen:null;
+  const eigenSuf=eoNeed!==null?(eigenVrij>=eoNeed):null;
+  const eigenDagen=r.overshoot>0?Math.min(Math.floor(eigenVrij/r.overshoot),r.dagen):r.dagen;
+
+  // Urgentie
+  const urgKl=r.maxType>=4?'danger':r.bufDagen>14?'ok':r.bufDagen>=7?'warning':'danger';
+  const urgLbl=r.maxType>=5?'Specialistische route':r.maxType>=4?'Kwaliteitsroute':r.bufDagen>14?'Ruim voldoende':r.bufDagen>=7?'Beperkt':'Kritiek';
+  const urgSub=r.maxType>=4?'Kwaliteitsprobleem — speciale route vereist':r.bufDagen>14?`Buffer: ${r.bufDagen} dagen`:r.bufDagen>=7?`Buffer: ${r.bufDagen} dagen — actie gewenst`:`Buffer: ${r.bufDagen} dagen — directe actie`;
+
+  // Capacity display values
+  const dispOpvang=r.maxType>=5?null:r.maxType>=4?10000:r.freeOpvang;
+  const dispSurplus=dispOpvang!==null?dispOpvang-r.totalTon:null;
+  const surplusKl=dispSurplus===null?'danger':dispSurplus>=0?'ok':'danger';
+  const surplusStr=dispSurplus===null?'Niet te berekenen — specialistische route':dispSurplus>=0?`+${dispSurplus.toLocaleString()} ton surplus`:`${dispSurplus.toLocaleString()} ton tekort`;
+  const surplusVerdict=dispSurplus===null?'op aanvraag bij specialistische verwerkers':dispSurplus>=0?'Voldoende capaciteit beschikbaar':`Extra opslag nodig — ${Math.abs(dispSurplus).toLocaleString()} ton`;
+
+  // Executive summary (4-regels max)
+  let summary;
+  if(r.maxType>=5)summary=`De geselecteerde verwerker (${vwNames.join(', ')}) kan het slib van ${wsNames.join(', ')} (${r.selTon.toLocaleString()} ton/dag) volledig niet verwerken vanwege kwaliteitsproblemen. Specialistische verwerkingsroutes moeten direct worden ingeschakeld. Reguliere incidentenopslag is niet toereikend voor dit type slib.`;
+  else if(r.maxType>=4)summary=`Er is een kwaliteitsprobleem geconstateerd bij de verwerking van slib van ${wsNames.join(', ')} (${r.selTon.toLocaleString()} ton/dag). Reguliere verwerkingsroutes zijn niet geschikt; kwaliteitsopslag via Indaver Groningen is de aangewezen route. Directe afstemming met AquaMinerals is vereist.`;
+  else if(r.bufDagen>14)summary=`Bij een verstoring bij ${vwNames.join(' en ')} ontstaat een dagelijks overschot van ${r.overshoot.toLocaleString()} ton slib van ${wsNames.join(', ')}. De beschikbare incidentenopslag (${r.freeOpvang.toLocaleString()} ton) biedt ruim voldoende buffer voor ${r.bufDagen} dagen. Activeer opslag preventief en monitor dagelijks.`;
+  else if(r.bufDagen>=7)summary=`Een verstoring bij ${vwNames.join(' en ')} levert ${r.overshoot.toLocaleString()} ton/dag overschot op van slib van ${wsNames.join(', ')}. De beschikbare buffer is beperkt (${r.bufDagen} dagen) en vraagt om directe activatie van incidentenopslag én onderzoek naar alternatieve verwerkingsroutes.`;
+  else summary=`Kritieke situatie: een verstoring bij ${vwNames.join(' en ')} levert ${r.overshoot.toLocaleString()} ton/dag overschot op. Bij het huidige overschot is de buffer van ${wsNames.join(', ')} uitgeput na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Onmiddellijke escalatie naar GR Slib en activatie van alle beschikbare capaciteit is vereist.`;
+
+  // Capacity table rows
+  const capRows=[
+    {lbl:'Dagelijks overschot',val:r.overshoot.toLocaleString()+' ton/dag',sub:'',dot:r.overshoot===0?'ok':r.overshoot<200?'warning':'danger'},
+    {lbl:'Totale opslagbehoefte',val:r.maxType>=5?'onbekend':r.totalTon.toLocaleString()+' ton',sub:`${r.selTon.toLocaleString()} t/dag × ${r.dagen} dagen`,dot:r.totalTon<5000?'ok':r.totalTon<=15000?'warning':'danger'},
+    {lbl:'Eigen buffer verwerker',val:eigenVrij>0?eigenVrij.toLocaleString()+' ton':'onbekend / niet van toepassing',sub:eigenVrij>0&&r.overshoot>0?eigenDagen+' dagen buffer':'',dot:eigenSuf?'ok':eigenSuf===false?'warning':'neutral'},
+    {lbl:'Incidentenopslag AQM',val:dispOpvang!==null?dispOpvang.toLocaleString()+' ton'+(r.maxType>=4?' *':''):'niet van toepassing',sub:r.maxType>=4?'* indicatief — op aanvraag':'',dot:dispOpvang&&dispOpvang>r.totalTon?'ok':dispOpvang?'warning':'danger'},
+  ];
+
+  // Available opvang options (cards)
+  const opvSet=r.maxType>=5?SI_OPV_C:r.maxType>=4?SI_OPV_B:SI_OPV_A;
+  const opvCardsH=opvSet.map((o,i)=>{
+    const aanbevolen=i===0&&!o.geblokkeerd;
+    const vrijStr=o.cap?`${Math.max(o.cap-o.bezet,0).toLocaleString()} / ${o.cap.toLocaleString()} ton vrij`:'Volume op aanvraag';
+    const blokH=o.geblokkeerd?`<div class="rpt-opvang-blok">⚠ Geblokkeerd — niet beschikbaar</div>`:'';
+    return `<div class="rpt-opvang-card${aanbevolen?' aanbevolen':''}">
+      ${aanbevolen?'<div class="rpt-opvang-act">Aanbevolen</div>':''}
+      <div class="rpt-opvang-nm">${o.naam}</div>
+      <div class="rpt-opvang-cap">${vrijStr}</div>
+      ${blokH}
+    </div>`;
+  }).join('');
+
+  // Timeline
+  const tlDagen=r.dagen;
+  const tlEigenEnd=r.overshoot>0?Math.min(eigenDagen,tlDagen):tlDagen;
+  const tlAQMStart=eigenSuf===false?tlEigenEnd+1:null;
+  const tlEigenPct=Math.round(tlEigenEnd/tlDagen*100);
+  const tlRestPct=100-tlEigenPct;
+  const tlBarH=`<div class="rpt-tl-bar">
+    <div class="rpt-tl-seg" style="width:${tlEigenPct}%;background:${tlEigenPct>0?'#0f6e56':'transparent'}"></div>
+    <div class="rpt-tl-seg" style="width:${tlRestPct}%;background:${eigenSuf===false?(r.bufDagen<=tlDagen?'#e24b4a':'#d97706'):'#0f6e56'}"></div>
+  </div>`;
+  const mkDag0=`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag 0</div><div class="rpt-tl-mk-lbl">Verstoring begint</div></div>`;
+  const mkEigen=eigenDagen>0&&eigenDagen<tlDagen?`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${eigenDagen}</div><div class="rpt-tl-mk-lbl">Eigen buffer vol</div></div>`:'';
+  const mkAQM=tlAQMStart?`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${tlAQMStart}</div><div class="rpt-tl-mk-lbl">AQM opslag nodig</div></div>`:'';
+  const mkEind=`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${tlDagen}</div><div class="rpt-tl-mk-lbl">Einde scenario</div></div>`;
+
+  // Recommendations
+  let aanbev1,aanbev2,aanbev3;
+  if(r.maxType>=5){
+    aanbev1='Isoleer het betreffende slib op locatie en activeer het protocol specialistische verwerkers. Neem direct contact op met Remondis Hannover en meld de situatie bij GR Slib en VvZB.';
+    aanbev2='Monitor dagelijks de slibkwaliteitsparameters (kwik, arseen). Registreer volumes per RWZI en houd logboek bij voor de regiegroep.';
+    aanbev3='Escaleer naar GR Slib-regiegroep zodra transportkosten of opslagvolume de vergunde limieten naderen. Informeer de Unie van Waterschappen als de situatie > 7 dagen aanhoudt.';
+  } else if(r.maxType>=4){
+    aanbev1='Activeer de kwaliteitsopslagroute via Indaver Groningen (Stainkoeln). Controleer contaminantgehalten t.o.v. vergunningsgrenzen en meld de situatie bij AquaMinerals.';
+    aanbev2='Monitor dagelijks de slibkwaliteit en de bezettingsgraad van kwaliteitsopslag. Informeer de regiegroep wekelijks over de voortgang.';
+    aanbev3='Escaleer naar GR Slib en Unie van Waterschappen indien de kwaliteitsopslag binnen 14 dagen vol is of de verwerkingsroute niet tijdig kan worden geopend.';
+  } else if(r.bufDagen>14){
+    aanbev1=`Activeer de incidentenopslag preventief: Indaver Delfzijl en Indaver Groningen (Stainkoeln). Coördineer transport via AquaMinerals. Buffer is ruim voldoende voor ${r.bufDagen} dagen.`;
+    aanbev2='Monitor dagelijks de instroom en de bezetting van opslaglocaties. Evalueer na 7 dagen of de verstoring afloopt of aanhoudt.';
+    aanbev3='Schaal op naar GR Slib-regiegroep indien de verstoring langer dan 14 dagen aanhoudt of indien de bezetting van incidentenopslag boven 80% komt.';
+  } else if(r.bufDagen>=7){
+    aanbev1=`Activeer direct de incidentenopslag (Indaver Delfzijl en Groningen) én onderzoek alternatieve verwerkingsroutes voor de komende ${r.dagen} dagen. Buffer houdt ${r.bufDagen} dagen stand.`;
+    aanbev2='Monitor dagelijks de bezetting van alle opslaglocaties. Beleg binnen 48 uur een overleg met AquaMinerals en de betrokken waterschappen.';
+    aanbev3='Informeer de GR Slib-regiegroep direct. Escaleer naar Unie van Waterschappen als aanvullende capaciteit niet tijdig beschikbaar is.';
+  } else {
+    aanbev1=`Directe activatie van ALLE beschikbare incidentenopslag. Buffer is kritiek — uitputting na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Direct contact AquaMinerals voor noodcapaciteit.`;
+    aanbev2='Uur-voor-uur monitoring van instroom en opslagbezetting. Dagelijkse rapportage aan directie en bestuur van betrokken waterschappen.';
+    aanbev3='Onmiddellijke escalatie naar GR Slib-regiegroep en Unie van Waterschappen. Bereid bestuurlijke communicatie voor richting gemeenten in het verzorgingsgebied.';
+  }
+
+  document.getElementById('memo').innerHTML=`<div class="rpt">
+    <div class="rpt-hdr">
+      <div>
+        <div class="rpt-hdr-logo"><span>■</span>KetenKompas</div>
+        <div class="rpt-hdr-sub">Scenarioanalyse slibketen — indicatieve doorrekening</div>
+      </div>
+      <div class="rpt-hdr-right">
+        <div class="rpt-hdr-badge">Vertrouwelijk — intern gebruik</div>
+        <div class="rpt-hdr-date">${d}</div>
+      </div>
+    </div>
+    <div class="rpt-body">
+      <div class="rpt-section">
+        <div class="rpt-sec-title">Samenvatting</div>
+        <div class="rpt-summary-text">${summary}</div>
+      </div>
+      <div class="rpt-section">
+        <div class="rpt-sec-title">Scenario</div>
+        <div class="rpt-3col">
+          <div class="rpt-col">
+            <div class="rpt-col-lbl">Betrokken waterschap(pen)</div>
+            <div class="rpt-col-val">${wsNames.join('<br>')}</div>
+            <div class="rpt-col-sub">${r.selTon.toLocaleString()} ton/dag totaal</div>
+          </div>
+          <div class="rpt-col">
+            <div class="rpt-col-lbl">Verstoring</div>
+            <div class="rpt-col-val">${vwEntries.map(v=>`${v.naam}<br><span style="font-size:11px;color:#6b7a8d;font-weight:400">${SI_OPTS_LBL[v.type]||'—'}</span>`).join('<br>')}</div>
+            <div class="rpt-col-sub">Duur: ${r.dagen} dagen (${siFormatDagen(r.dagen).split('=').pop().trim()})</div>
+          </div>
+          <div class="rpt-urgentie ${urgKl}">
+            <div class="rpt-urg-lbl">Urgentie</div>
+            <div class="rpt-urg-val">${urgLbl}</div>
+            <div class="rpt-urg-sub">${urgSub}</div>
+          </div>
+        </div>
+      </div>
+      <div class="rpt-section">
+        <div class="rpt-sec-title">Capaciteitsanalyse</div>
+        <table class="rpt-cap-table">
+          ${capRows.map(row=>`<tr>
+            <td><span class="rpt-dot ${row.dot}"></span></td>
+            <td>${row.lbl}</td>
+            <td>${row.sub}</td>
+            <td>${row.val}</td>
+          </tr>`).join('')}
+        </table>
+        <div class="rpt-surplus ${surplusKl}">
+          <span>${surplusVerdict}</span>
+          <span>${surplusStr}</span>
+        </div>
+      </div>
+      <div class="rpt-section">
+        <div class="rpt-sec-title">Beschikbare opvangopties</div>
+        <div class="rpt-opvang-grid">${opvCardsH}</div>
+      </div>
+      <div class="rpt-section">
+        <div class="rpt-sec-title">Tijdlijn</div>
+        <div class="rpt-tl">
+          ${tlBarH}
+          <div class="rpt-tl-labels">
+            ${mkDag0}${mkEigen}${mkAQM}${mkEind}
+          </div>
+        </div>
+      </div>
+      <div class="rpt-section">
+        <div class="rpt-sec-title">Aanbevelingen</div>
+        <div class="rpt-aanbev">
+          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">1</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Directe actie</div><div class="rpt-aanbev-txt">${aanbev1}</div></div></div>
+          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">2</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Monitoring</div><div class="rpt-aanbev-txt">${aanbev2}</div></div></div>
+          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">3</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Escalatie</div><div class="rpt-aanbev-txt">${aanbev3}</div></div></div>
+        </div>
+      </div>
+      <div class="rpt-export">
+        <button class="rpt-btn rpt-btn-pdf" onclick="window.print()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>
+          Exporteer als PDF
+        </button>
+        <button class="rpt-btn rpt-btn-copy" id="rpt-copy-btn" onclick="copyMemo()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Kopieer als tekst
+        </button>
+      </div>
+    </div>
+    <div class="rpt-foot">
+      Gegenereerd door KetenKompas · AGV initiatief · ${d}<br>
+      Indicatieve doorrekening op basis van beschikbare data — geen operationele garantie<br>
+      Classificatie: Intern
+    </div>
+  </div>`;
   document.querySelector('nav.tabs button[data-v="bestuur"]').click();
 }
+
 function copyMemo(){
-  const t=document.getElementById('memo').innerText.replace(/Kopieer tekst/,'').trim();
+  const el=document.getElementById('memo');
+  const clone=el.cloneNode(true);
+  clone.querySelectorAll('.rpt-export,.rpt-hdr-badge').forEach(n=>n.remove());
+  const t=clone.innerText.replace(/\n{3,}/g,'\n\n').trim();
   navigator.clipboard.writeText(t);
-  const b=document.querySelector('.copy-btn');
-  const o=b.innerHTML;b.innerHTML=I.check+' Gekopieerd';setTimeout(()=>b.innerHTML=o,1600);
+  const b=document.getElementById('rpt-copy-btn');
+  if(!b)return;
+  const o=b.innerHTML;b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Gekopieerd';
+  setTimeout(()=>b.innerHTML=o,1600);
 }
 
 /* ============ SECTIONS ============ */
