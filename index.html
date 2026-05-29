@@ -279,6 +279,11 @@
   .si-dagen-calc.warning{background:var(--warn-bg);color:var(--warn-ink)}
   .si-dagen-calc.danger{background:var(--danger-bg);color:var(--danger-ink)}
   .si-opvang-footnote{font-size:9.5px;color:var(--ink-faint);margin-bottom:10px;padding:4px 6px;font-style:italic}
+  .si-step-sub{font-size:10px;color:var(--ink-faint);margin:-10px 0 12px;font-weight:500}
+  .si-3a-result{border-radius:8px;padding:10px 14px;border-left:3px solid;margin-top:10px;font-size:11.5px;line-height:1.55}
+  .si-3a-result.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok-ink)}
+  .si-3a-result.danger{background:var(--danger-bg);border-color:var(--danger);color:var(--danger-ink)}
+  .si-3a-result span{font-size:10.5px;opacity:.85}
   .si-demo{background:#f4f5f6;border:1.5px dashed #ccc;border-radius:10px;padding:16px 18px}
   .si-demo-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#888;margin-bottom:14px;padding-bottom:8px;border-bottom:1px dashed #d0d0d0}
   .si-buf-box{border-radius:10px;padding:16px 20px;border-left:4px solid;margin-bottom:12px}
@@ -1406,6 +1411,34 @@ const SI_RWZI={
   ],
 };
 
+const SI_EIGEN_OPSLAG={
+  0:[
+    {naam:"Silo's RWZI Amsterdam-West",sub:"Op locatie · GR Slib",cap:2000,bezet:800,status:"warning"},
+    {naam:"SDI Alkmaar — bunkeropslag",sub:"Op terrein verwerker · beperkt",cap:1200,bezet:600,status:"warning"},
+    {naam:"SVI Dordrecht — tussenopslag",sub:"Op terrein verwerker · indicatief",cap:null,status:"ok"},
+  ],
+};
+
+function siGetEigenOpslag(activeClusters){
+  let locs=[],eigenVrij=0;
+  activeClusters.forEach(ci=>{
+    const custom=SI_EIGEN_OPSLAG[ci];
+    const dataLocs=(DATA.clusters[ci]||{}).opslaglocaties;
+    (custom||dataLocs||[]).forEach(o=>{
+      locs.push({...o,ci});
+      if(o.cap&&!o.gesloten&&!o.geblokkeerd)eigenVrij+=Math.max(o.cap-o.bezet,0);
+    });
+  });
+  return{locs,eigenVrij};
+}
+
+function siEigenLocCard(o){
+  if(o.gesloten||o.geblokkeerd)return `<div class="si-loc-card si-loc-blocked"><div class="si-loc-nm">${o.naam}</div><div style="font-size:10px;color:var(--ink-faint)">${o.note||'Niet beschikbaar'}</div></div>`;
+  if(!o.cap)return `<div class="si-loc-card"><div class="si-loc-nm">${o.naam}</div>${o.sub?`<div style="font-size:10px;color:var(--ink-faint)">${o.sub}</div>`:''}${o.sub?'':'<div style="font-size:10px;color:var(--ink-faint)">Volume onbekend · op aanvraag</div>'}</div>`;
+  const pct=Math.min(Math.round(o.bezet/o.cap*100),100),vrij=Math.max(o.cap-o.bezet,0);
+  return `<div class="si-loc-card"><div class="si-loc-nm">${o.naam}</div>${o.sub?`<div style="font-size:10px;color:var(--ink-faint);margin-bottom:3px">${o.sub}</div>`:''}<div class="bar" style="margin:4px 0 3px"><i class="${o.status}" style="width:${pct}%"></i></div><div style="font-size:10px;color:var(--ink-faint);display:flex;justify-content:space-between"><span>${o.bezet.toLocaleString()}/${o.cap.toLocaleString()} t</span><span>${vrij.toLocaleString()} vrij</span></div></div>`;
+}
+
 function buildScenario(){
   const conn=`<div class="si-connector"><div class="si-conn-line"></div></div>`;
   document.getElementById('si-v2-wrap').innerHTML=`<div class="si-flow">
@@ -1432,9 +1465,14 @@ function buildScenario(){
       </div>
       <div class="si-dagen-calc" id="si-2b-calc"></div>
     </div>${conn}
-    <div class="si-step si-dimmed" id="si-s3">
-      <div class="si-step-hdr"><span class="si-step-num">Stap 3</span><span class="si-step-title">Beschikbare opvangcapaciteit</span></div>
-      <div id="si-opvang"><div class="si-placeholder">Selecteer een waterschap om te beginnen</div></div>
+    <div class="si-step si-dimmed" id="si-s3a">
+      <div class="si-step-hdr"><span class="si-step-num">Stap 3A</span><span class="si-step-title">Eigen opslag bij verwerker</span></div>
+      <div id="si-opvang-3a"><div class="si-placeholder">Selecteer een waterschap om te beginnen</div></div>
+    </div>${conn}
+    <div class="si-step si-dimmed" id="si-s3b">
+      <div class="si-step-hdr"><span class="si-step-num">Stap 3B</span><span class="si-step-title">Incidentenopslag Robuust Plan</span></div>
+      <div class="si-step-sub">Incidentenopslag Robuust Plan — via AQM</div>
+      <div id="si-opvang-3b"><div class="si-placeholder">Stap 3A onvoldoende — dan volgt hier de AQM-opvang</div></div>
     </div>${conn}
     <div class="si-step si-dimmed" id="si-s4">
       <div class="si-step-hdr"><span class="si-step-num">Stap 4</span><span class="si-step-title">Conclusie scenario</span></div>
@@ -1490,7 +1528,7 @@ function siRenderWS(){
   });
   document.getElementById('si-ws-grid').innerHTML=h;
   const hasWS=siV2State.ws.size>0;
-  ['si-s2','si-s2b','si-s3','si-s4'].forEach(id=>document.getElementById(id).classList.toggle('si-dimmed',!hasWS));
+  ['si-s2','si-s2b','si-s3a','si-s4'].forEach(id=>document.getElementById(id).classList.toggle('si-dimmed',!hasWS));
   siRenderVW();
 }
 
@@ -1662,30 +1700,58 @@ function siDemoCard(){
 function siUpdateDyn(){
   siRenderDagenCalc();
   if(siV2State.ws.size===0){
-    document.getElementById('si-opvang').innerHTML='<div class="si-placeholder">Selecteer een waterschap om te beginnen</div>';
+    document.getElementById('si-opvang-3a').innerHTML='<div class="si-placeholder">Selecteer een waterschap om te beginnen</div>';
+    document.getElementById('si-opvang-3b').innerHTML='<div class="si-placeholder">Stap 3A onvoldoende — dan volgt hier de AQM-opvang</div>';
+    document.getElementById('si-s3b').classList.add('si-dimmed');
     document.getElementById('si-concl').innerHTML=siDemoCard();
     return;
   }
   const r=siCalc();
+  const activeClusters=new Set([...siV2State.ws].map(k=>parseInt(k.split('-')[0])));
+  const{locs,eigenVrij}=siGetEigenOpslag(activeClusters);
 
-  // Step 3 — opvang
-  const opvSet=r.maxType>=5?SI_OPV_C:r.maxType>=4?SI_OPV_B:SI_OPV_A;
-  const opvLbl=r.maxType>=5?'Specialistische verwerkers (sub C)':r.maxType>=4?'Kwaliteitsopslag voor vervuild slib (sub B)':'Incidentenopslag normaal slib (sub A)';
-  const locH=opvSet.map(o=>{
-    if(!o.cap)return `<div class="si-loc-card"><div class="si-loc-nm">${o.naam}</div><div style="font-size:10px;color:var(--ink-faint)">Volume onbekend · op aanvraag</div></div>`;
-    const pct=Math.min(Math.round(o.bezet/o.cap*100),100);
-    const vrij=Math.max(o.cap-o.bezet,0);
-    return `<div class="si-loc-card${o.geblokkeerd?' si-loc-blocked':''}">
-      <div class="si-loc-nm">${o.naam}${o.geblokkeerd?` <span class="rp-badge geblokkeerd" style="font-size:8.5px">geblokkeerd</span>`:''}</div>
-      <div class="bar" style="margin:4px 0 3px"><i class="${o.status}" style="width:${pct}%"></i></div>
-      <div style="font-size:10px;color:var(--ink-faint);display:flex;justify-content:space-between"><span>${o.bezet.toLocaleString()}/${o.cap.toLocaleString()} t</span><span>${o.geblokkeerd?'n.v.t.':vrij.toLocaleString()+' vrij'}</span></div>
-    </div>`;
-  }).join('');
-  const totDisp=r.maxType>=5?'onbekend':r.freeOpvang.toLocaleString()+' ton';
-  document.getElementById('si-opvang').innerHTML=`
-    <div class="si-opvang-lbl">${opvLbl}</div>
-    <div class="si-opvang-grid">${locH}</div>
-    <div class="si-totaal"><span>Totaal beschikbare opvangcapaciteit:</span><span class="si-totaal-val">${totDisp}</span></div>`;
+  // Step 3A — eigen opslag bij verwerker
+  const eoNeed=r.hasV?r.overshoot*r.dagen:null;
+  const eigenSuf=eoNeed!==null?(eigenVrij>=eoNeed):null;
+  const eigenDagen=r.overshoot>0?Math.min(Math.floor(eigenVrij/r.overshoot),r.dagen):r.dagen;
+  let eoH='';
+  if(locs.length===0){
+    eoH='<div class="si-placeholder">Geen eigen opslaglocaties bekend voor selectie</div>';
+  } else {
+    eoH=`<div class="si-opvang-grid">${locs.map(siEigenLocCard).join('')}</div>`;
+    eoH+=`<div class="si-totaal"><span>Totaal vrije eigen capaciteit:</span><span class="si-totaal-val">${eigenVrij>0?eigenVrij.toLocaleString()+' ton':'onbekend'}</span></div>`;
+    if(eoNeed!==null){
+      const eigenRes=eigenSuf
+        ?`<div class="si-3a-result ok">Eigen opslag volstaat voor volledige verstoringsperiode<span> — ${eigenVrij.toLocaleString()} ton vrij ≥ ${eoNeed.toLocaleString()} ton nodig</span></div>`
+        :`<div class="si-3a-result danger">Eigen opslag onvoldoende — AQM-opslag nodig (stap 3B)<span> — ${eigenVrij.toLocaleString()} ton vrij &lt; ${eoNeed.toLocaleString()} ton nodig</span></div>`;
+      eoH+=eigenRes;
+    }
+  }
+  document.getElementById('si-opvang-3a').innerHTML=eoH;
+
+  // Step 3B — only shown when eigen opslag insufficient
+  const s3b=document.getElementById('si-s3b');
+  s3b.classList.toggle('si-dimmed',eigenSuf!==false);
+  if(eigenSuf===false){
+    const opvSet=r.maxType>=5?SI_OPV_C:r.maxType>=4?SI_OPV_B:SI_OPV_A;
+    const opvLbl=r.maxType>=5?'Specialistische verwerkers (sub C)':r.maxType>=4?'Kwaliteitsopslag voor vervuild slib (sub B)':'Incidentenopslag normaal slib (sub A)';
+    const locH=opvSet.map(o=>{
+      if(!o.cap)return `<div class="si-loc-card"><div class="si-loc-nm">${o.naam}</div><div style="font-size:10px;color:var(--ink-faint)">Volume onbekend · op aanvraag</div></div>`;
+      const pct=Math.min(Math.round(o.bezet/o.cap*100),100),vrij=Math.max(o.cap-o.bezet,0);
+      return `<div class="si-loc-card${o.geblokkeerd?' si-loc-blocked':''}">
+        <div class="si-loc-nm">${o.naam}${o.geblokkeerd?` <span class="rp-badge geblokkeerd" style="font-size:8.5px">geblokkeerd</span>`:''}</div>
+        <div class="bar" style="margin:4px 0 3px"><i class="${o.status}" style="width:${pct}%"></i></div>
+        <div style="font-size:10px;color:var(--ink-faint);display:flex;justify-content:space-between"><span>${o.bezet.toLocaleString()}/${o.cap.toLocaleString()} t</span><span>${o.geblokkeerd?'n.v.t.':vrij.toLocaleString()+' vrij'}</span></div>
+      </div>`;
+    }).join('');
+    const totDisp=r.maxType>=5?'onbekend':r.freeOpvang.toLocaleString()+' ton';
+    document.getElementById('si-opvang-3b').innerHTML=`
+      <div class="si-opvang-lbl">${opvLbl}</div>
+      <div class="si-opvang-grid">${locH}</div>
+      <div class="si-totaal"><span>Totaal beschikbare AQM-opvangcapaciteit:</span><span class="si-totaal-val">${totDisp}</span></div>`;
+  } else {
+    document.getElementById('si-opvang-3b').innerHTML='<div class="si-placeholder">Stap 3A onvoldoende — dan volgt hier de AQM-opvang</div>';
+  }
 
   // Step 4 — conclusie
   if(!r.hasV){
@@ -1703,7 +1769,6 @@ function siUpdateDyn(){
   else if(r.bufDagen>=7)advies=`Activeer opslag bij Indaver Delfzijl en Indaver Groningen. Buffer beperkt — ook alternatieve verwerkingsroute onderzoeken. Directe melding aan AquaMinerals.`;
   else advies=`Directe activatie incidentenopslag én contact AquaMinerals voor extra capaciteit. Buffer kritiek — mogelijke tekorten na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Escaleer naar GR Slib.`;
 
-  // Display values: indicatief for kwaliteitsroutes
   const totKl=r.totalTon<5000?'ok':r.totalTon<=15000?'warning':'danger';
   const dispOpvang=r.maxType>=5?null:r.maxType>=4?10000:r.freeOpvang;
   const dispOpvangStr=r.maxType>=5?'onbekend — op aanvraag':r.maxType>=4?'~10.000 ton *':r.freeOpvang.toLocaleString()+' ton';
@@ -1717,11 +1782,18 @@ function siUpdateDyn(){
     :dispSurplus>=0?'Voldoende capaciteit':`Capaciteitstekort — ${Math.abs(dispSurplus).toLocaleString()} ton extra opslag nodig`;
   const footnote=r.maxType>=4?`<div class="si-opvang-footnote">* indicatieve waarde — werkelijke capaciteit op aanvraag bij AQM</div>`:'';
 
+  // Eigen buffer metric (4th metric card)
+  const eigenBufKl=eigenSuf===null?'':eigenSuf?'ok':'danger';
+  const eigenBufVal=r.overshoot===0?'∞':eigenDagen+' dg';
+  const aqmVanafDag=r.overshoot>0&&eigenSuf===false?eigenDagen+1:null;
+  const eigenBufSub=eigenSuf===null?'selecteer verwerker':eigenSuf?'eigen buffer volstaat':aqmVanafDag?`AQM opslag nodig vanaf dag ${aqmVanafDag}`:'eigen buffer volstaat';
+
   document.getElementById('si-concl').innerHTML=`
     <div class="si-metrics">
       <div class="si-metric"><div class="si-metric-lbl">Dagelijks overschot</div><div class="si-metric-val">${r.overshoot.toLocaleString()} t/dag</div></div>
       <div class="si-metric ${totKl}"><div class="si-metric-lbl">Totale opslagbehoefte</div><div class="si-metric-val">${r.totalTon.toLocaleString()} ton</div><div class="si-metric-sub">${r.selTon.toLocaleString()} t/dag × ${r.dagen} dg</div></div>
       <div class="si-metric"><div class="si-metric-lbl">Beschikbare opvangcapaciteit</div><div class="si-metric-val" style="${r.maxType>=5?'font-size:13px;line-height:1.3':''}">${dispOpvangStr}</div></div>
+      <div class="si-metric ${eigenBufKl}"><div class="si-metric-lbl">Eigen buffer volstaat</div><div class="si-metric-val">${eigenBufVal}</div><div class="si-metric-sub">${eigenBufSub}</div></div>
     </div>
     ${footnote}
     <div class="si-surplus ${surplusKl}">
