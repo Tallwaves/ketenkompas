@@ -311,7 +311,27 @@
   .si-step-num.sub{font-size:8px;padding:1px 7px;background:transparent;border:1px solid var(--line);color:var(--ink-faint);letter-spacing:.04em}
   .si-pct-eff{font-size:11px;color:var(--ink-faint);margin-top:6px;padding:6px 10px;background:var(--surface-2);border-radius:6px;line-height:1.5}
   .si-pct-eff.reduced{color:var(--warn-ink)}
-  .si-sc-meta{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;padding:12px 14px;background:var(--surface-2);border-radius:8px;border:1px solid var(--line)}
+  .si-sc-meta{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;padding:12px 14px;background:var(--surface-2);border-radius:8px;border:1px solid var(--line)}
+  .si-ct-toggle{display:flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;font-family:var(--font);font-size:11px;font-weight:600;color:var(--ink-soft);padding:6px 2px;letter-spacing:.03em;text-transform:uppercase}
+  .si-ct-toggle svg{width:13px;height:13px;transition:transform .2s;flex-shrink:0}
+  .si-ct-toggle.open svg{transform:rotate(180deg)}
+  .si-ct-body{display:none;margin-bottom:14px;padding:12px 14px;background:var(--surface-2);border-radius:8px;border:1px solid var(--line)}
+  .si-ct-body.open{display:block}
+  .si-ct-row{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .si-ct-row:last-child{border-bottom:none;padding-bottom:0}
+  .si-ct-org{font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;grid-column:1/-1;margin-bottom:2px}
+  .si-ct-inp{width:100%;border:1px solid var(--line);border-radius:5px;padding:5px 8px;font-size:12px;font-family:var(--font);color:var(--ink);background:var(--surface);outline:none;transition:border-color .15s;box-sizing:border-box}
+  .si-ct-inp:focus{border-color:var(--accent)}
+  .si-ct-inp::placeholder{color:var(--ink-faint)}
+  .si-ct-inp-lbl{font-size:9.5px;color:var(--ink-faint);margin-bottom:2px}
+  /* rapportage contactpersonen */
+  .rpt-ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:4px}
+  .rpt-ct-row{padding:7px 10px;font-size:11.5px;line-height:1.4}
+  .rpt-ct-row:nth-child(odd){background:#F4F6F8}
+  .rpt-ct-row:nth-child(even){background:#fff}
+  .rpt-ct-org{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--kk-blue);margin-bottom:2px}
+  .rpt-ct-naam{font-weight:600;color:#0e1b2a}
+  .rpt-ct-detail{color:var(--kk-slate);font-size:11px;margin-top:1px}
   .si-sc-meta-row{display:flex;flex-direction:column;gap:4px}
   .si-sc-lbl{font-size:10.5px;font-weight:600;color:var(--ink-soft)}
   .si-sc-opt{font-weight:400;color:var(--ink-faint);font-size:10px}
@@ -460,7 +480,7 @@
     .view{display:none!important}
     #view-bestuur{display:block!important;padding:0!important}
     .memo{box-shadow:none!important;border:none!important;max-width:100%!important}
-    .rpt-tl-bar,.rpt-urgentie,.rpt-surplus,.rpt-aanbev-num,.rpt-hdr{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .rpt-tl-bar,.rpt-urgentie,.rpt-surplus,.rpt-aanbev-num,.rpt-hdr,.rpt-ct-row{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     /* Voorkom pagina-afbrekingen midden in blokken */
     .rpt-section,.rpt-hdr,.rpt-3col,.rpt-tl,.rpt-aanbev,.rpt-opvang-grid,.rpt-surplus{page-break-inside:avoid;break-inside:avoid}
     .rpt-col,.rpt-urgentie,.rpt-opvang-card,.rpt-aanbev-item,.rpt-cap-table tr{page-break-inside:avoid;break-inside:avoid}
@@ -1494,7 +1514,13 @@ function renderRobuust(){
 }
 
 /* ============ SCENARIO V2 ============ */
-let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externPct:40};
+let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externPct:40,contacten:[
+  {org:'KetenKompas / AGV',naam:'Gizan Ezra',rol:'Strategisch Contractmanager Ketenregie',email:'gizan.ezra@agv.nl',tel:'06 25 43 21 45'},
+  {org:'HVC',naam:'Chiel Landman',rol:'Ketenregisseur HVC',email:'',tel:''},
+  {org:'HHNK',naam:'',rol:'nader in te vullen',email:'',tel:''},
+  {org:'Unie van Waterschappen / regiegroep',naam:'Fons Röttgering',rol:'Trainee WDI',email:'frottgering@uvw.nl',tel:''},
+  {org:'AQM (incidentenopslag)',naam:'',rol:'nader in te vullen',email:'',tel:''},
+]};
 
 const SI_OPV_A=[
   {naam:"Indaver Delfzijl",cap:6000,bezet:2501,status:"warning"},
@@ -1831,6 +1857,11 @@ function buildScenario(){
         <input class="si-sc-inp" id="si-sc-beschr" type="text" maxlength="160" placeholder="bijv. Uitval thermische droging door technisch defect · verwachte hersteltijd onbekend" value="" oninput="siV2State.beschrijving=this.value">
       </div>
     </div>
+    <button class="si-ct-toggle" id="si-ct-btn" onclick="siToggleContacten()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      Contactpersonen aanpassen
+    </button>
+    <div class="si-ct-body" id="si-ct-body">${siRenderContactenEditor()}</div>
   </div>
   <div class="si-flow">
     <div class="si-phase-hdr">Slibstroom</div>
@@ -1891,7 +1922,8 @@ function buildScenario(){
       </button>
     </div>
   </div>`;
-  siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),eigenOverride:{},aqmOverride:{},titel:'',beschrijving:'',eigenPct:60,externPct:40};
+  const prevContacten=siV2State.contacten;
+  siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),eigenOverride:{},aqmOverride:{},titel:'',beschrijving:'',eigenPct:60,externPct:40,contacten:prevContacten};
   siRenderWS(); siRenderVW();
 }
 
@@ -2026,7 +2058,31 @@ function siSelCluster(ci){
   });
   siRenderWS(); siUpdateDyn();
 }
-function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externPct:siV2State.externPct??40};siRenderWS();siRenderVW();siUpdateDyn();}
+function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externPct:siV2State.externPct??40,contacten:siV2State.contacten};siRenderWS();siRenderVW();siUpdateDyn();}
+function siToggleContacten(){
+  const body=document.getElementById('si-ct-body');
+  const btn=document.getElementById('si-ct-btn');
+  if(!body||!btn)return;
+  const open=body.classList.toggle('open');
+  btn.classList.toggle('open',open);
+}
+function siUpdateContact(i,f,v){
+  if(siV2State.contacten&&siV2State.contacten[i])siV2State.contacten[i][f]=v;
+}
+function siRenderContactenEditor(){
+  const fields=[{k:'naam',lbl:'Naam'},{k:'rol',lbl:'Rol'},{k:'email',lbl:'E-mail'},{k:'tel',lbl:'Telefoon'}];
+  return (siV2State.contacten||[]).map((c,i)=>`
+    <div class="si-ct-row">
+      <div class="si-ct-org">${c.org}</div>
+      ${fields.map(f=>`
+        <div>
+          <div class="si-ct-inp-lbl">${f.lbl}</div>
+          <input class="si-ct-inp" type="text" value="${(c[f.k]||'').replace(/"/g,'&quot;')}"
+            placeholder="${f.k==='naam'||f.k==='rol'?'nader in te vullen':''}"
+            oninput="siUpdateContact(${i},'${f.k}',this.value)">
+        </div>`).join('')}
+    </div>`).join('');
+}
 function siToggleV(vk,type){
   const cur=siV2State.vw[vk];
   if(cur&&cur.type===type)delete siV2State.vw[vk];
@@ -2397,6 +2453,17 @@ function siGenMemo(){
           <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">1</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Directe actie</div><div class="rpt-aanbev-txt">${aanbev1}</div></div></div>
           <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">2</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Monitoring</div><div class="rpt-aanbev-txt">${aanbev2}</div></div></div>
           <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">3</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Escalatie</div><div class="rpt-aanbev-txt">${aanbev3}</div></div></div>
+        </div>
+      </div>
+      <div class="rpt-section">
+        <div class="rpt-sec-title">Contactpersonen</div>
+        <div class="rpt-ct-grid">
+          ${(siV2State.contacten||[]).map(c=>`
+            <div class="rpt-ct-row">
+              <div class="rpt-ct-org">${c.org}</div>
+              <div class="rpt-ct-naam">${c.naam||'<em style="opacity:.45;font-style:italic">nader in te vullen</em>'}</div>
+              ${(c.rol||c.email||c.tel)?`<div class="rpt-ct-detail">${[c.rol,c.email,c.tel].filter(Boolean).join(' · ')}</div>`:''}
+            </div>`).join('')}
         </div>
       </div>
       <div class="rpt-export">
