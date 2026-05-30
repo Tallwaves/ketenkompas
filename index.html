@@ -387,7 +387,7 @@
   /* PRINT */
   @media print{
     @page{size:A4;margin:18mm 20mm}
-    .topbar,.tabs-bar,nav.tabs,aside,.page-head,.rpt-export{display:none!important}
+    .topbar,.tabs-bar,nav.tabs,aside,.page-head,.rpt-export,header,#app>header{display:none!important}
     body,html{background:#fff!important}
     main,.content-wrap{padding:0!important;margin:0!important;box-shadow:none!important}
     .view{display:none!important}
@@ -2071,6 +2071,7 @@ function siGenMemo(){
       <div class="rpt-hdr-right">
         <div class="rpt-hdr-badge">Vertrouwelijk — intern gebruik</div>
         <div class="rpt-hdr-date">${d}</div>
+        <div class="rpt-hdr-date" style="margin-top:4px;opacity:.7">Opgesteld door: Gizan Ezra · Strategisch Contractmanager Ketenregie · AGV/Waternet</div>
       </div>
     </div>
     <div class="rpt-body">
@@ -2147,8 +2148,8 @@ function siGenMemo(){
     </div>
     <div class="rpt-foot">
       Gegenereerd door KetenKompas · AGV initiatief · ${d}<br>
-      Indicatieve doorrekening op basis van beschikbare data — geen operationele garantie<br>
-      Classificatie: Intern
+      Opgesteld door Gizan Ezra · gizan.ezra@agv.nl · 06 25 43 21 45 · Vragen over deze rapportage? Neem contact op met de auteur.<br>
+      Indicatieve doorrekening op basis van beschikbare data — geen operationele garantie · Classificatie: Intern
     </div>
   </div>`;
   document.querySelector('nav.tabs button[data-v="bestuur"]').click();
