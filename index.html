@@ -366,7 +366,7 @@
   .rpt-col-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#0e1b2a;opacity:.45;margin-bottom:6px}
   .rpt-col-val{font-size:13px;color:#0e1b2a;font-weight:500;line-height:1.45}
   .rpt-col-sub{font-size:11px;color:#6b7a8d;margin-top:3px}
-  .rpt-ws-logo{position:absolute;bottom:-8px;right:-6px;width:88px;height:88px;object-fit:contain;opacity:.08;filter:grayscale(100%);pointer-events:none;user-select:none}
+  .rpt-ws-logo{position:absolute;bottom:-12px;right:-10px;width:110px;height:110px;object-fit:contain;opacity:.09;filter:grayscale(100%);pointer-events:none;user-select:none}
   .rpt-urgentie{border-radius:8px;padding:14px 16px;text-align:center}
   .rpt-urgentie.ok{background:#d1fae5;border:1px solid #6ee7b7}
   .rpt-urgentie.warning{background:#fef3c7;border:1px solid #fcd34d}
@@ -2232,7 +2232,7 @@ function siGenMemo(){
     const [ci,wi]=[...siV2State.ws][0].split('-').map(Number);
     const wsNaam=DATA.clusters[ci].waterschappen[wi].naam;
     const domain=WS_LOGOS[wsNaam];
-    if(domain)wsLogoHTML=`<img class="rpt-ws-logo" src="https://logo.clearbit.com/${domain}" onerror="this.style.display='none'" alt="">`;
+    if(domain)wsLogoHTML=`<img class="rpt-ws-logo" src="https://www.google.com/s2/favicons?domain=${domain}&sz=256" onerror="this.style.display='none'" alt="">`;
   }
 
   // Waterschap labels incl. RWZI detail
