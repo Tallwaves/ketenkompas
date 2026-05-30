@@ -393,7 +393,14 @@
     .view{display:none!important}
     #view-bestuur{display:block!important;padding:0!important}
     .memo{box-shadow:none!important;border:none!important;max-width:100%!important}
-    .rpt-tl-bar,.rpt-urgentie,.rpt-surplus,.rpt-aanbev-num{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .rpt-tl-bar,.rpt-urgentie,.rpt-surplus,.rpt-aanbev-num,.rpt-hdr{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    /* Voorkom pagina-afbrekingen midden in blokken */
+    .rpt-section,.rpt-hdr,.rpt-3col,.rpt-tl,.rpt-aanbev,.rpt-opvang-grid,.rpt-surplus{page-break-inside:avoid;break-inside:avoid}
+    .rpt-col,.rpt-urgentie,.rpt-opvang-card,.rpt-aanbev-item,.rpt-cap-table tr{page-break-inside:avoid;break-inside:avoid}
+    /* Sectie-labels nooit als weeskind onderaan een pagina */
+    .rpt-sec-title{page-break-after:avoid;break-after:avoid}
+    /* Zorg dat de footer bij de body hoort */
+    .rpt-foot{page-break-inside:avoid;break-inside:avoid}
   }
 
   .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:11px;color:var(--ink-faint)}
