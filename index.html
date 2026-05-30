@@ -1742,11 +1742,12 @@ function siRenderStap4HTML(r,eigenVrij,eoNeed,eigenSuf,eigenDagen){
   const totKl=r.totalTon<5000?'ok':r.totalTon<=15000?'warning':'danger';
   const dispOpvang=r.maxType>=5?null:r.maxType>=4?10000:r.freeOpvang;
   const dispOpvangStr=r.maxType>=5?'onbekend — op aanvraag':r.maxType>=4?'~10.000 ton *':r.freeOpvang.toLocaleString()+' ton';
-  const dispSurplus=dispOpvang!==null?dispOpvang-r.totalTon:null;
+  const opslagNood=r.overshoot*r.dagen;
+  const dispSurplus=dispOpvang!==null?dispOpvang-opslagNood:null;
   const surplusKl=dispSurplus===null?'danger':dispSurplus>=0?'ok':'danger';
   const surplusCalcStr=dispSurplus===null
     ?'Niet te berekenen — capaciteit specialistische verwerkers onbekend *'
-    :`${dispOpvang.toLocaleString()} − ${r.totalTon.toLocaleString()} = ${dispSurplus>=0?'+':''}${dispSurplus.toLocaleString()} ton`;
+    :`${dispOpvang.toLocaleString()} − ${opslagNood.toLocaleString()} = ${dispSurplus>=0?'+':''}${dispSurplus.toLocaleString()} ton`;
   const surplusVerdict=dispSurplus===null
     ?'* indicatieve waarde — werkelijke capaciteit op aanvraag bij AQM'
     :dispSurplus>=0?'Voldoende capaciteit':`Capaciteitstekort — ${Math.abs(dispSurplus).toLocaleString()} ton extra opslag nodig`;
@@ -2229,7 +2230,8 @@ function siGenMemo(){
 
   // Capacity display values
   const dispOpvang=r.maxType>=5?null:r.maxType>=4?10000:r.freeOpvang;
-  const dispSurplus=dispOpvang!==null?dispOpvang-r.totalTon:null;
+  const opslagNood=r.overshoot*r.dagen;
+  const dispSurplus=dispOpvang!==null?dispOpvang-opslagNood:null;
   const surplusKl=dispSurplus===null?'danger':dispSurplus>=0?'ok':'danger';
   const surplusStr=dispSurplus===null?'Niet te berekenen — specialistische route':dispSurplus>=0?`+${dispSurplus.toLocaleString()} ton surplus`:`${dispSurplus.toLocaleString()} ton tekort`;
   const surplusVerdict=dispSurplus===null?'op aanvraag bij specialistische verwerkers':dispSurplus>=0?'Voldoende capaciteit beschikbaar':`Extra opslag nodig — ${Math.abs(dispSurplus).toLocaleString()} ton`;
@@ -2243,13 +2245,19 @@ function siGenMemo(){
   else summary=`Kritieke situatie: een verstoring bij ${vwNames.join(' en ')} levert ${r.overshoot.toLocaleString()} ton/dag overschot op. Bij het huidige overschot is de buffer van ${wsNames.join(', ')} uitgeput na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Onmiddellijke escalatie naar GR Slib en activatie van alle beschikbare capaciteit is vereist.`;
 
   // Capacity table rows
+  const aqmNodigRpt=eigenSuf===false;
+  const aqmLabelRpt=eigenSuf===null?'—':eigenSuf?'Nee':'Ja';
+  const aqmDagenRpt=!aqmNodigRpt?'—':r.bufDagen>98?'∞ dagen':r.bufDagen+` dag${r.bufDagen!==1?'en':''}`;
   const capRows=[
-    {lbl:'Eigen verwerking (HVC)',val:`${r.eigenEffPct??0}% (${(r.eigenTon||0).toLocaleString()} t/dag)`,sub:r.eigenEffPct!==r.eigenPct?`Verlaagd van ${r.eigenPct}% door verstoring`:'',dot:(r.eigenEffPct??0)>0?'ok':'warning'},
-    {lbl:'Extern Duitsland',val:`${r.externPct??0}% (${(r.externTon||0).toLocaleString()} t/dag)`,sub:'Niet beïnvloed door verstoring',dot:(r.externPct??0)>0?'ok':'neutral'},
-    {lbl:'Dagelijks overschot naar opvang',val:r.overshoot.toLocaleString()+' ton/dag',sub:'',dot:r.overshoot===0?'ok':r.overshoot<200?'warning':'danger'},
-    {lbl:'Totale opslagbehoefte',val:r.maxType>=5?'onbekend':r.totalTon.toLocaleString()+' ton',sub:`${r.selTon.toLocaleString()} t/dag × ${r.dagen} dagen`,dot:r.totalTon<5000?'ok':r.totalTon<=15000?'warning':'danger'},
-    {lbl:'Eigen buffer verwerker',val:eigenVrij>0?eigenVrij.toLocaleString()+' ton':'onbekend / niet van toepassing',sub:eigenVrij>0&&r.overshoot>0?eigenDagen+' dagen buffer':'',dot:eigenSuf?'ok':eigenSuf===false?'warning':'neutral'},
-    {lbl:'Incidentenopslag AQM',val:dispOpvang!==null?dispOpvang.toLocaleString()+' ton'+(r.maxType>=4?' *':''):'niet van toepassing',sub:r.maxType>=4?'* indicatief — op aanvraag':'',dot:dispOpvang&&dispOpvang>r.totalTon?'ok':dispOpvang?'warning':'danger'},
+    {lbl:'Totale slibstroom',val:`${r.selTon.toLocaleString()} t/dag`,sub:'',dot:'neutral'},
+    {lbl:'Intern te verwerken (eigen HVC)',val:`${r.eigenEffPct??0}% — ${(r.eigenTon||0).toLocaleString()} t/dag`,sub:r.eigenEffPct!==r.eigenPct?`Verlaagd van ${r.eigenPct}% door verstoring`:'',dot:(r.eigenEffPct??0)>0?'ok':'warning'},
+    {lbl:'Extern te verwerken (Duitsland)',val:`${r.externPct??0}% — ${(r.externTon||0).toLocaleString()} t/dag`,sub:'Niet beïnvloed door verstoring',dot:(r.externPct??0)>0?'ok':'neutral'},
+    {lbl:'Dagelijks op te vangen overschot',val:r.overshoot.toLocaleString()+' t/dag',sub:'',dot:r.overshoot===0?'ok':r.overshoot<200?'warning':'danger'},
+    {lbl:'Totale opslagbehoefte',val:r.maxType>=5?'onbekend':opslagNood.toLocaleString()+' ton',sub:`${r.overshoot.toLocaleString()} t/dag × ${r.dagen} dagen`,dot:opslagNood<5000?'ok':opslagNood<=15000?'warning':'danger'},
+    {lbl:'Opvang bij verwerker',val:eigenVrij>0?eigenVrij.toLocaleString()+' ton':'onbekend / niet van toepassing',sub:eigenVrij>0&&r.overshoot>0?eigenDagen+' dagen buffer':'',dot:eigenSuf?'ok':eigenSuf===false?'warning':'neutral'},
+    {lbl:'Aanspraak robuust plan',val:aqmLabelRpt,sub:'',dot:eigenSuf===null?'neutral':eigenSuf?'ok':'danger'},
+    {lbl:'Incidentenopslag AQM (robuust plan)',val:dispOpvang!==null?dispOpvang.toLocaleString()+' ton'+(r.maxType>=4?' *':''):'niet van toepassing',sub:r.maxType>=4?'* indicatief — op aanvraag':'',dot:dispOpvang&&dispOpvang>opslagNood?'ok':dispOpvang?'warning':'danger'},
+    {lbl:'Robuust plan vol na',val:aqmDagenRpt,sub:'',dot:!aqmNodigRpt?'neutral':r.bufDagen>14?'ok':r.bufDagen>=7?'warning':'danger'},
   ];
 
   // Available opvang options (cards)
