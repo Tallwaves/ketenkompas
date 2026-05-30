@@ -2373,8 +2373,8 @@ function siGenMemo(){
     <div class="rpt-tl-seg" style="width:${tlRestPct}%;background:${eigenSuf===false?(r.bufDagen<=tlDagen?'var(--kk-alert)':'#d97706'):'var(--kk-ok)'}"></div>
   </div>`;
   const mkDag0=`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag 0</div><div class="rpt-tl-mk-lbl">Verstoring begint</div></div>`;
-  const mkEigen=eigenDagen>0&&eigenDagen<tlDagen?`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${eigenDagen}</div><div class="rpt-tl-mk-lbl">Eigen buffer vol</div></div>`:'';
-  const mkAQM=tlAQMStart?`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${tlAQMStart}</div><div class="rpt-tl-mk-lbl">AQM opslag nodig</div></div>`:'';
+  const mkEigen=eigenDagen>0&&eigenDagen<tlDagen?`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${eigenDagen}</div><div class="rpt-tl-mk-lbl">Eigen opslag vol</div></div>`:'';
+  const mkAQM=tlAQMStart?`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${tlAQMStart}</div><div class="rpt-tl-mk-lbl">Incidentenopslag nodig</div></div>`:'';
   const mkEind=`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${tlDagen}</div><div class="rpt-tl-mk-lbl">Einde scenario</div></div>`;
 
   // Recommendations
