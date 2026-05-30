@@ -212,6 +212,8 @@
 
   /* ---------- SCENARIO V2 ---------- */
   .si-flow{display:flex;flex-direction:column;gap:0}
+  .si-phase-hdr{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);padding:22px 4px 6px;border-top:1px solid var(--line);margin-top:8px}
+  .si-phase-hdr:first-child{border-top:none;margin-top:0;padding-top:4px}
   .si-step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);transition:opacity .2s}
   .si-dimmed{opacity:.38;pointer-events:none}
   .si-connector{display:flex;justify-content:center;padding:4px 0}
@@ -1809,6 +1811,7 @@ function buildScenario(){
     </div>
   </div>
   <div class="si-flow">
+    <div class="si-phase-hdr">Slibstroom</div>
     <div class="si-step" id="si-s1">
       <div class="si-step-hdr"><span class="si-step-num">Stap 1</span><span class="si-step-title">Selecteer een waterschap</span></div>
       <div class="si-quick">
@@ -1817,6 +1820,7 @@ function buildScenario(){
       </div>
       <div id="si-ws-grid" class="si-ws-grid"></div>
     </div>${conn}
+    <div class="si-phase-hdr">Verwerking</div>
     <div class="si-step si-dimmed" id="si-s2a">
       <div class="si-step-hdr"><span class="si-step-num sub">Stap 2A</span><span class="si-step-title">Kies een verwerker en verstoring</span></div>
       <div id="si-vw-grid"></div>
@@ -1845,6 +1849,7 @@ function buildScenario(){
       </div>
       <div class="si-dagen-calc" id="si-2c-calc"></div>
     </div>${conn}
+    <div class="si-phase-hdr">Opslag</div>
     <div class="si-step si-dimmed" id="si-s3a">
       <div class="si-step-hdr"><span class="si-step-num">Stap 3A</span><span class="si-step-title">Eigen opslag bij verwerker</span></div>
       <div id="si-opvang-3a"><div class="si-placeholder">Selecteer een waterschap om te beginnen</div></div>
@@ -1854,6 +1859,7 @@ function buildScenario(){
       <div class="si-step-sub">Incidentenopslag Robuust Plan — via AQM</div>
       <div id="si-opvang-3b"><div class="si-placeholder">Selecteer eerst een waterschap en verwerker</div></div>
     </div>${conn}
+    <div class="si-phase-hdr">Overzicht</div>
     <div class="si-step si-dimmed" id="si-s4">
       <div class="si-step-hdr"><span class="si-step-num">Stap 4</span><span class="si-step-title">Conclusie scenario</span></div>
       <div id="si-concl"><div class="si-placeholder">Selecteer een waterschap om te beginnen</div></div>
