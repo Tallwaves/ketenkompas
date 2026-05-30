@@ -89,6 +89,18 @@
   .stand{font-size:11.5px;color:#7fa8c4}
   .logout{background:transparent;border:1px solid #28425c;color:#9fb4c5;font-size:12px;padding:5px 12px;border-radius:7px;cursor:pointer;font-family:var(--font)}
   .logout:hover{border-color:#5dcaa5;color:#fff}
+  /* Hamburger */
+  .ham-btn{display:none;background:none;border:none;cursor:pointer;padding:6px;color:#9fb4c5;flex-shrink:0}
+  .ham-btn svg{display:block}
+  .mob-menu{display:none;position:absolute;top:60px;left:0;right:0;background:#0a1520;border-bottom:1px solid #1d3a52;z-index:19;flex-direction:column;padding:8px 16px 14px}
+  .mob-menu.open{display:flex}
+  .mob-menu button{background:none;border:none;color:#9fb4c5;font-size:15px;font-family:var(--font);font-weight:500;padding:11px 12px;border-radius:8px;cursor:pointer;text-align:left;width:100%}
+  .mob-menu button:hover,.mob-menu button.active{color:#fff;background:#1c3450}
+  .mob-menu button.active{color:#fff;background:#1f3a58}
+  .mob-menu button[data-mv="beheer"]{color:#c89b20}
+  .mob-menu button[data-mv="beheer"].active{background:#332800;color:#f0c040}
+  .mob-menu-div{height:1px;background:#1d3a52;margin:6px 0}
+  .mob-menu-foot{display:flex;align-items:center;justify-content:space-between;padding:8px 12px 0;font-size:11.5px;color:#7fa8c4}
 
   main{flex:1;max-width:1180px;width:100%;margin:0 auto;padding:26px 28px 60px}
   .view{display:none}
@@ -387,7 +399,7 @@
   /* PRINT */
   @media print{
     @page{size:A4;margin:18mm 20mm}
-    .topbar,.tabs-bar,nav.tabs,aside,.page-head,.rpt-export,header,#app>header{display:none!important}
+    .topbar,.tabs-bar,nav.tabs,.mob-menu,.ham-btn,aside,.page-head,.rpt-export,header,#app>header{display:none!important}
     body,html{background:#fff!important}
     main,.content-wrap{padding:0!important;margin:0!important;box-shadow:none!important}
     .view{display:none!important}
@@ -412,9 +424,10 @@
     .cluster-grid{grid-template-columns:1fr;gap:8px}
     .col-arrow{transform:rotate(90deg);height:20px}
     .rcards,.grid-3{grid-template-columns:1fr}
-    nav.tabs button{padding:7px 9px;font-size:12.5px}
     main{padding:20px 16px 50px}
     header{padding:0 16px}
+    nav.tabs,.stand{display:none}
+    .ham-btn{display:block}
   }
 
   /* ---------- KETENKAART ---------- */
@@ -778,7 +791,25 @@
       <span class="stand">Stand: 21 mei 2026</span>
       <button class="logout" onclick="logout()">Uitloggen</button>
     </div>
+    <button class="ham-btn" id="ham-btn" onclick="toggleMobMenu()" aria-label="Menu">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="19" y2="6"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="16" x2="19" y2="16"/>
+      </svg>
+    </button>
   </header>
+  <div class="mob-menu" id="mob-menu">
+    <button data-mv="dashboard" class="active" onclick="mobNav(this,'dashboard')">Ketenoverzicht</button>
+    <button data-mv="robuust" onclick="mobNav(this,'robuust')">Robuust Plan</button>
+    <button data-mv="scenario" onclick="mobNav(this,'scenario')">Scenario's</button>
+    <button data-mv="bestuur" onclick="mobNav(this,'bestuur')">Rapportage</button>
+    <div class="mob-menu-div"></div>
+    <button data-mv="beheer" onclick="mobNav(this,'beheer')">⚙ Beheer</button>
+    <div class="mob-menu-div"></div>
+    <div class="mob-menu-foot">
+      <span>Stand: 21 mei 2026</span>
+      <button class="logout" onclick="logout()" style="font-size:13px">Uitloggen</button>
+    </div>
+  </div>
 
   <main>
     <!-- DASHBOARD -->
@@ -1093,15 +1124,33 @@ async function showApp(){
 document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
 
 /* ============ TABS ============ */
+function activateTab(v){
+  document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
+  const tb=document.querySelector(`nav.tabs button[data-v="${v}"]`);
+  if(tb) tb.classList.add('active');
+  document.querySelectorAll('.mob-menu button[data-mv]').forEach(x=>x.classList.remove('active'));
+  const mb=document.querySelector(`.mob-menu button[data-mv="${v}"]`);
+  if(mb) mb.classList.add('active');
+  document.querySelectorAll('.view').forEach(vw=>vw.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  if(v==='beheer') renderAdminView();
+}
 document.querySelectorAll('nav.tabs button').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-    document.getElementById('view-'+b.dataset.v).classList.add('active');
-    if(b.dataset.v==='beheer') renderAdminView();
-  });
+  b.addEventListener('click',()=>activateTab(b.dataset.v));
 });
+function toggleMobMenu(){
+  const m=document.getElementById('mob-menu');
+  const btn=document.getElementById('ham-btn');
+  const open=m.classList.toggle('open');
+  btn.innerHTML=open
+    ?`<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="18" y2="18"/><line x1="18" y1="4" x2="4" y2="18"/></svg>`
+    :`<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="19" y2="6"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="16" x2="19" y2="16"/></svg>`;
+}
+function mobNav(el,v){
+  activateTab(v);
+  document.getElementById('mob-menu').classList.remove('open');
+  document.getElementById('ham-btn').innerHTML=`<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="19" y2="6"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="16" x2="19" y2="16"/></svg>`;
+}
 
 /* ============ DASHBOARD ============ */
 function renderDashboard(){
@@ -2159,7 +2208,7 @@ function siGenMemo(){
       Indicatieve doorrekening op basis van beschikbare data — geen operationele garantie · Classificatie: Intern
     </div>
   </div>`;
-  document.querySelector('nav.tabs button[data-v="bestuur"]').click();
+  activateTab('bestuur');
 }
 
 function copyMemo(){
@@ -2326,11 +2375,7 @@ function siSetDagen(v){
 
 function wsChipClick(ci){
   if(ci===0){
-    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-    const kBtn=document.querySelector('nav.tabs button[data-v="ketenkaart"]');
-    if(kBtn)kBtn.classList.add('active');
-    document.getElementById('view-ketenkaart').classList.add('active');
+    activateTab('ketenkaart');
   }else{
     const m=document.getElementById('ws-cs-'+ci);
     if(m){m.style.display='block';clearTimeout(m._t);m._t=setTimeout(()=>m.style.display='none',2800);}
