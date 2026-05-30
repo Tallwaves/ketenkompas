@@ -1257,7 +1257,7 @@ function renderDashboard(){
     <div class="stat"><div class="stat-label">Landelijke dagproductie</div><div class="stat-val">${totaal.toLocaleString()} <span class="stat-unit">t/dag</span></div></div>
     <div class="stat"><div class="stat-label">Verwerkingscapaciteit</div><div class="stat-val">${verwCap.toLocaleString()} <span class="stat-unit">t/dag</span></div></div>
     <div class="stat"><div class="stat-label">Opslag bij verwerkers *</div><div class="stat-val">${opslagTotaal.toLocaleString()} <span class="stat-unit">ton</span></div></div>
-    <div class="stat"><div class="stat-label">Incidentenopslag (Robuust Plan)</div><div class="stat-val warn">${calBezet.toLocaleString()} / ${calTotaal.toLocaleString()} <span class="stat-unit">ton</span></div></div>`;
+    <div class="stat"><div class="stat-label">Incidentenopslag (UvW)</div><div class="stat-val warn">${calBezet.toLocaleString()} / ${calTotaal.toLocaleString()} <span class="stat-unit">ton</span></div></div>`;
 
   renderSections();
   renderScenarioInline();
@@ -2469,7 +2469,7 @@ function siGenMemo(){
       <div class="rpt-section">
         <div class="rpt-sec-title">Beschikbare opvangopties</div>
         ${eigenCardsH?`<div class="rpt-opvang-subhdr">Opslag bij de verwerker</div><div class="rpt-opvang-grid">${eigenCardsH}</div>`:''}
-        <div class="rpt-opvang-subhdr" style="${eigenCardsH?'':'margin-top:0'}">Incidentenopslag (Robuust Plan)</div>
+        <div class="rpt-opvang-subhdr" style="${eigenCardsH?'':'margin-top:0'}">Incidentenopslag (UvW)</div>
         <div class="rpt-opvang-grid">${opvCardsH}</div>
       </div>
       <div class="rpt-section">
