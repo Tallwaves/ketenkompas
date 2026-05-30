@@ -1796,9 +1796,7 @@ function siUpdate3ACalcOnly(){
 function buildScenario(){
   const conn=`<div class="si-connector"><div class="si-conn-line"></div></div>`;
   document.getElementById('si-v2-wrap').innerHTML=`
-  <div class="si-step" id="si-sc-block" style="margin-bottom:0">
-    <div class="si-step-hdr"><span class="si-step-title">Scenario</span></div>
-    <div class="si-step-sub" style="margin-top:-10px;margin-bottom:14px">Geef het scenario een naam en beschrijving voor in de rapportage.</div>
+  <div id="si-sc-block" style="padding:0 2px 18px 2px">
     <div class="si-sc-meta">
       <div class="si-sc-meta-row">
         <label class="si-sc-lbl">Scenariotitel <span class="si-sc-opt">optioneel</span></label>
@@ -1819,22 +1817,9 @@ function buildScenario(){
       </div>
       <div id="si-ws-grid" class="si-ws-grid"></div>
     </div>${conn}
-    <div class="si-step si-dimmed" id="si-s2">
-      <div class="si-step-hdr"><span class="si-step-num">Stap 2</span><span class="si-step-title">Kies een verwerker en verstoring</span></div>
-      <div id="si-vw-grid"></div>
-    </div>${conn}
     <div class="si-step si-dimmed" id="si-s2a">
-      <div class="si-step-hdr"><span class="si-step-num sub">Stap 2A</span><span class="si-step-title">Eigen verwerking — HVC-installaties</span></div>
-      <div class="si-step-sub">% van dagelijkse productie dat via eigen HVC-installaties verwerkt wordt</div>
-      <div class="si-dagen-display" id="si-2a-val">60%</div>
-      <input type="range" class="si-dagen-slider" id="si-2a-slider" min="0" max="100" value="60" step="5" oninput="siSetEigenPct(+this.value)">
-      <div class="si-quick">
-        <button class="si-quick-btn" onclick="siSetEigenPct(0)">0%</button>
-        <button class="si-quick-btn" onclick="siSetEigenPct(30)">30%</button>
-        <button class="si-quick-btn" onclick="siSetEigenPct(60)">60%</button>
-        <button class="si-quick-btn" onclick="siSetEigenPct(100)">100%</button>
-      </div>
-      <div class="si-pct-eff" id="si-2a-eff"></div>
+      <div class="si-step-hdr"><span class="si-step-num sub">Stap 2A</span><span class="si-step-title">Kies een verwerker en verstoring</span></div>
+      <div id="si-vw-grid"></div>
     </div>${conn}
     <div class="si-step si-dimmed" id="si-s2b">
       <div class="si-step-hdr"><span class="si-step-num sub">Stap 2B</span><span class="si-step-title">Externe verwerking — Duitsland</span></div>
@@ -1927,7 +1912,7 @@ function siRenderWS(){
   });
   document.getElementById('si-ws-grid').innerHTML=h;
   const hasWS=siV2State.ws.size>0;
-  ['si-s2','si-s2c','si-s3a','si-s4'].forEach(id=>document.getElementById(id).classList.toggle('si-dimmed',!hasWS));
+  ['si-s2a','si-s2c','si-s3a','si-s4'].forEach(id=>document.getElementById(id).classList.toggle('si-dimmed',!hasWS));
   siRenderVW();
 }
 
@@ -2044,42 +2029,14 @@ function siFormatDagen(d){
   if(d<30)return d+' dagen = ~'+Math.round(d/7*10)/10+' weken';
   return d+' dagen = ~'+Math.round(d/30*10)/10+' maanden';
 }
-function siSetEigenPct(val){
-  val=Math.min(Math.max(0,Math.round(val)),100);
-  siV2State.eigenPct=val;
-  if(val+siV2State.externPct>100){
-    siV2State.externPct=100-val;
-    const s=document.getElementById('si-2b-new-slider');if(s)s.value=siV2State.externPct;
-  }
-  siUpdateDyn();
-}
 function siSetExternPct(val){
   val=Math.min(Math.max(0,Math.round(val)),100);
   siV2State.externPct=val;
-  if(siV2State.eigenPct+val>100){
-    siV2State.eigenPct=100-val;
-    const s=document.getElementById('si-2a-slider');if(s)s.value=siV2State.eigenPct;
-  }
   siUpdateDyn();
 }
 function siRenderPctDisplay(r){
   if(!r)return;
   const selTon=r.selTon||0;
-  const v2a=document.getElementById('si-2a-val');
-  const sl2a=document.getElementById('si-2a-slider');
-  const eff2a=document.getElementById('si-2a-eff');
-  if(v2a)v2a.textContent=r.eigenPct+'%';
-  if(sl2a)sl2a.value=r.eigenPct;
-  if(eff2a){
-    const reduced=r.eigenEffPct<r.eigenPct;
-    const cls=reduced?'si-pct-eff reduced':'si-pct-eff';
-    eff2a.className=cls;
-    if(selTon>0&&r.hasV)eff2a.innerHTML=reduced
-      ?`Eigen aandeel na verstoring: <strong>${r.eigenEffPct}%</strong> (${r.eigenTon.toLocaleString()} t/dag) — verlaagd van ${r.eigenPct}% door verstoring`
-      :`Effectief: <strong>${r.eigenEffPct}%</strong> — ${r.eigenTon.toLocaleString()} t/dag via eigen installaties`;
-    else if(selTon>0)eff2a.innerHTML=`= ${r.eigenTon.toLocaleString()} t/dag via eigen installaties`;
-    else eff2a.innerHTML='';
-  }
   const v2b=document.getElementById('si-2b-new-val');
   const sl2b=document.getElementById('si-2b-new-slider');
   const eff2b=document.getElementById('si-2b-new-eff');
@@ -2161,7 +2118,7 @@ function siDemoCard(){
 function siUpdateDyn(){
   siRenderDagenCalc();
   const hasV2=Object.keys(siV2State.vw).length>0;
-  ['si-s2a','si-s2b'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('si-dimmed',!hasV2);});
+  ['si-s2b'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('si-dimmed',!hasV2);});
   if(siV2State.ws.size===0){
     document.getElementById('si-opvang-3a').innerHTML='<div class="si-placeholder">Selecteer een waterschap om te beginnen</div>';
     document.getElementById('si-opvang-3b').innerHTML='<div class="si-placeholder">Selecteer eerst een waterschap en verwerker</div>';
