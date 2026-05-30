@@ -2059,10 +2059,15 @@ function siRenderDagenCalc(){
   const el=document.getElementById('si-2c-calc');if(!el)return;
   const selTon=siGetSelTon();
   if(!selTon){el.innerHTML='';el.className='si-dagen-calc';return;}
-  const d=siV2State.dagen,total=selTon*d;
+  const d=siV2State.dagen;
+  const externPct=siV2State.externPct??40;
+  const externTon=Math.round(selTon*externPct/100);
+  const netTon=selTon-externTon;
+  const total=netTon*d;
   const cls=total<5000?'ok':total<=15000?'warning':'danger';
   el.className='si-dagen-calc '+cls;
-  el.innerHTML=`Totaal te verwerken slib gedurende verstoring: <strong>${selTon.toLocaleString()} t/dag</strong> × <strong>${d} dag${d!==1?'en':''}</strong> = <strong>${total.toLocaleString()} ton</strong>`;
+  const externPart=externTon>0?` − ${externTon.toLocaleString()} t/dag extern`:'';
+  el.innerHTML=`Lokaal te verwerken slib gedurende verstoring: <strong>${selTon.toLocaleString()}${externPart} = ${netTon.toLocaleString()} t/dag</strong> × <strong>${d} dag${d!==1?'en':''}</strong> = <strong>${total.toLocaleString()} ton</strong>`;
 }
 
 function siCalc(){
