@@ -1524,7 +1524,7 @@ function renderRobuust(){
 }
 
 /* ============ SCENARIO V2 ============ */
-let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externPct:40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,contacten:[
+let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externNLPct:0,externDEPct:40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,contacten:[
   {org:'KetenKompas / AGV',naam:'Gizan Ezra',rol:'Ketenregie',email:'gizan.ezra@agv.nl',tel:''},
   {org:'HVC',naam:'Chiel Landman',rol:'Ketenregisseur HVC',email:'',tel:''},
   {org:'HHNK',naam:'',rol:'nader in te vullen',email:'',tel:''},
@@ -1806,7 +1806,8 @@ function siRenderStap4HTML(r,eigenVrij,eoNeed,eigenSuf,eigenDagen){
     <tr class="si-ovtbl-sec"><td colspan="2">Slibstroom · ${r.dagen} dag${r.dagen!==1?'en':''}</td></tr>
     <tr><td class="si-ovtbl-lbl">Totale slibstroom</td><td>${r.selTon.toLocaleString()} t/dag</td></tr>
     <tr><td class="si-ovtbl-lbl">Totaal intern te verwerken</td><td>${eigenTonDisp} t/dag <span style="font-weight:400;color:var(--ink-faint)">(${eigenEffPct}% eigen${eigenEffPct<(r.eigenPct??60)?' na verstoring':''})</span></td></tr>
-    <tr><td class="si-ovtbl-lbl">Totaal extern te verwerken</td><td>${externTonDisp} t/dag <span style="font-weight:400;color:var(--ink-faint)">(${externPct}% Duitsland)</span></td></tr>
+    <tr><td class="si-ovtbl-lbl">Extern — Nederlandse verwerkers</td><td>${(r.externNLTon||0).toLocaleString()} t/dag <span style="font-weight:400;color:var(--ink-faint)">(${r.externNLPct||0}%)</span></td></tr>
+    <tr><td class="si-ovtbl-lbl">Extern — Export Duitsland</td><td>${(r.externDETon||0).toLocaleString()} t/dag <span style="font-weight:400;color:var(--ink-faint)">(${r.externDEPct||0}%)</span></td></tr>
     <tr><td class="si-ovtbl-lbl">Totaal op te vangen</td><td class="${overshootKl}">${r.overshoot.toLocaleString()} t/dag <span style="font-weight:400;color:var(--ink-faint)">= ${overshootTotal} ton over ${r.dagen} dg</span></td></tr>
     <tr class="si-ovtbl-sec"><td colspan="2">Opslag</td></tr>
     <tr><td class="si-ovtbl-lbl">Opvang bij verwerker</td><td>${eigenVrijDisp} · volstaat ${eigenDagenDisp}</td></tr>
@@ -1889,17 +1890,30 @@ function buildScenario(){
       <div id="si-vw-grid"></div>
     </div>${conn}
     <div class="si-step si-dimmed" id="si-s2b">
-      <div class="si-step-hdr"><span class="si-step-num sub">Stap 2B</span><span class="si-step-title">Externe verwerking — Duitsland</span></div>
-      <div class="si-step-sub">% dat via externe verwerkers in Duitsland afgevoerd wordt · niet beïnvloed door verstoring</div>
-      <div class="si-dagen-display" id="si-2b-new-val">40%</div>
-      <input type="range" class="si-dagen-slider" id="si-2b-new-slider" min="0" max="100" value="40" step="5" oninput="siSetExternPct(+this.value)">
-      <div class="si-quick">
-        <button class="si-quick-btn" onclick="siSetExternPct(0)">0%</button>
-        <button class="si-quick-btn" onclick="siSetExternPct(20)">20%</button>
-        <button class="si-quick-btn" onclick="siSetExternPct(40)">40%</button>
-        <button class="si-quick-btn" onclick="siSetExternPct(60)">60%</button>
+      <div class="si-step-hdr"><span class="si-step-num sub">Stap 2B</span><span class="si-step-title">Externe verwerking</span></div>
+      <div style="margin-bottom:18px">
+        <div class="si-step-sub" style="margin-bottom:6px">Nederlandse verwerkers</div>
+        <div class="si-dagen-display" id="si-2b-nl-val">0%</div>
+        <input type="range" class="si-dagen-slider" id="si-2b-nl-slider" min="0" max="100" value="0" step="5" oninput="siSetExternNLPct(+this.value)">
+        <div class="si-quick">
+          <button class="si-quick-btn" onclick="siSetExternNLPct(0)">0%</button>
+          <button class="si-quick-btn" onclick="siSetExternNLPct(20)">20%</button>
+          <button class="si-quick-btn" onclick="siSetExternNLPct(40)">40%</button>
+          <button class="si-quick-btn" onclick="siSetExternNLPct(60)">60%</button>
+        </div>
       </div>
-      <div class="si-pct-eff" id="si-2b-new-eff"></div>
+      <div>
+        <div class="si-step-sub" style="margin-bottom:6px">Export Duitsland</div>
+        <div class="si-dagen-display" id="si-2b-de-val">40%</div>
+        <input type="range" class="si-dagen-slider" id="si-2b-de-slider" min="0" max="100" value="40" step="5" oninput="siSetExternDEPct(+this.value)">
+        <div class="si-quick">
+          <button class="si-quick-btn" onclick="siSetExternDEPct(0)">0%</button>
+          <button class="si-quick-btn" onclick="siSetExternDEPct(20)">20%</button>
+          <button class="si-quick-btn" onclick="siSetExternDEPct(40)">40%</button>
+          <button class="si-quick-btn" onclick="siSetExternDEPct(60)">60%</button>
+        </div>
+      </div>
+      <div class="si-pct-eff" id="si-2b-eff" style="margin-top:10px"></div>
     </div>${conn}
     <div class="si-step si-dimmed" id="si-s2c">
       <div class="si-step-hdr"><span class="si-step-num sub">Stap 2C</span><span class="si-step-title">Hoe lang duurt de verstoring?</span></div>
@@ -1933,7 +1947,7 @@ function buildScenario(){
     </div>
   </div>`;
   const prevContacten=siV2State.contacten;
-  siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),eigenOverride:{},aqmOverride:{},titel:'',beschrijving:'',eigenPct:60,externPct:40,contacten:prevContacten};
+  siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),eigenOverride:{},aqmOverride:{},titel:'',beschrijving:'',eigenPct:60,externNLPct:0,externDEPct:40,contacten:prevContacten};
   siRenderWS(); siRenderVW();
 }
 
@@ -2068,7 +2082,7 @@ function siSelCluster(ci){
   });
   siRenderWS(); siUpdateDyn();
 }
-function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externPct:siV2State.externPct??40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,contacten:siV2State.contacten};siRenderWS();siRenderVW();siUpdateDyn();}
+function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externNLPct:siV2State.externNLPct??0,externDEPct:siV2State.externDEPct??40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,contacten:siV2State.contacten};siRenderWS();siRenderVW();siUpdateDyn();}
 function siToggleContacten(){
   const body=document.getElementById('si-ct-body');
   const btn=document.getElementById('si-ct-btn');
@@ -2123,24 +2137,29 @@ function siFormatDagen(d){
   if(d<30)return d+' dagen = ~'+Math.round(d/7*10)/10+' weken';
   return d+' dagen = ~'+Math.round(d/30*10)/10+' maanden';
 }
-function siSetExternPct(val){
-  val=Math.min(Math.max(0,Math.round(val)),100);
-  siV2State.externPct=val;
+function siSetExternNLPct(val){
+  siV2State.externNLPct=Math.min(Math.max(0,Math.round(val)),100);
+  siUpdateDyn();
+}
+function siSetExternDEPct(val){
+  siV2State.externDEPct=Math.min(Math.max(0,Math.round(val)),100);
   siUpdateDyn();
 }
 function siRenderPctDisplay(r){
   if(!r)return;
   const selTon=r.selTon||0;
-  const v2b=document.getElementById('si-2b-new-val');
-  const sl2b=document.getElementById('si-2b-new-slider');
-  const eff2b=document.getElementById('si-2b-new-eff');
-  if(v2b)v2b.textContent=r.externPct+'%';
-  if(sl2b)sl2b.value=r.externPct;
-  if(eff2b){
-    eff2b.className='si-pct-eff';
+  const vNL=document.getElementById('si-2b-nl-val'),slNL=document.getElementById('si-2b-nl-slider');
+  const vDE=document.getElementById('si-2b-de-val'),slDE=document.getElementById('si-2b-de-slider');
+  const eff=document.getElementById('si-2b-eff');
+  if(vNL)vNL.textContent=(r.externNLPct||0)+'%';
+  if(slNL)slNL.value=r.externNLPct||0;
+  if(vDE)vDE.textContent=(r.externDEPct||0)+'%';
+  if(slDE)slDE.value=r.externDEPct||0;
+  if(eff){
+    eff.className='si-pct-eff';
     const remaining=Math.max(0,100-r.eigenPct-r.externPct);
-    if(selTon>0)eff2b.innerHTML=`= ${r.externTon.toLocaleString()} t/dag extern · Overschot naar opvang: <strong>${remaining}%</strong> (${r.overshoot.toLocaleString()} t/dag)`;
-    else eff2b.innerHTML='';
+    if(selTon>0)eff.innerHTML=`Totaal extern: ${r.externTon.toLocaleString()} t/dag · Overschot naar opvang: <strong>${remaining}%</strong> (${r.overshoot.toLocaleString()} t/dag)`;
+    else eff.innerHTML='';
   }
 }
 function siSetDagen2b(v){
@@ -2154,7 +2173,7 @@ function siRenderDagenCalc(){
   const selTon=siGetSelTon();
   if(!selTon){el.innerHTML='';el.className='si-dagen-calc';return;}
   const d=siV2State.dagen;
-  const externPct=siV2State.externPct??40;
+  const externPct=(siV2State.externNLPct??0)+(siV2State.externDEPct??40);
   const externTon=Math.round(selTon*externPct/100);
   const netTon=selTon-externTon;
   const total=netTon*d;
@@ -2177,10 +2196,14 @@ function siCalc(){
   const hasV=Object.keys(siV2State.vw).length>0;
   const disruptionFactor=hasV?(SI_FACTOR[maxType]!==undefined?SI_FACTOR[maxType]:1):1;
   const eigenPct=siV2State.eigenPct!==undefined?siV2State.eigenPct:60;
-  const externPct=siV2State.externPct!==undefined?siV2State.externPct:40;
+  const externNLPct=siV2State.externNLPct??0;
+  const externDEPct=siV2State.externDEPct??40;
+  const externPct=externNLPct+externDEPct;
   const eigenEffPct=Math.round(eigenPct*disruptionFactor*10)/10;
   const eigenTon=Math.round(selTon*eigenEffPct/100);
-  const externTon=Math.round(selTon*externPct/100);
+  const externNLTon=Math.round(selTon*externNLPct/100);
+  const externDETon=Math.round(selTon*externDEPct/100);
+  const externTon=externNLTon+externDETon;
   const overshoot=Math.max(selTon-eigenTon-externTon,0);
   const freeA=SI_OPV_A.filter(o=>!o.geblokkeerd).reduce((s,o)=>{
     const ov=siV2State.aqmOverride[o.naam];
@@ -2195,7 +2218,7 @@ function siCalc(){
   const freeOpvang=maxType>=5?0:maxType>=4?freeB:freeA;
   const surplus=freeOpvang-totalTon;
   const bufDagen=overshoot>0?Math.round(freeOpvang/overshoot):99;
-  return{selTon,dagen,totalTon,remCap,overshoot,maxType,freeOpvang,surplus,bufDagen,hasV,eigenEffPct,eigenPct,externPct,eigenTon,externTon};
+  return{selTon,dagen,totalTon,remCap,overshoot,maxType,freeOpvang,surplus,bufDagen,hasV,eigenEffPct,eigenPct,externPct,externNLPct,externDEPct,eigenTon,externTon,externNLTon,externDETon};
 }
 
 function siDemoCard(){
@@ -2327,7 +2350,8 @@ function siGenMemo(){
   const capRows=[
     {lbl:'Totale slibstroom',val:`${r.selTon.toLocaleString()} t/dag`,sub:'',dot:'neutral'},
     {lbl:'Intern te verwerken (eigen HVC)',val:`${r.eigenEffPct??0}% — ${(r.eigenTon||0).toLocaleString()} t/dag`,sub:r.eigenEffPct!==r.eigenPct?`Verlaagd van ${r.eigenPct}% door verstoring`:'',dot:(r.eigenEffPct??0)>0?'ok':'warning'},
-    {lbl:'Extern te verwerken (Duitsland)',val:`${r.externPct??0}% — ${(r.externTon||0).toLocaleString()} t/dag`,sub:'Niet beïnvloed door verstoring',dot:(r.externPct??0)>0?'ok':'neutral'},
+    {lbl:'Extern — Nederlandse verwerkers',val:`${r.externNLPct??0}% — ${(r.externNLTon||0).toLocaleString()} t/dag`,sub:'Niet beïnvloed door verstoring',dot:(r.externNLPct??0)>0?'ok':'neutral'},
+    {lbl:'Extern — Export Duitsland',val:`${r.externDEPct??0}% — ${(r.externDETon||0).toLocaleString()} t/dag`,sub:'Niet beïnvloed door verstoring',dot:(r.externDEPct??0)>0?'ok':'neutral'},
     {lbl:'Dagelijks op te vangen overschot',val:r.overshoot.toLocaleString()+' t/dag',sub:'',dot:r.overshoot===0?'ok':r.overshoot<200?'warning':'danger'},
     {lbl:'Totale opslagbehoefte',val:r.maxType>=5?'onbekend':opslagNood.toLocaleString()+' ton',sub:`${r.overshoot.toLocaleString()} t/dag × ${r.dagen} dagen`,dot:opslagNood<5000?'ok':opslagNood<=15000?'warning':'danger'},
     {lbl:'Opvang bij verwerker',val:eigenVrij>0?eigenVrij.toLocaleString()+' ton':'onbekend / niet van toepassing',sub:eigenVrij>0&&r.overshoot>0?eigenDagen+' dagen buffer':'',dot:eigenSuf?'ok':eigenSuf===false?'warning':'neutral'},
