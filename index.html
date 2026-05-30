@@ -1482,7 +1482,7 @@ function renderRobuust(){
 }
 
 /* ============ SCENARIO V2 ============ */
-let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:''};
+let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{}};
 
 const SI_OPV_A=[
   {naam:"Indaver Delfzijl",cap:6000,bezet:2501,status:"warning"},
@@ -1646,23 +1646,72 @@ function siEigenSlider(key,val){
   siUpdate3ACalcOnly();
 }
 
+function siAqmLocCard(o,li){
+  if(o.geblokkeerd)return `<div class="si-loc-card si-loc-blocked">
+    <div class="si-eigen-hdr"><div class="si-loc-nm">${o.naam} <span class="rp-badge geblokkeerd" style="font-size:8.5px">geblokkeerd</span></div></div>
+    ${o.cap?`<div class="bar" style="margin:4px 0 3px"><i class="${o.status}" style="width:0%"></i></div><div style="font-size:10px;color:var(--ink-faint);display:flex;justify-content:space-between"><span>0/${o.cap.toLocaleString()} t</span><span>n.v.t.</span></div>`:''}
+  </div>`;
+  if(!o.cap)return `<div class="si-loc-card"><div class="si-loc-nm">${o.naam}</div><div style="font-size:10px;color:var(--ink-faint)">Volume onbekend · op aanvraag</div></div>`;
+  if(!siV2State.aqmOverride[o.naam])
+    siV2State.aqmOverride[o.naam]={av:true,vrijCap:Math.max(o.cap-o.bezet,0)};
+  const ov=siV2State.aqmOverride[o.naam];
+  const vrijCap=ov.vrijCap!==null?ov.vrijCap:Math.max(o.cap-o.bezet,0);
+  const maxVrij=Math.max(o.cap-o.bezet,0);
+  const pct=Math.min(Math.round(o.bezet/o.cap*100),100);
+  const tb=`<button class="si-eigen-toggle ${ov.av?'on':'off'}" onclick="siAqmToggle(${li})">${ov.av?'Beschikbaar':'Niet beschikbaar'}</button>`;
+  const slider=ov.av?`<div class="si-eigen-slider-row">
+    <input type="range" class="si-eigen-slider" style="accent-color:#0f6e56" min="0" max="${maxVrij}" value="${vrijCap}" oninput="siAqmSlider(${li},this.value)">
+    <span class="si-eigen-slider-val" id="si-aqmsv-${li}">${vrijCap.toLocaleString()} t</span>
+  </div>`:'';
+  return `<div class="si-loc-card${ov.av?'':' si-eigen-off'}">
+    <div class="si-eigen-hdr"><div class="si-loc-nm">${o.naam}</div>${tb}</div>
+    <div class="bar" style="margin:5px 0 3px"><i class="${o.status}" style="width:${pct}%"></i></div>
+    <div style="font-size:10px;color:var(--ink-faint);display:flex;justify-content:space-between;margin-bottom:2px"><span>${o.bezet.toLocaleString()}/${o.cap.toLocaleString()} t</span><span>${vrijCap.toLocaleString()} vrij</span></div>
+    ${slider}
+  </div>`;
+}
+
 function siRender3BContent(r){
   const opvSet=r.maxType>=5?SI_OPV_C:r.maxType>=4?SI_OPV_B:SI_OPV_A;
   const opvLbl=r.maxType>=5?'Specialistische verwerkers (sub C)':r.maxType>=4?'Kwaliteitsopslag voor vervuild slib (sub B)':'Incidentenopslag normaal slib (sub A)';
-  const locH=opvSet.map(o=>{
-    if(!o.cap)return `<div class="si-loc-card"><div class="si-loc-nm">${o.naam}</div><div style="font-size:10px;color:var(--ink-faint)">Volume onbekend · op aanvraag</div></div>`;
-    const pct=Math.min(Math.round(o.bezet/o.cap*100),100),vrij=Math.max(o.cap-o.bezet,0);
-    return `<div class="si-loc-card${o.geblokkeerd?' si-loc-blocked':''}">
-      <div class="si-loc-nm">${o.naam}${o.geblokkeerd?` <span class="rp-badge geblokkeerd" style="font-size:8.5px">geblokkeerd</span>`:''}</div>
-      <div class="bar" style="margin:4px 0 3px"><i class="${o.status}" style="width:${pct}%"></i></div>
-      <div style="font-size:10px;color:var(--ink-faint);display:flex;justify-content:space-between"><span>${o.bezet.toLocaleString()}/${o.cap.toLocaleString()} t</span><span>${o.geblokkeerd?'n.v.t.':vrij.toLocaleString()+' vrij'}</span></div>
-    </div>`;
-  }).join('');
+  const locH=opvSet.map((o,li)=>siAqmLocCard(o,li)).join('');
   const totDisp=r.maxType>=5?'onbekend':r.freeOpvang.toLocaleString()+' ton';
   document.getElementById('si-opvang-3b').innerHTML=`
     <div class="si-opvang-lbl">${opvLbl}</div>
     <div class="si-opvang-grid">${locH}</div>
-    <div class="si-totaal"><span>Totaal beschikbare AQM-opvangcapaciteit:</span><span class="si-totaal-val">${totDisp}</span></div>`;
+    <div class="si-totaal" id="si-3b-totaal"><span>Totaal beschikbare AQM-opvangcapaciteit:</span><span class="si-totaal-val">${totDisp}</span></div>`;
+}
+
+function siAqmToggle(li){
+  const r=siCalc();
+  const opvSet=r.maxType>=5?SI_OPV_C:r.maxType>=4?SI_OPV_B:SI_OPV_A;
+  const o=opvSet[li];
+  if(!o||!siV2State.aqmOverride[o.naam])return;
+  siV2State.aqmOverride[o.naam].av=!siV2State.aqmOverride[o.naam].av;
+  const r2=siCalc();
+  siRender3BContent(r2);
+  siUpdate3BStap4(r2);
+}
+function siAqmSlider(li,val){
+  const r=siCalc();
+  const opvSet=r.maxType>=5?SI_OPV_C:r.maxType>=4?SI_OPV_B:SI_OPV_A;
+  const o=opvSet[li];
+  if(!o||!siV2State.aqmOverride[o.naam])return;
+  siV2State.aqmOverride[o.naam].vrijCap=parseInt(val);
+  const lbl=document.getElementById('si-aqmsv-'+li);
+  if(lbl)lbl.textContent=parseInt(val).toLocaleString()+' t';
+  const r2=siCalc();
+  const totEl=document.getElementById('si-3b-totaal');
+  if(totEl)totEl.innerHTML=`<span>Totaal beschikbare AQM-opvangcapaciteit:</span><span class="si-totaal-val">${r2.freeOpvang.toLocaleString()} ton</span>`;
+  siUpdate3BStap4(r2);
+}
+function siUpdate3BStap4(r){
+  const activeClusters=new Set([...siV2State.ws].map(k=>parseInt(k.split('-')[0])));
+  const{eigenVrij}=siGetEigenOpslag(activeClusters);
+  const eoNeed=r.hasV?r.overshoot*r.dagen:null;
+  const eigenSuf=eoNeed!==null?(eigenVrij>=eoNeed):null;
+  const eigenDagen=r.overshoot>0?Math.min(Math.floor(eigenVrij/r.overshoot),r.dagen):r.dagen;
+  if(r.hasV)document.getElementById('si-concl').innerHTML=siRenderStap4HTML(r,eigenVrij,eoNeed,eigenSuf,eigenDagen);
 }
 
 function siRenderStap4HTML(r,eigenVrij,eoNeed,eigenSuf,eigenDagen){
@@ -1791,7 +1840,7 @@ function buildScenario(){
       </button>
     </div>
   </div>`;
-  siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),eigenOverride:{},titel:'',beschrijving:''};
+  siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),eigenOverride:{},aqmOverride:{},titel:'',beschrijving:''};
   siRenderWS(); siRenderVW();
 }
 
@@ -1926,7 +1975,7 @@ function siSelCluster(ci){
   });
   siRenderWS(); siUpdateDyn();
 }
-function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||''};siRenderWS();siRenderVW();siUpdateDyn();}
+function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||''};siRenderWS();siRenderVW();siUpdateDyn();}
 function siToggleV(vk,type){
   const cur=siV2State.vw[vk];
   if(cur&&cur.type===type)delete siV2State.vw[vk];
@@ -1984,8 +2033,16 @@ function siCalc(){
   }));
   const maxType=Object.values(siV2State.vw).reduce((m,v)=>Math.max(m,v.type||0),0);
   const overshoot=Math.max(selTon-remCap,0);
-  const freeA=SI_OPV_A.filter(o=>!o.geblokkeerd).reduce((s,o)=>s+Math.max(o.cap-o.bezet,0),0);
-  const freeB=SI_OPV_B.filter(o=>o.cap).reduce((s,o)=>s+Math.max(o.cap-o.bezet,0),0);
+  const freeA=SI_OPV_A.filter(o=>!o.geblokkeerd).reduce((s,o)=>{
+    const ov=siV2State.aqmOverride[o.naam];
+    if(ov&&!ov.av)return s;
+    return s+(ov&&ov.vrijCap!==null?ov.vrijCap:Math.max(o.cap-o.bezet,0));
+  },0);
+  const freeB=SI_OPV_B.filter(o=>o.cap).reduce((s,o)=>{
+    const ov=siV2State.aqmOverride[o.naam];
+    if(ov&&!ov.av)return s;
+    return s+(ov&&ov.vrijCap!==null?ov.vrijCap:Math.max(o.cap-o.bezet,0));
+  },0);
   const freeOpvang=maxType>=5?0:maxType>=4?freeB:freeA;
   const surplus=freeOpvang-totalTon;
   const bufDagen=overshoot>0?Math.round(freeOpvang/overshoot):99;
