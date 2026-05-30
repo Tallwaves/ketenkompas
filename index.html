@@ -1777,7 +1777,7 @@ function siRenderStap4HTML(r,eigenVrij,eoNeed,eigenSuf,eigenDagen){
     <tr><td class="si-ovtbl-lbl">Totaal op te vangen</td><td class="${overshootKl}">${r.overshoot.toLocaleString()} t/dag <span style="font-weight:400;color:var(--ink-faint)">= ${overshootTotal} ton over ${r.dagen} dg</span></td></tr>
     <tr class="si-ovtbl-sec"><td colspan="2">Opslag</td></tr>
     <tr><td class="si-ovtbl-lbl">Opvang bij verwerker</td><td>${eigenVrijDisp} · volstaat ${eigenDagenDisp}</td></tr>
-    <tr><td class="si-ovtbl-lbl">Aanspraak robuust plan</td><td class="${aqmKlRow}">${aqmLabel}</td></tr>
+    <tr><td class="si-ovtbl-lbl">Aanspraak Incidentenopslag (UvW)</td><td class="${aqmKlRow}">${aqmLabel}</td></tr>
     <tr><td class="si-ovtbl-lbl">Robuust plan vol na</td><td class="${aqmDagenKl}">${aqmDagenDisp}</td></tr>
   </table>`;
   return `${overviewTable}
@@ -2255,7 +2255,7 @@ function siGenMemo(){
     {lbl:'Dagelijks op te vangen overschot',val:r.overshoot.toLocaleString()+' t/dag',sub:'',dot:r.overshoot===0?'ok':r.overshoot<200?'warning':'danger'},
     {lbl:'Totale opslagbehoefte',val:r.maxType>=5?'onbekend':opslagNood.toLocaleString()+' ton',sub:`${r.overshoot.toLocaleString()} t/dag × ${r.dagen} dagen`,dot:opslagNood<5000?'ok':opslagNood<=15000?'warning':'danger'},
     {lbl:'Opvang bij verwerker',val:eigenVrij>0?eigenVrij.toLocaleString()+' ton':'onbekend / niet van toepassing',sub:eigenVrij>0&&r.overshoot>0?eigenDagen+' dagen buffer':'',dot:eigenSuf?'ok':eigenSuf===false?'warning':'neutral'},
-    {lbl:'Aanspraak robuust plan',val:aqmLabelRpt,sub:'',dot:eigenSuf===null?'neutral':eigenSuf?'ok':'danger'},
+    {lbl:'Aanspraak Incidentenopslag (UvW)',val:aqmLabelRpt,sub:'',dot:eigenSuf===null?'neutral':eigenSuf?'ok':'danger'},
     {lbl:'Incidentenopslag AQM (robuust plan)',val:dispOpvang!==null?dispOpvang.toLocaleString()+' ton'+(r.maxType>=4?' *':''):'niet van toepassing',sub:r.maxType>=4?'* indicatief — op aanvraag':'',dot:dispOpvang&&dispOpvang>opslagNood?'ok':dispOpvang?'warning':'danger'},
     {lbl:'Robuust plan vol na',val:aqmDagenRpt,sub:'',dot:!aqmNodigRpt?'neutral':r.bufDagen>14?'ok':r.bufDagen>=7?'warning':'danger'},
   ];
