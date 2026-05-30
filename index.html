@@ -1729,7 +1729,10 @@ function siUpdate3ACalcOnly(){
   if(s3b){
     s3b.classList.toggle('si-dimmed',eigenSuf!==false);
     if(eigenSuf===false)siRender3BContent(r);
-    else document.getElementById('si-opvang-3b').innerHTML='<div class="si-placeholder">Stap 3A onvoldoende — dan volgt hier de AQM-opvang</div>';
+    else{
+      const ph=eigenSuf===true?'Eigen opslag voldoende — AQM-opvang niet nodig':'Selecteer een verwerker om te beoordelen of AQM-opvang nodig is';
+      document.getElementById('si-opvang-3b').innerHTML=`<div class="si-placeholder">${ph}</div>`;
+    }
   }
   if(r.hasV)document.getElementById('si-concl').innerHTML=siRenderStap4HTML(r,eigenVrij,eoNeed,eigenSuf,eigenDagen);
 }
@@ -2010,7 +2013,7 @@ function siUpdateDyn(){
   siRenderDagenCalc();
   if(siV2State.ws.size===0){
     document.getElementById('si-opvang-3a').innerHTML='<div class="si-placeholder">Selecteer een waterschap om te beginnen</div>';
-    document.getElementById('si-opvang-3b').innerHTML='<div class="si-placeholder">Stap 3A onvoldoende — dan volgt hier de AQM-opvang</div>';
+    document.getElementById('si-opvang-3b').innerHTML='<div class="si-placeholder">Selecteer eerst een waterschap en verwerker</div>';
     document.getElementById('si-s3b').classList.add('si-dimmed');
     document.getElementById('si-concl').innerHTML=siDemoCard();
     return;
@@ -2039,7 +2042,10 @@ function siUpdateDyn(){
   const s3b=document.getElementById('si-s3b');
   s3b.classList.toggle('si-dimmed',eigenSuf!==false);
   if(eigenSuf===false)siRender3BContent(r);
-  else document.getElementById('si-opvang-3b').innerHTML='<div class="si-placeholder">Stap 3A onvoldoende — dan volgt hier de AQM-opvang</div>';
+  else{
+    const ph=eigenSuf===true?'Eigen opslag voldoende — AQM-opvang niet nodig':'Selecteer een verwerker om te beoordelen of AQM-opvang nodig is';
+    document.getElementById('si-opvang-3b').innerHTML=`<div class="si-placeholder">${ph}</div>`;
+  }
 
   // Step 4 — conclusie
   if(!r.hasV){document.getElementById('si-concl').innerHTML=siDemoCard();return;}
