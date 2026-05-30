@@ -2365,16 +2365,37 @@ function siGenMemo(){
   // Timeline
   const tlDagen=r.dagen;
   const tlEigenEnd=r.overshoot>0?Math.min(eigenDagen,tlDagen):tlDagen;
-  const tlAQMStart=eigenSuf===false?tlEigenEnd+1:null;
   const tlEigenPct=Math.round(tlEigenEnd/tlDagen*100);
-  const tlRestPct=100-tlEigenPct;
-  const tlBarH=`<div class="rpt-tl-bar">
-    <div class="rpt-tl-seg" style="width:${tlEigenPct}%;background:${tlEigenPct>0?'var(--kk-ok)':'transparent'}"></div>
-    <div class="rpt-tl-seg" style="width:${tlRestPct}%;background:${eigenSuf===false?(r.bufDagen<=tlDagen?'var(--kk-alert)':'#d97706'):'var(--kk-ok)'}"></div>
-  </div>`;
+
+  // Incidentenopslag (UvW) is used from day eigenDagen+1 and lasts bufDagen more days
+  const incidentVolDag=eigenSuf===false&&r.bufDagen<99?eigenDagen+r.bufDagen:null;
+  const showInciVol=incidentVolDag!==null&&incidentVolDag<tlDagen;
+  const calDag=showInciVol?incidentVolDag+1:null;
+  const showCal=calDag!==null&&calDag<=tlDagen;
+
+  let tlBarH;
+  if(showInciVol){
+    const inciPct=Math.round(incidentVolDag/tlDagen*100)-tlEigenPct;
+    const calPct=100-tlEigenPct-inciPct;
+    tlBarH=`<div class="rpt-tl-bar">
+      <div class="rpt-tl-seg" style="width:${tlEigenPct}%;background:${tlEigenPct>0?'var(--kk-ok)':'transparent'}"></div>
+      <div class="rpt-tl-seg" style="width:${inciPct}%;background:#d97706"></div>
+      <div class="rpt-tl-seg" style="width:${calPct}%;background:var(--kk-alert)"></div>
+    </div>`;
+  }else if(eigenSuf===false){
+    const restPct=100-tlEigenPct;
+    tlBarH=`<div class="rpt-tl-bar">
+      <div class="rpt-tl-seg" style="width:${tlEigenPct}%;background:${tlEigenPct>0?'var(--kk-ok)':'transparent'}"></div>
+      <div class="rpt-tl-seg" style="width:${restPct}%;background:#d97706"></div>
+    </div>`;
+  }else{
+    tlBarH=`<div class="rpt-tl-bar"><div class="rpt-tl-seg" style="width:100%;background:var(--kk-ok)"></div></div>`;
+  }
+
   const mkDag0=`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag 0</div><div class="rpt-tl-mk-lbl">Verstoring begint</div></div>`;
   const mkEigen=eigenDagen>0&&eigenDagen<tlDagen?`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${eigenDagen}</div><div class="rpt-tl-mk-lbl">Eigen opslag vol</div></div>`:'';
-  const mkAQM=tlAQMStart?`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${tlAQMStart}</div><div class="rpt-tl-mk-lbl">Incidentenopslag nodig</div></div>`:'';
+  const mkInciVol=showInciVol?`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${incidentVolDag}</div><div class="rpt-tl-mk-lbl">Incidentenopslag vol</div></div>`:'';
+  const mkCal=showCal?`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${calDag}</div><div class="rpt-tl-mk-lbl" style="color:var(--kk-alert);font-weight:600">Calamiteitenregeling aanspreken</div></div>`:'';
   const mkEind=`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${tlDagen}</div><div class="rpt-tl-mk-lbl">Einde scenario</div></div>`;
 
   // Recommendations
@@ -2477,7 +2498,7 @@ function siGenMemo(){
         <div class="rpt-tl">
           ${tlBarH}
           <div class="rpt-tl-labels">
-            ${mkDag0}${mkEigen}${mkAQM}${mkEind}
+            ${mkDag0}${mkEigen}${mkInciVol}${mkCal}${mkEind}
           </div>
         </div>
       </div>
