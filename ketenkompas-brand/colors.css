@@ -1,0 +1,34 @@
+/* KetenKompas — Marine & Brons */
+/* Drop this file into your project and link it once: <link rel="stylesheet" href="ketenkompas-colors.css"> */
+/* Or @import it from your global stylesheet. */
+
+:root {
+  /* Primair */
+  --kk-ink:    #0B2A40;   /* tekst & koppen */
+  --kk-navy:   #143A56;  /* donkere UI / achtergronden */
+  --kk-blue:   #2C5E84;  /* primair · links · accenten */
+  --kk-light:  #6B93B4; /* secundair · vlakken */
+  --kk-brons:  #A8842C; /* kompas-noord · highlight · cta */
+
+  /* Uitbreiding · UI & scenario-tool */
+  --kk-mist:        #EEF2F6;       /* pagina-achtergrond */
+  --kk-line:        #D5DEE7;       /* scheidingslijnen */
+  --kk-slate:       #5E7384;      /* bijschriften & meta */
+  --kk-brons-licht: #C9A659; /* zachte highlight */
+  --kk-ok:          #3F7E3F;         /* groen · goed / gezond */
+  --kk-alert:       #B3492E;      /* gedempt rood · verstoring / uitval */
+
+  --kk-paper:       #FFFFFF;
+
+  /* Semantische rollen (gebruik bij voorkeur deze) */
+  --color-bg:           var(--kk-paper);
+  --color-bg-muted:     var(--kk-mist);
+  --color-text:         var(--kk-ink);
+  --color-text-muted:   var(--kk-slate);
+  --color-border:       var(--kk-line);
+  --color-primary:      var(--kk-blue);
+  --color-primary-dark: var(--kk-navy);
+  --color-accent:       var(--kk-brons);
+  --color-success:      var(--kk-ok);
+  --color-danger:       var(--kk-alert);
+}

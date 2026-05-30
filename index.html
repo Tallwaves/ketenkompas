@@ -6,26 +6,41 @@
 <title>KetenKompas — Nederlandse Waterketen</title>
 <style>
   :root{
-    --bg:#0e1b2a;
-    --bg-soft:#13263b;
-    --surface:#ffffff;
-    --surface-2:#f4f7f9;
-    --ink:#0e1b2a;
-    --ink-soft:#5a6b7b;
-    --ink-faint:#8a99a7;
-    --line:#e3e9ee;
-    --line-soft:#eef2f5;
-    --accent:#0f6e56;
-    --accent-soft:#e1f5ee;
-    --water:#185fa5;
-    --water-soft:#e6f1fb;
-    --ok:#1d9e75;       --ok-bg:#eaf3de;  --ok-ink:#3b6d11;
-    --warn:#ba7517;     --warn-bg:#faeeda; --warn-ink:#854f0b;
-    --danger:#e24b4a;   --danger-bg:#fcebeb; --danger-ink:#a32d2d;
+    /* KetenKompas brand tokens — Marine & Brons */
+    --kk-ink:    #0B2A40;
+    --kk-navy:   #143A56;
+    --kk-blue:   #2C5E84;
+    --kk-light:  #6B93B4;
+    --kk-brons:  #A8842C;
+    --kk-mist:        #EEF2F6;
+    --kk-line:        #D5DEE7;
+    --kk-slate:       #5E7384;
+    --kk-brons-licht: #C9A659;
+    --kk-ok:          #3F7E3F;
+    --kk-alert:       #B3492E;
+    --kk-paper:       #FFFFFF;
+
+    /* UI aliases */
+    --bg:        var(--kk-navy);
+    --bg-soft:   #1a4870;
+    --surface:   var(--kk-paper);
+    --surface-2: var(--kk-mist);
+    --ink:       var(--kk-ink);
+    --ink-soft:  var(--kk-slate);
+    --ink-faint: var(--kk-light);
+    --line:      var(--kk-line);
+    --line-soft: #E8EFF5;
+    --accent:        var(--kk-brons);
+    --accent-soft:   #F5EDD8;
+    --water:         var(--kk-blue);
+    --water-soft:    #DDE9F3;
+    --ok:     var(--kk-ok);      --ok-bg:#EAF2EA;   --ok-ink:#2B5A2B;
+    --warn:   var(--kk-brons-licht); --warn-bg:#F9F2E4; --warn-ink:#7A5A10;
+    --danger: var(--kk-alert);   --danger-bg:#FAEDE9; --danger-ink:#7E2A15;
     --neutral:#888780;
     --radius:14px; --radius-sm:9px;
     --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-    --shadow:0 1px 3px rgba(14,27,42,.06),0 4px 16px rgba(14,27,42,.04);
+    --shadow:0 1px 3px rgba(11,42,64,.07),0 4px 16px rgba(11,42,64,.05);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
@@ -38,34 +53,34 @@
   .lc-logo{width:48px;height:48px;flex-shrink:0}
   .lc-brand{display:flex;flex-direction:column}
   .lc-name{font-size:26px;font-weight:600;color:#fff;letter-spacing:-.02em;line-height:1.1}
-  .lc-name span{color:#5dcaa5}
-  .lc-sub{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#7fa8c4;margin-top:3px}
-  .lc-divider{height:1px;background:#28425c;margin-bottom:22px}
+  .lc-name span{color:var(--kk-brons)}
+  .lc-sub{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--kk-light);margin-top:3px}
+  .lc-divider{height:1px;background:rgba(44,94,132,.35);margin-bottom:22px}
   .lc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-  .lc-stat{background:#13263b;border:1px solid #1d3a40;border-radius:10px;padding:14px 10px;text-align:center}
+  .lc-stat{background:var(--bg-soft);border:1px solid #1d3a40;border-radius:10px;padding:14px 10px;text-align:center}
   .lc-stat-val{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
-  .lc-stat-val.green{color:#5dcaa5}
+  .lc-stat-val.green{color:var(--kk-ok)}
   .lc-stat-val.amber{color:#e8a44a}
-  .lc-stat-lbl{font-size:11px;color:#9fb4c5;letter-spacing:.03em}
-  .lc-box{background:#13263b;border:1px solid #1d3a40;border-radius:12px;padding:20px}
-  .lc-access-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7fa8c4;margin-bottom:8px}
-  .lc-box input{width:100%;height:46px;border-radius:8px;border:1px solid #28425c;background:#0e1b2a;color:#fff;padding:0 14px;font-size:15px;font-family:var(--font);outline:none;transition:border-color .15s;box-sizing:border-box}
-  .lc-box input:focus{border-color:#5dcaa5}
+  .lc-stat-lbl{font-size:11px;color:var(--kk-light);letter-spacing:.03em}
+  .lc-box{background:var(--bg-soft);border:1px solid #1d3a40;border-radius:12px;padding:20px}
+  .lc-access-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--kk-light);margin-bottom:8px}
+  .lc-box input{width:100%;height:46px;border-radius:8px;border:1px solid rgba(44,94,132,.35);background:var(--kk-ink);color:#fff;padding:0 14px;font-size:15px;font-family:var(--font);outline:none;transition:border-color .15s;box-sizing:border-box}
+  .lc-box input:focus{border-color:var(--kk-brons)}
   .lc-box input::placeholder{color:#5d7388}
-  .lc-box button{width:100%;height:46px;margin-top:10px;border:none;border-radius:8px;background:#5dcaa5;color:#04342c;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
-  .lc-box button:hover{background:#7fdcbb}
-  .lc-btn-sec{background:transparent!important;border:1px solid #28425c!important;color:#7fa8c4!important;font-weight:500!important}
-  .lc-btn-sec:hover{background:#13263b!important;border-color:#3a5a72!important}
+  .lc-box button{width:100%;height:46px;margin-top:10px;border:none;border-radius:8px;background:var(--kk-brons);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
+  .lc-box button:hover{background:var(--kk-brons-licht)}
+  .lc-btn-sec{background:transparent!important;border:1px solid rgba(44,94,132,.35)!important;color:var(--kk-light)!important;font-weight:500!important}
+  .lc-btn-sec:hover{background:var(--bg-soft)!important;border-color:#3a5a72!important}
   .lc-contact{max-height:0;overflow:hidden;transition:max-height .3s ease}
   .lc-contact.open{max-height:320px}
-  .lc-contact-inner{padding-top:12px;border-top:1px solid #1d3a52;margin-top:10px}
+  .lc-contact-inner{padding-top:12px;border-top:1px solid rgba(44,94,132,.4);margin-top:10px}
   .lc-field{margin-bottom:8px}
-  .lc-field-lbl{display:block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7fa8c4;margin-bottom:5px}
-  .lc-field-inp{width:100%;height:40px;border-radius:7px;border:1px solid #28425c;background:#0e1b2a;color:#fff;padding:0 12px;font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s;box-sizing:border-box}
-  .lc-field-inp:focus{border-color:#5dcaa5}
+  .lc-field-lbl{display:block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--kk-light);margin-bottom:5px}
+  .lc-field-inp{width:100%;height:40px;border-radius:7px;border:1px solid rgba(44,94,132,.35);background:var(--kk-ink);color:#fff;padding:0 12px;font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s;box-sizing:border-box}
+  .lc-field-inp:focus{border-color:var(--kk-brons)}
   .lc-field-inp::placeholder{color:#5d7388}
-  .lc-btn-send{width:100%;height:42px;margin-top:6px;border:none;border-radius:8px;background:#5dcaa5;color:#04342c;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
-  .lc-btn-send:hover{background:#7fdcbb}
+  .lc-btn-send{width:100%;height:42px;margin-top:6px;border:none;border-radius:8px;background:var(--kk-brons);color:var(--kk-navy);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
+  .lc-btn-send:hover{background:var(--kk-brons-licht)}
   .lc-btn-send:disabled{background:#3a7a65;cursor:not-allowed}
   .lc-contact-msg{font-size:12px;margin-top:9px;min-height:0}
   .lc-err{color:#f09595;font-size:12px;margin-top:10px;min-height:16px}
@@ -75,32 +90,31 @@
   /* ---------- APP SHELL ---------- */
   #app{display:none;min-height:100vh;flex-direction:column}
   header{background:var(--bg);color:#fff;padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20}
-  .brand{display:flex;align-items:center;gap:11px}
-  .brand .logo-dot{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#5dcaa5,#185fa5);display:flex;align-items:center;justify-content:center}
-  .brand .logo-dot svg{width:15px;height:15px}
-  .brand-name{font-size:15px;font-weight:600;letter-spacing:-.01em}
-  .brand-name span{color:#5dcaa5}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand .logo-mark{width:28px;height:28px;flex-shrink:0}
+  .brand-name{font-size:15px;font-weight:700;letter-spacing:-.01em;color:#fff}
+  .brand-name span{color:var(--kk-brons)}
   nav.tabs{display:flex;gap:4px;align-items:center}
-  .tab-group{display:flex;gap:4px;border:1px solid #28425c;border-radius:10px;padding:3px}
-  nav.tabs button{background:transparent;border:none;color:#9fb4c5;font-size:13.5px;font-family:var(--font);padding:7px 14px;border-radius:8px;cursor:pointer;font-weight:500;transition:all .12s}
-  nav.tabs button:hover{color:#fff;background:#1c3450}
-  nav.tabs button.active{color:#fff;background:#1f3a58}
+  .tab-group{display:flex;gap:4px;border:1px solid rgba(108,147,180,.3);border-radius:10px;padding:3px}
+  nav.tabs button{background:transparent;border:none;color:var(--kk-light);font-size:13.5px;font-family:var(--font);padding:7px 14px;border-radius:8px;cursor:pointer;font-weight:500;transition:all .12s}
+  nav.tabs button:hover{color:#fff;background:var(--kk-blue)}
+  nav.tabs button.active{color:#fff;background:var(--kk-blue)}
   .header-right{display:flex;align-items:center;gap:14px}
-  .stand{font-size:11.5px;color:#7fa8c4}
-  .logout{background:transparent;border:1px solid #28425c;color:#9fb4c5;font-size:12px;padding:5px 12px;border-radius:7px;cursor:pointer;font-family:var(--font)}
-  .logout:hover{border-color:#5dcaa5;color:#fff}
+  .stand{font-size:11.5px;color:var(--kk-light)}
+  .logout{background:transparent;border:1px solid rgba(108,147,180,.35);color:var(--kk-light);font-size:12px;padding:5px 12px;border-radius:7px;cursor:pointer;font-family:var(--font)}
+  .logout:hover{border-color:var(--kk-brons);color:#fff}
   /* Hamburger */
-  .ham-btn{display:none;background:none;border:none;cursor:pointer;padding:6px;color:#9fb4c5;flex-shrink:0}
+  .ham-btn{display:none;background:none;border:none;cursor:pointer;padding:6px;color:var(--kk-light);flex-shrink:0}
   .ham-btn svg{display:block}
-  .mob-menu{display:none;position:absolute;top:60px;left:0;right:0;background:#0a1520;border-bottom:1px solid #1d3a52;z-index:19;flex-direction:column;padding:8px 16px 14px}
+  .mob-menu{display:none;position:absolute;top:60px;left:0;right:0;background:#0d2539;border-bottom:1px solid rgba(44,94,132,.4);z-index:19;flex-direction:column;padding:8px 16px 14px}
   .mob-menu.open{display:flex}
-  .mob-menu button{background:none;border:none;color:#9fb4c5;font-size:15px;font-family:var(--font);font-weight:500;padding:11px 12px;border-radius:8px;cursor:pointer;text-align:left;width:100%}
-  .mob-menu button:hover,.mob-menu button.active{color:#fff;background:#1c3450}
-  .mob-menu button.active{color:#fff;background:#1f3a58}
-  .mob-menu button[data-mv="beheer"]{color:#c89b20}
-  .mob-menu button[data-mv="beheer"].active{background:#332800;color:#f0c040}
-  .mob-menu-div{height:1px;background:#1d3a52;margin:6px 0}
-  .mob-menu-foot{display:flex;align-items:center;justify-content:space-between;padding:8px 12px 0;font-size:11.5px;color:#7fa8c4}
+  .mob-menu button{background:none;border:none;color:var(--kk-light);font-size:15px;font-family:var(--font);font-weight:500;padding:11px 12px;border-radius:8px;cursor:pointer;text-align:left;width:100%}
+  .mob-menu button:hover,.mob-menu button.active{color:#fff;background:var(--kk-blue)}
+  .mob-menu button.active{color:#fff;background:var(--kk-blue)}
+  .mob-menu button[data-mv="beheer"]{color:var(--kk-brons-licht)}
+  .mob-menu button[data-mv="beheer"].active{background:rgba(168,132,44,.15);color:var(--kk-brons-licht)}
+  .mob-menu-div{height:1px;background:rgba(44,94,132,.35);margin:6px 0}
+  .mob-menu-foot{display:flex;align-items:center;justify-content:space-between;padding:8px 12px 0;font-size:11.5px;color:var(--kk-light)}
 
   main{flex:1;max-width:1180px;width:100%;margin:0 auto;padding:26px 28px 60px}
   .view{display:none}
@@ -111,15 +125,15 @@
   .page-title{font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px}
   .page-sub{font-size:14px;color:var(--ink-soft)}
 
-  .ka-card{background:#fff;border:1px solid #fca5a5;border-radius:var(--radius);margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow)}
-  .ka-header{display:flex;align-items:center;gap:10px;padding:9px 16px;background:linear-gradient(135deg,#fef2f2 0%,#fef6ec 100%);border-bottom:1px solid #fca5a5}
+  .ka-card{background:#fff;border:1px solid var(--kk-alert);border-radius:var(--radius);margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow)}
+  .ka-header{display:flex;align-items:center;gap:10px;padding:9px 16px;background:var(--danger-bg);border-bottom:1px solid var(--kk-alert)}
   .ka-header svg{width:15px;height:15px;color:var(--danger);flex-shrink:0}
   .ka-titel{font-size:12.5px;font-weight:700;color:var(--danger-ink)}
   .ka-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
   .ka-col{padding:10px 14px;border-right:1px solid var(--line-soft)}
   .ka-col:last-child{border-right:none}
   .ka-col-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
-  .ka-lbl-danger{color:var(--danger-ink)}.ka-lbl-warning{color:var(--warn-ink)}.ka-lbl-info{color:#185fa5}
+  .ka-lbl-danger{color:var(--danger-ink)}.ka-lbl-warning{color:var(--warn-ink)}.ka-lbl-info{color:var(--kk-blue)}
   .ka-item{display:flex;align-items:flex-start;gap:6px;margin-bottom:5px;font-size:11px;line-height:1.4;color:var(--ink-soft)}
   .ka-item:last-child{margin-bottom:0}
   .ka-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
@@ -152,7 +166,7 @@
   .vw.danger{background:var(--danger-bg);border-color:var(--danger)}
   .vw.neutral{background:var(--surface-2);border-color:var(--neutral)}
   .vw-nm{font-size:13px;font-weight:600;margin-bottom:1px}
-  .vw.ok .vw-nm{color:#27500a}.vw.warning .vw-nm{color:#633806}.vw.danger .vw-nm{color:#791f1f}.vw.neutral .vw-nm{color:var(--ink)}
+  .vw.ok .vw-nm{color:var(--ok-ink)}.vw.warning .vw-nm{color:var(--warn-ink)}.vw.danger .vw-nm{color:var(--danger-ink)}.vw.neutral .vw-nm{color:var(--ink)}
   .vw-sub{font-size:11px;opacity:.85}
   .vw.ok .vw-sub{color:var(--ok-ink)}.vw.warning .vw-sub{color:var(--warn-ink)}.vw.danger .vw-sub{color:var(--danger-ink)}.vw.neutral .vw-sub{color:var(--ink-soft)}
   .vw-flag{font-size:11px;margin-top:4px;display:flex;gap:5px;align-items:flex-start;opacity:.9}
@@ -198,7 +212,7 @@
   .tl-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:11px}
   .tl-bar{height:30px;border-radius:8px;overflow:hidden;display:flex;background:var(--surface-2)}
   .tl-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;white-space:nowrap}
-  .tl-seg.buffer{background:#9fe1cb;color:#04342c}
+  .tl-seg.buffer{background:#9fe1cb;color:var(--kk-navy)}
   .tl-seg.shortage{background:#f09595;color:#501313}
   .tl-scale{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--ink-faint)}
   .verdict{padding:13px 16px;border-radius:var(--radius-sm);font-size:13px;display:flex;gap:9px;align-items:flex-start;line-height:1.55}
@@ -207,7 +221,7 @@
   .verdict.warn{background:var(--warn-bg);color:var(--warn-ink)}
   .verdict.good{background:var(--ok-bg);color:var(--ok-ink)}
   .gen-btn{margin-top:18px;width:100%;padding:12px;border:1px solid var(--accent);border-radius:var(--radius-sm);background:var(--accent-soft);color:var(--accent);font-size:13.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;font-family:var(--font);transition:all .12s}
-  .gen-btn:hover{background:#cfeee2}
+  .gen-btn:hover{background:#EFE3C4}
   .gen-btn svg{width:16px;height:16px}
 
   /* ---------- SCENARIO V2 ---------- */
@@ -223,7 +237,7 @@
   .si-step-title{font-size:14px;font-weight:700;color:var(--ink)}
   .si-quick{display:flex;gap:6px;margin-bottom:12px;align-items:center;flex-wrap:wrap}
   .si-quick-btn{font-size:11.5px;padding:4px 12px;border:1px solid var(--accent);border-radius:6px;background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:var(--font);font-weight:600;transition:all .12s}
-  .si-quick-btn:hover{background:#cfeee2}
+  .si-quick-btn:hover{background:#EFE3C4}
   .si-clear-btn{border-color:var(--line);background:var(--surface);color:var(--ink-faint)}
   .si-clear-btn:hover{border-color:var(--ink-faint);background:var(--surface-2)}
   .si-ws-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;align-items:start}
@@ -311,7 +325,7 @@
   .si-eigen-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:6px}
   .si-eigen-toggle{font-size:9px;font-weight:700;border:none;border-radius:10px;padding:2px 7px;cursor:pointer;transition:background .15s,color .15s;flex-shrink:0;line-height:1.6}
   .si-eigen-toggle.on{background:#d1fae5;color:#065f46}
-  .si-eigen-toggle.off{background:#fee2e2;color:#991b1b}
+  .si-eigen-toggle.off{background:var(--danger-bg);color:#991b1b}
   .si-loc-card.si-eigen-off{opacity:.45}
   .si-eigen-slider-row{display:flex;align-items:center;gap:6px;margin-top:5px}
   .si-eigen-slider{flex:1;cursor:pointer;height:3px;border-radius:2px}
@@ -346,10 +360,10 @@
   .copy-btn:hover{border-color:var(--ink-faint)}
   .copy-btn svg{width:14px;height:14px}
   /* RAPPORT */
-  .rpt{font-family:var(--font);color:#0e1b2a;background:#fff;line-height:1.55}
-  .rpt-hdr{background:#0e1b2a;color:#fff;padding:22px 30px 18px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-  .rpt-hdr-logo{font-size:16px;font-weight:700;letter-spacing:-.01em}
-  .rpt-hdr-logo span{color:#4ade80;margin-right:6px}
+  .rpt{font-family:var(--font);color:var(--kk-ink);background:#fff;line-height:1.55}
+  .rpt-hdr{background:var(--kk-ink);color:#fff;padding:22px 30px 18px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .rpt-hdr-logo{font-size:16px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:9px}
+  .rpt-hdr-logo svg{width:26px;height:26px;flex-shrink:0}
   .rpt-hdr-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:3px;font-weight:400}
   .rpt-hdr-right{text-align:right;flex-shrink:0}
   .rpt-hdr-titel{font-size:17px;font-weight:700;color:#fff;margin-top:6px;line-height:1.25}
@@ -359,18 +373,18 @@
   .rpt-body{padding:26px 30px}
   .rpt-section{margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid #e8eaed}
   .rpt-section:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0}
-  .rpt-sec-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#0e1b2a;opacity:.45;margin-bottom:12px}
+  .rpt-sec-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--kk-ink);opacity:.45;margin-bottom:12px}
   .rpt-summary-text{font-size:14.5px;line-height:1.7;color:#1a2e3a}
   .rpt-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
   .rpt-col{background:#f6f8fa;border-radius:8px;padding:14px 16px;position:relative;overflow:hidden}
-  .rpt-col-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#0e1b2a;opacity:.45;margin-bottom:6px}
-  .rpt-col-val{font-size:13px;color:#0e1b2a;font-weight:500;line-height:1.45}
-  .rpt-col-sub{font-size:11px;color:#6b7a8d;margin-top:3px}
-  .rpt-ws-logo{position:absolute;bottom:-12px;right:-10px;width:110px;height:110px;object-fit:contain;opacity:.09;filter:grayscale(100%);pointer-events:none;user-select:none}
+  .rpt-col-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--kk-ink);opacity:.45;margin-bottom:6px}
+  .rpt-col-val{font-size:13px;color:var(--kk-ink);font-weight:500;line-height:1.45}
+  .rpt-col-sub{font-size:11px;color:var(--kk-slate);margin-top:3px}
+  .rpt-ws-wm{position:absolute;bottom:-8px;right:6px;font-size:56px;font-weight:800;letter-spacing:-.04em;color:var(--kk-navy);opacity:.07;pointer-events:none;user-select:none;line-height:1;font-family:var(--font)}
   .rpt-urgentie{border-radius:8px;padding:14px 16px;text-align:center}
   .rpt-urgentie.ok{background:#d1fae5;border:1px solid #6ee7b7}
   .rpt-urgentie.warning{background:#fef3c7;border:1px solid #fcd34d}
-  .rpt-urgentie.danger{background:#fee2e2;border:1px solid #fca5a5}
+  .rpt-urgentie.danger{background:var(--danger-bg);border:1px solid var(--kk-alert)}
   .rpt-urg-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.6;margin-bottom:4px}
   .rpt-urg-val{font-size:17px;font-weight:700;line-height:1.2}
   .rpt-urg-sub{font-size:10px;margin-top:4px;opacity:.7}
@@ -380,41 +394,41 @@
   .rpt-cap-table td:first-child{width:18px;padding-right:10px}
   .rpt-cap-table td:last-child{text-align:right;font-weight:600;white-space:nowrap}
   .rpt-cap-table td:nth-child(2){color:#1a2e3a;flex:1}
-  .rpt-cap-table td:nth-child(3){font-size:11.5px;color:#6b7a8d;text-align:right;padding-right:14px}
+  .rpt-cap-table td:nth-child(3){font-size:11.5px;color:var(--kk-slate);text-align:right;padding-right:14px}
   .rpt-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}
-  .rpt-dot.ok{background:#0f6e56}
+  .rpt-dot.ok{background:var(--kk-ok)}
   .rpt-dot.warning{background:#d97706}
-  .rpt-dot.danger{background:#e24b4a}
+  .rpt-dot.danger{background:var(--kk-alert)}
   .rpt-dot.neutral{background:#9ca3af}
   .rpt-surplus{font-size:14px;font-weight:700;padding:10px 14px;border-radius:6px;margin-top:8px;display:flex;justify-content:space-between;align-items:center}
   .rpt-surplus.ok{background:#d1fae5;color:#065f46}
-  .rpt-surplus.danger{background:#fee2e2;color:#991b1b}
+  .rpt-surplus.danger{background:var(--danger-bg);color:#991b1b}
   .rpt-opvang-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
   .rpt-opvang-card{border:1px solid #e8eaed;border-radius:8px;padding:12px 14px;position:relative}
-  .rpt-opvang-card.aanbevolen{border-color:#0f6e56;background:#f0fdf8}
-  .rpt-opvang-nm{font-size:12.5px;font-weight:600;color:#0e1b2a;margin-bottom:4px}
-  .rpt-opvang-cap{font-size:12px;color:#6b7a8d}
-  .rpt-opvang-act{position:absolute;top:8px;right:8px;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:#0f6e56;color:#fff;border-radius:4px;padding:2px 6px}
-  .rpt-opvang-blok{font-size:11px;color:#e24b4a;margin-top:3px}
+  .rpt-opvang-card.aanbevolen{border-color:var(--kk-ok);background:var(--ok-bg)}
+  .rpt-opvang-nm{font-size:12.5px;font-weight:600;color:var(--kk-ink);margin-bottom:4px}
+  .rpt-opvang-cap{font-size:12px;color:var(--kk-slate)}
+  .rpt-opvang-act{position:absolute;top:8px;right:8px;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:var(--kk-ok);color:#fff;border-radius:4px;padding:2px 6px}
+  .rpt-opvang-blok{font-size:11px;color:var(--kk-alert);margin-top:3px}
   /* TIJDLIJN */
   .rpt-tl{margin-top:4px}
   .rpt-tl-bar{height:22px;border-radius:6px;display:flex;overflow:hidden;margin-bottom:8px}
   .rpt-tl-seg{height:100%;transition:width .3s}
-  .rpt-tl-labels{display:flex;justify-content:space-between;font-size:10.5px;color:#6b7a8d;position:relative}
+  .rpt-tl-labels{display:flex;justify-content:space-between;font-size:10.5px;color:var(--kk-slate);position:relative}
   .rpt-tl-mk{display:flex;flex-direction:column;align-items:center;font-size:10px}
-  .rpt-tl-mk-dag{font-weight:700;color:#0e1b2a;font-size:11px}
-  .rpt-tl-mk-lbl{color:#6b7a8d;text-align:center;max-width:80px;line-height:1.2}
+  .rpt-tl-mk-dag{font-weight:700;color:var(--kk-ink);font-size:11px}
+  .rpt-tl-mk-lbl{color:var(--kk-slate);text-align:center;max-width:80px;line-height:1.2}
   /* AANBEVELINGEN */
   .rpt-aanbev{display:flex;flex-direction:column;gap:12px}
   .rpt-aanbev-item{display:flex;gap:14px;align-items:flex-start}
-  .rpt-aanbev-num{width:28px;height:28px;border-radius:50%;background:#0e1b2a;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .rpt-aanbev-num{width:28px;height:28px;border-radius:50%;background:var(--kk-ink);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
   .rpt-aanbev-body{flex:1}
-  .rpt-aanbev-title{font-size:13px;font-weight:600;color:#0e1b2a;margin-bottom:2px}
+  .rpt-aanbev-title{font-size:13px;font-weight:600;color:var(--kk-ink);margin-bottom:2px}
   .rpt-aanbev-txt{font-size:13px;color:#374151;line-height:1.55}
   /* EXPORT KNOPPEN */
   .rpt-export{display:flex;gap:10px;margin-top:6px;padding-top:20px;border-top:1px solid #e8eaed;flex-wrap:wrap}
   .rpt-btn{padding:9px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;gap:7px;border:none}
-  .rpt-btn-pdf{background:#0e1b2a;color:#fff}
+  .rpt-btn-pdf{background:var(--kk-ink);color:#fff}
   .rpt-btn-pdf:hover{background:#1e3040}
   .rpt-btn-copy{background:var(--surface);border:1px solid var(--line)!important;color:var(--ink-soft)}
   .rpt-btn-copy:hover{border-color:var(--ink-faint)!important}
@@ -489,7 +503,7 @@
   .kk-p-val{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px}
   .kk-p-flag{font-size:12px;padding:4px 9px;background:var(--danger-bg);color:var(--danger-ink);border-radius:6px;margin-bottom:4px}
   .kk-p-none{font-size:12px;color:var(--ink-faint);font-style:italic;margin:0}
-  .kk-back{position:absolute;top:10px;left:10px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:#185fa5;cursor:pointer;display:none;align-items:center;gap:6px;z-index:10;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+  .kk-back{position:absolute;top:10px;left:10px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--kk-blue);cursor:pointer;display:none;align-items:center;gap:6px;z-index:10;box-shadow:0 1px 4px rgba(0,0,0,.08)}
   .kk-back:hover{background:#eff6ff}
   .kk-footnote{position:absolute;bottom:6px;right:10px;font-size:10px;color:var(--ink-faint);display:none;pointer-events:none}
   .kk-ws-hint{position:absolute;bottom:6px;left:10px;font-size:10px;color:var(--ink-faint);pointer-events:none}
@@ -540,7 +554,7 @@
   .vw-card{border-radius:8px;padding:14px 11px;border-left:3px solid;text-align:center}
   .vw-card.ok{background:var(--ok-bg);border-color:var(--ok)}.vw-card.warning{background:var(--warn-bg);border-color:var(--warn)}.vw-card.danger{background:var(--danger-bg);border-color:var(--danger)}
   .vw-card-nm{font-size:16px;font-weight:700;letter-spacing:-.01em}
-  .vw-card.ok .vw-card-nm{color:#27500a}.vw-card.warning .vw-card-nm{color:#633806}.vw-card.danger .vw-card-nm{color:#791f1f}
+  .vw-card.ok .vw-card-nm{color:var(--ok-ink)}.vw-card.warning .vw-card-nm{color:var(--warn-ink)}.vw-card.danger .vw-card-nm{color:var(--danger-ink)}
   .inst-chips{display:flex;flex-direction:column;gap:6px}
   .inst-chip{font-size:13px;padding:8px 11px;border-radius:7px;border-left:3px solid;font-weight:600}
   .inst-chip.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok-ink)}
@@ -666,8 +680,8 @@
   @media(max-width:820px){.rp-s3-noodgrid{grid-template-columns:1fr}}
 
   /* ---------- BEHEER TAB ---------- */
-  nav.tabs button[data-v="beheer"]{color:#c89b20}
-  nav.tabs button[data-v="beheer"].active{background:#332800;color:#f0c040}
+  nav.tabs button[data-v="beheer"]{color:var(--kk-brons-licht)}
+  nav.tabs button[data-v="beheer"].active{background:rgba(168,132,44,.18);color:var(--kk-brons-licht)}
   /* ---------- ADMIN PANEL ---------- */
   .adm-panel{max-width:820px}
   .adm-section{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
@@ -749,21 +763,21 @@
   <div class="lc">
     <div class="lc-header">
       <svg class="lc-logo" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="34" height="34" rx="9" fill="#0a1520" stroke="#5dcaa5" stroke-width="1.5"/>
-        <polygon points="17,4 27,10 27,24 17,30 7,24 7,10" fill="none" stroke="#1d3a52" stroke-width="0.5"/>
-        <circle cx="17" cy="4" r="3" fill="#5dcaa5"/>
+        <rect width="34" height="34" rx="9" fill="var(--kk-navy)" stroke="var(--kk-brons)" stroke-width="1.5"/>
+        <polygon points="17,4 27,10 27,24 17,30 7,24 7,10" fill="none" stroke="rgba(44,94,132,.4)" stroke-width="0.5"/>
+        <circle cx="17" cy="4" r="3" fill="var(--kk-brons)"/>
         <circle cx="27" cy="10" r="2.5" fill="#3a7bd5"/>
         <circle cx="27" cy="24" r="2.5" fill="#3a7bd5"/>
-        <circle cx="17" cy="30" r="3" fill="#5dcaa5"/>
+        <circle cx="17" cy="30" r="3" fill="var(--kk-brons)"/>
         <circle cx="7" cy="24" r="2.5" fill="#3a7bd5"/>
         <circle cx="7" cy="10" r="2.5" fill="#3a7bd5"/>
-        <circle cx="17" cy="17" r="9" fill="#0a1520" stroke="#5dcaa5" stroke-width="1.5"/>
-        <line x1="17" y1="9" x2="17" y2="12" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="17" y1="22" x2="17" y2="25" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="9" y1="17" x2="12" y2="17" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="22" y1="17" x2="25" y2="17" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="17" cy="17" r="9" fill="var(--kk-navy)" stroke="var(--kk-brons)" stroke-width="1.5"/>
+        <line x1="17" y1="9" x2="17" y2="12" stroke="var(--kk-brons)" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="17" y1="22" x2="17" y2="25" stroke="var(--kk-brons)" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="9" y1="17" x2="12" y2="17" stroke="var(--kk-brons)" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="22" y1="17" x2="25" y2="17" stroke="var(--kk-brons)" stroke-width="1.5" stroke-linecap="round"/>
         <polygon points="17,10 19,17 17,24 15,17" fill="#e8a44a"/>
-        <circle cx="17" cy="17" r="2" fill="#0a1520"/>
+        <circle cx="17" cy="17" r="2" fill="var(--kk-navy)"/>
       </svg>
       <div class="lc-brand">
         <div class="lc-name">Keten<span>Kompas</span></div>
@@ -800,22 +814,13 @@
 <div id="app">
   <header>
     <div class="brand">
-      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="34" height="34" rx="9" fill="#0a1520" stroke="#5dcaa5" stroke-width="1.5"/>
-        <polygon points="17,4 27,10 27,24 17,30 7,24 7,10" fill="none" stroke="#1d3a52" stroke-width="0.5"/>
-        <circle cx="17" cy="4" r="3" fill="#5dcaa5"/>
-        <circle cx="27" cy="10" r="2.5" fill="#3a7bd5"/>
-        <circle cx="27" cy="24" r="2.5" fill="#3a7bd5"/>
-        <circle cx="17" cy="30" r="3" fill="#5dcaa5"/>
-        <circle cx="7" cy="24" r="2.5" fill="#3a7bd5"/>
-        <circle cx="7" cy="10" r="2.5" fill="#3a7bd5"/>
-        <circle cx="17" cy="17" r="9" fill="#0a1520" stroke="#5dcaa5" stroke-width="1.5"/>
-        <line x1="17" y1="9" x2="17" y2="12" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="17" y1="22" x2="17" y2="25" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="9" y1="17" x2="12" y2="17" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="22" y1="17" x2="25" y2="17" stroke="#5dcaa5" stroke-width="1.5" stroke-linecap="round"/>
-        <polygon points="17,10 19,17 17,24 15,17" fill="#e8a44a"/>
-        <circle cx="17" cy="17" r="2" fill="#0a1520"/>
+      <svg class="logo-mark" width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KetenKompas">
+        <circle cx="50" cy="50" r="47" stroke="#2A4A66" stroke-width="1.4"/>
+        <circle cx="50" cy="50" r="40.5" stroke="#2A4A66" stroke-width="0.8"/>
+        <line x1="50" y1="3" x2="50" y2="8" stroke="#DCE8F1" stroke-width="1.4"/><line x1="97" y1="50" x2="92" y2="50" stroke="#DCE8F1" stroke-width="1.4"/><line x1="50" y1="97" x2="50" y2="92" stroke="#DCE8F1" stroke-width="1.4"/><line x1="3" y1="50" x2="8" y2="50" stroke="#DCE8F1" stroke-width="1.4"/>
+        <polygon points="50,50 67,33 52.8,40.1" fill="#9FCDEA"/><polygon points="50,50 67,33 59.9,47.2" fill="#C7DFEE"/><polygon points="50,50 67,67 59.9,52.8" fill="#9FCDEA"/><polygon points="50,50 67,67 52.8,59.9" fill="#C7DFEE"/><polygon points="50,50 33,67 47.2,59.9" fill="#9FCDEA"/><polygon points="50,50 33,67 40.1,52.8" fill="#C7DFEE"/><polygon points="50,50 33,33 40.1,47.2" fill="#9FCDEA"/><polygon points="50,50 33,33 47.2,40.1" fill="#C7DFEE"/>
+        <polygon points="50,50 50,8 43,38" fill="#D7B45D"/><polygon points="50,50 50,8 57,38" fill="#D7B45D" opacity="0.82"/><polygon points="50,50 92,50 62,43" fill="#FFFFFF"/><polygon points="50,50 92,50 62,57" fill="#DCE8F1"/><polygon points="50,50 50,92 57,62" fill="#FFFFFF"/><polygon points="50,50 50,92 43,62" fill="#DCE8F1"/><polygon points="50,50 8,50 38,57" fill="#FFFFFF"/><polygon points="50,50 8,50 38,43" fill="#DCE8F1"/>
+        <circle cx="50" cy="50" r="4.4" fill="#0B2A40" stroke="#FFFFFF" stroke-width="1.6"/>
       </svg>
       <span class="brand-name">Keten<span>Kompas</span></span>
     </div>
@@ -957,7 +962,7 @@ const FALLBACK_DATA = {
     ],
   },
   clusters: [
-    { naam:"GR Slibverwerking 2009", kleur:"#0f6e56", aandeel:"~7% landelijk · 8 waterschappen", juridischeVorm:"Gemeenschappelijke Regeling",
+    { naam:"GR Slibverwerking 2009", kleur:"var(--kk-ok)", aandeel:"~7% landelijk · 8 waterschappen", juridischeVorm:"Gemeenschappelijke Regeling",
       waterschappen:[
         {naam:"AGV", ton:277},
         {naam:"HHNK", ton:272},
@@ -1132,7 +1137,7 @@ async function sendContactForm(){
     const r=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({naam,organisatie:org,email})});
     if(r.ok){
       document.getElementById('lc-contact').classList.remove('open');
-      msg.style.color='#5dcaa5';
+      msg.style.color='var(--kk-brons)';
       msg.textContent='Verzoek ontvangen — je hoort snel van ons';
     }else{
       msg.style.color='#f09595';msg.textContent='Er ging iets mis — probeer het opnieuw';
@@ -1676,7 +1681,7 @@ function siAqmLocCard(o,li){
   const pct=Math.min(Math.round(o.bezet/o.cap*100),100);
   const tb=`<button class="si-eigen-toggle ${ov.av?'on':'off'}" onclick="siAqmToggle(${li})">${ov.av?'Beschikbaar':'Niet beschikbaar'}</button>`;
   const slider=ov.av?`<div class="si-eigen-slider-row">
-    <input type="range" class="si-eigen-slider" style="accent-color:#0f6e56" min="0" max="${maxVrij}" value="${vrijCap}" oninput="siAqmSlider(${li},this.value)">
+    <input type="range" class="si-eigen-slider" style="accent-color:var(--kk-ok)" min="0" max="${maxVrij}" value="${vrijCap}" oninput="siAqmSlider(${li},this.value)">
     <span class="si-eigen-slider-val" id="si-aqmsv-${li}">${vrijCap.toLocaleString()} t</span>
   </div>`:'';
   return `<div class="si-loc-card${ov.av?'':' si-eigen-off'}">
@@ -2198,42 +2203,17 @@ function siUpdateDyn(){
   document.getElementById('si-concl').innerHTML=siRenderStap4HTML(r,eigenVrij,eoNeed,eigenSuf,eigenDagen);
 }
 
-const WS_LOGOS={
-  'AGV':'agv.nl',
-  'HHNK':'hhnk.nl',
-  'Delfland':'hhdelfland.nl',
-  'Hollandse Delta':'wshd.nl',
-  'Rijnland':'rijnland.net',
-  'Rivierenland':'waterschaprivierenland.nl',
-  'HHSK':'schielandendekrimpenerwaard.nl',
-  'Zuiderzeeland':'zuiderzeeland.nl',
-  'Aa en Maas':'aaenmaas.nl',
-  'Brabantse Delta':'brabantsedelta.nl',
-  'De Dommel':'dommel.nl',
-  'De Stichtse Rijnlanden':'hdsr.nl',
-  'Vechtstromen':'vechtstromen.nl',
-  'Scheldestromen':'scheldestromen.nl',
-  'Waterschap Limburg':'waterschaplimburg.nl',
-  'Noorderzijlvest':'noorderzijlvest.nl',
-  "Hunze en Aa's":'hunzeenaas.nl',
-  'Drents Overijsselse Delta':'wdodelta.nl',
-  'Wetterskip Fryslân':'wetterskipfryslan.nl',
-  'Vallei en Veluwe':'valleienveluwe.nl',
-  'Rijn en IJssel':'rijnenijssel.nl',
-};
 
 function siGenMemo(){
   const r=siCalc();
   const d=new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
 
-  // Waterschap logo watermark (alleen bij 1 geselecteerd waterschap)
-  let wsLogoHTML='';
-  if(siV2State.ws.size===1){
-    const [ci,wi]=[...siV2State.ws][0].split('-').map(Number);
-    const wsNaam=DATA.clusters[ci].waterschappen[wi].naam;
-    const domain=WS_LOGOS[wsNaam];
-    if(domain)wsLogoHTML=`<img class="rpt-ws-logo" src="https://www.google.com/s2/favicons?domain=${domain}&sz=256" onerror="this.style.display='none'" alt="">`;
-  }
+  // Waterschap naam-watermark (altijd zichtbaar, ook bij meerdere selecties)
+  const wsAbbr=[...siV2State.ws].map(k=>{
+    const[ci,wi]=k.split('-').map(Number);
+    return DATA.clusters[ci].waterschappen[wi].naam;
+  }).map(n=>n.replace('Waterschap ','').replace('Hoogheemraadschap ','').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,4)).join('·');
+  const wsLogoHTML=wsAbbr?`<div class="rpt-ws-wm">${wsAbbr}</div>`:'';
 
   // Waterschap labels incl. RWZI detail
   const wsNames=[...siV2State.ws].map(k=>{
@@ -2315,8 +2295,8 @@ function siGenMemo(){
   const tlEigenPct=Math.round(tlEigenEnd/tlDagen*100);
   const tlRestPct=100-tlEigenPct;
   const tlBarH=`<div class="rpt-tl-bar">
-    <div class="rpt-tl-seg" style="width:${tlEigenPct}%;background:${tlEigenPct>0?'#0f6e56':'transparent'}"></div>
-    <div class="rpt-tl-seg" style="width:${tlRestPct}%;background:${eigenSuf===false?(r.bufDagen<=tlDagen?'#e24b4a':'#d97706'):'#0f6e56'}"></div>
+    <div class="rpt-tl-seg" style="width:${tlEigenPct}%;background:${tlEigenPct>0?'var(--kk-ok)':'transparent'}"></div>
+    <div class="rpt-tl-seg" style="width:${tlRestPct}%;background:${eigenSuf===false?(r.bufDagen<=tlDagen?'var(--kk-alert)':'#d97706'):'var(--kk-ok)'}"></div>
   </div>`;
   const mkDag0=`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag 0</div><div class="rpt-tl-mk-lbl">Verstoring begint</div></div>`;
   const mkEigen=eigenDagen>0&&eigenDagen<tlDagen?`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${eigenDagen}</div><div class="rpt-tl-mk-lbl">Eigen buffer vol</div></div>`:'';
@@ -2352,7 +2332,7 @@ function siGenMemo(){
   document.getElementById('memo').innerHTML=`<div class="rpt">
     <div class="rpt-hdr">
       <div>
-        <div class="rpt-hdr-logo"><span>■</span>KetenKompas</div>
+        <div class="rpt-hdr-logo"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="47" stroke="#2A4A66" stroke-width="1.4"/><circle cx="50" cy="50" r="40.5" stroke="#2A4A66" stroke-width="0.8"/><line x1="50" y1="3" x2="50" y2="8" stroke="#DCE8F1" stroke-width="1.4"/><line x1="97" y1="50" x2="92" y2="50" stroke="#DCE8F1" stroke-width="1.4"/><line x1="50" y1="97" x2="50" y2="92" stroke="#DCE8F1" stroke-width="1.4"/><line x1="3" y1="50" x2="8" y2="50" stroke="#DCE8F1" stroke-width="1.4"/><polygon points="50,50 67,33 52.8,40.1" fill="#9FCDEA"/><polygon points="50,50 67,33 59.9,47.2" fill="#C7DFEE"/><polygon points="50,50 67,67 59.9,52.8" fill="#9FCDEA"/><polygon points="50,50 67,67 52.8,59.9" fill="#C7DFEE"/><polygon points="50,50 33,67 47.2,59.9" fill="#9FCDEA"/><polygon points="50,50 33,67 40.1,52.8" fill="#C7DFEE"/><polygon points="50,50 33,33 40.1,47.2" fill="#9FCDEA"/><polygon points="50,50 33,33 47.2,40.1" fill="#C7DFEE"/><polygon points="50,50 50,8 43,38" fill="#D7B45D"/><polygon points="50,50 50,8 57,38" fill="#D7B45D" opacity="0.82"/><polygon points="50,50 92,50 62,43" fill="#FFFFFF"/><polygon points="50,50 92,50 62,57" fill="#DCE8F1"/><polygon points="50,50 50,92 57,62" fill="#FFFFFF"/><polygon points="50,50 50,92 43,62" fill="#DCE8F1"/><polygon points="50,50 8,50 38,57" fill="#FFFFFF"/><polygon points="50,50 8,50 38,43" fill="#DCE8F1"/><circle cx="50" cy="50" r="4.4" fill="#0B2A40" stroke="#FFFFFF" stroke-width="1.6"/></svg>KetenKompas</div>
         ${scTitel?`<div class="rpt-hdr-titel">${scTitel}</div>`:''}
         ${scBeschr?`<div class="rpt-hdr-beschr">${scBeschr}</div>`:`<div class="rpt-hdr-sub">Scenarioanalyse slibketen — indicatieve doorrekening</div>`}
       </div>
@@ -2378,7 +2358,7 @@ function siGenMemo(){
           </div>
           <div class="rpt-col">
             <div class="rpt-col-lbl">Verstoring</div>
-            <div class="rpt-col-val">${vwEntries.map(v=>`${v.naam}<br><span style="font-size:11px;color:#6b7a8d;font-weight:400">${SI_OPTS_LBL[v.type]||'—'}</span>`).join('<br>')}</div>
+            <div class="rpt-col-val">${vwEntries.map(v=>`${v.naam}<br><span style="font-size:11px;color:var(--kk-slate);font-weight:400">${SI_OPTS_LBL[v.type]||'—'}</span>`).join('<br>')}</div>
             <div class="rpt-col-sub">Duur: ${r.dagen} dagen (${siFormatDagen(r.dagen).split('=').pop().trim()})</div>
           </div>
           <div class="rpt-urgentie ${urgKl}">
@@ -2460,7 +2440,7 @@ function copyMemo(){
 function renderSections(){
   const C=[
     {
-      kleur:'#0f6e56', naam:'GR Slibverwerking 2009',
+      kleur:'var(--kk-ok)', naam:'GR Slibverwerking 2009',
       ws:DATA.clusters[0].waterschappen,
       verwerker:{naam:'HVC', sub:'SVI Dordrecht · SDI Alkmaar', status:'danger', note:'SVI onderhoud week 24 · SDI beperkt operationeel'},
       installaties:DATA.clusters[0].installaties||FALLBACK_DATA.clusters[0].installaties,
@@ -2631,7 +2611,7 @@ const KK_DET={
   fosfaat:  {naam:'Fosfaat Puraloop',  type:'Reststroom',  cap:'n.v.t.',       status:'ok',      flags:[]},
   granulaat:{naam:'Granulaat BEC',     type:'Reststroom',  cap:'n.v.t.',       status:'ok',      flags:[]},
 };
-const KK_ST={ok:{c:'#1d9e75',bg:'#eaf3de',l:'Stabiel'},warning:{c:'#ba7517',bg:'#faeeda',l:'Aandacht vereist'},danger:{c:'#e24b4a',bg:'#fcebeb',l:'Kritiek'}};
+const KK_ST={ok:{c:'var(--kk-ok)',bg:'var(--ok-bg)',l:'Stabiel'},warning:{c:'var(--warn)',bg:'var(--warn-bg)',l:'Aandacht vereist'},danger:{c:'var(--kk-alert)',bg:'var(--danger-bg)',l:'Kritiek'}};
 
 /* overview positions & sizes */
 const KKP={
@@ -2653,8 +2633,8 @@ const KK_EDGES=[
   {src:'rivierenland',dst:'hvc',label:'45',color:'#93c5fd'},
   {src:'hhsk',dst:'hvc',label:'76',color:'#93c5fd'},
   {src:'zuiderzeeland',dst:'hvc',label:'110',color:'#93c5fd'},
-  {src:'hvc',dst:'svi',color:'#185fa5'},{src:'hvc',dst:'sdi',color:'#185fa5'},
-  {src:'svi',dst:'fosfaat',color:'#ba7517',dashed:true},{src:'sdi',dst:'granulaat',color:'#e24b4a',dashed:true},
+  {src:'hvc',dst:'svi',color:'var(--kk-blue)'},{src:'hvc',dst:'sdi',color:'var(--kk-blue)'},
+  {src:'svi',dst:'fosfaat',color:'#ba7517',dashed:true},{src:'sdi',dst:'granulaat',color:'var(--kk-alert)',dashed:true},
 ];
 
 /* RWZI drill-down dataset */
@@ -2811,19 +2791,19 @@ function kkNodeSvg(id){
   const{w,h}=siz[id];
   if(d.type==='Waterschap')return(
     `<rect width="${w}" height="${h}" rx="10" fill="#fff" stroke="#bfdbfe" stroke-width="1.5" class="kk-bg"/>
-    <rect x="0" y="10" width="4" height="32" rx="2" fill="#185fa5"/>
-    <text x="12" y="19" font-size="8" font-weight="700" ${ff} fill="#185fa5" letter-spacing="1">WATERSCHAP</text>
+    <rect x="0" y="10" width="4" height="32" rx="2" fill="var(--kk-blue)"/>
+    <text x="12" y="19" font-size="8" font-weight="700" ${ff} fill="var(--kk-blue)" letter-spacing="1">WATERSCHAP</text>
     <text x="12" y="36" font-size="13" font-weight="600" ${ff} fill="#1e40af">${d.naam}</text>
     <text x="${w-5}" y="36" font-size="10" ${ff} fill="#6b7280" text-anchor="end">${d.cap.replace(' ton/dag','')}</text>
     <text x="${w/2}" y="${h-4}" font-size="7.5" ${ff} fill="#93c5fd" text-anchor="middle" opacity=".8">▼ klik voor RWZI's</text>`
   );
   if(d.type==='Verwerker')return(
-    `<rect width="${w}" height="${h}" rx="12" fill="#0e1b2a" stroke="#185fa5" stroke-width="1.5" class="kk-bg"/>
+    `<rect width="${w}" height="${h}" rx="12" fill="var(--kk-ink)" stroke="var(--kk-blue)" stroke-width="1.5" class="kk-bg"/>
     <text x="${w/2}" y="22" font-size="8.5" font-weight="700" ${ff} fill="#93c5fd" text-anchor="middle" letter-spacing="1.5">VERWERKER</text>
     <text x="${w/2}" y="48" font-size="22" font-weight="700" ${ff} fill="white" text-anchor="middle">${d.naam}</text>
     <text x="${w/2}" y="62" font-size="10" ${ff} fill="#94a3b8" text-anchor="middle">${d.cap}</text>`
   );
-  const c=d.status==='warning'?{f:'#fefce8',s:'#ba7517',a:'#ba7517',t:'#633806'}:{f:'#fef2f2',s:'#fca5a5',a:'#e24b4a',t:'#791f1f'};
+  const c=d.status==='warning'?{f:'#fefce8',s:'#ba7517',a:'#ba7517',t:'#633806'}:{f:'#fef2f2',s:'var(--kk-alert)',a:'var(--kk-alert)',t:'#791f1f'};
   if(d.type==='Installatie')return(
     `<rect width="${w}" height="${h}" rx="10" fill="${c.f}" stroke="${c.s}" stroke-width="1.5" class="kk-bg"/>
     <rect x="0" y="10" width="4" height="36" rx="2" fill="${c.a}"/>
@@ -2841,8 +2821,8 @@ function kkNodeSvg(id){
     const ly=lines.length>1?[h/2-4,h/2+9]:[h/2+5];
     return(
       `<rect width="${w}" height="${h}" rx="10" fill="#fff" stroke="#60a5fa" stroke-width="1.5" class="kk-bg"/>
-      <rect x="0" y="8" width="4" height="${h-16}" rx="2" fill="#185fa5"/>
-      <text x="10" y="13" font-size="7" font-weight="700" ${ff} fill="#185fa5" letter-spacing=".6">CENTRALE ONTWATERING</text>
+      <rect x="0" y="8" width="4" height="${h-16}" rx="2" fill="var(--kk-blue)"/>
+      <text x="10" y="13" font-size="7" font-weight="700" ${ff} fill="var(--kk-blue)" letter-spacing=".6">CENTRALE ONTWATERING</text>
       ${lines.map((l,i)=>`<text x="${w/2}" y="${ly[i]}" font-size="10.5" font-weight="600" ${ff} fill="#1e40af" text-anchor="middle">${l}</text>`).join('')}`
     );
   }
@@ -2855,12 +2835,12 @@ function kkNodeSvg(id){
 
 function renderKetenKaart(){
   const ff='font-family="Inter,-apple-system,BlinkMacSystemFont,sans-serif"';
-  const mmap={'#93c5fd':'arr-ws','#185fa5':'arr-bl','#ba7517':'arr-wn','#e24b4a':'arr-dn'};
+  const mmap={'#93c5fd':'arr-ws','var(--kk-blue)':'arr-bl','#ba7517':'arr-wn','var(--kk-alert)':'arr-dn'};
   let out=`<defs>
     <marker id="arr-ws" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,1 L9,5 L0,9 Z" fill="#93c5fd"/></marker>
-    <marker id="arr-bl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,1 L9,5 L0,9 Z" fill="#185fa5"/></marker>
+    <marker id="arr-bl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,1 L9,5 L0,9 Z" fill="var(--kk-blue)"/></marker>
     <marker id="arr-wn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,1 L9,5 L0,9 Z" fill="#ba7517"/></marker>
-    <marker id="arr-dn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,1 L9,5 L0,9 Z" fill="#e24b4a"/></marker>
+    <marker id="arr-dn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,1 L9,5 L0,9 Z" fill="var(--kk-alert)"/></marker>
   </defs>`;
   const edges=kkView?kkDrillEdges:KK_EDGES;
   const pos=kkView?kkDrillPos:KKP;
@@ -2945,7 +2925,7 @@ function kkDrillDown(wsId){
   sats.forEach(s=>kkDrillEdges.push({src:s.id,dst:s.naar,color:'#93c5fd'}));
   cents.forEach(c=>{
     const dst=(c.naar&&kkDrillPos[c.naar])?c.naar:'d-hvc';
-    kkDrillEdges.push({src:c.id,dst,color:c.naar?'#93c5fd':'#185fa5',dashed:!!c.naar});
+    kkDrillEdges.push({src:c.id,dst,color:c.naar?'#93c5fd':'var(--kk-blue)',dashed:!!c.naar});
   });
 
   document.getElementById('kk-svg').setAttribute('viewBox',`0 0 ${VW} ${hvcY+HH+20}`);
@@ -3114,7 +3094,7 @@ function renderAdminPanel(){
             <input type="text" id="adm-ka-r-${i}" value="${r||''}" class="adm-txt" style="margin-bottom:4px">`).join('')}
         </div>
         <div style="margin-top:6px">
-          <div style="font-size:10px;font-weight:600;color:#185fa5;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Strategische inzichten</div>
+          <div style="font-size:10px;font-weight:600;color:var(--kk-blue);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Strategische inzichten</div>
           ${((DATA.ketenAlert||FALLBACK_DATA.ketenAlert).inzichten||[]).map((ins,i)=>`
             <input type="text" id="adm-ka-i-${i}" value="${ins||''}" class="adm-txt" style="margin-bottom:4px">`).join('')}
         </div>

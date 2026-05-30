@@ -1,0 +1,85 @@
+{
+  "$description": "KetenKompas — Marine & Brons. Color tokens for the slibketen / scenario tool.",
+  "color": {
+    "ink": {
+      "$value": "#0B2A40",
+      "$description": "Primaire tekst & koppen"
+    },
+    "navy": {
+      "$value": "#143A56",
+      "$description": "Donkere UI / achtergronden"
+    },
+    "blue": {
+      "$value": "#2C5E84",
+      "$description": "Primair · links · accenten"
+    },
+    "light": {
+      "$value": "#6B93B4",
+      "$description": "Secundair · vlakken"
+    },
+    "brons": {
+      "$value": "#A8842C",
+      "$description": "Kompas-noord · highlight · cta"
+    },
+    "mist": {
+      "$value": "#EEF2F6",
+      "$description": "Pagina-achtergrond"
+    },
+    "line": {
+      "$value": "#D5DEE7",
+      "$description": "Scheidingslijnen"
+    },
+    "slate": {
+      "$value": "#5E7384",
+      "$description": "Bijschriften & meta"
+    },
+    "brons-licht": {
+      "$value": "#C9A659",
+      "$description": "Zachte highlight"
+    },
+    "ok": {
+      "$value": "#3F7E3F",
+      "$description": "Goed / gezond (status groen)"
+    },
+    "alert": {
+      "$value": "#B3492E",
+      "$description": "Verstoring / uitval (status rood)"
+    },
+    "paper": {
+      "$value": "#FFFFFF",
+      "$description": "Wit"
+    }
+  },
+  "semantic": {
+    "color-bg": {
+      "$value": "{color.paper}"
+    },
+    "color-bg-muted": {
+      "$value": "{color.mist}"
+    },
+    "color-text": {
+      "$value": "{color.ink}"
+    },
+    "color-text-muted": {
+      "$value": "{color.slate}"
+    },
+    "color-border": {
+      "$value": "{color.line}"
+    },
+    "color-primary": {
+      "$value": "{color.blue}"
+    },
+    "color-primary-dark": {
+      "$value": "{color.navy}"
+    },
+    "color-accent": {
+      "$value": "{color.brons}"
+    },
+    "color-success": {
+      "$value": "{color.ok}"
+    },
+    "color-danger": {
+      "$value": "{color.alert}"
+    }
+  }
+}
