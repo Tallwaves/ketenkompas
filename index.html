@@ -2364,44 +2364,56 @@ function siGenMemo(){
 
   // Timeline
   const tlDagen=r.dagen;
-  const tlEigenEnd=r.overshoot>0?Math.min(eigenDagen,tlDagen):tlDagen;
-  const tlEigenPct=Math.round(tlEigenEnd/tlDagen*100);
+  const tlEigenPct=r.overshoot>0?Math.round(Math.min(eigenDagen,tlDagen)/tlDagen*100):100;
 
-  // Incidentenopslag (UvW) is used from day eigenDagen+1 and lasts bufDagen more days
+  // Incidentenopslag (UvW) exhausts at eigenDagen + bufDagen
   const incidentVolDag=eigenSuf===false&&r.bufDagen<99?eigenDagen+r.bufDagen:null;
   const showInciVol=incidentVolDag!==null&&incidentVolDag<tlDagen;
-  const calDag=showInciVol?incidentVolDag+1:null;
-  const showCal=calDag!==null&&calDag<=tlDagen;
 
-  let tlBarH;
+  // Bar segments
+  let tlBarSegs;
   if(showInciVol){
     const inciPct=Math.round(incidentVolDag/tlDagen*100)-tlEigenPct;
     const calPct=100-tlEigenPct-inciPct;
-    tlBarH=`<div class="rpt-tl-bar">
-      <div class="rpt-tl-seg" style="width:${tlEigenPct}%;background:${tlEigenPct>0?'var(--kk-ok)':'transparent'}"></div>
-      <div class="rpt-tl-seg" style="width:${inciPct}%;background:#d97706"></div>
-      <div class="rpt-tl-seg" style="width:${calPct}%;background:var(--kk-alert)"></div>
-    </div>`;
+    tlBarSegs=`<div class="rpt-tl-seg" style="width:${tlEigenPct}%;background:${tlEigenPct>0?'var(--kk-ok)':'transparent'}"></div><div class="rpt-tl-seg" style="width:${inciPct}%;background:#d97706"></div><div class="rpt-tl-seg" style="width:${calPct}%;background:var(--kk-alert)"></div>`;
   }else if(eigenSuf===false){
-    const restPct=100-tlEigenPct;
-    tlBarH=`<div class="rpt-tl-bar">
-      <div class="rpt-tl-seg" style="width:${tlEigenPct}%;background:${tlEigenPct>0?'var(--kk-ok)':'transparent'}"></div>
-      <div class="rpt-tl-seg" style="width:${restPct}%;background:#d97706"></div>
-    </div>`;
+    tlBarSegs=`<div class="rpt-tl-seg" style="width:${tlEigenPct}%;background:${tlEigenPct>0?'var(--kk-ok)':'transparent'}"></div><div class="rpt-tl-seg" style="width:${100-tlEigenPct}%;background:#d97706"></div>`;
   }else{
-    tlBarH=`<div class="rpt-tl-bar"><div class="rpt-tl-seg" style="width:100%;background:var(--kk-ok)"></div></div>`;
+    tlBarSegs=`<div class="rpt-tl-seg" style="width:100%;background:var(--kk-ok)"></div>`;
   }
 
-  const mkDag0=`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag 0</div><div class="rpt-tl-mk-lbl">Verstoring begint</div></div>`;
-  const mkEigen=eigenDagen>0&&eigenDagen<tlDagen?`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag" style="color:var(--kk-ok)">Dag ${eigenDagen}</div><div class="rpt-tl-mk-lbl" style="color:var(--kk-ok)">Eigen opslag vol</div></div>`:'';
-  const mkInciVol=showInciVol?`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag" style="color:#c05c00">Dag ${incidentVolDag}</div><div class="rpt-tl-mk-lbl" style="color:#c05c00">Incidentenopslag vol</div></div>`:'';
-  const mkEind=`<div class="rpt-tl-mk"><div class="rpt-tl-mk-dag">Dag ${tlDagen}</div><div class="rpt-tl-mk-lbl">Einde scenario</div></div>`;
-  const calSpanH=showInciVol?`<div style="display:flex;margin:5px 0 2px;align-items:flex-start">
+  // Markers: {pct, day, lbl, dayColor, lblColor, anchor}
+  const tlMks=[{pct:0,day:0,lbl:'Verstoring begint',dayColor:'var(--kk-ink)',lblColor:'var(--kk-slate)',anchor:'left'}];
+  if(eigenDagen>0&&eigenDagen<tlDagen)
+    tlMks.push({pct:Math.round(eigenDagen/tlDagen*100),day:eigenDagen,lbl:'Eigen opslag vol',dayColor:'var(--kk-ok)',lblColor:'var(--kk-ok)',anchor:'center'});
+  if(showInciVol)
+    tlMks.push({pct:Math.round(incidentVolDag/tlDagen*100),day:incidentVolDag,lbl:'Incidentenopslag vol',dayColor:'#c05c00',lblColor:'#c05c00',anchor:'center'});
+  tlMks.push({pct:100,day:tlDagen,lbl:'Einde scenario',dayColor:'var(--kk-ink)',lblColor:'var(--kk-slate)',anchor:'right'});
+
+  // Tick marks at interior transitions (thin white lines on bar)
+  const tlTicksH=tlMks.filter(m=>m.pct>0&&m.pct<100).map(m=>
+    `<div style="position:absolute;top:0;left:${m.pct}%;width:2px;height:100%;background:rgba(255,255,255,0.55);transform:translateX(-50%)"></div>`
+  ).join('');
+
+  // Calamiteitenregeling span bracket over red zone
+  const calSpanH=showInciVol?`<div style="display:flex;height:18px;margin:3px 0 0;align-items:flex-start">
     <div style="flex:${incidentVolDag}"></div>
-    <div style="flex:${tlDagen-incidentVolDag};border-top:2px solid var(--kk-alert);text-align:center;padding-top:4px">
+    <div style="flex:${tlDagen-incidentVolDag};border-top:2px solid var(--kk-alert);padding-top:3px;text-align:center">
       <span style="font-size:9px;font-weight:700;color:var(--kk-alert);letter-spacing:.05em;text-transform:uppercase">Calamiteitenregeling</span>
     </div>
-  </div>`:'';
+  </div>`:'' ;
+
+  // Labels absolutely positioned to match bar segment transitions exactly
+  const tlLabelsH=tlMks.map(m=>{
+    const tf=m.anchor==='left'?'none':m.anchor==='right'?'translateX(-100%)':'translateX(-50%)';
+    const ta=m.anchor==='right'?'right':'center';
+    return `<div style="position:absolute;left:${m.pct}%;transform:${tf};text-align:${ta}">
+      <div style="font-size:11px;font-weight:700;color:${m.dayColor}">Dag ${m.day}</div>
+      <div style="font-size:10px;line-height:1.25;max-width:80px;color:${m.lblColor}">${m.lbl}</div>
+    </div>`;
+  }).join('');
+
+  const tlBarH=`<div class="rpt-tl-bar" style="position:relative;overflow:hidden">${tlBarSegs}${tlTicksH}</div>${calSpanH}<div style="position:relative;height:52px;margin-top:4px">${tlLabelsH}</div>`;
 
   // Recommendations
   let aanbev1,aanbev2,aanbev3;
@@ -2502,10 +2514,6 @@ function siGenMemo(){
         <div class="rpt-sec-title">Tijdlijn</div>
         <div class="rpt-tl">
           ${tlBarH}
-          ${calSpanH}
-          <div class="rpt-tl-labels">
-            ${mkDag0}${mkEigen}${mkInciVol}${mkEind}
-          </div>
         </div>
       </div>
       <div class="rpt-section">
