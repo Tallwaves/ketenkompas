@@ -362,10 +362,11 @@
   .rpt-sec-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#0e1b2a;opacity:.45;margin-bottom:12px}
   .rpt-summary-text{font-size:14.5px;line-height:1.7;color:#1a2e3a}
   .rpt-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-  .rpt-col{background:#f6f8fa;border-radius:8px;padding:14px 16px}
+  .rpt-col{background:#f6f8fa;border-radius:8px;padding:14px 16px;position:relative;overflow:hidden}
   .rpt-col-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#0e1b2a;opacity:.45;margin-bottom:6px}
   .rpt-col-val{font-size:13px;color:#0e1b2a;font-weight:500;line-height:1.45}
   .rpt-col-sub{font-size:11px;color:#6b7a8d;margin-top:3px}
+  .rpt-ws-logo{position:absolute;bottom:-8px;right:-6px;width:88px;height:88px;object-fit:contain;opacity:.08;filter:grayscale(100%);pointer-events:none;user-select:none}
   .rpt-urgentie{border-radius:8px;padding:14px 16px;text-align:center}
   .rpt-urgentie.ok{background:#d1fae5;border:1px solid #6ee7b7}
   .rpt-urgentie.warning{background:#fef3c7;border:1px solid #fcd34d}
@@ -2197,9 +2198,42 @@ function siUpdateDyn(){
   document.getElementById('si-concl').innerHTML=siRenderStap4HTML(r,eigenVrij,eoNeed,eigenSuf,eigenDagen);
 }
 
+const WS_LOGOS={
+  'AGV':'agv.nl',
+  'HHNK':'hhnk.nl',
+  'Delfland':'hhdelfland.nl',
+  'Hollandse Delta':'wshd.nl',
+  'Rijnland':'rijnland.net',
+  'Rivierenland':'waterschaprivierenland.nl',
+  'HHSK':'schielandendekrimpenerwaard.nl',
+  'Zuiderzeeland':'zuiderzeeland.nl',
+  'Aa en Maas':'aaenmaas.nl',
+  'Brabantse Delta':'brabantsedelta.nl',
+  'De Dommel':'dommel.nl',
+  'De Stichtse Rijnlanden':'hdsr.nl',
+  'Vechtstromen':'vechtstromen.nl',
+  'Scheldestromen':'scheldestromen.nl',
+  'Waterschap Limburg':'waterschaplimburg.nl',
+  'Noorderzijlvest':'noorderzijlvest.nl',
+  "Hunze en Aa's":'hunzeenaas.nl',
+  'Drents Overijsselse Delta':'wdodelta.nl',
+  'Wetterskip Fryslân':'wetterskipfryslan.nl',
+  'Vallei en Veluwe':'valleienveluwe.nl',
+  'Rijn en IJssel':'rijnenijssel.nl',
+};
+
 function siGenMemo(){
   const r=siCalc();
   const d=new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
+
+  // Waterschap logo watermark (alleen bij 1 geselecteerd waterschap)
+  let wsLogoHTML='';
+  if(siV2State.ws.size===1){
+    const [ci,wi]=[...siV2State.ws][0].split('-').map(Number);
+    const wsNaam=DATA.clusters[ci].waterschappen[wi].naam;
+    const domain=WS_LOGOS[wsNaam];
+    if(domain)wsLogoHTML=`<img class="rpt-ws-logo" src="https://logo.clearbit.com/${domain}" onerror="this.style.display='none'" alt="">`;
+  }
 
   // Waterschap labels incl. RWZI detail
   const wsNames=[...siV2State.ws].map(k=>{
@@ -2340,6 +2374,7 @@ function siGenMemo(){
             <div class="rpt-col-lbl">Betrokken waterschap(pen)</div>
             <div class="rpt-col-val">${wsNames.join('<br>')}</div>
             <div class="rpt-col-sub">${r.selTon.toLocaleString()} ton/dag totaal</div>
+            ${wsLogoHTML}
           </div>
           <div class="rpt-col">
             <div class="rpt-col-lbl">Verstoring</div>
