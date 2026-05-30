@@ -395,6 +395,14 @@
   .rpt-section:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0}
   .rpt-sec-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--kk-ink);opacity:.45;margin-bottom:12px}
   .rpt-summary-text{font-size:14.5px;line-height:1.7;color:#1a2e3a}
+  .rpt-sec-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .rpt-sec-hdr .rpt-sec-title{margin-bottom:0;flex:1}
+  .rpt-edit-btn{background:none;border:1px solid var(--kk-line);border-radius:5px;padding:3px 8px;font-size:10.5px;font-family:var(--font);color:var(--kk-slate);cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap}
+  .rpt-edit-btn:hover{border-color:var(--kk-blue);color:var(--kk-blue);background:#f0f6ff}
+  .rpt-edit-btn svg{width:10px;height:10px;flex-shrink:0}
+  .memo [contenteditable]:hover:not(:focus){outline:1px dashed var(--kk-line);border-radius:5px;cursor:text}
+  .memo [contenteditable]:focus{outline:2px solid var(--kk-blue);border-radius:5px;padding:4px 8px;background:#f8fbff;cursor:text}
+  @media print{.rpt-edit-btn{display:none!important}.memo [contenteditable]{outline:none!important;background:none!important;padding:0!important}}
   .rpt-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
   .rpt-col{background:#f6f8fa;border-radius:8px;padding:14px 16px;position:relative;overflow:hidden}
   .rpt-col-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--kk-ink);opacity:.45;margin-bottom:6px}
@@ -1516,12 +1524,12 @@ function renderRobuust(){
 }
 
 /* ============ SCENARIO V2 ============ */
-let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externPct:40,contacten:[
-  {org:'KetenKompas / AGV',naam:'Gizan Ezra',rol:'Ketenregie',email:'gizan.ezra@agv.nl',tel:'06 25 43 21 45'},
+let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externPct:40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,contacten:[
   {org:'HVC',naam:'Chiel Landman',rol:'Ketenregisseur HVC',email:'',tel:''},
   {org:'HHNK',naam:'',rol:'nader in te vullen',email:'',tel:''},
   {org:'Unie van Waterschappen',naam:'Fons Röttgering',rol:'Trainee WDI',email:'frottgering@uvw.nl',tel:''},
   {org:'AQM',naam:'Angela Damen',rol:'nader in te vullen',email:'damen@aquaminerals.com',tel:''},
+  {org:'KetenKompas / AGV',naam:'Gizan Ezra',rol:'Ketenregie',email:'gizan.ezra@agv.nl',tel:''},
 ]};
 
 const SI_OPV_A=[
@@ -2060,7 +2068,7 @@ function siSelCluster(ci){
   });
   siRenderWS(); siUpdateDyn();
 }
-function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externPct:siV2State.externPct??40,contacten:siV2State.contacten};siRenderWS();siRenderVW();siUpdateDyn();}
+function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externPct:siV2State.externPct??40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,contacten:siV2State.contacten};siRenderWS();siRenderVW();siUpdateDyn();}
 function siToggleContacten(){
   const body=document.getElementById('si-ct-body');
   const btn=document.getElementById('si-ct-btn');
@@ -2310,6 +2318,7 @@ function siGenMemo(){
   else if(r.bufDagen>14)summary=`Bij een verstoring bij ${vwNames.join(' en ')} ontstaat een dagelijks overschot van ${r.overshoot.toLocaleString()} ton slib van ${wsNames.join(', ')}. De beschikbare incidentenopslag (${r.freeOpvang.toLocaleString()} ton) biedt ruim voldoende buffer voor ${r.bufDagen} dagen. Activeer opslag preventief en monitor dagelijks.`;
   else if(r.bufDagen>=7)summary=`Een verstoring bij ${vwNames.join(' en ')} levert ${r.overshoot.toLocaleString()} ton/dag overschot op van slib van ${wsNames.join(', ')}. De beschikbare buffer is beperkt (${r.bufDagen} dagen) en vraagt om directe activatie van incidentenopslag én onderzoek naar alternatieve verwerkingsroutes.`;
   else summary=`Kritieke situatie: een verstoring bij ${vwNames.join(' en ')} levert ${r.overshoot.toLocaleString()} ton/dag overschot op. Bij het huidige overschot is de buffer van ${wsNames.join(', ')} uitgeput na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Onmiddellijke escalatie naar GR Slib en activatie van alle beschikbare capaciteit is vereist.`;
+  if(siV2State.summaryOverride)summary=siV2State.summaryOverride;
 
   // Capacity table rows
   const aqmNodigRpt=eigenSuf===false;
@@ -2391,6 +2400,9 @@ function siGenMemo(){
     aanbev2='Uur-voor-uur monitoring van instroom en opslagbezetting. Dagelijkse rapportage aan directie en bestuur van betrokken waterschappen.';
     aanbev3='Onmiddellijke escalatie naar GR Slib-regiegroep en Unie van Waterschappen. Bereid bestuurlijke communicatie voor richting gemeenten in het verzorgingsgebied.';
   }
+  if(siV2State.aanbev1Override)aanbev1=siV2State.aanbev1Override;
+  if(siV2State.aanbev2Override)aanbev2=siV2State.aanbev2Override;
+  if(siV2State.aanbev3Override)aanbev3=siV2State.aanbev3Override;
 
   const scTitel=siV2State.titel?siV2State.titel.trim():'';
   const scBeschr=siV2State.beschrijving?siV2State.beschrijving.trim():'';
@@ -2404,13 +2416,19 @@ function siGenMemo(){
       <div class="rpt-hdr-right">
         <div class="rpt-hdr-badge">Vertrouwelijk — intern gebruik</div>
         <div class="rpt-hdr-date">${d}</div>
-        <div class="rpt-hdr-date" style="margin-top:4px;opacity:.7">Opgesteld door: Gizan Ezra · Strategisch Contractmanager Ketenregie · AGV/Waternet</div>
+        <div class="rpt-hdr-date" style="margin-top:4px;opacity:.7">Opgesteld door: Gizan Ezra · Ketenregie · AGV/Waternet</div>
       </div>
     </div>
     <div class="rpt-body">
       <div class="rpt-section">
-        <div class="rpt-sec-title">Samenvatting</div>
-        <div class="rpt-summary-text">${summary}</div>
+        <div class="rpt-sec-hdr">
+          <div class="rpt-sec-title">Samenvatting</div>
+          <button class="rpt-edit-btn" onclick="document.getElementById('rpt-summary').focus()" title="Bewerken">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Bewerken
+          </button>
+        </div>
+        <div class="rpt-summary-text" id="rpt-summary" contenteditable="true" oninput="siV2State.summaryOverride=this.innerText">${summary}</div>
       </div>
       <div class="rpt-section">
         <div class="rpt-sec-title">Scenario</div>
@@ -2464,11 +2482,17 @@ function siGenMemo(){
         </div>
       </div>
       <div class="rpt-section">
-        <div class="rpt-sec-title">Aanbevelingen</div>
+        <div class="rpt-sec-hdr">
+          <div class="rpt-sec-title">Aanbevelingen</div>
+          <button class="rpt-edit-btn" onclick="document.getElementById('rpt-aanbev1').focus()" title="Bewerken">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Bewerken
+          </button>
+        </div>
         <div class="rpt-aanbev">
-          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">1</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Directe actie</div><div class="rpt-aanbev-txt">${aanbev1}</div></div></div>
-          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">2</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Monitoring</div><div class="rpt-aanbev-txt">${aanbev2}</div></div></div>
-          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">3</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Escalatie</div><div class="rpt-aanbev-txt">${aanbev3}</div></div></div>
+          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">1</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Directe actie</div><div class="rpt-aanbev-txt" id="rpt-aanbev1" contenteditable="true" oninput="siV2State.aanbev1Override=this.innerText">${aanbev1}</div></div></div>
+          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">2</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Monitoring</div><div class="rpt-aanbev-txt" contenteditable="true" oninput="siV2State.aanbev2Override=this.innerText">${aanbev2}</div></div></div>
+          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">3</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Escalatie</div><div class="rpt-aanbev-txt" contenteditable="true" oninput="siV2State.aanbev3Override=this.innerText">${aanbev3}</div></div></div>
         </div>
       </div>
       <div class="rpt-section">
@@ -2495,7 +2519,7 @@ function siGenMemo(){
     </div>
     <div class="rpt-foot">
       Gegenereerd door KetenKompas · AGV initiatief · ${d}<br>
-      Opgesteld door Gizan Ezra · gizan.ezra@agv.nl · 06 25 43 21 45 · Vragen over deze rapportage? Neem contact op met de auteur.<br>
+      Opgesteld door Gizan Ezra · gizan.ezra@agv.nl · Vragen over deze rapportage? Neem contact op met de auteur.<br>
       Indicatieve doorrekening op basis van beschikbare data — geen operationele garantie · Classificatie: Intern
     </div>
   </div>`;
