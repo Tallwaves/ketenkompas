@@ -292,6 +292,9 @@
   .si-dagen-calc.danger{background:var(--danger-bg);color:var(--danger-ink)}
   .si-opvang-footnote{font-size:9.5px;color:var(--ink-faint);margin-bottom:10px;padding:4px 6px;font-style:italic}
   .si-step-sub{font-size:10px;color:var(--ink-faint);margin:-10px 0 12px;font-weight:500}
+  .si-step-num.sub{font-size:8px;padding:1px 7px;background:transparent;border:1px solid var(--line);color:var(--ink-faint);letter-spacing:.04em}
+  .si-pct-eff{font-size:11px;color:var(--ink-faint);margin-top:6px;padding:6px 10px;background:var(--surface-2);border-radius:6px;line-height:1.5}
+  .si-pct-eff.reduced{color:var(--warn-ink)}
   .si-sc-meta{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;padding:12px 14px;background:var(--surface-2);border-radius:8px;border:1px solid var(--line)}
   .si-sc-meta-row{display:flex;flex-direction:column;gap:4px}
   .si-sc-lbl{font-size:10.5px;font-weight:600;color:var(--ink-soft)}
@@ -1482,7 +1485,7 @@ function renderRobuust(){
 }
 
 /* ============ SCENARIO V2 ============ */
-let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{}};
+let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externPct:40};
 
 const SI_OPV_A=[
   {naam:"Indaver Delfzijl",cap:6000,bezet:2501,status:"warning"},
@@ -1740,8 +1743,12 @@ function siRenderStap4HTML(r,eigenVrij,eoNeed,eigenSuf,eigenDagen){
   const eigenBufVal=r.overshoot===0?'∞':eigenDagen+' dg';
   const aqmVanafDag=r.overshoot>0&&eigenSuf===false?eigenDagen+1:null;
   const eigenBufSub=eigenSuf===null?'selecteer verwerker':eigenSuf?'eigen buffer volstaat':aqmVanafDag?`AQM opslag nodig vanaf dag ${aqmVanafDag}`:'eigen buffer volstaat';
-  return `
-    <div class="si-metrics">
+  const eigenEffPct=r.eigenEffPct??0;
+  const externPct=r.externPct??0;
+  const verwerkingRow=r.hasV&&r.selTon>0?`<div class="si-dagen-calc ok" style="margin-bottom:12px;font-size:11.5px">
+    <strong>Verwerkingsverdeling:</strong> Eigen ${eigenEffPct}% (${(r.eigenTon||0).toLocaleString()} t/dag) · Extern ${externPct}% (${(r.externTon||0).toLocaleString()} t/dag) · Overschot naar opvang: ${r.overshoot.toLocaleString()} t/dag
+  </div>`:'';
+  return `${verwerkingRow}<div class="si-metrics">
       <div class="si-metric"><div class="si-metric-lbl">Dagelijks overschot</div><div class="si-metric-val">${r.overshoot.toLocaleString()} t/dag</div></div>
       <div class="si-metric ${totKl}"><div class="si-metric-lbl">Totale opslagbehoefte</div><div class="si-metric-val">${r.totalTon.toLocaleString()} ton</div><div class="si-metric-sub">${r.selTon.toLocaleString()} t/dag × ${r.dagen} dg</div></div>
       <div class="si-metric"><div class="si-metric-lbl">Beschikbare opvangcapaciteit</div><div class="si-metric-val" style="${r.maxType>=5?'font-size:13px;line-height:1.3':''}">${dispOpvangStr}</div></div>
@@ -1788,19 +1795,24 @@ function siUpdate3ACalcOnly(){
 
 function buildScenario(){
   const conn=`<div class="si-connector"><div class="si-conn-line"></div></div>`;
-  document.getElementById('si-v2-wrap').innerHTML=`<div class="si-flow">
+  document.getElementById('si-v2-wrap').innerHTML=`
+  <div class="si-step" id="si-sc-block" style="margin-bottom:0">
+    <div class="si-step-hdr"><span class="si-step-title">Scenario</span></div>
+    <div class="si-step-sub" style="margin-top:-10px;margin-bottom:14px">Geef het scenario een naam en beschrijving voor in de rapportage.</div>
+    <div class="si-sc-meta">
+      <div class="si-sc-meta-row">
+        <label class="si-sc-lbl">Scenariotitel <span class="si-sc-opt">optioneel</span></label>
+        <input class="si-sc-inp" id="si-sc-titel" type="text" maxlength="80" placeholder="bijv. Calamiteit HVC Dordrecht — zomer 2026" value="" oninput="siV2State.titel=this.value">
+      </div>
+      <div class="si-sc-meta-row">
+        <label class="si-sc-lbl">Korte beschrijving <span class="si-sc-opt">optioneel</span></label>
+        <input class="si-sc-inp" id="si-sc-beschr" type="text" maxlength="160" placeholder="bijv. Uitval thermische droging door technisch defect · verwachte hersteltijd onbekend" value="" oninput="siV2State.beschrijving=this.value">
+      </div>
+    </div>
+  </div>
+  <div class="si-flow">
     <div class="si-step" id="si-s1">
       <div class="si-step-hdr"><span class="si-step-num">Stap 1</span><span class="si-step-title">Selecteer een waterschap</span></div>
-      <div class="si-sc-meta">
-        <div class="si-sc-meta-row">
-          <label class="si-sc-lbl">Scenariotitel <span class="si-sc-opt">optioneel</span></label>
-          <input class="si-sc-inp" id="si-sc-titel" type="text" maxlength="80" placeholder="bijv. Calamiteit HVC Dordrecht — zomer 2026" value="" oninput="siV2State.titel=this.value">
-        </div>
-        <div class="si-sc-meta-row">
-          <label class="si-sc-lbl">Korte beschrijving <span class="si-sc-opt">optioneel</span></label>
-          <input class="si-sc-inp" id="si-sc-beschr" type="text" maxlength="160" placeholder="bijv. Uitval thermische droging door technisch defect · verwachte hersteltijd onbekend" value="" oninput="siV2State.beschrijving=this.value">
-        </div>
-      </div>
       <div class="si-quick">
         <button class="si-quick-btn" onclick="siSelCluster(0)">✓ Selecteer alle GR Slib</button>
         <button class="si-quick-btn si-clear-btn" onclick="siClearAll()">Wis selectie</button>
@@ -1811,16 +1823,42 @@ function buildScenario(){
       <div class="si-step-hdr"><span class="si-step-num">Stap 2</span><span class="si-step-title">Kies een verwerker en verstoring</span></div>
       <div id="si-vw-grid"></div>
     </div>${conn}
+    <div class="si-step si-dimmed" id="si-s2a">
+      <div class="si-step-hdr"><span class="si-step-num sub">Stap 2A</span><span class="si-step-title">Eigen verwerking — HVC-installaties</span></div>
+      <div class="si-step-sub">% van dagelijkse productie dat via eigen HVC-installaties verwerkt wordt</div>
+      <div class="si-dagen-display" id="si-2a-val">60%</div>
+      <input type="range" class="si-dagen-slider" id="si-2a-slider" min="0" max="100" value="60" step="5" oninput="siSetEigenPct(+this.value)">
+      <div class="si-quick">
+        <button class="si-quick-btn" onclick="siSetEigenPct(0)">0%</button>
+        <button class="si-quick-btn" onclick="siSetEigenPct(30)">30%</button>
+        <button class="si-quick-btn" onclick="siSetEigenPct(60)">60%</button>
+        <button class="si-quick-btn" onclick="siSetEigenPct(100)">100%</button>
+      </div>
+      <div class="si-pct-eff" id="si-2a-eff"></div>
+    </div>${conn}
     <div class="si-step si-dimmed" id="si-s2b">
-      <div class="si-step-hdr"><span class="si-step-num">Stap 2B</span><span class="si-step-title">Hoe lang duurt de verstoring?</span></div>
-      <div class="si-dagen-display" id="si-2b-lbl">14 dagen = 2 weken</div>
-      <input type="range" class="si-dagen-slider" id="si-2b-slider" min="1" max="90" value="14" step="1" oninput="siSetDagen2b(this.value)">
+      <div class="si-step-hdr"><span class="si-step-num sub">Stap 2B</span><span class="si-step-title">Externe verwerking — Duitsland</span></div>
+      <div class="si-step-sub">% dat via externe verwerkers in Duitsland afgevoerd wordt · niet beïnvloed door verstoring</div>
+      <div class="si-dagen-display" id="si-2b-new-val">40%</div>
+      <input type="range" class="si-dagen-slider" id="si-2b-new-slider" min="0" max="100" value="40" step="5" oninput="siSetExternPct(+this.value)">
+      <div class="si-quick">
+        <button class="si-quick-btn" onclick="siSetExternPct(0)">0%</button>
+        <button class="si-quick-btn" onclick="siSetExternPct(20)">20%</button>
+        <button class="si-quick-btn" onclick="siSetExternPct(40)">40%</button>
+        <button class="si-quick-btn" onclick="siSetExternPct(60)">60%</button>
+      </div>
+      <div class="si-pct-eff" id="si-2b-new-eff"></div>
+    </div>${conn}
+    <div class="si-step si-dimmed" id="si-s2c">
+      <div class="si-step-hdr"><span class="si-step-num sub">Stap 2C</span><span class="si-step-title">Hoe lang duurt de verstoring?</span></div>
+      <div class="si-dagen-display" id="si-2c-lbl">14 dagen = 2 weken</div>
+      <input type="range" class="si-dagen-slider" id="si-2c-slider" min="1" max="90" value="14" step="1" oninput="siSetDagen2b(this.value)">
       <div class="si-quick">
         <button class="si-quick-btn" onclick="siSetDagen2b(7)">1 week</button>
         <button class="si-quick-btn" onclick="siSetDagen2b(14)">2 weken</button>
         <button class="si-quick-btn" onclick="siSetDagen2b(30)">1 maand</button>
       </div>
-      <div class="si-dagen-calc" id="si-2b-calc"></div>
+      <div class="si-dagen-calc" id="si-2c-calc"></div>
     </div>${conn}
     <div class="si-step si-dimmed" id="si-s3a">
       <div class="si-step-hdr"><span class="si-step-num">Stap 3A</span><span class="si-step-title">Eigen opslag bij verwerker</span></div>
@@ -1829,7 +1867,7 @@ function buildScenario(){
     <div class="si-step si-dimmed" id="si-s3b">
       <div class="si-step-hdr"><span class="si-step-num">Stap 3B</span><span class="si-step-title">Incidentenopslag Robuust Plan</span></div>
       <div class="si-step-sub">Incidentenopslag Robuust Plan — via AQM</div>
-      <div id="si-opvang-3b"><div class="si-placeholder">Stap 3A onvoldoende — dan volgt hier de AQM-opvang</div></div>
+      <div id="si-opvang-3b"><div class="si-placeholder">Selecteer eerst een waterschap en verwerker</div></div>
     </div>${conn}
     <div class="si-step si-dimmed" id="si-s4">
       <div class="si-step-hdr"><span class="si-step-num">Stap 4</span><span class="si-step-title">Conclusie scenario</span></div>
@@ -1840,7 +1878,7 @@ function buildScenario(){
       </button>
     </div>
   </div>`;
-  siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),eigenOverride:{},aqmOverride:{},titel:'',beschrijving:''};
+  siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),eigenOverride:{},aqmOverride:{},titel:'',beschrijving:'',eigenPct:60,externPct:40};
   siRenderWS(); siRenderVW();
 }
 
@@ -1889,7 +1927,7 @@ function siRenderWS(){
   });
   document.getElementById('si-ws-grid').innerHTML=h;
   const hasWS=siV2State.ws.size>0;
-  ['si-s2','si-s2b','si-s3a','si-s4'].forEach(id=>document.getElementById(id).classList.toggle('si-dimmed',!hasWS));
+  ['si-s2','si-s2c','si-s3a','si-s4'].forEach(id=>document.getElementById(id).classList.toggle('si-dimmed',!hasWS));
   siRenderVW();
 }
 
@@ -1975,7 +2013,7 @@ function siSelCluster(ci){
   });
   siRenderWS(); siUpdateDyn();
 }
-function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||''};siRenderWS();siRenderVW();siUpdateDyn();}
+function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externPct:siV2State.externPct??40};siRenderWS();siRenderVW();siUpdateDyn();}
 function siToggleV(vk,type){
   const cur=siV2State.vw[vk];
   if(cur&&cur.type===type)delete siV2State.vw[vk];
@@ -2006,14 +2044,62 @@ function siFormatDagen(d){
   if(d<30)return d+' dagen = ~'+Math.round(d/7*10)/10+' weken';
   return d+' dagen = ~'+Math.round(d/30*10)/10+' maanden';
 }
+function siSetEigenPct(val){
+  val=Math.min(Math.max(0,Math.round(val)),100);
+  siV2State.eigenPct=val;
+  if(val+siV2State.externPct>100){
+    siV2State.externPct=100-val;
+    const s=document.getElementById('si-2b-new-slider');if(s)s.value=siV2State.externPct;
+  }
+  siUpdateDyn();
+}
+function siSetExternPct(val){
+  val=Math.min(Math.max(0,Math.round(val)),100);
+  siV2State.externPct=val;
+  if(siV2State.eigenPct+val>100){
+    siV2State.eigenPct=100-val;
+    const s=document.getElementById('si-2a-slider');if(s)s.value=siV2State.eigenPct;
+  }
+  siUpdateDyn();
+}
+function siRenderPctDisplay(r){
+  if(!r)return;
+  const selTon=r.selTon||0;
+  const v2a=document.getElementById('si-2a-val');
+  const sl2a=document.getElementById('si-2a-slider');
+  const eff2a=document.getElementById('si-2a-eff');
+  if(v2a)v2a.textContent=r.eigenPct+'%';
+  if(sl2a)sl2a.value=r.eigenPct;
+  if(eff2a){
+    const reduced=r.eigenEffPct<r.eigenPct;
+    const cls=reduced?'si-pct-eff reduced':'si-pct-eff';
+    eff2a.className=cls;
+    if(selTon>0&&r.hasV)eff2a.innerHTML=reduced
+      ?`Eigen aandeel na verstoring: <strong>${r.eigenEffPct}%</strong> (${r.eigenTon.toLocaleString()} t/dag) — verlaagd van ${r.eigenPct}% door verstoring`
+      :`Effectief: <strong>${r.eigenEffPct}%</strong> — ${r.eigenTon.toLocaleString()} t/dag via eigen installaties`;
+    else if(selTon>0)eff2a.innerHTML=`= ${r.eigenTon.toLocaleString()} t/dag via eigen installaties`;
+    else eff2a.innerHTML='';
+  }
+  const v2b=document.getElementById('si-2b-new-val');
+  const sl2b=document.getElementById('si-2b-new-slider');
+  const eff2b=document.getElementById('si-2b-new-eff');
+  if(v2b)v2b.textContent=r.externPct+'%';
+  if(sl2b)sl2b.value=r.externPct;
+  if(eff2b){
+    eff2b.className='si-pct-eff';
+    const remaining=Math.max(0,100-r.eigenPct-r.externPct);
+    if(selTon>0)eff2b.innerHTML=`= ${r.externTon.toLocaleString()} t/dag extern · Overschot naar opvang: <strong>${remaining}%</strong> (${r.overshoot.toLocaleString()} t/dag)`;
+    else eff2b.innerHTML='';
+  }
+}
 function siSetDagen2b(v){
   siV2State.dagen=parseInt(v);
-  const slider=document.getElementById('si-2b-slider');if(slider)slider.value=v;
-  const lbl=document.getElementById('si-2b-lbl');if(lbl)lbl.textContent=siFormatDagen(siV2State.dagen);
+  const slider=document.getElementById('si-2c-slider');if(slider)slider.value=v;
+  const lbl=document.getElementById('si-2c-lbl');if(lbl)lbl.textContent=siFormatDagen(siV2State.dagen);
   siRenderDagenCalc();siUpdateDyn();
 }
 function siRenderDagenCalc(){
-  const el=document.getElementById('si-2b-calc');if(!el)return;
+  const el=document.getElementById('si-2c-calc');if(!el)return;
   const selTon=siGetSelTon();
   if(!selTon){el.innerHTML='';el.className='si-dagen-calc';return;}
   const d=siV2State.dagen,total=selTon*d;
@@ -2032,7 +2118,14 @@ function siCalc(){
     remCap+=vs?cap*(SI_FACTOR[vs.type]||0):cap;
   }));
   const maxType=Object.values(siV2State.vw).reduce((m,v)=>Math.max(m,v.type||0),0);
-  const overshoot=Math.max(selTon-remCap,0);
+  const hasV=Object.keys(siV2State.vw).length>0;
+  const disruptionFactor=hasV?(SI_FACTOR[maxType]!==undefined?SI_FACTOR[maxType]:1):1;
+  const eigenPct=siV2State.eigenPct!==undefined?siV2State.eigenPct:60;
+  const externPct=siV2State.externPct!==undefined?siV2State.externPct:40;
+  const eigenEffPct=Math.round(eigenPct*disruptionFactor*10)/10;
+  const eigenTon=Math.round(selTon*eigenEffPct/100);
+  const externTon=Math.round(selTon*externPct/100);
+  const overshoot=Math.max(selTon-eigenTon-externTon,0);
   const freeA=SI_OPV_A.filter(o=>!o.geblokkeerd).reduce((s,o)=>{
     const ov=siV2State.aqmOverride[o.naam];
     if(ov&&!ov.av)return s;
@@ -2046,8 +2139,7 @@ function siCalc(){
   const freeOpvang=maxType>=5?0:maxType>=4?freeB:freeA;
   const surplus=freeOpvang-totalTon;
   const bufDagen=overshoot>0?Math.round(freeOpvang/overshoot):99;
-  const hasV=Object.keys(siV2State.vw).length>0;
-  return{selTon,dagen,totalTon,remCap,overshoot,maxType,freeOpvang,surplus,bufDagen,hasV};
+  return{selTon,dagen,totalTon,remCap,overshoot,maxType,freeOpvang,surplus,bufDagen,hasV,eigenEffPct,eigenPct,externPct,eigenTon,externTon};
 }
 
 function siDemoCard(){
@@ -2068,6 +2160,8 @@ function siDemoCard(){
 
 function siUpdateDyn(){
   siRenderDagenCalc();
+  const hasV2=Object.keys(siV2State.vw).length>0;
+  ['si-s2a','si-s2b'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('si-dimmed',!hasV2);});
   if(siV2State.ws.size===0){
     document.getElementById('si-opvang-3a').innerHTML='<div class="si-placeholder">Selecteer een waterschap om te beginnen</div>';
     document.getElementById('si-opvang-3b').innerHTML='<div class="si-placeholder">Selecteer eerst een waterschap en verwerker</div>';
@@ -2076,6 +2170,7 @@ function siUpdateDyn(){
     return;
   }
   const r=siCalc();
+  siRenderPctDisplay(r);
   const activeClusters=new Set([...siV2State.ws].map(k=>parseInt(k.split('-')[0])));
   const{locs,eigenVrij}=siGetEigenOpslag(activeClusters);
   const eoNeed=r.hasV?r.overshoot*r.dagen:null;
@@ -2157,7 +2252,9 @@ function siGenMemo(){
 
   // Capacity table rows
   const capRows=[
-    {lbl:'Dagelijks overschot',val:r.overshoot.toLocaleString()+' ton/dag',sub:'',dot:r.overshoot===0?'ok':r.overshoot<200?'warning':'danger'},
+    {lbl:'Eigen verwerking (HVC)',val:`${r.eigenEffPct??0}% (${(r.eigenTon||0).toLocaleString()} t/dag)`,sub:r.eigenEffPct!==r.eigenPct?`Verlaagd van ${r.eigenPct}% door verstoring`:'',dot:(r.eigenEffPct??0)>0?'ok':'warning'},
+    {lbl:'Extern Duitsland',val:`${r.externPct??0}% (${(r.externTon||0).toLocaleString()} t/dag)`,sub:'Niet beïnvloed door verstoring',dot:(r.externPct??0)>0?'ok':'neutral'},
+    {lbl:'Dagelijks overschot naar opvang',val:r.overshoot.toLocaleString()+' ton/dag',sub:'',dot:r.overshoot===0?'ok':r.overshoot<200?'warning':'danger'},
     {lbl:'Totale opslagbehoefte',val:r.maxType>=5?'onbekend':r.totalTon.toLocaleString()+' ton',sub:`${r.selTon.toLocaleString()} t/dag × ${r.dagen} dagen`,dot:r.totalTon<5000?'ok':r.totalTon<=15000?'warning':'danger'},
     {lbl:'Eigen buffer verwerker',val:eigenVrij>0?eigenVrij.toLocaleString()+' ton':'onbekend / niet van toepassing',sub:eigenVrij>0&&r.overshoot>0?eigenDagen+' dagen buffer':'',dot:eigenSuf?'ok':eigenSuf===false?'warning':'neutral'},
     {lbl:'Incidentenopslag AQM',val:dispOpvang!==null?dispOpvang.toLocaleString()+' ton'+(r.maxType>=4?' *':''):'niet van toepassing',sub:r.maxType>=4?'* indicatief — op aanvraag':'',dot:dispOpvang&&dispOpvang>r.totalTon?'ok':dispOpvang?'warning':'danger'},
