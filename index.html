@@ -2666,6 +2666,17 @@ function siGenMemo(){
     `<div style="position:absolute;top:0;left:${m.pct}%;width:2px;height:100%;background:rgba(255,255,255,0.55);transform:translateX(-50%)"></div>`
   ).join('');
 
+  // Incidentenopslag span bracket over orange zone
+  const inciStartPct=tlEigenPct;
+  const inciEndPct=showInciVol?Math.round(incidentVolDag/tlDagen*100):100;
+  const inciSpanH=(eigenSuf===false)?`<div style="display:flex;height:18px;margin:3px 0 0;align-items:flex-start">
+    <div style="flex:${inciStartPct}"></div>
+    <div style="flex:${inciEndPct-inciStartPct};border-top:2px solid #d97706;padding-top:3px;text-align:center">
+      <span style="font-size:9px;font-weight:700;color:#d97706;letter-spacing:.05em;text-transform:uppercase">Incidentenopslag</span>
+    </div>
+    <div style="flex:${100-inciEndPct}"></div>
+  </div>`:'' ;
+
   // Calamiteitenregeling span bracket over red zone
   const calSpanH=showInciVol?`<div style="display:flex;height:18px;margin:3px 0 0;align-items:flex-start">
     <div style="flex:${incidentVolDag}"></div>
@@ -2684,7 +2695,7 @@ function siGenMemo(){
     </div>`;
   }).join('');
 
-  const tlBarH=`<div class="rpt-tl-bar" style="position:relative;overflow:hidden">${tlBarSegs}${tlTicksH}</div>${calSpanH}<div style="position:relative;height:52px;margin-top:4px">${tlLabelsH}</div>`;
+  const tlBarH=`<div class="rpt-tl-bar" style="position:relative;overflow:hidden">${tlBarSegs}${tlTicksH}</div>${inciSpanH}${calSpanH}<div style="position:relative;height:52px;margin-top:4px">${tlLabelsH}</div>`;
 
   // Actiepunten
   const apData=siGenActiepunten(r,wsNames);
