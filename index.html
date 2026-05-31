@@ -57,7 +57,7 @@
 
   /* ---------- LOGIN ---------- */
   #login{position:fixed;inset:0;background:var(--kk-ink);display:flex;align-items:center;justify-content:center;z-index:100;padding:24px;background-image:url('https://images.unsplash.com/photo-1595267688272-883f691e4af8?auto=format&fit=crop&w=1920&q=80');background-size:cover;background-position:center}
-  #login::before{content:'';position:absolute;inset:0;background:rgba(11,42,64,.72);z-index:0}
+  #login::before{content:'';position:absolute;inset:0;background:rgba(11,42,64,.82);z-index:0}
   #login>*{position:relative;z-index:1}
   .lc{width:100%;max-width:400px}
   .lc-header{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:20px}
@@ -65,22 +65,22 @@
   .lc-brand{display:flex;flex-direction:column}
   .lc-name{font-size:26px;font-weight:600;color:#fff;letter-spacing:-.02em;line-height:1.1}
   .lc-name span{color:var(--kk-brons)}
-  .lc-sub{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--kk-light);margin-top:3px}
-  .lc-divider{height:1px;background:rgba(44,94,132,.35);margin-bottom:22px}
+  .lc-sub{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9ab8d0;margin-top:3px}
+  .lc-divider{height:1px;background:rgba(44,94,132,.5);margin-bottom:22px}
   .lc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-  .lc-stat{background:var(--kk-navy);border:1px solid rgba(44,94,132,.35);border-radius:10px;padding:14px 10px;text-align:center}
+  .lc-stat{background:rgba(20,58,86,.9);border:1px solid rgba(44,94,132,.6);border-radius:10px;padding:14px 10px;text-align:center}
   .lc-stat-val{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
   .lc-stat-val.green{color:var(--kk-ok)}
   .lc-stat-val.amber{color:#e8a44a}
-  .lc-stat-lbl{font-size:11px;color:var(--kk-light);letter-spacing:.03em}
-  .lc-box{background:var(--kk-navy);border:1px solid rgba(44,94,132,.35);border-radius:12px;padding:20px}
-  .lc-access-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--kk-light);margin-bottom:8px}
+  .lc-stat-lbl{font-size:11px;color:#9ab8d0;letter-spacing:.03em}
+  .lc-box{background:rgba(20,58,86,.9);border:1px solid rgba(44,94,132,.6);border-radius:12px;padding:20px}
+  .lc-access-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ab8d0;margin-bottom:8px}
   .lc-box input{width:100%;height:46px;border-radius:8px;border:1px solid rgba(44,94,132,.35);background:var(--kk-ink);color:#fff;padding:0 14px;font-size:15px;font-family:var(--font);outline:none;transition:border-color .15s;box-sizing:border-box}
   .lc-box input:focus{border-color:var(--kk-brons)}
-  .lc-box input::placeholder{color:#5d7388}
+  .lc-box input::placeholder{color:#7a9ab5}
   .lc-box button{width:100%;height:46px;margin-top:10px;border:none;border-radius:8px;background:var(--kk-brons);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
   .lc-box button:hover{background:var(--kk-brons-licht)}
-  .lc-btn-sec{background:transparent!important;border:1px solid rgba(44,94,132,.35)!important;color:var(--kk-light)!important;font-weight:500!important}
+  .lc-btn-sec{background:transparent!important;border:1px solid rgba(44,94,132,.6)!important;color:#9ab8d0!important;font-weight:500!important}
   .lc-btn-sec:hover{background:var(--bg-soft)!important;border-color:#3a5a72!important}
   .lc-contact{max-height:0;overflow:hidden;transition:max-height .3s ease}
   .lc-contact.open{max-height:320px}
@@ -95,7 +95,7 @@
   .lc-btn-send:disabled{background:#3a7a65;cursor:not-allowed}
   .lc-contact-msg{font-size:12px;margin-top:9px;min-height:0}
   .lc-err{color:#f09595;font-size:12px;margin-top:10px;min-height:16px}
-  .lc-foot{margin-top:18px;font-size:11px;color:var(--kk-light);display:flex;align-items:center;justify-content:center;gap:6px}
+  .lc-foot{margin-top:18px;font-size:11px;color:#9ab8d0;display:flex;align-items:center;justify-content:center;gap:6px}
   .lc-foot-dot{width:6px;height:6px;border-radius:50%;background:var(--kk-brons);flex-shrink:0}
 
   /* ---------- APP SHELL ---------- */
