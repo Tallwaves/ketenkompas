@@ -2574,7 +2574,7 @@ function siGenMemo(){
     `<span class="rpt-bd-badge ${bdImpact.kl}" style="padding-right:6px"><span class="rpt-bd-dot ${bdImpact.kl}"></span>Impact:&nbsp;<select class="rpt-bd-sel" onchange="siV2State.bdImpactOverride=this.value;siGenMemo()">${_bdImpactOpts}</select></span>`,
     `<span class="rpt-bd-badge ${bdRobust.kl}" style="padding-right:6px"><span class="rpt-bd-dot ${bdRobust.kl}"></span>Robuustheid:&nbsp;<select class="rpt-bd-sel" onchange="siV2State.bdRobuustheidOverride=this.value;siGenMemo()">${_bdRobOpts}</select></span>`,
     `<span class="rpt-bd-badge ${bdUrg.kl}" style="padding-right:6px"><span class="rpt-bd-dot ${bdUrg.kl}"></span>Urgentie:&nbsp;<select class="rpt-bd-sel" onchange="siV2State.bdUrgentieOverride=this.value;siGenMemo()">${_bdUrgOpts}</select></span>`,
-    ...(restRobuustheidPct!==null?[`<span class="rpt-bd-badge ${_restRobKl}"><span class="rpt-bd-dot ${_restRobKl}"></span>Resterend:&nbsp;<strong>${restRobuustheidPct}%</strong></span>`]:[]),
+    ...(restRobuustheidPct!==null?[`<span class="rpt-bd-badge ${_restRobKl}"><span class="rpt-bd-dot ${_restRobKl}"></span>Resterende robuustheid:&nbsp;<strong>${restRobuustheidPct}%</strong></span>`]:[]),
     ...bdApts.map(a=>`<span class="rpt-bd-badge ${a.kl}"><span class="rpt-bd-dot ${a.kl}"></span>Aandachtspunt: ${a.lbl}</span>`),
   ].join('');
 
