@@ -466,11 +466,12 @@
   .rpt-tl-mk-dag{font-weight:700;color:var(--kk-ink);font-size:11px}
   .rpt-tl-mk-lbl{color:var(--kk-slate);text-align:center;max-width:80px;line-height:1.2}
   /* ACTIEPUNTEN */
-  .rpt-aanbev-num{width:28px;height:28px;border-radius:50%;background:var(--kk-ink);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .rpt-aanbev-num{width:28px;height:28px;border-radius:50%;background:var(--kk-ink);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1}
   .rpt-aanbev-title{font-size:13px;font-weight:600;color:var(--kk-ink)}
   .rpt-ap-list{display:flex;flex-direction:column}
-  .rpt-ap-item{padding:16px 0}
-  .rpt-ap-item+.rpt-ap-item{border-top:1px solid var(--kk-line)}
+  .rpt-ap-item{padding:16px 0;position:relative}
+  .rpt-ap-item+.rpt-ap-item{border-top:none}
+  .rpt-ap-item:not(:last-child)::after{content:'';position:absolute;left:13px;top:44px;bottom:-16px;width:2px;background:var(--kk-line);z-index:0}
   .rpt-ap-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
   .rpt-ap-body{display:flex;flex-direction:column;gap:5px;padding-left:38px}
   .rpt-ap-field{display:grid;grid-template-columns:72px 1fr;gap:8px;align-items:baseline}
@@ -2357,7 +2358,7 @@ function siGenActiepunten(r,wsNames){
   const gc=siV2State.contacten.find(c=>c.org==='KetenKompas');
   const hc=siV2State.contacten.find(c=>c.org==='HVC');
   const gStr=gc?`${gc.naam} · ${gc.rol}`:'Gizan Ezra · Scenario Architect';
-  const gShort=gc?`${gc.naam} (AGV)`:'Gizan Ezra (AGV)';
+  const gShort=gc?gc.naam:'Gizan Ezra (AGV)';
   const hStr=hc?`${hc.naam} (${hc.org})`:'Chiel Landman (HVC)';
   // Dynamic Wie for AP1: map selected waterschappen to contacts
   const wsOrgMap={'HHNK':'HHNK','AGV':'KetenKompas','Waterschap AGV':'KetenKompas'};
