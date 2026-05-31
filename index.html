@@ -3640,8 +3640,15 @@ async function loadContactRequests(){
 /* ============ SCENARIO OPSLAAN / LADEN ============ */
 const _KK_SC_KEY='kk_saved_scenarios';
 function _kkEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function _siSerialize(){return JSON.stringify({...siV2State,ws:[...siV2State.ws],expanded:[...siV2State.expanded]});}
-function _siDeserialize(json){const s=JSON.parse(json);return{...s,ws:new Set(s.ws||[]),expanded:new Set(s.expanded||[])};}
+function _siSerialize(){
+  const rwziSer={};for(const k in siV2State.rwzi){rwziSer[k]=[...siV2State.rwzi[k]];}
+  return JSON.stringify({...siV2State,ws:[...siV2State.ws],expanded:[...siV2State.expanded],rwzi:rwziSer});
+}
+function _siDeserialize(json){
+  const s=JSON.parse(json);
+  const rwzi={};for(const k in s.rwzi||{}){rwzi[k]=new Set(s.rwzi[k]);}
+  return{...s,ws:new Set(s.ws||[]),expanded:new Set(s.expanded||[]),rwzi};
+}
 function _kkSavedList(){try{return JSON.parse(localStorage.getItem(_KK_SC_KEY)||'[]');}catch(e){return[];}}
 function _kkSaveList(arr){localStorage.setItem(_KK_SC_KEY,JSON.stringify(arr));}
 
