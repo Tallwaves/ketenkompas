@@ -3623,17 +3623,7 @@ if(sessionStorage.getItem('kk_auth')==='1'){ showApp(); }
 /* ============ LOGIN GALLERY ============ */
 function _lcFavCheck(img){
   var fb=function(){img.style.display='none';img.nextElementSibling.style.display='flex';};
-  if(img.naturalWidth<=16){fb();return;}
-  try{
-    var c=document.createElement('canvas');
-    c.width=img.naturalWidth;c.height=img.naturalHeight;
-    var ctx=c.getContext('2d');ctx.drawImage(img,0,0);
-    var d=ctx.getImageData(0,0,c.width,c.height).data,blank=0;
-    for(var i=0;i<d.length;i+=4){
-      if(d[i+3]<20||(d[i]>220&&d[i+1]>220&&d[i+2]>220))blank++;
-    }
-    if(blank/(d.length/4)>0.80)fb();
-  }catch(e){}
+  if(img.naturalWidth<40)fb();
 }
 (function buildLoginGallery(){
   const WS=[
@@ -3661,7 +3651,7 @@ function _lcFavCheck(img){
   ];
   const track=document.getElementById('lc-gallery-track');
   if(!track)return;
-  const items=WS.map(w=>`<div class="lc-ws-item"><div class="lc-ws-badge"><img src="https://www.google.com/s2/favicons?domain=${w.domain}&sz=64" alt="${w.abbr}" crossorigin="anonymous" onload="_lcFavCheck(this)" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none">${w.abbr}</span></div><div class="lc-ws-lbl">${w.naam}</div></div>`).join('');
+  const items=WS.map(w=>`<div class="lc-ws-item"><div class="lc-ws-badge"><img src="https://www.google.com/s2/favicons?domain=${w.domain}&sz=64" alt="${w.abbr}" onload="_lcFavCheck(this)" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none">${w.abbr}</span></div><div class="lc-ws-lbl">${w.naam}</div></div>`).join('');
   track.innerHTML=items+items; // dubbel voor naadloze loop
 })();
 </script>
