@@ -465,13 +465,19 @@
   .rpt-tl-mk{display:flex;flex-direction:column;align-items:center;font-size:10px}
   .rpt-tl-mk-dag{font-weight:700;color:var(--kk-ink);font-size:11px}
   .rpt-tl-mk-lbl{color:var(--kk-slate);text-align:center;max-width:80px;line-height:1.2}
-  /* AANBEVELINGEN */
-  .rpt-aanbev{display:flex;flex-direction:column;gap:12px}
-  .rpt-aanbev-item{display:flex;gap:14px;align-items:flex-start}
-  .rpt-aanbev-num{width:28px;height:28px;border-radius:50%;background:var(--kk-ink);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-  .rpt-aanbev-body{flex:1}
-  .rpt-aanbev-title{font-size:13px;font-weight:600;color:var(--kk-ink);margin-bottom:2px}
-  .rpt-aanbev-txt{font-size:13px;color:#374151;line-height:1.55}
+  /* ACTIEPUNTEN */
+  .rpt-aanbev-num{width:28px;height:28px;border-radius:50%;background:var(--kk-ink);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .rpt-aanbev-title{font-size:13px;font-weight:600;color:var(--kk-ink)}
+  .rpt-ap-list{display:flex;flex-direction:column}
+  .rpt-ap-item{padding:16px 0}
+  .rpt-ap-item+.rpt-ap-item{border-top:1px solid var(--kk-line)}
+  .rpt-ap-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .rpt-ap-body{display:flex;flex-direction:column;gap:5px;padding-left:38px}
+  .rpt-ap-field{display:grid;grid-template-columns:72px 1fr;gap:8px;align-items:baseline}
+  .rpt-ap-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--kk-slate);padding-top:3px}
+  .rpt-ap-val{font-size:13px;color:var(--kk-ink);line-height:1.6}
+  .rpt-ap-val[contenteditable]:focus{outline:2px solid var(--kk-blue);border-radius:3px;padding:2px 6px;background:var(--kk-mist);cursor:text}
+  .rpt-aanbev-title[contenteditable]:focus{outline:2px solid var(--kk-blue);border-radius:3px;padding:1px 5px;background:var(--kk-mist)}
   /* EXPORT KNOPPEN */
   .rpt-export{display:flex;flex-direction:column;gap:8px;margin-top:6px;padding-top:20px;border-top:1px solid #e8eaed}
   .rpt-btn{width:100%;padding:11px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;justify-content:center;gap:7px;border:none;box-sizing:border-box}
@@ -511,7 +517,7 @@
     .memo{box-shadow:none!important;border:none!important;max-width:100%!important}
     .rpt-tl-bar,.rpt-urgentie,.rpt-surplus,.rpt-aanbev-num,.rpt-hdr,.rpt-addr-strip,.rpt-titel-blok,.rpt-ct-row{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     /* Voorkom pagina-afbrekingen midden in blokken */
-    .rpt-section,.rpt-hdr,.rpt-3col,.rpt-tl,.rpt-aanbev,.rpt-opvang-grid,.rpt-surplus{page-break-inside:avoid;break-inside:avoid}
+    .rpt-section,.rpt-hdr,.rpt-3col,.rpt-tl,.rpt-ap-item,.rpt-opvang-grid,.rpt-surplus{page-break-inside:avoid;break-inside:avoid}
     .rpt-col,.rpt-urgentie,.rpt-opvang-card,.rpt-aanbev-item,.rpt-cap-table tr{page-break-inside:avoid;break-inside:avoid}
     /* Sectie-labels nooit als weeskind onderaan een pagina */
     .rpt-sec-title{page-break-after:avoid;break-after:avoid}
@@ -1543,7 +1549,7 @@ function renderRobuust(){
 }
 
 /* ============ SCENARIO V2 ============ */
-let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externNLPct:0,externDEPct:40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,aanbev1TitelOverride:null,aanbev2TitelOverride:null,aanbev3TitelOverride:null,contacten:[
+let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externNLPct:0,externDEPct:40,summaryOverride:null,apOverrides:[{},{},{}],contacten:[
   {org:'KetenKompas',naam:'Gizan Ezra (AGV)',rol:'Scenario Architect',email:'gizan.ezra@agv.nl',tel:''},
   {org:'HVC',naam:'Chiel Landman',rol:'Ketenregisseur HVC',email:'c.landman@hvcgroep.nl',tel:''},
   {org:'HHNK',naam:'David Koenders',rol:'AOGR-vertegenwoordiger',email:'d.koenders@hhnk.nl',tel:''},
@@ -2115,7 +2121,7 @@ function siSelCluster(ci){
   });
   siRenderWS(); siUpdateDyn();
 }
-function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externNLPct:siV2State.externNLPct??0,externDEPct:siV2State.externDEPct??40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,aanbev1TitelOverride:null,aanbev2TitelOverride:null,aanbev3TitelOverride:null,contacten:siV2State.contacten,opgesteldVoor:siV2State.opgesteldVoor||['Intern (AGV)'],opgesteldVoorAnders:siV2State.opgesteldVoorAnders||''};siRenderWS();siRenderVW();siUpdateDyn();}
+function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externNLPct:siV2State.externNLPct??0,externDEPct:siV2State.externDEPct??40,summaryOverride:null,apOverrides:[{},{},{}],contacten:siV2State.contacten,opgesteldVoor:siV2State.opgesteldVoor||['Intern (AGV)'],opgesteldVoorAnders:siV2State.opgesteldVoorAnders||''};siRenderWS();siRenderVW();siUpdateDyn();}
 const SI_OVV_OPTS=['Intern (AGV)','GR Slibverwerking 2009','VvZB','Unie van Waterschappen','AquaMinerals'];
 function siGetBadgeText(){
   const sel=siV2State.opgesteldVoor||['Intern (AGV)'];
@@ -2345,6 +2351,55 @@ function siUpdateDyn(){
 }
 
 
+function siSetApOverride(i,f,v){if(!siV2State.apOverrides)siV2State.apOverrides=[{},{},{}];siV2State.apOverrides[i][f]=v;}
+
+function siGenActiepunten(r,wsNames){
+  const gc=siV2State.contacten.find(c=>c.org==='KetenKompas');
+  const hc=siV2State.contacten.find(c=>c.org==='HVC');
+  const gStr=gc?`${gc.naam} · ${gc.rol}`:'Gizan Ezra · Scenario Architect';
+  const gShort=gc?`${gc.naam} (AGV)`:'Gizan Ezra (AGV)';
+  const hStr=hc?`${hc.naam} (${hc.org})`:'Chiel Landman (HVC)';
+  // Dynamic Wie for AP1: map selected waterschappen to contacts
+  const wsOrgMap={'HHNK':'HHNK','AGV':'KetenKompas','Waterschap AGV':'KetenKompas'};
+  const ap1WieSet=[];
+  [...siV2State.ws].forEach(k=>{
+    const[ci,wi]=k.split('-').map(Number);
+    const nm=DATA.clusters[ci].waterschappen[wi].naam;
+    const orgKey=wsOrgMap[nm]||(nm.includes('HHNK')?'HHNK':nm.includes('AGV')?'KetenKompas':null);
+    if(orgKey){
+      const c=siV2State.contacten.find(ct=>ct.org===orgKey);
+      if(c&&!ap1WieSet.some(x=>x.org===orgKey))ap1WieSet.push(c);
+    }
+  });
+  if(!ap1WieSet.length&&gc)ap1WieSet.push(gc);
+  const ap1Wie=ap1WieSet.map(c=>`${c.naam} · ${c.rol}`).join(' · ');
+  const rwziRef=wsNames.join(', ')||'geselecteerde RWZI\'s';
+  const escDagen=r.dagen+7;
+  return[
+    {
+      titel:'Directe actie',
+      wie:ap1Wie,
+      wat:`Neem contact op met ${hStr} om transport naar Indaver Delfzijl en/of Indaver Groningen te activeren. Bevestig schriftelijk dat beroep wordt gedaan op incidentenopslag via AquaMinerals.`,
+      wanneer:'Binnen 24 uur na vaststelling verstoring',
+      informeer:'Marten Mosch (AGV) · Fons Röttgering (UvW/VvZB) · Jeroen Wubben (AOGR voorzitter)',
+    },
+    {
+      titel:'Monitoring',
+      wie:`${hStr} · ${gShort}`,
+      wat:`Monitor dagelijks de instroom bij ${rwziRef} en de bezetting van de geactiveerde opslaglocatie. Rapporteer wekelijks aan de regiegroep.`,
+      wanneer:`Dagelijks gedurende de verstoring · eerste evaluatie na ${r.dagen} dagen`,
+      informeer:'AOGR · AquaMinerals',
+    },
+    {
+      titel:'Escalatie',
+      wie:`${gShort} · Jeroen Wubben (AOGR voorzitter)`,
+      wat:`Schaal op naar GR Slib DB indien verstoring langer aanhoudt dan ${escDagen} dagen of bezetting incidentenopslag boven 80% komt. Agenda-item aanmelden voor eerstvolgende AOGR.`,
+      wanneer:'Bij overschrijding drempelwaarden',
+      informeer:'Sander Mager (AGV bestuurder) · DB GR Slib · Unie van Waterschappen',
+    },
+  ];
+}
+
 function siGenMemo(){
   const r=siCalc();
   const d=new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
@@ -2506,35 +2561,31 @@ function siGenMemo(){
 
   const tlBarH=`<div class="rpt-tl-bar" style="position:relative;overflow:hidden">${tlBarSegs}${tlTicksH}</div>${calSpanH}<div style="position:relative;height:52px;margin-top:4px">${tlLabelsH}</div>`;
 
-  // Recommendations
-  let aanbev1,aanbev2,aanbev3;
-  if(r.maxType>=5){
-    aanbev1='Isoleer het betreffende slib op locatie en activeer het protocol specialistische verwerkers. Neem direct contact op met Remondis Hannover en meld de situatie bij GR Slib en VvZB.';
-    aanbev2='Monitor dagelijks de slibkwaliteitsparameters (kwik, arseen). Registreer volumes per RWZI en houd logboek bij voor de regiegroep.';
-    aanbev3='Escaleer naar GR Slib-regiegroep zodra transportkosten of opslagvolume de vergunde limieten naderen. Informeer de Unie van Waterschappen als de situatie > 7 dagen aanhoudt.';
-  } else if(r.maxType>=4){
-    aanbev1='Activeer de kwaliteitsopslagroute via Indaver Groningen (Stainkoeln). Controleer contaminantgehalten t.o.v. vergunningsgrenzen en meld de situatie bij AquaMinerals.';
-    aanbev2='Monitor dagelijks de slibkwaliteit en de bezettingsgraad van kwaliteitsopslag. Informeer de regiegroep wekelijks over de voortgang.';
-    aanbev3='Escaleer naar GR Slib en Unie van Waterschappen indien de kwaliteitsopslag binnen 14 dagen vol is of de verwerkingsroute niet tijdig kan worden geopend.';
-  } else if(r.bufDagen>14){
-    aanbev1=`Activeer de incidentenopslag preventief: Indaver Delfzijl en Indaver Groningen (Stainkoeln). Coördineer transport via AquaMinerals. Buffer is ruim voldoende voor ${r.bufDagen} dagen.`;
-    aanbev2='Monitor dagelijks de instroom en de bezetting van opslaglocaties. Evalueer na 7 dagen of de verstoring afloopt of aanhoudt.';
-    aanbev3='Schaal op naar GR Slib-regiegroep indien de verstoring langer dan 14 dagen aanhoudt of indien de bezetting van incidentenopslag boven 80% komt.';
-  } else if(r.bufDagen>=7){
-    aanbev1=`Activeer direct de incidentenopslag (Indaver Delfzijl en Groningen) én onderzoek alternatieve verwerkingsroutes voor de komende ${r.dagen} dagen. Buffer houdt ${r.bufDagen} dagen stand.`;
-    aanbev2='Monitor dagelijks de bezetting van alle opslaglocaties. Beleg binnen 48 uur een overleg met AquaMinerals en de betrokken waterschappen.';
-    aanbev3='Informeer de GR Slib-regiegroep direct. Escaleer naar Unie van Waterschappen als aanvullende capaciteit niet tijdig beschikbaar is.';
-  } else {
-    aanbev1=`Directe activatie van ALLE beschikbare incidentenopslag. Buffer is kritiek — uitputting na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Direct contact AquaMinerals voor noodcapaciteit.`;
-    aanbev2='Uur-voor-uur monitoring van instroom en opslagbezetting. Dagelijkse rapportage aan directie en bestuur van betrokken waterschappen.';
-    aanbev3='Onmiddellijke escalatie naar GR Slib-regiegroep en Unie van Waterschappen. Bereid bestuurlijke communicatie voor richting gemeenten in het verzorgingsgebied.';
-  }
-  if(siV2State.aanbev1Override)aanbev1=siV2State.aanbev1Override;
-  if(siV2State.aanbev2Override)aanbev2=siV2State.aanbev2Override;
-  if(siV2State.aanbev3Override)aanbev3=siV2State.aanbev3Override;
-  const aanbev1Titel=siV2State.aanbev1TitelOverride||'Directe actie';
-  const aanbev2Titel=siV2State.aanbev2TitelOverride||'Monitoring';
-  const aanbev3Titel=siV2State.aanbev3TitelOverride||'Escalatie';
+  // Actiepunten
+  const apData=siGenActiepunten(r,wsNames);
+  const apOverrides=siV2State.apOverrides||[{},{},{}];
+  const _EI=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+  const apHtml=apData.map((ap,i)=>{
+    const o=apOverrides[i]||{};
+    const t=o.titel!==undefined?o.titel:ap.titel;
+    const w=o.wie!==undefined?o.wie:ap.wie;
+    const wt=o.wat!==undefined?o.wat:ap.wat;
+    const wn=o.wanneer!==undefined?o.wanneer:ap.wanneer;
+    const inf=o.informeer!==undefined?o.informeer:ap.informeer;
+    return `<div class="rpt-ap-item">
+      <div class="rpt-ap-hdr">
+        <div class="rpt-aanbev-num">${i+1}</div>
+        <div class="rpt-aanbev-title" style="flex:1;margin:0" contenteditable="true" oninput="siSetApOverride(${i},'titel',this.innerText)">${t}</div>
+        <button class="rpt-edit-btn" onclick="this.closest('.rpt-ap-item').querySelector('.rpt-ap-val').focus()" title="Bewerken">${_EI}Bewerken</button>
+      </div>
+      <div class="rpt-ap-body">
+        <div class="rpt-ap-field"><div class="rpt-ap-lbl">Wie</div><div class="rpt-ap-val" contenteditable="true" oninput="siSetApOverride(${i},'wie',this.innerText)">${w}</div></div>
+        <div class="rpt-ap-field"><div class="rpt-ap-lbl">Wat</div><div class="rpt-ap-val" contenteditable="true" oninput="siSetApOverride(${i},'wat',this.innerText)">${wt}</div></div>
+        <div class="rpt-ap-field"><div class="rpt-ap-lbl">Wanneer</div><div class="rpt-ap-val" contenteditable="true" oninput="siSetApOverride(${i},'wanneer',this.innerText)">${wn}</div></div>
+        <div class="rpt-ap-field"><div class="rpt-ap-lbl">Informeer</div><div class="rpt-ap-val" contenteditable="true" oninput="siSetApOverride(${i},'informeer',this.innerText)">${inf}</div></div>
+      </div>
+    </div>`;
+  }).join('');
 
   const scTitel=siV2State.titel?siV2State.titel.trim():'';
   const scBeschr=siV2State.beschrijving?siV2State.beschrijving.trim():'';
@@ -2617,18 +2668,8 @@ function siGenMemo(){
         </div>
       </div>
       <div class="rpt-section">
-        <div class="rpt-sec-hdr">
-          <div class="rpt-sec-title">Aanbevelingen</div>
-          <button class="rpt-edit-btn" onclick="document.getElementById('rpt-aanbev1').focus()" title="Bewerken">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            Bewerken
-          </button>
-        </div>
-        <div class="rpt-aanbev">
-          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">1</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title" contenteditable="true" oninput="siV2State.aanbev1TitelOverride=this.innerText">${aanbev1Titel}</div><div class="rpt-aanbev-txt" id="rpt-aanbev1" contenteditable="true" oninput="siV2State.aanbev1Override=this.innerText">${aanbev1}</div></div></div>
-          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">2</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title" contenteditable="true" oninput="siV2State.aanbev2TitelOverride=this.innerText">${aanbev2Titel}</div><div class="rpt-aanbev-txt" contenteditable="true" oninput="siV2State.aanbev2Override=this.innerText">${aanbev2}</div></div></div>
-          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">3</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title" contenteditable="true" oninput="siV2State.aanbev3TitelOverride=this.innerText">${aanbev3Titel}</div><div class="rpt-aanbev-txt" contenteditable="true" oninput="siV2State.aanbev3Override=this.innerText">${aanbev3}</div></div></div>
-        </div>
+        <div class="rpt-sec-title">Actiepunten</div>
+        <div class="rpt-ap-list">${apHtml}</div>
       </div>
       <div class="rpt-section">
         <div class="rpt-sec-title">Contactpersonen</div>
