@@ -56,7 +56,10 @@
   body{font-family:var(--font);color:var(--ink);background:var(--surface-2);line-height:1.5;-webkit-font-smoothing:antialiased}
 
   /* ---------- LOGIN ---------- */
-  #login{position:fixed;inset:0;background:var(--kk-ink);display:flex;align-items:center;justify-content:center;z-index:100;padding:24px}
+  #login{position:fixed;inset:0;background:var(--kk-ink);display:flex;align-items:center;justify-content:center;z-index:100;padding:24px;background-image:url('https://images.unsplash.com/photo-yEpUny1hxoE?auto=format&fit=crop&w=1920&q=80');background-size:cover;background-position:center bottom}
+  #login::before{content:'';position:absolute;inset:0;background:rgba(11,42,64,.72);z-index:0}
+  #login>*{position:relative;z-index:1}
+  .lc-photo-credit{position:absolute;bottom:10px;right:14px;font-size:10px;color:rgba(255,255,255,.35);z-index:1;pointer-events:none}
   .lc{width:100%;max-width:400px}
   .lc-header{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:20px}
   .lc-logo{width:48px;height:48px;flex-shrink:0}
@@ -881,6 +884,7 @@
     </div>
     <div class="lc-foot"><span class="lc-foot-dot"></span>Voor de waterschappen die de keten beheren · 2026</div>
   </div>
+  <span class="lc-photo-credit">Foto: E Mens / Unsplash</span>
 </div>
 
 <!-- APP -->
