@@ -473,13 +473,14 @@
   .rpt-aanbev-title{font-size:13px;font-weight:600;color:var(--kk-ink);margin-bottom:2px}
   .rpt-aanbev-txt{font-size:13px;color:#374151;line-height:1.55}
   /* EXPORT KNOPPEN */
-  .rpt-export{display:flex;gap:10px;margin-top:6px;padding-top:20px;border-top:1px solid #e8eaed;flex-wrap:wrap}
-  .rpt-btn{padding:9px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;gap:7px;border:none}
+  .rpt-export{display:flex;flex-direction:column;gap:8px;margin-top:6px;padding-top:20px;border-top:1px solid #e8eaed}
+  .rpt-btn{width:100%;padding:11px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;justify-content:center;gap:7px;border:none;box-sizing:border-box}
   .rpt-btn-pdf{background:var(--kk-ink);color:#fff}
   .rpt-btn-pdf:hover{background:#1e3040}
-  .rpt-btn-copy{background:var(--surface);border:1px solid var(--line)!important;color:var(--ink-soft)}
-  .rpt-btn-copy:hover{border-color:var(--ink-faint)!important}
+  .rpt-btn-vervolg{background:transparent;border:1px solid var(--kk-line)!important;color:var(--kk-slate);font-weight:400}
+  .rpt-btn-vervolg:hover{border-color:var(--kk-slate)!important;color:var(--kk-ink)}
   .rpt-btn svg{width:14px;height:14px;stroke:currentColor}
+  .rpt-aanbev-title[contenteditable]:focus{outline:2px solid var(--kk-blue);border-radius:3px;padding:1px 4px;background:var(--kk-mist)}
   /* FOOTER */
   .rpt-foot{background:#f6f8fa;padding:14px 30px;font-size:10.5px;color:#9ca3af;line-height:1.6;border-top:1px solid #e8eaed}
   /* RAPPORTAGE MOBIEL */
@@ -495,7 +496,6 @@
     .rpt-cap-table td{font-size:12px}
     .rpt-surplus{flex-direction:column;gap:4px;align-items:flex-start}
     .rpt-export{flex-direction:column}
-    .rpt-btn{width:100%;justify-content:center}
   }
   @media(max-width:500px){
     .rpt-opvang-grid{grid-template-columns:1fr}
@@ -1543,7 +1543,7 @@ function renderRobuust(){
 }
 
 /* ============ SCENARIO V2 ============ */
-let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externNLPct:0,externDEPct:40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,contacten:[
+let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externNLPct:0,externDEPct:40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,aanbev1TitelOverride:null,aanbev2TitelOverride:null,aanbev3TitelOverride:null,contacten:[
   {org:'KetenKompas',naam:'Gizan Ezra (AGV)',rol:'Scenario Architect',email:'gizan.ezra@agv.nl',tel:''},
   {org:'HVC',naam:'Chiel Landman',rol:'Ketenregisseur HVC',email:'c.landman@hvcgroep.nl',tel:''},
   {org:'HHNK',naam:'David Koenders',rol:'AOGR-vertegenwoordiger',email:'d.koenders@hhnk.nl',tel:''},
@@ -2116,7 +2116,7 @@ function siSelCluster(ci){
   });
   siRenderWS(); siUpdateDyn();
 }
-function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externNLPct:siV2State.externNLPct??0,externDEPct:siV2State.externDEPct??40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,contacten:siV2State.contacten,opgesteldVoor:siV2State.opgesteldVoor||['Intern (AGV)'],opgesteldVoorAnders:siV2State.opgesteldVoorAnders||''};siRenderWS();siRenderVW();siUpdateDyn();}
+function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externNLPct:siV2State.externNLPct??0,externDEPct:siV2State.externDEPct??40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,aanbev1TitelOverride:null,aanbev2TitelOverride:null,aanbev3TitelOverride:null,contacten:siV2State.contacten,opgesteldVoor:siV2State.opgesteldVoor||['Intern (AGV)'],opgesteldVoorAnders:siV2State.opgesteldVoorAnders||''};siRenderWS();siRenderVW();siUpdateDyn();}
 const SI_OVV_OPTS=['Intern (AGV)','GR Slibverwerking 2009','VvZB','Unie van Waterschappen','AquaMinerals'];
 function siGetBadgeText(){
   const sel=siV2State.opgesteldVoor||['Intern (AGV)'];
@@ -2533,6 +2533,9 @@ function siGenMemo(){
   if(siV2State.aanbev1Override)aanbev1=siV2State.aanbev1Override;
   if(siV2State.aanbev2Override)aanbev2=siV2State.aanbev2Override;
   if(siV2State.aanbev3Override)aanbev3=siV2State.aanbev3Override;
+  const aanbev1Titel=siV2State.aanbev1TitelOverride||'Directe actie';
+  const aanbev2Titel=siV2State.aanbev2TitelOverride||'Monitoring';
+  const aanbev3Titel=siV2State.aanbev3TitelOverride||'Escalatie';
 
   const scTitel=siV2State.titel?siV2State.titel.trim():'';
   const scBeschr=siV2State.beschrijving?siV2State.beschrijving.trim():'';
@@ -2623,9 +2626,9 @@ function siGenMemo(){
           </button>
         </div>
         <div class="rpt-aanbev">
-          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">1</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Directe actie</div><div class="rpt-aanbev-txt" id="rpt-aanbev1" contenteditable="true" oninput="siV2State.aanbev1Override=this.innerText">${aanbev1}</div></div></div>
-          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">2</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Monitoring</div><div class="rpt-aanbev-txt" contenteditable="true" oninput="siV2State.aanbev2Override=this.innerText">${aanbev2}</div></div></div>
-          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">3</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title">Escalatie</div><div class="rpt-aanbev-txt" contenteditable="true" oninput="siV2State.aanbev3Override=this.innerText">${aanbev3}</div></div></div>
+          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">1</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title" contenteditable="true" oninput="siV2State.aanbev1TitelOverride=this.innerText">${aanbev1Titel}</div><div class="rpt-aanbev-txt" id="rpt-aanbev1" contenteditable="true" oninput="siV2State.aanbev1Override=this.innerText">${aanbev1}</div></div></div>
+          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">2</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title" contenteditable="true" oninput="siV2State.aanbev2TitelOverride=this.innerText">${aanbev2Titel}</div><div class="rpt-aanbev-txt" contenteditable="true" oninput="siV2State.aanbev2Override=this.innerText">${aanbev2}</div></div></div>
+          <div class="rpt-aanbev-item"><div class="rpt-aanbev-num">3</div><div class="rpt-aanbev-body"><div class="rpt-aanbev-title" contenteditable="true" oninput="siV2State.aanbev3TitelOverride=this.innerText">${aanbev3Titel}</div><div class="rpt-aanbev-txt" contenteditable="true" oninput="siV2State.aanbev3Override=this.innerText">${aanbev3}</div></div></div>
         </div>
       </div>
       <div class="rpt-section">
@@ -2644,9 +2647,8 @@ function siGenMemo(){
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>
           Exporteer als PDF
         </button>
-        <button class="rpt-btn rpt-btn-copy" id="rpt-copy-btn" onclick="copyMemo()">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Kopieer als tekst
+        <button class="rpt-btn rpt-btn-vervolg" onclick="">
+          Vervolg Scenario Aanvragen
         </button>
       </div>
     </div>
