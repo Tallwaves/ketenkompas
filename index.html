@@ -315,6 +315,13 @@
   .si-ct-toggle{display:flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;font-family:var(--font);font-size:11px;font-weight:600;color:var(--ink-soft);padding:6px 2px;letter-spacing:.03em;text-transform:uppercase}
   .si-ct-toggle svg{width:13px;height:13px;transition:transform .2s;flex-shrink:0}
   .si-ct-toggle.open svg{transform:rotate(180deg)}
+  .si-ovv-body{display:none;margin-bottom:10px;padding:10px 14px;background:var(--surface-2);border-radius:8px;border:1px solid var(--line)}
+  .si-ovv-body.open{display:block}
+  .si-ovv-opts{display:flex;flex-direction:column;gap:6px;margin-bottom:0}
+  .si-ovv-opt{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink);cursor:pointer}
+  .si-ovv-opt input[type=checkbox]{accent-color:var(--accent);width:14px;height:14px;cursor:pointer;flex-shrink:0}
+  .si-ovv-anders{margin-top:4px;width:100%;border:1px solid var(--line);border-radius:5px;padding:5px 8px;font-size:12px;font-family:var(--font);color:var(--ink);background:var(--surface);outline:none;box-sizing:border-box}
+  .si-ovv-anders:focus{border-color:var(--accent)}
   .si-ct-body{display:none;margin-bottom:14px;padding:12px 14px;background:var(--surface-2);border-radius:8px;border:1px solid var(--line)}
   .si-ct-body.open{display:block}
   .si-ct-row{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
@@ -1530,7 +1537,7 @@ let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',b
   {org:'HHNK',naam:'',rol:'nader in te vullen',email:'',tel:''},
   {org:'Unie van Waterschappen',naam:'Fons Röttgering',rol:'Trainee WDI',email:'frottgering@uvw.nl',tel:''},
   {org:'AQM',naam:'Angela Damen',rol:'nader in te vullen',email:'damen@aquaminerals.com',tel:''},
-]};
+],opgesteldVoor:['Intern (AGV)'],opgesteldVoorAnders:''};
 
 const SI_OPV_A=[
   {naam:"Indaver Delfzijl",cap:6000,bezet:2501,status:"warning"},
@@ -1869,6 +1876,19 @@ function buildScenario(){
         <input class="si-sc-inp" id="si-sc-beschr" type="text" maxlength="160" placeholder="bijv. Uitval thermische droging door technisch defect · verwachte hersteltijd onbekend" value="" oninput="siV2State.beschrijving=this.value">
       </div>
     </div>
+    <button class="si-ct-toggle" id="si-ovv-btn" onclick="siToggleOvv()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      Opgesteld voor
+    </button>
+    <div class="si-ovv-body" id="si-ovv-body">
+      <div class="si-ovv-opts">
+        ${SI_OVV_OPTS.map(o=>`<label class="si-ovv-opt"><input type="checkbox" id="si-ovv-cb-${o.replace(/\s/g,'_')}" ${(siV2State.opgesteldVoor||['Intern (AGV)']).includes(o)?'checked':''} onchange="siToggleOvvOpt('${o}')"><span>${o}</span></label>`).join('')}
+        <label class="si-ovv-opt"><input type="checkbox" id="si-ovv-cb-Anders" ${(siV2State.opgesteldVoor||[]).includes('Anders')?'checked':''} onchange="siToggleOvvOpt('Anders')"><span>Anders</span></label>
+        <div id="si-ovv-anders-row" style="display:${(siV2State.opgesteldVoor||[]).includes('Anders')?'block':'none'}">
+          <input class="si-ovv-anders" type="text" placeholder="Naam organisatie…" value="${siV2State.opgesteldVoorAnders||''}" oninput="siV2State.opgesteldVoorAnders=this.value">
+        </div>
+      </div>
+    </div>
     <button class="si-ct-toggle" id="si-ct-btn" onclick="siToggleContacten()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
       Contactpersonen aanpassen
@@ -1948,7 +1968,7 @@ function buildScenario(){
     </div>
   </div>`;
   const prevContacten=siV2State.contacten;
-  siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),eigenOverride:{},aqmOverride:{},titel:'',beschrijving:'',eigenPct:60,externNLPct:0,externDEPct:40,contacten:prevContacten};
+  siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),eigenOverride:{},aqmOverride:{},titel:'',beschrijving:'',eigenPct:60,externNLPct:0,externDEPct:40,contacten:prevContacten,opgesteldVoor:['Intern (AGV)'],opgesteldVoorAnders:''};
   siRenderWS(); siRenderVW();
 }
 
@@ -2083,7 +2103,35 @@ function siSelCluster(ci){
   });
   siRenderWS(); siUpdateDyn();
 }
-function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externNLPct:siV2State.externNLPct??0,externDEPct:siV2State.externDEPct??40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,contacten:siV2State.contacten};siRenderWS();siRenderVW();siUpdateDyn();}
+function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externNLPct:siV2State.externNLPct??0,externDEPct:siV2State.externDEPct??40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,contacten:siV2State.contacten,opgesteldVoor:siV2State.opgesteldVoor||['Intern (AGV)'],opgesteldVoorAnders:siV2State.opgesteldVoorAnders||''};siRenderWS();siRenderVW();siUpdateDyn();}
+const SI_OVV_OPTS=['Intern (AGV)','GR Slibverwerking 2009','VvZB Regiegroep','AquaMinerals','Unie van Waterschappen'];
+function siGetBadgeText(){
+  const sel=siV2State.opgesteldVoor||['Intern (AGV)'];
+  if(sel.length===1&&sel[0]==='Intern (AGV)')return 'Vertrouwelijk — intern gebruik';
+  const labels=sel.map(v=>v==='Anders'?(siV2State.opgesteldVoorAnders||'Anders'):v);
+  return 'Opgesteld voor: '+labels.join(' · ');
+}
+function siToggleOvv(){
+  const body=document.getElementById('si-ovv-body');
+  const btn=document.getElementById('si-ovv-btn');
+  if(!body||!btn)return;
+  const open=body.classList.toggle('open');
+  btn.classList.toggle('open',open);
+}
+function siToggleOvvOpt(val){
+  let sel=siV2State.opgesteldVoor||['Intern (AGV)'];
+  if(sel.includes(val))sel=sel.filter(v=>v!==val);
+  else sel=[...sel,val];
+  if(sel.length===0)sel=['Intern (AGV)'];
+  siV2State.opgesteldVoor=sel;
+  const andersRow=document.getElementById('si-ovv-anders-row');
+  if(andersRow)andersRow.style.display=sel.includes('Anders')?'block':'none';
+  // refresh checkboxes
+  SI_OVV_OPTS.concat(['Anders']).forEach(o=>{
+    const cb=document.getElementById('si-ovv-cb-'+o.replace(/\s/g,'_'));
+    if(cb)cb.checked=sel.includes(o);
+  });
+}
 function siToggleContacten(){
   const body=document.getElementById('si-ct-body');
   const btn=document.getElementById('si-ct-btn');
@@ -2477,9 +2525,9 @@ function siGenMemo(){
         ${scBeschr?`<div class="rpt-hdr-beschr">${scBeschr}</div>`:`<div class="rpt-hdr-sub">Scenarioanalyse slibketen — indicatieve doorrekening</div>`}
       </div>
       <div class="rpt-hdr-right">
-        <div class="rpt-hdr-badge">Vertrouwelijk — intern gebruik</div>
+        <div class="rpt-hdr-badge">${siGetBadgeText()}</div>
         <div class="rpt-hdr-date">${d}</div>
-        <div class="rpt-hdr-date" style="margin-top:4px;opacity:.7">Opgesteld door: Gizan Ezra · Ketenregie · AGV/Waternet</div>
+        <div class="rpt-hdr-date" style="margin-top:4px;opacity:.7">Opgesteld door: Gizan Ezra · Initiatiefnemer KetenKompas · AGV/Gr Slib</div>
       </div>
     </div>
     <div class="rpt-body">
