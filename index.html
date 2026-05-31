@@ -3630,7 +3630,7 @@ function _lcFavCheck(img){
     {abbr:'AGV',  naam:'Amstel, Gooi en Vecht',       domain:'agv.nl'},
     {abbr:'HHNK', naam:'Hollands Noorderkwartier',     domain:'hhnk.nl'},
     {abbr:'HvD',  naam:'Delfland',                     domain:'hhdelfland.nl'},
-    {abbr:'HD',   naam:'Hollandse Delta',              domain:'wshd.nl'},
+    {abbr:'HD',   naam:'Hollandse Delta',              domain:'wshd.nl',              noLogo:true},
     {abbr:'HvR',  naam:'Rijnland',                     domain:'rijnland.net'},
     {abbr:'RL',   naam:'Rivierenland',                 domain:'wsrl.nl'},
     {abbr:'HHSK', naam:'Schieland & Krimpenerwaard',   domain:'hhsk.nl'},
@@ -3638,20 +3638,25 @@ function _lcFavCheck(img){
     {abbr:'AeM',  naam:'Aa en Maas',                   domain:'aaenmaas.nl'},
     {abbr:'BD',   naam:'Brabantse Delta',              domain:'brabantsedelta.nl'},
     {abbr:'DD',   naam:'De Dommel',                    domain:'dommel.nl'},
-    {abbr:'HDSR', naam:'De Stichtse Rijnlanden',       domain:'hdsr.nl'},
+    {abbr:'HDSR', naam:'De Stichtse Rijnlanden',       domain:'hdsr.nl',              noLogo:true},
     {abbr:'VS',   naam:'Vechtstromen',                 domain:'vechtstromen.nl'},
     {abbr:'SS',   naam:'Scheldestromen',               domain:'scheldestromen.nl'},
     {abbr:'WL',   naam:'Limburg',                      domain:'waterschaplimburg.nl'},
     {abbr:'NZV',  naam:'Noorderzijlvest',              domain:'noorderzijlvest.nl'},
     {abbr:'HeA',  naam:"Hunze en Aa's",                domain:'hunzeenaas.nl'},
     {abbr:'DOD',  naam:'Drents Overijsselse Delta',    domain:'wdodelta.nl'},
-    {abbr:'WF',   naam:'Wetterskip Fryslân',           domain:'wetterskipfryslan.nl'},
+    {abbr:'WF',   naam:'Wetterskip Fryslân',           domain:'wetterskipfryslan.nl', noLogo:true},
     {abbr:'VeV',  naam:'Vallei en Veluwe',             domain:'vallei-en-veluwe.nl'},
     {abbr:'ReIJ', naam:'Rijn en IJssel',               domain:'rijnijssel.nl'},
   ];
   const track=document.getElementById('lc-gallery-track');
   if(!track)return;
-  const items=WS.map(w=>`<div class="lc-ws-item"><div class="lc-ws-badge"><img src="https://www.google.com/s2/favicons?domain=${w.domain}&sz=64" alt="${w.abbr}" onload="_lcFavCheck(this)" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none">${w.abbr}</span></div><div class="lc-ws-lbl">${w.naam}</div></div>`).join('');
+  const items=WS.map(w=>{
+    const inner=w.noLogo
+      ?`<span>${w.abbr}</span>`
+      :`<img src="https://www.google.com/s2/favicons?domain=${w.domain}&sz=64" alt="${w.abbr}" onload="_lcFavCheck(this)" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none">${w.abbr}</span>`;
+    return `<div class="lc-ws-item"><div class="lc-ws-badge">${inner}</div><div class="lc-ws-lbl">${w.naam}</div></div>`;
+  }).join('');
   track.innerHTML=items+items; // dubbel voor naadloze loop
 })();
 </script>
