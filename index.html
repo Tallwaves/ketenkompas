@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KetenKompas — Nederlandse Waterketen</title>
+<title>KetenKompas — Bestuurlijk Scenario-instrument Slibketen</title>
+<meta name="description" content="KetenKompas is het interactieve scenario-instrument voor bestuurlijke besluitvorming in de Nederlandse slibverwerkingsketen. Capaciteitsanalyse, risicobeoordeling en bestuurlijke rapportage in één overzicht.">
+<meta name="theme-color" content="#0B2A40">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/ketenkompas-brand/app-icon.svg">
+<meta property="og:title" content="KetenKompas — Bestuurlijk Scenario-instrument Slibketen">
+<meta property="og:description" content="Interactief instrument voor ketensturing en scenario-analyse in de Nederlandse slibverwerkingsketen. Ontwikkeld door AGV / GR Slib.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/ketenkompas-brand/app-icon.svg">
+<meta name="robots" content="noindex, nofollow">
 <style>
   :root{
     /* KetenKompas brand tokens — Marine & Brons */
@@ -1567,7 +1576,7 @@ function renderRobuust(){
 }
 
 /* ============ SCENARIO V2 ============ */
-let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externNLPct:0,externDEPct:40,summaryOverride:null,bdKernOverride:null,bdConclusieOverride:null,bdAdviesOverride:null,bdImpactOverride:null,apOverrides:[{},{},{}],contacten:[
+let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externNLPct:0,externDEPct:40,summaryOverride:null,bdKernOverride:null,bdConclusieOverride:null,bdAdviesOverride:null,bdImpactOverride:null,bdRobuustheidOverride:null,bdUrgentieOverride:null,apOverrides:[{},{},{}],contacten:[
   {org:'KetenKompas',naam:'Gizan Ezra (AGV)',rol:'Scenario Architect',email:'gizan.ezra@agv.nl',tel:''},
   {org:'HVC',naam:'Chiel Landman',rol:'Ketenregisseur HVC',email:'c.landman@hvcgroep.nl',tel:''},
   {org:'HHNK',naam:'David Koenders',rol:'AOGR-vertegenwoordiger',email:'d.koenders@hhnk.nl',tel:''},
@@ -2139,7 +2148,7 @@ function siSelCluster(ci){
   });
   siRenderWS(); siUpdateDyn();
 }
-function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externNLPct:siV2State.externNLPct??0,externDEPct:siV2State.externDEPct??40,summaryOverride:null,bdKernOverride:null,bdConclusieOverride:null,bdAdviesOverride:null,bdImpactOverride:null,apOverrides:[{},{},{}],contacten:siV2State.contacten,opgesteldVoor:siV2State.opgesteldVoor||['Intern (AGV)'],opgesteldVoorAnders:siV2State.opgesteldVoorAnders||''};siRenderWS();siRenderVW();siUpdateDyn();}
+function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externNLPct:siV2State.externNLPct??0,externDEPct:siV2State.externDEPct??40,summaryOverride:null,bdKernOverride:null,bdConclusieOverride:null,bdAdviesOverride:null,bdImpactOverride:null,bdRobuustheidOverride:null,bdUrgentieOverride:null,apOverrides:[{},{},{}],contacten:siV2State.contacten,opgesteldVoor:siV2State.opgesteldVoor||['Intern (AGV)'],opgesteldVoorAnders:siV2State.opgesteldVoorAnders||''};siRenderWS();siRenderVW();siUpdateDyn();}
 const SI_OVV_OPTS=['Intern (AGV)','GR Slibverwerking 2009','VvZB','Unie van Waterschappen','AquaMinerals'];
 function siGetBadgeText(){
   const sel=siV2State.opgesteldVoor||['Intern (AGV)'];
@@ -2482,8 +2491,14 @@ function siGenMemo(){
   const _bdImpactAuto=r.bufDagen>90?'Laag':r.bufDagen>30?'Middel':r.bufDagen>14?'Hoog':'Kritiek';
   const bdImpactLbl=siV2State.bdImpactOverride||_bdImpactAuto;
   const bdImpact={lbl:bdImpactLbl,kl:_bdImpactMap[bdImpactLbl]||'ok'};
-  const bdRobust=r.bufDagen>14&&(dispSurplus===null||dispSurplus>0)?{lbl:'Voldoende',kl:'ok'}:r.bufDagen>=7?{lbl:'Beperkt',kl:'warn'}:{lbl:'Onvoldoende',kl:'danger'};
-  const bdUrg=urgKl==='ok'?{lbl:'Geen directe actie',kl:'ok'}:urgKl==='warning'?{lbl:'Actie gewenst',kl:'warn'}:{lbl:'Directe actie',kl:'danger'};
+  const _bdRobMap={Voldoende:'ok',Beperkt:'warn',Onvoldoende:'danger'};
+  const _bdRobAuto=r.bufDagen>14&&(dispSurplus===null||dispSurplus>0)?'Voldoende':r.bufDagen>=7?'Beperkt':'Onvoldoende';
+  const bdRobLbl=siV2State.bdRobuustheidOverride||_bdRobAuto;
+  const bdRobust={lbl:bdRobLbl,kl:_bdRobMap[bdRobLbl]||'ok'};
+  const _bdUrgMap={'Geen directe actie':'ok','Actie gewenst':'warn','Directe actie':'danger'};
+  const _bdUrgAuto=urgKl==='ok'?'Geen directe actie':urgKl==='warning'?'Actie gewenst':'Directe actie';
+  const bdUrgLbl=siV2State.bdUrgentieOverride||_bdUrgAuto;
+  const bdUrg={lbl:bdUrgLbl,kl:_bdUrgMap[bdUrgLbl]||'ok'};
   const bdApts=[];
   const opvTotaal=SI_OPV_A.reduce((s,o)=>s+(o.cap||0),0);
   const opvBezet=SI_OPV_A.reduce((s,o)=>s+(o.bezet||0),0);
@@ -2511,10 +2526,12 @@ function siGenMemo(){
   else bdAdvies=`Escaleer direct naar GR Slib en activeer alle beschikbare opvangcapaciteit. Schakel bestuurlijk niveau in (AOGR voorzitter, AGV bestuurder). Stel dagelijks crisisoverleg in.`;
   if(siV2State.bdAdviesOverride)bdAdvies=siV2State.bdAdviesOverride;
   const _bdImpactOpts=['Laag','Middel','Hoog','Kritiek'].map(v=>`<option value="${v}"${bdImpactLbl===v?' selected':''}>${v}</option>`).join('');
+  const _bdRobOpts=['Voldoende','Beperkt','Onvoldoende'].map(v=>`<option value="${v}"${bdRobLbl===v?' selected':''}>${v}</option>`).join('');
+  const _bdUrgOpts=['Geen directe actie','Actie gewenst','Directe actie'].map(v=>`<option value="${v}"${bdUrgLbl===v?' selected':''}>${v}</option>`).join('');
   const bdBadgesH=[
     `<span class="rpt-bd-badge ${bdImpact.kl}" style="padding-right:6px"><span class="rpt-bd-dot ${bdImpact.kl}"></span>Impact:&nbsp;<select class="rpt-bd-sel" onchange="siV2State.bdImpactOverride=this.value;siGenMemo()">${_bdImpactOpts}</select></span>`,
-    `<span class="rpt-bd-badge ${bdRobust.kl}"><span class="rpt-bd-dot ${bdRobust.kl}"></span>Robuustheid: ${bdRobust.lbl}</span>`,
-    `<span class="rpt-bd-badge ${bdUrg.kl}"><span class="rpt-bd-dot ${bdUrg.kl}"></span>Urgentie: ${bdUrg.lbl}</span>`,
+    `<span class="rpt-bd-badge ${bdRobust.kl}" style="padding-right:6px"><span class="rpt-bd-dot ${bdRobust.kl}"></span>Robuustheid:&nbsp;<select class="rpt-bd-sel" onchange="siV2State.bdRobuustheidOverride=this.value;siGenMemo()">${_bdRobOpts}</select></span>`,
+    `<span class="rpt-bd-badge ${bdUrg.kl}" style="padding-right:6px"><span class="rpt-bd-dot ${bdUrg.kl}"></span>Urgentie:&nbsp;<select class="rpt-bd-sel" onchange="siV2State.bdUrgentieOverride=this.value;siGenMemo()">${_bdUrgOpts}</select></span>`,
     ...bdApts.map(a=>`<span class="rpt-bd-badge ${a.kl}"><span class="rpt-bd-dot ${a.kl}"></span>Aandachtspunt: ${a.lbl}</span>`),
   ].join('');
 

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 512 512" role="img" aria-label="KetenKompas">
+  <rect width="512" height="512" rx="112" fill="#0B2A40"></rect>
+  <g transform="translate(76 76) scale(3.6)">
+  <circle cx="50" cy="50" r="47" stroke="#2A4A66" stroke-width="1.4"></circle>
+  <circle cx="50" cy="50" r="40.5" stroke="#2A4A66" stroke-width="0.8"></circle>
+  <line x1="50" y1="3" x2="50" y2="8" stroke="#DCE8F1" stroke-width="1.4"></line><line x1="97" y1="50" x2="92" y2="50" stroke="#DCE8F1" stroke-width="1.4"></line><line x1="50.00000000000001" y1="97" x2="50.00000000000001" y2="92" stroke="#DCE8F1" stroke-width="1.4"></line><line x1="3" y1="50.00000000000001" x2="8" y2="50.00000000000001" stroke="#DCE8F1" stroke-width="1.4"></line>
+  <polygon points="50,50 67.0,33.0 52.8,40.1" fill="#9FCDEA"></polygon><polygon points="50,50 67.0,33.0 59.9,47.2" fill="#C7DFEE"></polygon><polygon points="50,50 67.0,67.0 59.9,52.8" fill="#9FCDEA"></polygon><polygon points="50,50 67.0,67.0 52.8,59.9" fill="#C7DFEE"></polygon><polygon points="50,50 33.0,67.0 47.2,59.9" fill="#9FCDEA"></polygon><polygon points="50,50 33.0,67.0 40.1,52.8" fill="#C7DFEE"></polygon><polygon points="50,50 33.0,33.0 40.1,47.2" fill="#9FCDEA"></polygon><polygon points="50,50 33.0,33.0 47.2,40.1" fill="#C7DFEE"></polygon>
+  <polygon points="50,50 50.0,8.0 43.0,38.0" fill="#D7B45D"></polygon><polygon points="50,50 50.0,8.0 57.0,38.0" fill="#D7B45D" opacity="0.82"></polygon><polygon points="50,50 92.0,50.0 62.0,43.0" fill="#FFFFFF"></polygon><polygon points="50,50 92.0,50.0 62.0,57.0" fill="#DCE8F1"></polygon><polygon points="50,50 50.0,92.0 57.0,62.0" fill="#FFFFFF"></polygon><polygon points="50,50 50.0,92.0 43.0,62.0" fill="#DCE8F1"></polygon><polygon points="50,50 8.0,50.0 38.0,57.0" fill="#FFFFFF"></polygon><polygon points="50,50 8.0,50.0 38.0,43.0" fill="#DCE8F1"></polygon>
+  <circle cx="50" cy="50" r="4.4" fill="#0B2A40" stroke="#FFFFFF" stroke-width="1.6"></circle>
+</g>
+</svg>
