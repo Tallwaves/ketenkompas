@@ -66,7 +66,7 @@
   @keyframes lcScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
   .lc-ws-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 20px;flex-shrink:0;width:90px}
   .lc-ws-badge{width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;overflow:hidden;background:rgba(255,255,255,.07);flex-shrink:0}
-  .lc-ws-badge img{width:32px;height:32px;object-fit:contain;filter:grayscale(1) brightness(2) opacity(.75)}
+  .lc-ws-badge img{width:36px;height:36px;object-fit:contain;filter:grayscale(1) brightness(2.5) opacity(.8)}
   .lc-ws-badge span{font-size:9px;font-weight:700;letter-spacing:.03em;color:rgba(255,255,255,.55)}
   .lc-ws-lbl{font-size:8px;color:rgba(255,255,255,.4);text-align:center;line-height:1.35;width:100%}
   .lc{width:100%;max-width:400px}
@@ -3647,7 +3647,7 @@ if(sessionStorage.getItem('kk_auth')==='1'){ showApp(); }
   ];
   const track=document.getElementById('lc-gallery-track');
   if(!track)return;
-  const items=WS.map(w=>`<div class="lc-ws-item"><div class="lc-ws-badge"><img src="https://logo.clearbit.com/${w.domain}" alt="${w.abbr}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none">${w.abbr}</span></div><div class="lc-ws-lbl">${w.naam}</div></div>`).join('');
+  const items=WS.map(w=>`<div class="lc-ws-item"><div class="lc-ws-badge"><img src="https://www.google.com/s2/favicons?domain=${w.domain}&sz=64" alt="${w.abbr}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none">${w.abbr}</span></div><div class="lc-ws-lbl">${w.naam}</div></div>`).join('');
   track.innerHTML=items+items; // dubbel voor naadloze loop
 })();
 </script>
