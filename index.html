@@ -420,7 +420,7 @@
   .rpt-ws-wm{position:absolute;bottom:-8px;right:6px;font-size:56px;font-weight:800;letter-spacing:-.04em;color:var(--kk-navy);opacity:.07;pointer-events:none;user-select:none;line-height:1;font-family:var(--font)}
   .rpt-urgentie{border-radius:8px;padding:14px 16px;text-align:center}
   .rpt-urgentie.ok{background:var(--ok-bg);border:1px solid var(--ok)}
-  .rpt-urgentie.warning{background:#fef3c7;border:1px solid #fcd34d}
+  .rpt-urgentie.warning{background:var(--warn-bg);border:1px solid var(--warn)}
   .rpt-urgentie.danger{background:var(--danger-bg);border:1px solid var(--kk-alert)}
   .rpt-urg-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.6;margin-bottom:4px}
   .rpt-urg-val{font-size:17px;font-weight:700;line-height:1.2}
@@ -479,6 +479,22 @@
   .rpt-ap-val{font-size:13px;color:var(--kk-ink);line-height:1.6}
   .rpt-ap-val[contenteditable]:focus{outline:2px solid var(--kk-blue);border-radius:3px;padding:2px 6px;background:var(--kk-mist);cursor:text}
   .rpt-aanbev-title[contenteditable]:focus{outline:2px solid var(--kk-blue);border-radius:3px;padding:1px 5px;background:var(--kk-mist)}
+  /* BESTUURLIJKE DUIDING */
+  .rpt-bd{background:var(--kk-mist);border-radius:10px;padding:16px 18px}
+  .rpt-bd-badges{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+  .rpt-bd-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid transparent;white-space:nowrap}
+  .rpt-bd-badge.ok{background:var(--ok-bg);color:var(--ok-ink);border-color:var(--ok)}
+  .rpt-bd-badge.warn{background:var(--warn-bg);color:var(--warn-ink);border-color:var(--warn)}
+  .rpt-bd-badge.danger{background:var(--danger-bg);color:var(--danger-ink);border-color:var(--kk-alert)}
+  .rpt-bd-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .rpt-bd-dot.ok{background:var(--kk-ok)}
+  .rpt-bd-dot.warn{background:var(--warn)}
+  .rpt-bd-dot.danger{background:var(--kk-alert)}
+  .rpt-bd-fields{display:flex;flex-direction:column;gap:8px}
+  .rpt-bd-field{display:grid;grid-template-columns:110px 1fr;gap:8px;align-items:baseline}
+  .rpt-bd-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--kk-slate);padding-top:3px}
+  .rpt-bd-val{font-size:13px;color:var(--kk-ink);line-height:1.55}
+  .rpt-bd-val[contenteditable]:focus{outline:2px solid var(--kk-blue);border-radius:3px;padding:2px 5px;background:var(--kk-paper);cursor:text}
   /* EXPORT KNOPPEN */
   .rpt-export{display:flex;flex-direction:column;gap:8px;margin-top:6px;padding-top:20px;border-top:1px solid #e8eaed}
   .rpt-btn{width:100%;padding:11px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;justify-content:center;gap:7px;border:none;box-sizing:border-box}
@@ -516,7 +532,7 @@
     .view{display:none!important}
     #view-bestuur{display:block!important;padding:0!important}
     .memo{box-shadow:none!important;border:none!important;max-width:100%!important}
-    .rpt-tl-bar,.rpt-urgentie,.rpt-surplus,.rpt-aanbev-num,.rpt-hdr,.rpt-addr-strip,.rpt-titel-blok,.rpt-ct-row{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .rpt-tl-bar,.rpt-urgentie,.rpt-surplus,.rpt-aanbev-num,.rpt-hdr,.rpt-addr-strip,.rpt-titel-blok,.rpt-ct-row,.rpt-bd,.rpt-bd-badge{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     /* Voorkom pagina-afbrekingen midden in blokken */
     .rpt-section,.rpt-hdr,.rpt-3col,.rpt-tl,.rpt-ap-item,.rpt-opvang-grid,.rpt-surplus{page-break-inside:avoid;break-inside:avoid}
     .rpt-col,.rpt-urgentie,.rpt-opvang-card,.rpt-aanbev-item,.rpt-cap-table tr{page-break-inside:avoid;break-inside:avoid}
@@ -1550,7 +1566,7 @@ function renderRobuust(){
 }
 
 /* ============ SCENARIO V2 ============ */
-let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externNLPct:0,externDEPct:40,summaryOverride:null,apOverrides:[{},{},{}],contacten:[
+let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externNLPct:0,externDEPct:40,summaryOverride:null,bdKernOverride:null,bdAdviesOverride:null,apOverrides:[{},{},{}],contacten:[
   {org:'KetenKompas',naam:'Gizan Ezra (AGV)',rol:'Scenario Architect',email:'gizan.ezra@agv.nl',tel:''},
   {org:'HVC',naam:'Chiel Landman',rol:'Ketenregisseur HVC',email:'c.landman@hvcgroep.nl',tel:''},
   {org:'HHNK',naam:'David Koenders',rol:'AOGR-vertegenwoordiger',email:'d.koenders@hhnk.nl',tel:''},
@@ -2122,7 +2138,7 @@ function siSelCluster(ci){
   });
   siRenderWS(); siUpdateDyn();
 }
-function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externNLPct:siV2State.externNLPct??0,externDEPct:siV2State.externDEPct??40,summaryOverride:null,apOverrides:[{},{},{}],contacten:siV2State.contacten,opgesteldVoor:siV2State.opgesteldVoor||['Intern (AGV)'],opgesteldVoorAnders:siV2State.opgesteldVoorAnders||''};siRenderWS();siRenderVW();siUpdateDyn();}
+function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externNLPct:siV2State.externNLPct??0,externDEPct:siV2State.externDEPct??40,summaryOverride:null,bdKernOverride:null,bdAdviesOverride:null,apOverrides:[{},{},{}],contacten:siV2State.contacten,opgesteldVoor:siV2State.opgesteldVoor||['Intern (AGV)'],opgesteldVoorAnders:siV2State.opgesteldVoorAnders||''};siRenderWS();siRenderVW();siUpdateDyn();}
 const SI_OVV_OPTS=['Intern (AGV)','GR Slibverwerking 2009','VvZB','Unie van Waterschappen','AquaMinerals'];
 function siGetBadgeText(){
   const sel=siV2State.opgesteldVoor||['Intern (AGV)'];
@@ -2460,6 +2476,36 @@ function siGenMemo(){
   else summary=`Kritieke situatie: een verstoring bij ${vwNames.join(' en ')} levert ${r.overshoot.toLocaleString()} ton/dag overschot op. Bij het huidige overschot is de buffer van ${wsNames.join(', ')} uitgeput na ${r.bufDagen} dag${r.bufDagen!==1?'en':''}. Onmiddellijke escalatie naar GR Slib en activatie van alle beschikbare capaciteit is vereist.`;
   if(siV2State.summaryOverride)summary=siV2State.summaryOverride;
 
+  // Bestuurlijke Duiding badges
+  const bdImpact=r.overshoot===0?{lbl:'Laag',kl:'ok'}:urgKl==='ok'?{lbl:'Middel',kl:'ok'}:urgKl==='warning'?{lbl:'Hoog',kl:'warn'}:{lbl:'Kritiek',kl:'danger'};
+  const bdRobust=r.bufDagen>14&&(dispSurplus===null||dispSurplus>0)?{lbl:'Voldoende',kl:'ok'}:r.bufDagen>=7?{lbl:'Beperkt',kl:'warn'}:{lbl:'Onvoldoende',kl:'danger'};
+  const bdUrg=urgKl==='ok'?{lbl:'Geen directe actie',kl:'ok'}:urgKl==='warning'?{lbl:'Actie gewenst',kl:'warn'}:{lbl:'Directe actie',kl:'danger'};
+  const bdApts=[];
+  const opvTotaal=SI_OPV_A.reduce((s,o)=>s+(o.cap||0),0);
+  const opvBezet=SI_OPV_A.reduce((s,o)=>s+(o.bezet||0),0);
+  if(opvTotaal>0&&opvBezet/opvTotaal>0.5)bdApts.push({lbl:'Incidentencapaciteit neemt af',kl:'warn'});
+  if(r.maxType>=4)bdApts.push({lbl:'Kwaliteitsprobleem — speciale route',kl:'danger'});
+  // Kernboodschap
+  let bdKern;
+  if(r.overshoot===0)bdKern=`Geen overschot geconstateerd in dit scenario. De keten functioneert binnen normale marges. Proactieve monitoring volstaat.`;
+  else if(urgKl==='ok')bdKern=`De beschikbare incidentenopslag biedt in dit scenario voldoende buffer voor circa ${r.bufDagen} dagen bij een dagelijks overschot van ${r.overshoot.toLocaleString()} ton van ${wsNames.join(', ')}. De situatie is beheersbaar mits tijdig geactiveerd.`;
+  else if(urgKl==='warning')bdKern=`De buffer voor incidentenopslag is beperkt (${r.bufDagen} dagen) bij een overschot van ${r.overshoot.toLocaleString()} ton/dag van ${wsNames.join(', ')}. Directe activatie en parallel onderzoek naar alternatieve verwerkingsroutes is noodzakelijk.`;
+  else bdKern=`Kritieke situatie: de incidentenopslag is uitgeput na ${r.bufDagen} dag${r.bufDagen!==1?'en':''} bij een overschot van ${r.overshoot.toLocaleString()} ton/dag. Onmiddellijke escalatie en inzet van alle beschikbare capaciteit is vereist.`;
+  if(siV2State.bdKernOverride)bdKern=siV2State.bdKernOverride;
+  // Advies
+  let bdAdvies;
+  if(r.overshoot===0)bdAdvies=`Geen directe actie vereist. Handhaaf reguliere monitoring en evalueer het scenario opnieuw bij verandering in verwerkingscapaciteit of slibproductie.`;
+  else if(urgKl==='ok')bdAdvies=`Activeer incidentenopslag preventief en stem af met AquaMinerals. Monitor dagelijks en evalueer na ${Math.max(1,Math.round(r.bufDagen/2))} dagen of de situatie stabiel blijft.`;
+  else if(urgKl==='warning')bdAdvies=`Activeer direct de incidentenopslag en schakel de HVC Ketenregisseur in. Onderzoek parallel alternatieve verwerkingsroutes. Rapporteer dagelijks aan AOGR.`;
+  else bdAdvies=`Escaleer direct naar GR Slib en activeer alle beschikbare opvangcapaciteit. Schakel bestuurlijk niveau in (AOGR voorzitter, AGV bestuurder). Stel dagelijks crisisoverleg in.`;
+  if(siV2State.bdAdviesOverride)bdAdvies=siV2State.bdAdviesOverride;
+  const bdBadgesH=[
+    `<span class="rpt-bd-badge ${bdImpact.kl}"><span class="rpt-bd-dot ${bdImpact.kl}"></span>Impact: ${bdImpact.lbl}</span>`,
+    `<span class="rpt-bd-badge ${bdRobust.kl}"><span class="rpt-bd-dot ${bdRobust.kl}"></span>Robuustheid: ${bdRobust.lbl}</span>`,
+    `<span class="rpt-bd-badge ${bdUrg.kl}"><span class="rpt-bd-dot ${bdUrg.kl}"></span>Urgentie: ${bdUrg.lbl}</span>`,
+    ...bdApts.map(a=>`<span class="rpt-bd-badge ${a.kl}"><span class="rpt-bd-dot ${a.kl}"></span>Aandachtspunt: ${a.lbl}</span>`),
+  ].join('');
+
   // Capacity table rows
   const aqmNodigRpt=eigenSuf===false;
   const aqmLabelRpt=eigenSuf===null?'—':eigenSuf?'Nee':'Ja';
@@ -2619,6 +2665,24 @@ function siGenMemo(){
           </button>
         </div>
         <div class="rpt-summary-text" id="rpt-summary" contenteditable="true" oninput="siV2State.summaryOverride=this.innerText">${summary}</div>
+      </div>
+      <div class="rpt-section">
+        <div class="rpt-sec-hdr">
+          <div class="rpt-sec-title">Bestuurlijke Duiding</div>
+        </div>
+        <div class="rpt-bd">
+          <div class="rpt-bd-badges">${bdBadgesH}</div>
+          <div class="rpt-bd-fields">
+            <div class="rpt-bd-field">
+              <div class="rpt-bd-lbl">Kernboodschap</div>
+              <div class="rpt-bd-val" contenteditable="true" oninput="siV2State.bdKernOverride=this.innerText">${bdKern}</div>
+            </div>
+            <div class="rpt-bd-field">
+              <div class="rpt-bd-lbl">Advies</div>
+              <div class="rpt-bd-val" contenteditable="true" oninput="siV2State.bdAdviesOverride=this.innerText">${bdAdvies}</div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="rpt-section">
         <div class="rpt-sec-title">Scenario</div>
