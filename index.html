@@ -2504,6 +2504,8 @@ function siGenMemo(){
   const bdApts=[];
   const opvTotaal=SI_OPV_A.reduce((s,o)=>s+(o.cap||0),0);
   const opvBezet=SI_OPV_A.reduce((s,o)=>s+(o.bezet||0),0);
+  const restRobuustheidPct=opvTotaal>0?Math.round((opvTotaal-opvBezet)/opvTotaal*100):null;
+  const _restRobKl=restRobuustheidPct===null?'ok':restRobuustheidPct>=75?'ok':restRobuustheidPct>=50?'warn':'danger';
   if(opvTotaal>0&&opvBezet/opvTotaal>0.5)bdApts.push({lbl:'Incidentencapaciteit neemt af',kl:'warn'});
   if(r.maxType>=4)bdApts.push({lbl:'Kwaliteitsprobleem — speciale route',kl:'danger'});
   // Kernboodschap
@@ -2534,6 +2536,7 @@ function siGenMemo(){
     `<span class="rpt-bd-badge ${bdImpact.kl}" style="padding-right:6px"><span class="rpt-bd-dot ${bdImpact.kl}"></span>Impact:&nbsp;<select class="rpt-bd-sel" onchange="siV2State.bdImpactOverride=this.value;siGenMemo()">${_bdImpactOpts}</select></span>`,
     `<span class="rpt-bd-badge ${bdRobust.kl}" style="padding-right:6px"><span class="rpt-bd-dot ${bdRobust.kl}"></span>Robuustheid:&nbsp;<select class="rpt-bd-sel" onchange="siV2State.bdRobuustheidOverride=this.value;siGenMemo()">${_bdRobOpts}</select></span>`,
     `<span class="rpt-bd-badge ${bdUrg.kl}" style="padding-right:6px"><span class="rpt-bd-dot ${bdUrg.kl}"></span>Urgentie:&nbsp;<select class="rpt-bd-sel" onchange="siV2State.bdUrgentieOverride=this.value;siGenMemo()">${_bdUrgOpts}</select></span>`,
+    ...(restRobuustheidPct!==null?[`<span class="rpt-bd-badge ${_restRobKl}"><span class="rpt-bd-dot ${_restRobKl}"></span>Resterende robuustheid:&nbsp;<strong>${restRobuustheidPct}%</strong></span>`]:[]),
     ...bdApts.map(a=>`<span class="rpt-bd-badge ${a.kl}"><span class="rpt-bd-dot ${a.kl}"></span>Aandachtspunt: ${a.lbl}</span>`),
   ].join('');
 
