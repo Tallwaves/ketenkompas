@@ -2608,7 +2608,8 @@ function siGenMemo(){
     const ov=siV2State.eigenOverride[o.key]||{av:true,vrijCap:null};
     const vrij=ov.vrijCap!==null?ov.vrijCap:(o.cap?Math.max(o.cap-o.bezet,0):null);
     const vrijStr=vrij!==null?`${vrij.toLocaleString()} / ${o.cap.toLocaleString()} ton vrij`:'Volume op aanvraag';
-    const dimH=!ov.av?`<div class="rpt-opvang-blok" contenteditable="true">Niet beschikbaar in dit scenario</div>`:'';
+    const redenTekst=ov.reden||'Niet beschikbaar in dit scenario';
+    const dimH=!ov.av?`<div class="rpt-opvang-blok" contenteditable="true" oninput="if(!siV2State.eigenOverride['${o.key}'])siV2State.eigenOverride['${o.key}']={};siV2State.eigenOverride['${o.key}'].reden=this.innerText">${redenTekst}</div>`:'';
     return `<div class="rpt-opvang-card${!ov.av?' si-eigen-off':''}">
       <div class="rpt-opvang-nm">${o.naam}</div>
       ${o.sub?`<div class="rpt-opvang-cap" style="font-size:10.5px;margin-bottom:2px">${o.sub}</div>`:''}
