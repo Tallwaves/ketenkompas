@@ -3647,7 +3647,7 @@ if(sessionStorage.getItem('kk_auth')==='1'){ showApp(); }
   ];
   const track=document.getElementById('lc-gallery-track');
   if(!track)return;
-  const items=WS.map(w=>`<div class="lc-ws-item"><div class="lc-ws-badge"><img src="https://www.google.com/s2/favicons?domain=${w.domain}&sz=64" alt="${w.abbr}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none">${w.abbr}</span></div><div class="lc-ws-lbl">${w.naam}</div></div>`).join('');
+  const items=WS.map(w=>`<div class="lc-ws-item"><div class="lc-ws-badge"><img src="https://www.google.com/s2/favicons?domain=${w.domain}&sz=64" alt="${w.abbr}" onload="if(this.naturalWidth<=16){this.style.display='none';this.nextElementSibling.style.display='flex'}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none">${w.abbr}</span></div><div class="lc-ws-lbl">${w.naam}</div></div>`).join('');
   track.innerHTML=items+items; // dubbel voor naadloze loop
 })();
 </script>
