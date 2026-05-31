@@ -2104,7 +2104,7 @@ function siSelCluster(ci){
   siRenderWS(); siUpdateDyn();
 }
 function siClearAll(){siV2State={ws:new Set(),vw:{},dagen:siV2State.dagen,rwzi:{},expanded:new Set(),eigenOverride:siV2State.eigenOverride||{},aqmOverride:siV2State.aqmOverride||{},titel:siV2State.titel||'',beschrijving:siV2State.beschrijving||'',eigenPct:siV2State.eigenPct??60,externNLPct:siV2State.externNLPct??0,externDEPct:siV2State.externDEPct??40,summaryOverride:null,aanbev1Override:null,aanbev2Override:null,aanbev3Override:null,contacten:siV2State.contacten,opgesteldVoor:siV2State.opgesteldVoor||['Intern (AGV)'],opgesteldVoorAnders:siV2State.opgesteldVoorAnders||''};siRenderWS();siRenderVW();siUpdateDyn();}
-const SI_OVV_OPTS=['Intern (AGV)','GR Slibverwerking 2009','VvZB Regiegroep','AquaMinerals','Unie van Waterschappen'];
+const SI_OVV_OPTS=['Intern (AGV)','GR Slibverwerking 2009','VvZB / Unie van Waterschappen','AquaMinerals'];
 function siGetBadgeText(){
   const sel=siV2State.opgesteldVoor||['Intern (AGV)'];
   if(sel.length===1&&sel[0]==='Intern (AGV)')return 'Vertrouwelijk — intern gebruik';
