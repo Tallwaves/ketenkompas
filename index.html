@@ -133,8 +133,30 @@
   @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
   .page-head{margin-bottom:22px}
+  .page-head--flex{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .page-head-text{min-width:0}
   .page-title{font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px}
   .page-sub{font-size:14px;color:var(--ink-soft)}
+  .page-head-actions{display:flex;gap:8px;flex-shrink:0;padding-top:4px}
+  .kk-sc-btn{padding:7px 14px;border-radius:7px;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--kk-ink);font-family:var(--font);transition:all .12s;white-space:nowrap}
+  .kk-sc-btn:hover{border-color:var(--kk-blue);color:var(--kk-blue)}
+  .kk-sc-btn--primary{background:var(--kk-ink);color:#fff;border-color:var(--kk-ink)}
+  .kk-sc-btn--primary:hover{background:var(--kk-blue);border-color:var(--kk-blue)}
+  .kk-sc-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+  .kk-sc-box{background:#fff;border-radius:12px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden}
+  .kk-sc-box-hdr{padding:18px 20px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+  .kk-sc-box-title{font-size:15px;font-weight:700;color:var(--kk-ink)}
+  .kk-sc-box-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--ink-faint);line-height:1;padding:2px 6px;border-radius:4px}
+  .kk-sc-box-close:hover{color:var(--kk-ink);background:var(--kk-soft)}
+  .kk-sc-box-body{padding:12px 20px 20px;max-height:60vh;overflow-y:auto}
+  .kk-sc-item{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:8px;border:1px solid var(--line);margin-bottom:8px;cursor:pointer;transition:all .1s}
+  .kk-sc-item:hover{background:var(--kk-soft);border-color:var(--kk-blue)}
+  .kk-sc-item-info{flex:1;min-width:0}
+  .kk-sc-item-name{font-weight:600;font-size:13.5px;color:var(--kk-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kk-sc-item-ts{font-size:11px;color:var(--ink-faint);margin-top:2px}
+  .kk-sc-item-del{background:none;border:none;cursor:pointer;color:var(--ink-faint);font-size:18px;padding:2px 7px;border-radius:4px;line-height:1;flex-shrink:0;font-family:var(--font)}
+  .kk-sc-item-del:hover{color:var(--kk-alert);background:var(--danger-bg)}
+  .kk-sc-empty{text-align:center;color:var(--ink-faint);font-size:13.5px;padding:28px 0;line-height:1.6}
 
   .ka-card{background:#fff;border:1px solid var(--kk-alert);border-radius:var(--radius);margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow)}
   .ka-header{display:flex;align-items:center;gap:10px;padding:9px 16px;background:var(--danger-bg);border-bottom:1px solid var(--kk-alert)}
@@ -1000,9 +1022,15 @@
 
     <!-- BESTUUR -->
     <section class="view" id="view-bestuur">
-      <div class="page-head">
-        <div class="page-title">Rapportage</div>
-        <div class="page-sub">Het laatst doorgerekende scenario, vertaald naar bestuurstaal</div>
+      <div class="page-head page-head--flex">
+        <div class="page-head-text">
+          <div class="page-title">Rapportage</div>
+          <div class="page-sub">Het laatst doorgerekende scenario, vertaald naar bestuurstaal</div>
+        </div>
+        <div class="page-head-actions">
+          <button class="kk-sc-btn" onclick="siOpenScenarios()">Laden</button>
+          <button class="kk-sc-btn kk-sc-btn--primary" data-kk-save onclick="siSaveScenario()">Opslaan</button>
+        </div>
       </div>
       <div class="memo" id="memo">
         <div class="memo-empty">Nog geen scenario doorgerekend.<br>Ga naar "Scenario's" en genereer een samenvatting.</div>
@@ -3609,8 +3637,78 @@ async function loadContactRequests(){
   }
 }
 
+/* ============ SCENARIO OPSLAAN / LADEN ============ */
+const _KK_SC_KEY='kk_saved_scenarios';
+function _kkEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function _siSerialize(){return JSON.stringify({...siV2State,ws:[...siV2State.ws],expanded:[...siV2State.expanded]});}
+function _siDeserialize(json){const s=JSON.parse(json);return{...s,ws:new Set(s.ws||[]),expanded:new Set(s.expanded||[])};}
+function _kkSavedList(){try{return JSON.parse(localStorage.getItem(_KK_SC_KEY)||'[]');}catch(e){return[];}}
+function _kkSaveList(arr){localStorage.setItem(_KK_SC_KEY,JSON.stringify(arr));}
+
+function siSaveScenario(){
+  const def=(siV2State.titel||'').trim()||'Mijn scenario';
+  const naam=prompt('Naam voor dit scenario:',def);
+  if(!naam||!naam.trim())return;
+  const nm=naam.trim();
+  const saved=_kkSavedList();
+  const idx=saved.findIndex(s=>s.naam===nm);
+  if(idx>=0&&!confirm(`Overschrijf "${nm}"?`))return;
+  const entry={naam:nm,ts:Date.now(),state:_siSerialize()};
+  if(idx>=0)saved[idx]=entry;else saved.push(entry);
+  _kkSaveList(saved);
+  const btn=document.querySelector('[data-kk-save]');
+  if(btn){const orig=btn.textContent;btn.textContent='Opgeslagen ✓';setTimeout(()=>{btn.textContent=orig;},2000);}
+}
+
+function siOpenScenarios(){
+  document.getElementById('kk-sc-modal').style.display='flex';
+  siRenderScenarioList();
+}
+function siCloseScenarios(){document.getElementById('kk-sc-modal').style.display='none';}
+
+function siRenderScenarioList(){
+  const saved=[..._kkSavedList()].sort((a,b)=>b.ts-a.ts);
+  const body=document.getElementById('kk-sc-list');
+  if(!saved.length){body.innerHTML='<div class="kk-sc-empty">Nog geen scenario\'s opgeslagen.<br>Sla een scenario op via de knop "Opslaan" in de rapportageweergave.</div>';return;}
+  body.innerHTML=saved.map(s=>`
+    <div class="kk-sc-item" onclick="siLoadScenario(${JSON.stringify(s.naam)})">
+      <div class="kk-sc-item-info">
+        <div class="kk-sc-item-name">${_kkEsc(s.naam)}</div>
+        <div class="kk-sc-item-ts">${new Date(s.ts).toLocaleString('nl-NL',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
+      </div>
+      <button class="kk-sc-item-del" onclick="event.stopPropagation();siDeleteScenario(${JSON.stringify(s.naam)})" title="Verwijderen">×</button>
+    </div>`).join('');
+}
+
+function siLoadScenario(naam){
+  const entry=_kkSavedList().find(s=>s.naam===naam);
+  if(!entry)return;
+  try{
+    siV2State=_siDeserialize(entry.state);
+    siCloseScenarios();
+    siRenderWS();siRenderVW();siUpdateDyn();
+    siGenMemo();
+  }catch(e){alert('Laden mislukt: '+e.message);}
+}
+
+function siDeleteScenario(naam){
+  if(!confirm(`Verwijder "${naam}"?`))return;
+  _kkSaveList(_kkSavedList().filter(s=>s.naam!==naam));
+  siRenderScenarioList();
+}
+
 /* ============ INIT ============ */
 if(sessionStorage.getItem('kk_auth')==='1'){ showApp(); }
 </script>
+<!-- SCENARIO OPSLAAN/LADEN MODAL -->
+<div class="kk-sc-overlay" id="kk-sc-modal" onclick="if(event.target===this)siCloseScenarios()">
+  <div class="kk-sc-box">
+    <div class="kk-sc-box-hdr">
+      <div class="kk-sc-box-title">Opgeslagen scenario's</div>
+      <button class="kk-sc-box-close" onclick="siCloseScenarios()">×</button>
+    </div>
+    <div class="kk-sc-box-body" id="kk-sc-list"></div>
+  </div>
+</div>
 </body>
 </html>
