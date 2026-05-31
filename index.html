@@ -56,9 +56,17 @@
   body{font-family:var(--font);color:var(--ink);background:var(--surface-2);line-height:1.5;-webkit-font-smoothing:antialiased}
 
   /* ---------- LOGIN ---------- */
-  #login{position:fixed;inset:0;background:var(--kk-ink);display:flex;align-items:center;justify-content:center;z-index:100;padding:24px;background-image:url('https://images.unsplash.com/photo-1595267688272-883f691e4af8?auto=format&fit=crop&w=1920&q=80');background-size:cover;background-position:center}
+  #login{position:fixed;inset:0;background:var(--kk-ink);display:flex;align-items:center;justify-content:center;z-index:100;padding:24px 24px 140px;background-image:url('https://images.unsplash.com/photo-1595267688272-883f691e4af8?auto=format&fit=crop&w=1920&q=80');background-size:cover;background-position:center}
   #login::before{content:'';position:absolute;inset:0;background:rgba(11,42,64,.82);z-index:0}
   #login>*{position:relative;z-index:1}
+  /* WATERSCHAP GALLERY */
+  .lc-gallery{position:absolute;bottom:0;left:0;right:0;padding:16px 0 20px;border-top:1px solid rgba(255,255,255,.08);overflow:hidden;z-index:1}
+  .lc-gallery-track{display:flex;gap:0;width:max-content;animation:lcScroll 55s linear infinite}
+  .lc-gallery:hover .lc-gallery-track{animation-play-state:paused}
+  @keyframes lcScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  .lc-ws-item{display:flex;flex-direction:column;align-items:center;gap:7px;padding:0 22px;flex-shrink:0;width:96px}
+  .lc-ws-badge{width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;letter-spacing:.04em;color:rgba(255,255,255,.6);background:rgba(255,255,255,.06);flex-shrink:0}
+  .lc-ws-lbl{font-size:8.5px;color:rgba(255,255,255,.38);text-align:center;line-height:1.35;width:100%}
   .lc{width:100%;max-width:400px}
   .lc-header{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:20px}
   .lc-logo{width:48px;height:48px;flex-shrink:0}
@@ -883,6 +891,7 @@
     </div>
     <div class="lc-foot"><span class="lc-foot-dot"></span>Voor de waterschappen die de keten beheren · 2026</div>
   </div>
+  <div class="lc-gallery"><div class="lc-gallery-track" id="lc-gallery-track"></div></div>
 </div>
 
 <!-- APP -->
@@ -3608,6 +3617,37 @@ async function loadContactRequests(){
 
 /* ============ INIT ============ */
 if(sessionStorage.getItem('kk_auth')==='1'){ showApp(); }
+
+/* ============ LOGIN GALLERY ============ */
+(function buildLoginGallery(){
+  const WS=[
+    {abbr:'AGV',    naam:'Amstel, Gooi en Vecht'},
+    {abbr:'HHNK',   naam:'Hollands Noorderkwartier'},
+    {abbr:'HvD',    naam:'Delfland'},
+    {abbr:'HD',     naam:'Hollandse Delta'},
+    {abbr:'HvR',    naam:'Rijnland'},
+    {abbr:'RL',     naam:'Rivierenland'},
+    {abbr:'HHSK',   naam:'Schieland & Krimpenerwaard'},
+    {abbr:'ZZL',    naam:'Zuiderzeeland'},
+    {abbr:'AeM',    naam:'Aa en Maas'},
+    {abbr:'BD',     naam:'Brabantse Delta'},
+    {abbr:'DD',     naam:'De Dommel'},
+    {abbr:'HDSR',   naam:'De Stichtse Rijnlanden'},
+    {abbr:'VS',     naam:'Vechtstromen'},
+    {abbr:'SS',     naam:'Scheldestromen'},
+    {abbr:'WL',     naam:'Limburg'},
+    {abbr:'NZV',    naam:'Noorderzijlvest'},
+    {abbr:'HeA',    naam:"Hunze en Aa's"},
+    {abbr:'DOD',    naam:'Drents Overijsselse Delta'},
+    {abbr:'WF',     naam:'Wetterskip Fryslân'},
+    {abbr:'VeV',    naam:'Vallei en Veluwe'},
+    {abbr:'ReIJ',   naam:'Rijn en IJssel'},
+  ];
+  const track=document.getElementById('lc-gallery-track');
+  if(!track)return;
+  const items=WS.map(w=>`<div class="lc-ws-item"><div class="lc-ws-badge">${w.abbr}</div><div class="lc-ws-lbl">${w.naam}</div></div>`).join('');
+  track.innerHTML=items+items; // dubbel voor naadloze loop
+})();
 </script>
 </body>
 </html>
