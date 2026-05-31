@@ -2594,10 +2594,14 @@ function siGenMemo(){
   // Available opvang options (cards)
   const opvSet=r.maxType>=5?SI_OPV_C:r.maxType>=4?SI_OPV_B:SI_OPV_A;
   const opvCardsH=opvSet.map((o,i)=>{
-    const aanbevolen=i===0&&!o.geblokkeerd;
-    const vrijStr=o.cap?`${Math.max(o.cap-o.bezet,0).toLocaleString()} / ${o.cap.toLocaleString()} ton vrij`:'Volume op aanvraag';
-    const blokH=o.geblokkeerd?`<div class="rpt-opvang-blok">⚠ Geblokkeerd — niet beschikbaar</div>`:'';
-    return `<div class="rpt-opvang-card${aanbevolen?' aanbevolen':''}">
+    const aqmOv=siV2State.aqmOverride[i]||{av:true,vrijCap:null};
+    const nietBeschikbaar=o.geblokkeerd||aqmOv.av===false;
+    const aanbevolen=i===0&&!nietBeschikbaar;
+    const vrij=aqmOv.vrijCap!==null?aqmOv.vrijCap:(o.cap?Math.max(o.cap-o.bezet,0):null);
+    const vrijStr=vrij!==null?`${vrij.toLocaleString()} / ${o.cap.toLocaleString()} ton vrij`:'Volume op aanvraag';
+    const redenTekst=(aqmOv.reden)||(o.geblokkeerd?'⚠ Geblokkeerd — niet beschikbaar':'Niet beschikbaar in dit scenario');
+    const blokH=nietBeschikbaar?`<div class="rpt-opvang-blok" contenteditable="${!o.geblokkeerd}" oninput="if(!siV2State.aqmOverride[${i}])siV2State.aqmOverride[${i}]={};siV2State.aqmOverride[${i}].reden=this.innerText">${redenTekst}</div>`:'';
+    return `<div class="rpt-opvang-card${aanbevolen?' aanbevolen':''}${nietBeschikbaar?' si-eigen-off':''}">
       ${aanbevolen?'<div class="rpt-opvang-act">Aanbevolen</div>':''}
       <div class="rpt-opvang-nm">${o.naam}</div>
       <div class="rpt-opvang-cap">${vrijStr}</div>
