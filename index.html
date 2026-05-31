@@ -2362,6 +2362,16 @@ function siDemoCard(){
 }
 
 function siUpdateDyn(){
+  // Sync alle sliders en labels met siV2State
+  const _sl2c=document.getElementById('si-2c-slider'),_lb2c=document.getElementById('si-2c-lbl');
+  if(_sl2c)_sl2c.value=siV2State.dagen||14;
+  if(_lb2c)_lb2c.textContent=siFormatDagen(siV2State.dagen||14);
+  const _slNL=document.getElementById('si-2b-nl-slider'),_vNL=document.getElementById('si-2b-nl-val');
+  if(_slNL)_slNL.value=siV2State.externNLPct??0;
+  if(_vNL)_vNL.textContent=(siV2State.externNLPct??0)+'%';
+  const _slDE=document.getElementById('si-2b-de-slider'),_vDE=document.getElementById('si-2b-de-val');
+  if(_slDE)_slDE.value=siV2State.externDEPct??40;
+  if(_vDE)_vDE.textContent=(siV2State.externDEPct??40)+'%';
   siRenderDagenCalc();
   const hasV2=Object.keys(siV2State.vw).length>0;
   ['si-s2b'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('si-dimmed',!hasV2);});
