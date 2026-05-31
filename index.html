@@ -3671,12 +3671,12 @@ function siRenderScenarioList(){
   const body=document.getElementById('kk-sc-list');
   if(!saved.length){body.innerHTML='<div class="kk-sc-empty">Nog geen scenario\'s opgeslagen.<br>Sla een scenario op via de knop "Opslaan" in de rapportageweergave.</div>';return;}
   body.innerHTML=saved.map(s=>`
-    <div class="kk-sc-item" onclick="siLoadScenario(${JSON.stringify(s.naam)})">
+    <div class="kk-sc-item" data-naam="${_kkEsc(s.naam)}" onclick="siLoadScenario(this.dataset.naam)">
       <div class="kk-sc-item-info">
         <div class="kk-sc-item-name">${_kkEsc(s.naam)}</div>
         <div class="kk-sc-item-ts">${new Date(s.ts).toLocaleString('nl-NL',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
       </div>
-      <button class="kk-sc-item-del" onclick="event.stopPropagation();siDeleteScenario(${JSON.stringify(s.naam)})" title="Verwijderen">×</button>
+      <button class="kk-sc-item-del" data-naam="${_kkEsc(s.naam)}" onclick="event.stopPropagation();siDeleteScenario(this.dataset.naam)" title="Verwijderen">×</button>
     </div>`).join('');
 }
 
