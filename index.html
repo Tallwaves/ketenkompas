@@ -144,7 +144,7 @@
   /* Hamburger */
   .ham-btn{display:none;background:none;border:none;cursor:pointer;padding:6px;color:var(--kk-light);flex-shrink:0}
   .ham-btn svg{display:block}
-  .mob-menu{display:none;position:absolute;top:100%;left:0;right:0;background:#0d2539;border-bottom:1px solid rgba(44,94,132,.4);z-index:19;flex-direction:column;padding:8px 16px 14px}
+  .mob-menu{display:none;position:fixed;top:60px;left:0;right:0;background:#0d2539;border-bottom:1px solid rgba(44,94,132,.4);z-index:19;flex-direction:column;padding:8px 16px 14px}
   .mob-menu.open{display:flex}
   .mob-menu button{background:none;border:none;color:var(--kk-light);font-size:15px;font-family:var(--font);font-weight:500;padding:11px 12px;border-radius:8px;cursor:pointer;text-align:left;width:100%}
   .mob-menu button:hover,.mob-menu button.active{color:#fff;background:var(--kk-blue)}
@@ -1373,6 +1373,10 @@ function toggleMobMenu(){
   const m=document.getElementById('mob-menu');
   const btn=document.getElementById('ham-btn');
   const open=m.classList.toggle('open');
+  if(open){
+    const hdr=document.querySelector('#app > header');
+    if(hdr) m.style.top=hdr.getBoundingClientRect().bottom+'px';
+  }
   btn.innerHTML=open
     ?`<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="18" y2="18"/><line x1="18" y1="4" x2="4" y2="18"/></svg>`
     :`<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="19" y2="6"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="16" x2="19" y2="16"/></svg>`;
