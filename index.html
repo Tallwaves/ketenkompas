@@ -3876,22 +3876,37 @@ function _siDeserialize(json){
   const rwzi={};for(const k in s.rwzi||{}){rwzi[k]=new Set(s.rwzi[k]);}
   return{...s,ws:new Set(s.ws||[]),expanded:new Set(s.expanded||[]),rwzi};
 }
-function _kkSavedList(){try{return JSON.parse(localStorage.getItem(_KK_SC_KEY)||'[]');}catch(e){return[];}}
-function _kkSaveList(arr){localStorage.setItem(_KK_SC_KEY,JSON.stringify(arr));}
 
-function siSaveScenario(){
+let _siScCache=[];
+
+async function _siMigrateLS(){
+  const old=localStorage.getItem(_KK_SC_KEY);
+  if(!old)return;
+  try{
+    const items=JSON.parse(old);
+    for(const item of items){
+      await fetch('/api/scenarios',{method:'POST',headers:{'Content-Type':'application/json','X-Access-Key':TOEGANGSCODE},body:JSON.stringify(item)});
+    }
+    localStorage.removeItem(_KK_SC_KEY);
+  }catch(e){}
+}
+
+async function siSaveScenario(){
   const def=(siV2State.titel||'').trim()||'Mijn scenario';
   const naam=prompt('Naam voor dit scenario:',def);
   if(!naam||!naam.trim())return;
   const nm=naam.trim();
-  const saved=_kkSavedList();
-  const idx=saved.findIndex(s=>s.naam===nm);
-  if(idx>=0&&!confirm(`Overschrijf "${nm}"?`))return;
+  if(_siScCache.find(s=>s.naam===nm)&&!confirm(`Overschrijf "${nm}"?`))return;
   const entry={naam:nm,ts:Date.now(),state:_siSerialize()};
-  if(idx>=0)saved[idx]=entry;else saved.push(entry);
-  _kkSaveList(saved);
   const btn=document.querySelector('[data-kk-save]');
-  if(btn){const orig=btn.textContent;btn.textContent='Opgeslagen ✓';setTimeout(()=>{btn.textContent=orig;},2000);}
+  if(btn){btn.textContent='Opslaan…';btn.disabled=true;}
+  try{
+    await fetch('/api/scenarios',{method:'POST',headers:{'Content-Type':'application/json','X-Access-Key':TOEGANGSCODE},body:JSON.stringify(entry)});
+    _siScCache=_siScCache.filter(s=>s.naam!==nm);_siScCache.push(entry);
+    if(btn){btn.textContent='Opgeslagen ✓';btn.disabled=false;setTimeout(()=>{btn.textContent='Opslaan';},2000);}
+  }catch(e){
+    if(btn){btn.textContent='Fout';btn.disabled=false;setTimeout(()=>{btn.textContent='Opslaan';},2000);}
+  }
 }
 
 function siOpenScenarios(){
@@ -3900,11 +3915,17 @@ function siOpenScenarios(){
 }
 function siCloseScenarios(){document.getElementById('kk-sc-modal').style.display='none';}
 
-function siRenderScenarioList(){
-  const saved=[..._kkSavedList()].sort((a,b)=>b.ts-a.ts);
+async function siRenderScenarioList(){
   const body=document.getElementById('kk-sc-list');
-  if(!saved.length){body.innerHTML='<div class="kk-sc-empty">Nog geen scenario\'s opgeslagen.<br>Sla een scenario op via de knop "Opslaan" in de rapportageweergave.</div>';return;}
-  body.innerHTML=saved.map(s=>`
+  body.innerHTML='<div class="kk-sc-empty" style="opacity:.5">Laden…</div>';
+  await _siMigrateLS();
+  try{
+    const r=await fetch('/api/scenarios',{headers:{'X-Access-Key':TOEGANGSCODE}});
+    _siScCache=r.ok?await r.json():[];
+  }catch(e){_siScCache=[];}
+  const sorted=[..._siScCache].sort((a,b)=>b.ts-a.ts);
+  if(!sorted.length){body.innerHTML='<div class="kk-sc-empty">Nog geen scenario\'s opgeslagen.<br>Sla een scenario op via de knop "Opslaan" in de rapportageweergave.</div>';return;}
+  body.innerHTML=sorted.map(s=>`
     <div class="kk-sc-item" data-naam="${_kkEsc(s.naam)}" onclick="siLoadScenario(this.dataset.naam)">
       <div class="kk-sc-item-info">
         <div class="kk-sc-item-name">${_kkEsc(s.naam)}</div>
@@ -3915,7 +3936,7 @@ function siRenderScenarioList(){
 }
 
 function siLoadScenario(naam){
-  const entry=_kkSavedList().find(s=>s.naam===naam);
+  const entry=_siScCache.find(s=>s.naam===naam);
   if(!entry)return;
   try{
     siV2State=_siDeserialize(entry.state);
@@ -3925,9 +3946,10 @@ function siLoadScenario(naam){
   }catch(e){alert('Laden mislukt: '+e.message);}
 }
 
-function siDeleteScenario(naam){
+async function siDeleteScenario(naam){
   if(!confirm(`Verwijder "${naam}"?`))return;
-  _kkSaveList(_kkSavedList().filter(s=>s.naam!==naam));
+  await fetch('/api/scenarios?naam='+encodeURIComponent(naam),{method:'DELETE',headers:{'X-Access-Key':TOEGANGSCODE}});
+  _siScCache=_siScCache.filter(s=>s.naam!==naam);
   siRenderScenarioList();
 }
 
