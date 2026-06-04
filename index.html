@@ -837,6 +837,14 @@
   .adm-login-btn:hover{background:var(--kk-blue)}
   .adm-logout{font-size:12px;color:var(--ink-faint);cursor:pointer;text-decoration:underline;margin-left:12px}
   .adm-logout:hover{color:var(--danger)}
+  .adm-tabs{display:flex;gap:0;border-bottom:2px solid var(--line);margin-bottom:16px}
+  .adm-tab-btn{padding:7px 16px;border:none;background:none;cursor:pointer;font:inherit;font-size:13px;font-weight:500;color:var(--ink-soft);border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s}
+  .adm-tab-btn.active{color:var(--kk-ink);border-bottom-color:var(--kk-blue);font-weight:700}
+  .adm-tab-btn:hover:not(.active){color:var(--kk-ink)}
+  .adm-pw-gen-btn{font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid var(--kk-brons);color:var(--kk-brons);background:transparent;cursor:pointer;font-family:var(--font);font-weight:600;white-space:nowrap}
+  .adm-pw-gen-btn:hover{background:var(--kk-brons);color:#fff}
+  .adm-pw-val{font-family:monospace;font-size:12px;background:var(--surface-2);padding:3px 9px;border-radius:5px;border:1px solid var(--line);color:var(--kk-ink);cursor:pointer;user-select:all;white-space:nowrap}
+  .adm-pw-val:hover{background:var(--ok-bg);border-color:var(--kk-ok)}
   .adm-header-row{display:flex;align-items:center;margin-bottom:20px}
   .adm-header-row .page-title{margin:0}
 
@@ -1292,14 +1300,27 @@ async function sendContactForm(){
     btn.textContent='Verzoek versturen';btn.disabled=false;
   }
 }
-function tryLogin(){
+async function tryLogin(){
   const v=document.getElementById('pw').value;
   if(v===TOEGANGSCODE){
     sessionStorage.setItem('kk_auth','1');
+    fetch('/api/loginlog',{method:'POST',headers:{'Content-Type':'application/json','X-Access-Key':TOEGANGSCODE},body:JSON.stringify({wie:'Beheerder',ts:Date.now()})}).catch(()=>{});
     showApp();
-  }else{
-    document.getElementById('err').textContent='Onjuiste toegangscode';
+    return;
   }
+  // Check individual passwords via API
+  try{
+    const r=await fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({wachtwoord:v})});
+    if(r.ok){
+      const res=await r.json();
+      if(res.ok){
+        sessionStorage.setItem('kk_auth','1');
+        showApp();
+        return;
+      }
+    }
+  }catch(e){}
+  document.getElementById('err').textContent='Onjuiste toegangscode';
 }
 function logout(){ sessionStorage.removeItem('kk_auth'); location.reload(); }
 async function showApp(){
@@ -3459,9 +3480,33 @@ function renderAdminView(){
   const lw=document.getElementById('admin-login-wrap');
   const pw=document.getElementById('admin-panel-wrap');
   if(!lw||!pw)return;
-  lw.innerHTML='';
-  renderAdminPanel();
-  loadContactRequests();
+  if(!sessionStorage.getItem('kk_beheer_auth')){
+    lw.innerHTML=`
+      <div class="adm-login-box">
+        <div class="adm-login-title">Beheerdersingang</div>
+        <div class="adm-login-sub">Voer het beheerderswachtwoord in om data te bewerken</div>
+        <input type="password" id="adm-pw" placeholder="Wachtwoord" class="adm-txt" style="width:100%;box-sizing:border-box;margin-bottom:10px"
+          onkeydown="if(event.key==='Enter')tryBeheerLogin()">
+        <button class="adm-login-btn" onclick="tryBeheerLogin()">Inloggen</button>
+        <div id="adm-err" style="color:var(--danger);font-size:12px;margin-top:8px"></div>
+      </div>`;
+    pw.innerHTML='';
+  }else{
+    lw.innerHTML='';
+    renderAdminPanel();
+    loadContactRequests();
+  }
+}
+
+function tryBeheerLogin(){
+  const el=document.getElementById('adm-pw');
+  if(el&&el.value===TOEGANGSCODE){
+    sessionStorage.setItem('kk_beheer_auth','1');
+    renderAdminView();
+  }else{
+    const err=document.getElementById('adm-err');
+    if(err)err.textContent='Onjuist wachtwoord';
+  }
 }
 
 function renderAdminPanel(){
@@ -3588,8 +3633,17 @@ function renderAdminPanel(){
       </div>
 
       <div class="adm-section" id="adm-contact-section">
-        <div class="adm-section-title">Toegangsverzoeken <span id="adm-contact-badge"></span></div>
-        <div id="adm-contact-list" style="font-size:13px;color:var(--ink-faint)">Laden…</div>
+        <div class="adm-section-title">Toegang &amp; gebruik</div>
+        <div class="adm-tabs">
+          <button class="adm-tab-btn active" id="adm-tab-btn-verzoeken" onclick="admShowTab('verzoeken')">Toegangsverzoeken <span id="adm-contact-badge"></span></button>
+          <button class="adm-tab-btn" id="adm-tab-btn-inlogmomenten" onclick="admShowTab('inlogmomenten')">Inlogmomenten</button>
+        </div>
+        <div id="adm-tab-verzoeken">
+          <div id="adm-contact-list" style="font-size:13px;color:var(--ink-faint)">Laden…</div>
+        </div>
+        <div id="adm-tab-inlogmomenten" style="display:none">
+          <div id="adm-loginlog-list" style="font-size:13px;color:var(--ink-faint)">Laden…</div>
+        </div>
       </div>
 
       <button class="adm-save" id="adm-save-btn" onclick="saveToCloud()">Opslaan naar cloud ↑</button>
@@ -3671,21 +3725,88 @@ async function loadContactRequests(){
   const el=document.getElementById('adm-contact-list');
   if(!el)return;
   try{
-    const r=await fetch('/api/contact',{headers:{'X-Admin-Key':'kkadmin2026'}});
-    if(!r.ok){el.textContent='Laden mislukt ('+r.status+')';return;}
-    const list=await r.json();
+    const [rC,rP]=await Promise.all([
+      fetch('/api/contact',{headers:{'X-Access-Key':TOEGANGSCODE}}),
+      fetch('/api/passwords',{headers:{'X-Access-Key':TOEGANGSCODE}})
+    ]);
+    const list=rC.ok?await rC.json():[];
+    const pws=rP.ok?await rP.json():[];
+    const pwMap={};pws.forEach(p=>{pwMap[p.email]=p.wachtwoord;});
     const badge=document.getElementById('adm-contact-badge');
     if(badge)badge.textContent=list.length?'('+list.length+')':'';
-    if(!list.length){el.textContent='Geen verzoeken ontvangen.';return;}
-    el.innerHTML=list.map(v=>`
-      <div style="padding:10px 0;border-bottom:1px solid var(--line-soft)">
-        <div style="font-weight:600;color:var(--ink)">${v.naam}${v.organisatie?' · <span style="font-weight:400;color:var(--ink-soft)">'+v.organisatie+'</span>':''}</div>
-        <div style="font-size:12px;color:var(--water);margin-top:1px">${v.email}</div>
-        <div style="font-size:11px;color:var(--ink-faint);margin-top:2px">${new Date(v.datum).toLocaleString('nl-NL')}</div>
-      </div>`).join('');
+    if(!list.length){el.innerHTML='<div style="color:var(--ink-faint)">Geen verzoeken ontvangen.</div>';return;}
+    el.innerHTML=list.map(v=>{
+      const pw=pwMap[v.email];
+      return `<div style="padding:11px 0;border-bottom:1px solid var(--line-soft)">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+          <div>
+            <div style="font-weight:600;color:var(--kk-ink)">${_kkEsc(v.naam)}${v.organisatie?' &middot; <span style="font-weight:400;color:var(--ink-soft)">'+_kkEsc(v.organisatie)+'</span>':''}</div>
+            <div style="font-size:12px;color:var(--water);margin-top:2px">${_kkEsc(v.email)}</div>
+            <div style="font-size:11px;color:var(--ink-faint);margin-top:2px">${new Date(v.datum).toLocaleString('nl-NL')}</div>
+          </div>
+          <div style="flex-shrink:0;padding-top:2px">
+            ${pw
+              ?`<span class="adm-pw-val" data-pw="${_kkEsc(pw)}" onclick="admCopyPw(this)" title="Klik om te kopiëren">${_kkEsc(pw)}</span>`
+              :`<button class="adm-pw-gen-btn" data-email="${_kkEsc(v.email)}" data-naam="${_kkEsc(v.naam)}" data-org="${_kkEsc(v.organisatie||'')}" onclick="admGenPw(this)">Genereer wachtwoord</button>`
+            }
+          </div>
+        </div>
+      </div>`;
+    }).join('');
   }catch(e){
     if(el)el.textContent='Fout: '+e.message;
   }
+}
+
+function admShowTab(tab){
+  ['verzoeken','inlogmomenten'].forEach(t=>{
+    const btn=document.getElementById('adm-tab-btn-'+t);
+    const pane=document.getElementById('adm-tab-'+t);
+    if(btn)btn.classList.toggle('active',t===tab);
+    if(pane)pane.style.display=t===tab?'':'none';
+  });
+  if(tab==='inlogmomenten')loadLoginLog();
+}
+
+async function loadLoginLog(){
+  const el=document.getElementById('adm-loginlog-list');
+  if(!el)return;
+  el.innerHTML='<div style="color:var(--ink-faint);font-size:13px">Laden…</div>';
+  try{
+    const r=await fetch('/api/loginlog',{headers:{'X-Access-Key':TOEGANGSCODE}});
+    const log=r.ok?await r.json():[];
+    if(!log.length){el.innerHTML='<div style="color:var(--ink-faint);font-size:13px">Nog geen inlogmomenten vastgelegd.</div>';return;}
+    el.innerHTML=log.map(entry=>`
+      <div style="padding:8px 0;border-bottom:1px solid var(--line-soft);display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+        <div style="font-size:13px;font-weight:600;color:var(--kk-ink)">${_kkEsc(entry.wie||'Onbekend')}</div>
+        <div style="font-size:11px;color:var(--ink-faint);white-space:nowrap">${new Date(entry.ts).toLocaleString('nl-NL')}</div>
+      </div>`).join('');
+  }catch(e){
+    if(el)el.innerHTML='<div style="color:var(--ink-faint);font-size:13px">Fout: '+_kkEsc(e.message)+'</div>';
+  }
+}
+
+async function admGenPw(btn){
+  const email=btn.dataset.email,naam=btn.dataset.naam,org=btn.dataset.org;
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let pw='kk-';for(let i=0;i<5;i++)pw+=chars[Math.floor(Math.random()*chars.length)];
+  btn.textContent='Opslaan…';btn.disabled=true;
+  try{
+    await fetch('/api/passwords',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Access-Key':TOEGANGSCODE},
+      body:JSON.stringify({email,naam,organisatie:org,wachtwoord:pw,aangemaakt:Date.now()})
+    });
+    loadContactRequests();
+  }catch(e){btn.textContent='Fout';btn.disabled=false;}
+}
+
+function admCopyPw(el){
+  const pw=el.dataset.pw;
+  navigator.clipboard.writeText(pw).catch(()=>{});
+  const orig=el.textContent;
+  el.textContent='✓ Gekopieerd!';
+  setTimeout(()=>{el.textContent=orig;},1600);
 }
 
 /* ============ BACKLOG ============ */

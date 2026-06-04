@@ -1,7 +1,7 @@
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
+  'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key, X-Access-Key',
 };
 
 export async function onRequestOptions() {
@@ -9,7 +9,8 @@ export async function onRequestOptions() {
 }
 
 export async function onRequestGet({ request, env }) {
-  if (request.headers.get('X-Admin-Key') !== 'kkadmin2026') {
+  const key = request.headers.get('X-Access-Key') || request.headers.get('X-Admin-Key');
+  if (key !== 'ketenkompas2026' && key !== 'kkadmin2026') {
     return new Response('Unauthorized', { status: 401, headers: CORS });
   }
   try {
