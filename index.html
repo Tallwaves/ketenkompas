@@ -3454,38 +3454,14 @@ function kkSel(id){
 }
 
 /* ============ ADMIN ============ */
-let adminLoggedIn=false;
-
 function renderAdminView(){
   blRender();
   const lw=document.getElementById('admin-login-wrap');
   const pw=document.getElementById('admin-panel-wrap');
   if(!lw||!pw)return;
-  if(!adminLoggedIn){
-    lw.innerHTML=`
-      <div class="adm-login-box">
-        <div class="adm-login-title">Beheerdersingang</div>
-        <div class="adm-login-sub">Voer het beheerderswachtwoord in om data te bewerken</div>
-        <input type="password" id="adm-pw" placeholder="Wachtwoord" class="adm-txt" style="width:100%;box-sizing:border-box;margin-bottom:10px"
-          onkeydown="if(event.key==='Enter')tryAdminLogin()">
-        <button class="adm-login-btn" onclick="tryAdminLogin()">Inloggen</button>
-        <div id="adm-err" style="color:var(--danger);font-size:12px;margin-top:8px"></div>
-      </div>`;
-    pw.innerHTML='';
-  }else{
-    lw.innerHTML='';
-    renderAdminPanel();
-    loadContactRequests();
-  }
-}
-
-function tryAdminLogin(){
-  if(document.getElementById('adm-pw').value==='kkadmin2026'){
-    adminLoggedIn=true;
-    renderAdminView();
-  }else{
-    document.getElementById('adm-err').textContent='Onjuist wachtwoord';
-  }
+  lw.innerHTML='';
+  renderAdminPanel();
+  loadContactRequests();
 }
 
 function renderAdminPanel(){
@@ -3554,10 +3530,6 @@ function renderAdminPanel(){
     </tr>`).join('');
 
   pw.innerHTML=`
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-      <div style="font-size:13px;color:var(--ink-soft)">Ingelogd als beheerder</div>
-      <span class="adm-logout" onclick="adminLoggedIn=false;renderAdminView()">Uitloggen</span>
-    </div>
     <div class="adm-panel">
       <div class="adm-section">
         <div class="adm-section-title">Algemeen</div>
@@ -3823,7 +3795,7 @@ function siDeleteScenario(naam){
 }
 
 /* ============ INIT ============ */
-if(sessionStorage.getItem('kk_auth')==='1'){ showApp(); } else { showBeheerPublic(); }
+if(sessionStorage.getItem('kk_auth')==='1'){ showApp(); }
 </script>
 <!-- SCENARIO OPSLAAN/LADEN MODAL -->
 <div class="kk-sc-overlay" id="kk-sc-modal" onclick="if(event.target===this)siCloseScenarios()">
