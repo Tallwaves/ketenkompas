@@ -3689,15 +3689,18 @@ async function loadContactRequests(){
 }
 
 /* ============ BACKLOG ============ */
-const _BL_KEY='kk_backlog';
 const _BL_ORD={Hoog:0,Middel:1,Laag:2};
-function _blLoad(){try{return JSON.parse(localStorage.getItem(_BL_KEY)||'[]');}catch(e){return[];}}
-function _blSave(items){localStorage.setItem(_BL_KEY,JSON.stringify(items));}
 
-function blRender(){
-  const items=[..._blLoad()].sort((a,b)=>(_BL_ORD[a.urgentie]??1)-(_BL_ORD[b.urgentie]??1)||b.ts-a.ts);
+async function blRender(){
   const el=document.getElementById('bl-list');
   if(!el)return;
+  el.innerHTML='<div class="bl-empty" style="opacity:.5">Laden…</div>';
+  let items=[];
+  try{
+    const r=await fetch('/api/backlog');
+    if(r.ok)items=await r.json();
+  }catch(e){}
+  items=[...items].sort((a,b)=>(_BL_ORD[a.urgentie]??1)-(_BL_ORD[b.urgentie]??1)||b.ts-a.ts);
   if(!items.length){el.innerHTML='<div class="bl-empty">Nog geen verbeterpunten toegevoegd.</div>';return;}
   el.innerHTML=items.map(item=>`
     <div class="bl-item ${item.urgentie.toLowerCase()}">
@@ -3710,20 +3713,25 @@ function blRender(){
     </div>`).join('');
 }
 
-function blAdd(){
+async function blAdd(){
   const inp=document.getElementById('bl-inp'),sel=document.getElementById('bl-sel');
   if(!inp||!sel)return;
   const tekst=inp.value.trim();
   if(!tekst)return;
-  const items=_blLoad();
-  items.push({id:Date.now()+'',tekst,urgentie:sel.value,ts:Date.now()});
-  _blSave(items);
   inp.value='';
+  await fetch('/api/backlog',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-Access-Key':TOEGANGSCODE},
+    body:JSON.stringify({id:Date.now()+'',tekst,urgentie:sel.value,ts:Date.now()})
+  });
   blRender();
 }
 
-function blDelete(id){
-  _blSave(_blLoad().filter(i=>i.id!==id));
+async function blDelete(id){
+  await fetch('/api/backlog?id='+encodeURIComponent(id),{
+    method:'DELETE',
+    headers:{'X-Access-Key':TOEGANGSCODE}
+  });
   blRender();
 }
 
