@@ -1333,27 +1333,43 @@ async function sendContactForm(){
 }
 async function tryLogin(){
   const v=document.getElementById('pw').value;
+  const hn=window.location.hostname;
+  const err=document.getElementById('err');
+
+  if(hn==='ketenkompas.nl'||hn==='www.ketenkompas.nl'){
+    // Productie: sessie aanmaken via server
+    const btn=document.querySelector('#login button[onclick="tryLogin()"]')||document.querySelector('.lc-box button');
+    if(btn){btn.disabled=true;btn.textContent='Bezig…';}
+    try{
+      const r=await fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({wachtwoord:v})});
+      const res=await r.json();
+      if(res.ok){window.location.href=res.redirect;return;}
+      err.textContent='Onjuiste toegangscode';
+    }catch(e){err.textContent='Verbindingsfout, probeer opnieuw.';}
+    if(btn){btn.disabled=false;btn.textContent='Toegang tot dashboard';}
+    return;
+  }
+
+  // Dev / localhost: client-side fallback
   if(v===TOEGANGSCODE){
     sessionStorage.setItem('kk_auth','1');
     fetch('/api/loginlog',{method:'POST',headers:{'Content-Type':'application/json','X-Access-Key':TOEGANGSCODE},body:JSON.stringify({wie:'Beheerder',ts:Date.now()})}).catch(()=>{});
-    showApp();
-    return;
+    showApp();return;
   }
-  // Check individual passwords via API
   try{
     const r=await fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({wachtwoord:v})});
-    if(r.ok){
-      const res=await r.json();
-      if(res.ok){
-        sessionStorage.setItem('kk_auth','1');
-        showApp();
-        return;
-      }
-    }
+    if(r.ok){const res=await r.json();if(res.ok){sessionStorage.setItem('kk_auth','1');showApp();return;}}
   }catch(e){}
-  document.getElementById('err').textContent='Onjuiste toegangscode';
+  err.textContent='Onjuiste toegangscode';
 }
-function logout(){ sessionStorage.removeItem('kk_auth'); location.reload(); }
+async function logout(){
+  if(window.location.hostname==='slib.ketenkompas.nl'){
+    try{await fetch('/api/session',{method:'DELETE',credentials:'include'});}catch(e){}
+    window.location.href='https://ketenkompas.nl/';
+  }else{
+    sessionStorage.removeItem('kk_auth');location.reload();
+  }
+}
 async function showApp(){
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='flex';
@@ -4051,7 +4067,22 @@ async function siDeleteScenario(naam){
 }
 
 /* ============ INIT ============ */
-if(sessionStorage.getItem('kk_auth')==='1'){ showApp(); }
+(function(){
+  const hn=window.location.hostname;
+  if(hn==='slib.ketenkompas.nl'){
+    // Middleware heeft sessie al gevalideerd — direct dashboard tonen
+    showApp();
+  }else if(hn==='ketenkompas.nl'||hn==='www.ketenkompas.nl'){
+    // Alleen loginpagina tonen; controleer of er al een geldige sessie is
+    fetch('/api/session',{credentials:'include'})
+      .then(r=>r.json())
+      .then(res=>{if(res.ok)window.location.href='https://slib.ketenkompas.nl/';})
+      .catch(()=>{});
+  }else{
+    // Dev / localhost: gebruik sessionStorage
+    if(sessionStorage.getItem('kk_auth')==='1'){showApp();}
+  }
+})();
 </script>
 <!-- SCENARIO OPSLAAN/LADEN MODAL -->
 <div class="kk-sc-overlay" id="kk-sc-modal" onclick="if(event.target===this)siCloseScenarios()">
