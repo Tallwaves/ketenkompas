@@ -832,11 +832,16 @@
   .adm-table td{padding:7px 8px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
   .adm-save{width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s;margin-top:6px}
   .adm-save:hover{background:var(--kk-blue)}.adm-save:disabled{background:var(--ink-faint);cursor:not-allowed}
-  .adm-login-box{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 28px;max-width:360px;box-shadow:var(--shadow)}
-  .adm-login-title{font-size:16px;font-weight:600;margin-bottom:4px}
-  .adm-login-sub{font-size:12px;color:var(--ink-faint);margin-bottom:18px}
-  .adm-login-btn{width:100%;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font)}
-  .adm-login-btn:hover{background:var(--kk-blue)}
+  .adm-login-wrap{display:flex;justify-content:center;padding:48px 16px 32px}
+  .adm-login-box{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:36px 40px 32px;width:100%;max-width:420px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+  .adm-login-icon{width:44px;height:44px;border-radius:10px;background:var(--kk-navy);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+  .adm-login-title{font-size:18px;font-weight:700;color:var(--kk-ink);margin-bottom:6px}
+  .adm-login-sub{font-size:13px;color:var(--ink-soft);margin-bottom:24px;line-height:1.5}
+  .adm-login-label{font-size:12px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  .adm-login-inp{width:100%;box-sizing:border-box;padding:11px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--kk-ink);background:var(--surface);margin-bottom:16px;transition:border-color .15s}
+  .adm-login-inp:focus{outline:none;border-color:var(--kk-brons)}
+  .adm-login-btn{width:100%;padding:12px;background:var(--kk-brons);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);letter-spacing:.02em;transition:background .15s}
+  .adm-login-btn:hover{background:var(--kk-brons-licht)}
   .adm-logout{font-size:12px;color:var(--ink-faint);cursor:pointer;text-decoration:underline;margin-left:12px}
   .adm-logout:hover{color:var(--danger)}
   .adm-tabs{display:flex;gap:0;border-bottom:2px solid var(--line);margin-bottom:16px}
@@ -3489,13 +3494,19 @@ function renderAdminView(){
   if(!sessionStorage.getItem('kk_beheer_auth')){
     if(bl)bl.style.display='none';
     lw.innerHTML=`
-      <div class="adm-login-box">
-        <div class="adm-login-title">Beheerdersingang</div>
-        <div class="adm-login-sub">Voer het beheerderswachtwoord in om data te bewerken</div>
-        <input type="password" id="adm-pw" placeholder="Wachtwoord" class="adm-txt" style="width:100%;box-sizing:border-box;margin-bottom:10px"
-          onkeydown="if(event.key==='Enter')tryBeheerLogin()">
-        <button class="adm-login-btn" onclick="tryBeheerLogin()">Inloggen</button>
-        <div id="adm-err" style="color:var(--danger);font-size:12px;margin-top:8px"></div>
+      <div class="adm-login-wrap">
+        <div class="adm-login-box">
+          <div class="adm-login-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A659" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="adm-login-title">Beheerdersingang</div>
+          <div class="adm-login-sub">Voer het beheerderswachtwoord in om toegang te krijgen tot databeheer, toegangsverzoeken en de verbeterlijst.</div>
+          <div class="adm-login-label">Wachtwoord</div>
+          <input type="password" id="adm-pw" placeholder="••••••••••••" class="adm-login-inp"
+            onkeydown="if(event.key==='Enter')tryBeheerLogin()">
+          <button class="adm-login-btn" onclick="tryBeheerLogin()">Inloggen</button>
+          <div id="adm-err" style="color:var(--danger);font-size:12px;margin-top:10px;text-align:center"></div>
+        </div>
       </div>`;
     pw.innerHTML='';
   }else{
