@@ -1051,7 +1051,7 @@
         <div class="page-sub">Databeheer &amp; verbeterlijst</div>
       </div>
       <!-- BACKLOG -->
-      <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:28px">
+      <div id="bl-section" style="display:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:28px">
         <div style="font-size:15px;font-weight:700;color:var(--kk-ink);margin-bottom:4px">Verbeterlijst &amp; ideeën</div>
         <div style="font-size:13px;color:var(--ink-soft);margin-bottom:16px">Brainstorm — automatisch gesorteerd op urgentie</div>
         <div class="bl-form">
@@ -3476,11 +3476,12 @@ function kkSel(id){
 
 /* ============ ADMIN ============ */
 function renderAdminView(){
-  blRender();
+  const bl=document.getElementById('bl-section');
   const lw=document.getElementById('admin-login-wrap');
   const pw=document.getElementById('admin-panel-wrap');
   if(!lw||!pw)return;
   if(!sessionStorage.getItem('kk_beheer_auth')){
+    if(bl)bl.style.display='none';
     lw.innerHTML=`
       <div class="adm-login-box">
         <div class="adm-login-title">Beheerdersingang</div>
@@ -3492,6 +3493,7 @@ function renderAdminView(){
       </div>`;
     pw.innerHTML='';
   }else{
+    if(bl){bl.style.display='';blRender();}
     lw.innerHTML='';
     renderAdminPanel();
     loadContactRequests();
