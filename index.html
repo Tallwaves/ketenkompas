@@ -114,6 +114,31 @@
   .stand{font-size:11.5px;color:var(--kk-light)}
   .logout{background:transparent;border:1px solid rgba(108,147,180,.35);color:var(--kk-light);font-size:12px;padding:5px 12px;border-radius:7px;cursor:pointer;font-family:var(--font)}
   .logout:hover{border-color:var(--kk-brons);color:#fff}
+  /* public-mode: alle tabs behalve beheer uitgrijen */
+  .kk-public-mode nav.tabs button:not([data-v="beheer"]){opacity:.3;pointer-events:none;cursor:default}
+  .kk-public-mode .logout{display:none}
+  .kk-public-mode .stand{display:none}
+  /* backlog */
+  .bl-form{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+  .bl-inp{flex:1;min-width:200px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:13px;color:var(--kk-ink);background:var(--surface)}
+  .bl-inp:focus{outline:2px solid var(--kk-blue);border-color:transparent}
+  .bl-sel{padding:9px 10px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:13px;color:var(--kk-ink);background:var(--surface);cursor:pointer}
+  .bl-add{padding:9px 16px;border-radius:8px;background:var(--kk-ink);color:#fff;border:none;font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+  .bl-add:hover{background:var(--kk-blue)}
+  .bl-list{display:flex;flex-direction:column;gap:8px}
+  .bl-item{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface)}
+  .bl-item.hoog{border-left:4px solid var(--kk-alert)}
+  .bl-item.middel{border-left:4px solid #d97706}
+  .bl-item.laag{border-left:4px solid var(--kk-ok)}
+  .bl-urg{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;margin-top:1px}
+  .bl-urg.hoog{background:var(--danger-bg);color:var(--kk-alert)}
+  .bl-urg.middel{background:#fef3e2;color:#b45309}
+  .bl-urg.laag{background:var(--ok-bg);color:var(--ok-ink)}
+  .bl-tekst{flex:1;font-size:13.5px;color:var(--kk-ink);line-height:1.5}
+  .bl-del{background:none;border:none;cursor:pointer;color:var(--ink-faint);font-size:18px;padding:0 4px;line-height:1;flex-shrink:0;font-family:var(--font)}
+  .bl-del:hover{color:var(--kk-alert)}
+  .bl-ts{font-size:10.5px;color:var(--ink-faint);margin-top:3px}
+  .bl-empty{text-align:center;color:var(--ink-faint);font-size:13.5px;padding:28px 0;border:1px dashed var(--line);border-radius:9px}
   /* Hamburger */
   .ham-btn{display:none;background:none;border:none;cursor:pointer;padding:6px;color:var(--kk-light);flex-shrink:0}
   .ham-btn svg{display:block}
@@ -932,6 +957,7 @@
     </nav>
     <div class="header-right">
       <span class="stand">Stand: 21 mei 2026</span>
+      <button class="logout kk-public-login-btn" id="kk-pub-login" onclick="document.getElementById('login').style.display='flex';document.getElementById('app').style.display='none'" style="display:none;border-color:var(--kk-brons);color:var(--kk-brons-licht)">Inloggen voor volledig dashboard</button>
       <button class="logout" onclick="logout()">Uitloggen</button>
     </div>
     <button class="ham-btn" id="ham-btn" onclick="toggleMobMenu()" aria-label="Menu">
@@ -1014,7 +1040,22 @@
     <section class="view" id="view-beheer">
       <div class="page-head">
         <div class="page-title">⚙ Beheer</div>
-        <div class="page-sub">Databeheer — wijzigingen worden live opgeslagen via de Cloudflare KV</div>
+        <div class="page-sub">Databeheer &amp; verbeterlijst</div>
+      </div>
+      <!-- BACKLOG -->
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:28px">
+        <div style="font-size:15px;font-weight:700;color:var(--kk-ink);margin-bottom:4px">Verbeterlijst &amp; ideeën</div>
+        <div style="font-size:13px;color:var(--ink-soft);margin-bottom:16px">Brainstorm — automatisch gesorteerd op urgentie</div>
+        <div class="bl-form">
+          <input class="bl-inp" id="bl-inp" placeholder="Beschrijf het verbeterpunt of idee…" onkeydown="if(event.key==='Enter')blAdd()">
+          <select class="bl-sel" id="bl-sel">
+            <option value="Hoog">🔴 Hoog</option>
+            <option value="Middel" selected>🟠 Middel</option>
+            <option value="Laag">🟢 Laag</option>
+          </select>
+          <button class="bl-add" onclick="blAdd()">+ Toevoegen</button>
+        </div>
+        <div class="bl-list" id="bl-list"></div>
       </div>
       <div id="admin-login-wrap"></div>
       <div id="admin-panel-wrap"></div>
@@ -1264,11 +1305,20 @@ function logout(){ sessionStorage.removeItem('kk_auth'); location.reload(); }
 async function showApp(){
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='flex';
+  document.getElementById('app').classList.remove('kk-public-mode');
+  document.getElementById('kk-pub-login').style.display='none';
   await loadData();
   renderDashboard();
   buildScenario();
   renderKetenKaart();
   renderRobuust();
+}
+async function showBeheerPublic(){
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('app').classList.add('kk-public-mode');
+  document.getElementById('kk-pub-login').style.display='';
+  activateTab('beheer');
 }
 document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
 
@@ -3407,6 +3457,7 @@ function kkSel(id){
 let adminLoggedIn=false;
 
 function renderAdminView(){
+  blRender();
   const lw=document.getElementById('admin-login-wrap');
   const pw=document.getElementById('admin-panel-wrap');
   if(!lw||!pw)return;
@@ -3665,6 +3716,45 @@ async function loadContactRequests(){
   }
 }
 
+/* ============ BACKLOG ============ */
+const _BL_KEY='kk_backlog';
+const _BL_ORD={Hoog:0,Middel:1,Laag:2};
+function _blLoad(){try{return JSON.parse(localStorage.getItem(_BL_KEY)||'[]');}catch(e){return[];}}
+function _blSave(items){localStorage.setItem(_BL_KEY,JSON.stringify(items));}
+
+function blRender(){
+  const items=[..._blLoad()].sort((a,b)=>(_BL_ORD[a.urgentie]??1)-(_BL_ORD[b.urgentie]??1)||b.ts-a.ts);
+  const el=document.getElementById('bl-list');
+  if(!el)return;
+  if(!items.length){el.innerHTML='<div class="bl-empty">Nog geen verbeterpunten toegevoegd.</div>';return;}
+  el.innerHTML=items.map(item=>`
+    <div class="bl-item ${item.urgentie.toLowerCase()}">
+      <div style="flex:1">
+        <div class="bl-tekst">${_kkEsc(item.tekst)}</div>
+        <div class="bl-ts">${new Date(item.ts).toLocaleString('nl-NL',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
+      </div>
+      <span class="bl-urg ${item.urgentie.toLowerCase()}">${item.urgentie}</span>
+      <button class="bl-del" data-id="${item.id}" onclick="blDelete(this.dataset.id)" title="Verwijderen">×</button>
+    </div>`).join('');
+}
+
+function blAdd(){
+  const inp=document.getElementById('bl-inp'),sel=document.getElementById('bl-sel');
+  if(!inp||!sel)return;
+  const tekst=inp.value.trim();
+  if(!tekst)return;
+  const items=_blLoad();
+  items.push({id:Date.now()+'',tekst,urgentie:sel.value,ts:Date.now()});
+  _blSave(items);
+  inp.value='';
+  blRender();
+}
+
+function blDelete(id){
+  _blSave(_blLoad().filter(i=>i.id!==id));
+  blRender();
+}
+
 /* ============ SCENARIO OPSLAAN / LADEN ============ */
 const _KK_SC_KEY='kk_saved_scenarios';
 function _kkEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -3733,7 +3823,7 @@ function siDeleteScenario(naam){
 }
 
 /* ============ INIT ============ */
-if(sessionStorage.getItem('kk_auth')==='1'){ showApp(); }
+if(sessionStorage.getItem('kk_auth')==='1'){ showApp(); } else { showBeheerPublic(); }
 </script>
 <!-- SCENARIO OPSLAAN/LADEN MODAL -->
 <div class="kk-sc-overlay" id="kk-sc-modal" onclick="if(event.target===this)siCloseScenarios()">
