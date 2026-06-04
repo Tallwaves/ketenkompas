@@ -116,6 +116,25 @@
   .logout:hover{border-color:var(--kk-brons);color:#fff}
   .dev-banner{background:var(--kk-brons);color:#fff;font-size:12px;text-align:center;padding:7px 16px;line-height:1.4;letter-spacing:.01em}
   .dev-banner strong{color:#fff;font-weight:700}
+  .dev-banner-btn{display:inline-block;margin-left:14px;padding:3px 13px;border:1.5px solid rgba(255,255,255,.7);border-radius:20px;color:#fff;font-size:11px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.15);font-family:var(--font);letter-spacing:.02em;transition:background .15s;white-space:nowrap;vertical-align:middle}
+  .dev-banner-btn:hover{background:rgba(255,255,255,.3)}
+  /* suggestie modal */
+  .sg-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;padding:16px}
+  .sg-overlay.open{display:flex}
+  .sg-box{background:var(--surface);border-radius:14px;width:100%;max-width:460px;box-shadow:0 8px 40px rgba(0,0,0,.18);overflow:hidden}
+  .sg-box-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 0}
+  .sg-box-title{font-size:16px;font-weight:700;color:var(--kk-ink)}
+  .sg-box-close{background:none;border:none;cursor:pointer;font-size:22px;color:var(--ink-faint);padding:0 2px;line-height:1;font-family:var(--font)}
+  .sg-box-close:hover{color:var(--kk-alert)}
+  .sg-box-body{padding:14px 22px 22px}
+  .sg-desc{font-size:13px;color:var(--ink-soft);margin:0 0 18px;line-height:1.5}
+  .sg-label{display:block;font-size:11.5px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+  .sg-inp,.sg-txt{width:100%;box-sizing:border-box;padding:10px 13px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:13.5px;color:var(--kk-ink);background:var(--surface);margin-bottom:14px;transition:border-color .15s;resize:vertical}
+  .sg-inp:focus,.sg-txt:focus{outline:none;border-color:var(--kk-brons)}
+  .sg-send{width:100%;padding:11px;background:var(--kk-brons);color:#fff;border:none;border-radius:8px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.02em;transition:background .15s}
+  .sg-send:hover{background:var(--kk-brons-licht)}
+  .sg-send:disabled{background:var(--ink-faint);cursor:not-allowed}
+  .sg-msg{font-size:13px;margin-top:10px;text-align:center;min-height:18px}
   /* public-mode: alle tabs behalve beheer uitgrijen */
   .kk-public-mode nav.tabs button:not([data-v="beheer"]){opacity:.3;pointer-events:none;cursor:default}
   .kk-public-mode .logout{display:none}
@@ -905,7 +924,8 @@
 <body>
 
 <div class="dev-banner">
-  <strong>Let op: dit dashboard is nog in ontwikkeling.</strong> De getoonde data zijn inschattingen op basis van beschikbare gegevens en kunnen afwijken van de werkelijkheid.
+  <strong>Let op: dit dashboard is nog in ontwikkeling.</strong> Data zijn inschattingen die kunnen afwijken.
+  <button class="dev-banner-btn" onclick="openSuggestieModal()">Mis je iets? Suggestie doorgeven →</button>
 </div>
 
 <!-- LOGIN -->
@@ -3660,12 +3680,16 @@ function renderAdminPanel(){
         <div class="adm-tabs">
           <button class="adm-tab-btn active" id="adm-tab-btn-verzoeken" onclick="admShowTab('verzoeken')">Toegangsverzoeken <span id="adm-contact-badge"></span></button>
           <button class="adm-tab-btn" id="adm-tab-btn-inlogmomenten" onclick="admShowTab('inlogmomenten')">Inlogmomenten</button>
+          <button class="adm-tab-btn" id="adm-tab-btn-suggesties" onclick="admShowTab('suggesties')">Suggesties <span id="adm-sg-badge"></span></button>
         </div>
         <div id="adm-tab-verzoeken">
           <div id="adm-contact-list" style="font-size:13px;color:var(--ink-faint)">Laden…</div>
         </div>
         <div id="adm-tab-inlogmomenten" style="display:none">
           <div id="adm-loginlog-list" style="font-size:13px;color:var(--ink-faint)">Laden…</div>
+        </div>
+        <div id="adm-tab-suggesties" style="display:none">
+          <div id="adm-sg-list" style="font-size:13px;color:var(--ink-faint)">Laden…</div>
         </div>
       </div>
 
@@ -3782,13 +3806,14 @@ async function loadContactRequests(){
 }
 
 function admShowTab(tab){
-  ['verzoeken','inlogmomenten'].forEach(t=>{
+  ['verzoeken','inlogmomenten','suggesties'].forEach(t=>{
     const btn=document.getElementById('adm-tab-btn-'+t);
     const pane=document.getElementById('adm-tab-'+t);
     if(btn)btn.classList.toggle('active',t===tab);
     if(pane)pane.style.display=t===tab?'':'none';
   });
   if(tab==='inlogmomenten')loadLoginLog();
+  if(tab==='suggesties')loadSuggesties();
 }
 
 async function loadLoginLog(){
@@ -3806,6 +3831,63 @@ async function loadLoginLog(){
       </div>`).join('');
   }catch(e){
     if(el)el.innerHTML='<div style="color:var(--ink-faint);font-size:13px">Fout: '+_kkEsc(e.message)+'</div>';
+  }
+}
+
+async function loadSuggesties(){
+  const el=document.getElementById('adm-sg-list');
+  if(!el)return;
+  el.innerHTML='<div style="color:var(--ink-faint);font-size:13px">Laden…</div>';
+  try{
+    const r=await fetch('/api/suggestions',{headers:{'X-Access-Key':TOEGANGSCODE}});
+    const list=r.ok?await r.json():[];
+    const badge=document.getElementById('adm-sg-badge');
+    if(badge)badge.textContent=list.length?'('+list.length+')':'';
+    if(!list.length){el.innerHTML='<div style="color:var(--ink-faint);font-size:13px">Nog geen suggesties ontvangen.</div>';return;}
+    el.innerHTML=list.map(s=>`
+      <div style="padding:11px 0;border-bottom:1px solid var(--line-soft)">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:4px">
+          <div style="font-size:13px;font-weight:700;color:var(--kk-ink)">${_kkEsc(s.naam)}</div>
+          <div style="font-size:11px;color:var(--ink-faint);white-space:nowrap">${new Date(s.ts).toLocaleString('nl-NL',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
+        </div>
+        <div style="font-size:13px;color:var(--ink-soft);line-height:1.5">${_kkEsc(s.tekst)}</div>
+      </div>`).join('');
+  }catch(e){
+    if(el)el.innerHTML='<div style="color:var(--ink-faint);font-size:13px">Fout: '+_kkEsc(e.message)+'</div>';
+  }
+}
+
+/* ============ SUGGESTIE MODAL ============ */
+function openSuggestieModal(){
+  document.getElementById('sg-modal').classList.add('open');
+  document.getElementById('sg-msg').textContent='';
+  document.getElementById('sg-naam').value='';
+  document.getElementById('sg-tekst').value='';
+}
+function closeSuggestieModal(){
+  document.getElementById('sg-modal').classList.remove('open');
+}
+async function submitSuggestie(){
+  const naam=document.getElementById('sg-naam').value.trim();
+  const tekst=document.getElementById('sg-tekst').value.trim();
+  const msg=document.getElementById('sg-msg');
+  const btn=document.getElementById('sg-send-btn');
+  if(!naam){msg.style.color='var(--danger)';msg.textContent='Vul uw naam in.';return;}
+  if(!tekst){msg.style.color='var(--danger)';msg.textContent='Vul een suggestie in.';return;}
+  btn.disabled=true;btn.textContent='Versturen…';
+  try{
+    const r=await fetch('/api/suggestions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({naam,tekst})});
+    if(r.ok){
+      msg.style.color='var(--kk-ok,#3a9e5f)';msg.textContent='Bedankt! Je suggestie is ontvangen.';
+      btn.textContent='Verstuurd ✓';
+      setTimeout(()=>closeSuggestieModal(),2200);
+    }else{
+      msg.style.color='var(--danger)';msg.textContent='Verzenden mislukt, probeer opnieuw.';
+      btn.disabled=false;btn.textContent='Versturen';
+    }
+  }catch(e){
+    msg.style.color='var(--danger)';msg.textContent='Verbindingsfout, probeer opnieuw.';
+    btn.disabled=false;btn.textContent='Versturen';
   }
 }
 
@@ -3979,6 +4061,25 @@ if(sessionStorage.getItem('kk_auth')==='1'){ showApp(); }
       <button class="kk-sc-box-close" onclick="siCloseScenarios()">×</button>
     </div>
     <div class="kk-sc-box-body" id="kk-sc-list"></div>
+  </div>
+</div>
+
+<!-- SUGGESTIE MODAL -->
+<div class="sg-overlay" id="sg-modal" onclick="if(event.target===this)closeSuggestieModal()">
+  <div class="sg-box">
+    <div class="sg-box-hdr">
+      <div class="sg-box-title">Suggestie doorgeven</div>
+      <button class="sg-box-close" onclick="closeSuggestieModal()">×</button>
+    </div>
+    <div class="sg-box-body">
+      <p class="sg-desc">Mis je een functie of heb je een idee ter verbetering? Laat het ons weten — alle suggesties komen terecht bij het beheerteam.</p>
+      <label class="sg-label">Naam</label>
+      <input class="sg-inp" id="sg-naam" placeholder="Uw naam" maxlength="80">
+      <label class="sg-label">Suggestie of idee</label>
+      <textarea class="sg-txt" id="sg-tekst" placeholder="Beschrijf uw suggestie of het ontbrekende onderdeel…" rows="4" maxlength="1000"></textarea>
+      <button class="sg-send" id="sg-send-btn" onclick="submitSuggestie()">Versturen</button>
+      <div class="sg-msg" id="sg-msg"></div>
+    </div>
   </div>
 </div>
 </body>
