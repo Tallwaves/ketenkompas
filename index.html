@@ -318,6 +318,11 @@
   .si-quick-btn{font-size:11.5px;padding:4px 12px;border:1px solid var(--accent);border-radius:6px;background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:var(--font);font-weight:600;transition:all .12s}
   .si-quick-btn:hover{background:#EFE3C4}
   .si-clear-btn{border-color:var(--line);background:var(--surface);color:var(--ink-faint)}
+  .si-modus-row{display:flex;gap:6px;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .si-modus-lbl{font-size:11px;color:#777;margin-right:2px;white-space:nowrap}
+  .si-modus-btn{padding:5px 13px;border:1.5px solid var(--line);border-radius:20px;background:#fff;font-size:12px;cursor:pointer;color:#666;font-family:var(--font);transition:background .12s,color .12s,border-color .12s;white-space:nowrap}
+  .si-modus-btn.active{background:var(--kk-blue);color:#fff;border-color:var(--kk-blue)}
+  .si-aanp-panel{margin-top:12px;padding:12px 14px;background:#f4f7ff;border-radius:8px;border:1px solid #d8e4ff}
   .si-clear-btn:hover{border-color:var(--ink-faint);background:var(--surface-2)}
   .si-ws-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;align-items:start}
   .si-ws-card{border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer;transition:all .12s}
@@ -1754,7 +1759,7 @@ function renderRobuust(){
 }
 
 /* ============ SCENARIO V2 ============ */
-let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externNLPct:0,externDEPct:40,summaryOverride:null,bdKernOverride:null,bdConclusieOverride:null,bdAdviesOverride:null,bdImpactOverride:null,bdRobuustheidOverride:null,bdUrgentieOverride:null,apOverrides:[{},{},{}],contacten:[
+let siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),titel:'',beschrijving:'',aqmOverride:{},eigenPct:60,externNLPct:0,externDEPct:40,summaryOverride:null,bdKernOverride:null,bdConclusieOverride:null,bdAdviesOverride:null,bdImpactOverride:null,bdRobuustheidOverride:null,bdUrgentieOverride:null,apOverrides:[{},{},{}],slibAanpPct:0,stap1Modus:'huidig',stap2aModus:'huidig',stap2bModus:'huidig',stap3aModus:'huidig',stap3bModus:'huidig',contacten:[
   {org:'KetenKompas',naam:'Gizan Ezra (AGV)',rol:'Scenario Architect',email:'gizan.ezra@agv.nl',tel:''},
   {org:'HVC',naam:'Chiel Landman',rol:'Ketenregisseur HVC',email:'c.landman@hvcgroep.nl',tel:''},
   {org:'HHNK',naam:'David Koenders',rol:'AOGR-vertegenwoordiger',email:'d.koenders@hhnk.nl',tel:''},
@@ -1888,9 +1893,10 @@ function siEigenLocCard(o){
   if(o.gesloten||o.geblokkeerd)return `<div class="si-loc-card si-loc-blocked"><div class="si-loc-nm">${o.naam}</div><div style="font-size:10px;color:var(--ink-faint)">${o.note||'Niet beschikbaar'}</div></div>`;
   const ov=siV2State.eigenOverride[o.key]||{av:true,vrijCap:null};
   const clrKleur=(DATA.clusters[o.ci]||{}).kleur||'var(--accent)';
-  const tb=`<button class="si-eigen-toggle ${ov.av?'on':'off'}" onclick="siEigenToggle('${o.key}')">${ov.av?'Beschikbaar':'Niet beschikbaar'}</button>`;
+  const readOnly=siV2State.stap3aModus==='huidig';
+  const tb=readOnly?'':`<button class="si-eigen-toggle ${ov.av?'on':'off'}" onclick="siEigenToggle('${o.key}')">${ov.av?'Beschikbaar':'Niet beschikbaar'}</button>`;
   if(!o.cap){
-    return `<div class="si-loc-card${ov.av?'':' si-eigen-off'}">
+    return `<div class="si-loc-card${!readOnly&&!ov.av?' si-eigen-off':''}">
       <div class="si-eigen-hdr"><div class="si-loc-nm">${o.naam}</div>${tb}</div>
       <div style="font-size:10px;color:var(--ink-faint)">${o.sub||'Volume onbekend · op aanvraag'}</div>
     </div>`;
@@ -1898,15 +1904,15 @@ function siEigenLocCard(o){
   const vrijCap=ov.vrijCap!==null?ov.vrijCap:Math.max(o.cap-o.bezet,0);
   const maxVrij=Math.max(o.cap-o.bezet,0);
   const pct=Math.min(Math.round(o.bezet/o.cap*100),100);
-  const slider=ov.av?`<div class="si-eigen-slider-row">
+  const slider=!readOnly&&ov.av?`<div class="si-eigen-slider-row">
     <input type="range" class="si-eigen-slider" style="accent-color:${clrKleur}" min="0" max="${maxVrij}" value="${vrijCap}" oninput="siEigenSlider('${o.key}',this.value)">
     <span class="si-eigen-slider-val" id="si-esv-${o.key}">${vrijCap.toLocaleString()} t</span>
   </div>`:'';
-  return `<div class="si-loc-card${ov.av?'':' si-eigen-off'}">
+  return `<div class="si-loc-card${!readOnly&&!ov.av?' si-eigen-off':''}">
     <div class="si-eigen-hdr"><div class="si-loc-nm">${o.naam}</div>${tb}</div>
     ${o.sub?`<div style="font-size:10px;color:var(--ink-faint);margin-bottom:3px">${o.sub}</div>`:''}
     <div class="bar" style="margin:4px 0 3px"><i class="${o.status}" style="width:${pct}%"></i></div>
-    <div style="font-size:10px;color:var(--ink-faint);display:flex;justify-content:space-between;margin-bottom:${ov.av?'1':'0'}px"><span>${o.bezet.toLocaleString()}/${o.cap.toLocaleString()} t</span><span>${vrijCap.toLocaleString()} vrij</span></div>
+    <div style="font-size:10px;color:var(--ink-faint);display:flex;justify-content:space-between;margin-bottom:${!readOnly&&ov.av?'1':'0'}px"><span>${o.bezet.toLocaleString()}/${o.cap.toLocaleString()} t</span><span>${vrijCap.toLocaleString()} vrij</span></div>
     ${slider}
   </div>`;
 }
@@ -1937,12 +1943,13 @@ function siAqmLocCard(o,li){
   const vrijCap=ov.vrijCap!==null?ov.vrijCap:Math.max(o.cap-o.bezet,0);
   const maxVrij=Math.max(o.cap-o.bezet,0);
   const pct=Math.min(Math.round(o.bezet/o.cap*100),100);
-  const tb=`<button class="si-eigen-toggle ${ov.av?'on':'off'}" onclick="siAqmToggle(${li})">${ov.av?'Beschikbaar':'Niet beschikbaar'}</button>`;
-  const slider=ov.av?`<div class="si-eigen-slider-row">
+  const readOnly=siV2State.stap3bModus==='huidig';
+  const tb=readOnly?'':`<button class="si-eigen-toggle ${ov.av?'on':'off'}" onclick="siAqmToggle(${li})">${ov.av?'Beschikbaar':'Niet beschikbaar'}</button>`;
+  const slider=!readOnly&&ov.av?`<div class="si-eigen-slider-row">
     <input type="range" class="si-eigen-slider" style="accent-color:var(--kk-ok)" min="0" max="${maxVrij}" value="${vrijCap}" oninput="siAqmSlider(${li},this.value)">
     <span class="si-eigen-slider-val" id="si-aqmsv-${li}">${vrijCap.toLocaleString()} t</span>
   </div>`:'';
-  return `<div class="si-loc-card${ov.av?'':' si-eigen-off'}">
+  return `<div class="si-loc-card${!readOnly&&!ov.av?' si-eigen-off':''}">
     <div class="si-eigen-hdr"><div class="si-loc-nm">${o.naam}</div>${tb}</div>
     <div class="bar" style="margin:5px 0 3px"><i class="${o.status}" style="width:${pct}%"></i></div>
     <div style="font-size:10px;color:var(--ink-faint);display:flex;justify-content:space-between;margin-bottom:2px"><span>${o.bezet.toLocaleString()}/${o.cap.toLocaleString()} t</span><span>${vrijCap.toLocaleString()} vrij</span></div>
@@ -2127,34 +2134,63 @@ function buildScenario(){
         <button class="si-quick-btn si-clear-btn" onclick="siClearAll()">Wis selectie</button>
       </div>
       <div id="si-ws-grid" class="si-ws-grid"></div>
+      <div class="si-modus-row" id="si-s1-modus" style="display:none">
+        <span class="si-modus-lbl">Slibstroom:</span>
+        <button class="si-modus-btn active" id="si-s1-tb-huidig" onclick="siSetStap1Modus('huidig')">Standaard slibgegevens</button>
+        <button class="si-modus-btn" id="si-s1-tb-aanpassen" onclick="siSetStap1Modus('aanpassen')">Aanpassen (%)</button>
+      </div>
+      <div class="si-aanp-panel" id="si-s1-aanp" style="display:none">
+        <div class="si-step-sub" style="margin-bottom:6px">Slibhoeveelheid aanpassen t.o.v. actuele gegevens</div>
+        <div class="si-dagen-display" id="si-s1-pct-val">0%</div>
+        <input type="range" class="si-dagen-slider" id="si-s1-pct-slider" min="-50" max="50" value="0" step="5" oninput="siSetSlibAanpPct(+this.value)">
+        <div class="si-quick" style="margin-top:6px;margin-bottom:0">
+          <button class="si-quick-btn" onclick="siSetSlibAanpPct(-20)">−20%</button>
+          <button class="si-quick-btn" onclick="siSetSlibAanpPct(-10)">−10%</button>
+          <button class="si-quick-btn si-clear-btn" onclick="siSetSlibAanpPct(0)">Geen aanpassing</button>
+          <button class="si-quick-btn" onclick="siSetSlibAanpPct(10)">+10%</button>
+          <button class="si-quick-btn" onclick="siSetSlibAanpPct(20)">+20%</button>
+        </div>
+      </div>
     </div>${conn}
     <div class="si-phase-hdr">Verwerking</div>
     <div class="si-step si-dimmed" id="si-s2a">
       <div class="si-step-hdr"><span class="si-step-num sub">Stap 2A</span><span class="si-step-title">Kies een verwerker en verstoring</span></div>
+      <div class="si-modus-row" id="si-s2a-modus" style="margin-top:0;padding-top:0;border-top:none;margin-bottom:12px">
+        <span class="si-modus-lbl">Verwerking:</span>
+        <button class="si-modus-btn active" id="si-s2a-tb-huidig" onclick="siSetStap2aModus('huidig')">Huidige verwerking gebruiken</button>
+        <button class="si-modus-btn" id="si-s2a-tb-aanpassen" onclick="siSetStap2aModus('aanpassen')">Verwerking aanpassen</button>
+      </div>
       <div id="si-vw-grid"></div>
     </div>${conn}
     <div class="si-step si-dimmed" id="si-s2b">
       <div class="si-step-hdr"><span class="si-step-num sub">Stap 2B</span><span class="si-step-title">Externe verwerking</span></div>
-      <div style="margin-bottom:18px">
-        <div class="si-step-sub" style="margin-bottom:6px">Nederlandse verwerkers</div>
-        <div class="si-dagen-display" id="si-2b-nl-val">0%</div>
-        <input type="range" class="si-dagen-slider" id="si-2b-nl-slider" min="0" max="100" value="0" step="5" oninput="siSetExternNLPct(+this.value)">
-        <div class="si-quick">
-          <button class="si-quick-btn" onclick="siSetExternNLPct(0)">0%</button>
-          <button class="si-quick-btn" onclick="siSetExternNLPct(20)">20%</button>
-          <button class="si-quick-btn" onclick="siSetExternNLPct(40)">40%</button>
-          <button class="si-quick-btn" onclick="siSetExternNLPct(60)">60%</button>
-        </div>
+      <div class="si-modus-row" id="si-s2b-modus" style="margin-top:0;padding-top:0;border-top:none;margin-bottom:12px">
+        <span class="si-modus-lbl">Externe verwerking:</span>
+        <button class="si-modus-btn active" id="si-s2b-tb-huidig" onclick="siSetStap2bModus('huidig')">Huidige externe verwerking</button>
+        <button class="si-modus-btn" id="si-s2b-tb-aanpassen" onclick="siSetStap2bModus('aanpassen')">Aanpassen</button>
       </div>
-      <div>
-        <div class="si-step-sub" style="margin-bottom:6px">Export Duitsland</div>
-        <div class="si-dagen-display" id="si-2b-de-val">40%</div>
-        <input type="range" class="si-dagen-slider" id="si-2b-de-slider" min="0" max="100" value="40" step="5" oninput="siSetExternDEPct(+this.value)">
-        <div class="si-quick">
-          <button class="si-quick-btn" onclick="siSetExternDEPct(0)">0%</button>
-          <button class="si-quick-btn" onclick="siSetExternDEPct(20)">20%</button>
-          <button class="si-quick-btn" onclick="siSetExternDEPct(40)">40%</button>
-          <button class="si-quick-btn" onclick="siSetExternDEPct(60)">60%</button>
+      <div id="si-2b-sliders" style="display:none">
+        <div style="margin-bottom:18px">
+          <div class="si-step-sub" style="margin-bottom:6px">Nederlandse verwerkers</div>
+          <div class="si-dagen-display" id="si-2b-nl-val">0%</div>
+          <input type="range" class="si-dagen-slider" id="si-2b-nl-slider" min="0" max="100" value="0" step="5" oninput="siSetExternNLPct(+this.value)">
+          <div class="si-quick">
+            <button class="si-quick-btn" onclick="siSetExternNLPct(0)">0%</button>
+            <button class="si-quick-btn" onclick="siSetExternNLPct(20)">20%</button>
+            <button class="si-quick-btn" onclick="siSetExternNLPct(40)">40%</button>
+            <button class="si-quick-btn" onclick="siSetExternNLPct(60)">60%</button>
+          </div>
+        </div>
+        <div>
+          <div class="si-step-sub" style="margin-bottom:6px">Export Duitsland</div>
+          <div class="si-dagen-display" id="si-2b-de-val">40%</div>
+          <input type="range" class="si-dagen-slider" id="si-2b-de-slider" min="0" max="100" value="40" step="5" oninput="siSetExternDEPct(+this.value)">
+          <div class="si-quick">
+            <button class="si-quick-btn" onclick="siSetExternDEPct(0)">0%</button>
+            <button class="si-quick-btn" onclick="siSetExternDEPct(20)">20%</button>
+            <button class="si-quick-btn" onclick="siSetExternDEPct(40)">40%</button>
+            <button class="si-quick-btn" onclick="siSetExternDEPct(60)">60%</button>
+          </div>
         </div>
       </div>
       <div class="si-pct-eff" id="si-2b-eff" style="margin-top:10px"></div>
@@ -2173,11 +2209,21 @@ function buildScenario(){
     <div class="si-phase-hdr">Opslag</div>
     <div class="si-step si-dimmed" id="si-s3a">
       <div class="si-step-hdr"><span class="si-step-num">Stap 3A</span><span class="si-step-title">Eigen opslag bij verwerker</span></div>
+      <div class="si-modus-row" id="si-s3a-modus" style="margin-top:0;padding-top:0;border-top:none;margin-bottom:12px">
+        <span class="si-modus-lbl">Eigen opslag:</span>
+        <button class="si-modus-btn active" id="si-s3a-tb-huidig" onclick="siSetStap3aModus('huidig')">Standaard eigen opslag</button>
+        <button class="si-modus-btn" id="si-s3a-tb-aanpassen" onclick="siSetStap3aModus('aanpassen')">Aanpassen</button>
+      </div>
       <div id="si-opvang-3a"><div class="si-placeholder">Selecteer een waterschap om te beginnen</div></div>
     </div>${conn}
     <div class="si-step si-dimmed" id="si-s3b">
       <div class="si-step-hdr"><span class="si-step-num">Stap 3B</span><span class="si-step-title">Incidentenopslag Robuust Plan</span></div>
       <div class="si-step-sub">Incidentenopslag Robuust Plan — via AQM</div>
+      <div class="si-modus-row" id="si-s3b-modus" style="margin-top:8px;padding-top:8px;margin-bottom:12px">
+        <span class="si-modus-lbl">AQM-opvang:</span>
+        <button class="si-modus-btn active" id="si-s3b-tb-huidig" onclick="siSetStap3bModus('huidig')">Standaard AQM-capaciteit</button>
+        <button class="si-modus-btn" id="si-s3b-tb-aanpassen" onclick="siSetStap3bModus('aanpassen')">Aanpassen</button>
+      </div>
       <div id="si-opvang-3b"><div class="si-placeholder">Selecteer eerst een waterschap en verwerker</div></div>
     </div>${conn}
     <div class="si-phase-hdr">Overzicht</div>
@@ -2191,7 +2237,7 @@ function buildScenario(){
     </div>
   </div>`;
   const prevContacten=siV2State.contacten;
-  siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),eigenOverride:{},aqmOverride:{},titel:'',beschrijving:'',eigenPct:60,externNLPct:0,externDEPct:40,contacten:prevContacten,opgesteldVoor:['Intern (AGV)'],opgesteldVoorAnders:''};
+  siV2State={ws:new Set(),vw:{},dagen:14,rwzi:{},expanded:new Set(),eigenOverride:{},aqmOverride:{},titel:'',beschrijving:'',eigenPct:60,externNLPct:0,externDEPct:40,slibAanpPct:0,stap1Modus:'huidig',stap2aModus:'huidig',stap2bModus:'huidig',stap3aModus:'huidig',stap3bModus:'huidig',contacten:prevContacten,opgesteldVoor:['Intern (AGV)'],opgesteldVoorAnders:''};
   siRenderWS(); siRenderVW();
 }
 
@@ -2247,6 +2293,7 @@ function siRenderWS(){
 function siRenderVW(){
   const activeClusters=new Set([...siV2State.ws].map(k=>parseInt(k.split('-')[0])));
   const hasSel=siV2State.ws.size>0;
+  const showOpts=siV2State.stap2aModus==='aanpassen';
   let activeH='',inactiveH='';
   DATA.clusters.forEach((c,ci)=>{
     c.verwerkers.forEach((v,vi)=>{
@@ -2256,7 +2303,7 @@ function siRenderVW(){
         const act=sel.type===o.id;
         return `<button class="si-vw-opt${act?' si-vw-opt-active':''}${act&&o.id>=3?' si-vw-opt-crit':''}" onclick="siToggleV('${vk}',${o.id})">${o.lbl}<span class="si-vw-opt-desc">${o.desc}</span></button>`;
       }).join('');
-      const stof=(sel.type===4||sel.type===5)?`<div class="si-vw-stof">
+      const stof=showOpts&&(sel.type===4||sel.type===5)?`<div class="si-vw-stof">
         <label>Vervuilingsstof</label>
         <select onchange="siSetStof('${vk}',this.value)">
           <option value="">— kies —</option>
@@ -2266,7 +2313,7 @@ function siRenderVW(){
         activeH+=`<div class="si-vw-card" style="border-left:3px solid ${c.kleur}">
           <div class="si-vw-nm">${v.naam}</div>
           <div class="si-vw-sub">${v.sub} · ${(v.capaciteitTonDag||0).toLocaleString()} t/dag</div>
-          <div class="si-vw-opts">${opts}</div>${stof}
+          ${showOpts?`<div class="si-vw-opts">${opts}</div>${stof}`:'<div style="font-size:11px;color:var(--kk-ok);margin-top:4px">Geen verstoring — volledige capaciteit beschikbaar</div>'}
         </div>`;
       } else {
         inactiveH+=`<div class="si-vw-card si-vw-card-dim">
@@ -2387,6 +2434,45 @@ function siToggleV(vk,type){
 }
 function siSetStof(vk,stof){if(siV2State.vw[vk])siV2State.vw[vk].stof=stof; siUpdateDyn();}
 
+function siSetStap1Modus(m){
+  siV2State.stap1Modus=m;
+  document.querySelectorAll('#si-s1-modus .si-modus-btn').forEach(b=>b.classList.toggle('active',b.id===`si-s1-tb-${m}`));
+  const panel=document.getElementById('si-s1-aanp');
+  if(panel)panel.style.display=m==='aanpassen'?'':'none';
+  if(m==='huidig'){siV2State.slibAanpPct=0;}
+  siUpdateDyn();
+}
+function siSetSlibAanpPct(val){
+  siV2State.slibAanpPct=Math.min(50,Math.max(-50,Math.round(val)));
+  const sl=document.getElementById('si-s1-pct-slider');if(sl)sl.value=siV2State.slibAanpPct;
+  const vl=document.getElementById('si-s1-pct-val');if(vl)vl.textContent=(siV2State.slibAanpPct>0?'+':'')+siV2State.slibAanpPct+'%';
+  siUpdateDyn();
+}
+function siSetStap2aModus(m){
+  siV2State.stap2aModus=m;
+  document.querySelectorAll('#si-s2a-modus .si-modus-btn').forEach(b=>b.classList.toggle('active',b.id===`si-s2a-tb-${m}`));
+  siRenderVW(); siUpdateDyn();
+}
+function siSetStap2bModus(m){
+  siV2State.stap2bModus=m;
+  document.querySelectorAll('#si-s2b-modus .si-modus-btn').forEach(b=>b.classList.toggle('active',b.id===`si-s2b-tb-${m}`));
+  const panel=document.getElementById('si-2b-sliders');
+  if(panel)panel.style.display=m==='aanpassen'?'':'none';
+  siUpdateDyn();
+}
+function siSetStap3aModus(m){
+  siV2State.stap3aModus=m;
+  document.querySelectorAll('#si-s3a-modus .si-modus-btn').forEach(b=>b.classList.toggle('active',b.id===`si-s3a-tb-${m}`));
+  siUpdateDyn();
+}
+function siSetStap3bModus(m){
+  siV2State.stap3bModus=m;
+  document.querySelectorAll('#si-s3b-modus .si-modus-btn').forEach(b=>b.classList.toggle('active',b.id===`si-s3b-tb-${m}`));
+  const r=siCalc();
+  siRender3BContent(r);
+  siUpdate3BStap4(r);
+}
+
 function siGetSelTon(){
   let t=0;
   siV2State.ws.forEach(k=>{
@@ -2396,7 +2482,8 @@ function siGetSelTon(){
     if(rd&&sr&&sr.size>0)[...sr].forEach(ri=>t+=rd[ri].ton);
     else t+=w.ton;
   });
-  return t;
+  const pct=siV2State.slibAanpPct||0;
+  return pct?Math.round(t*(1+pct/100)):t;
 }
 
 function siFormatDagen(d){
@@ -2459,13 +2546,14 @@ function siCalc(){
   const dagen=siV2State.dagen||14;
   const selTon=siGetSelTon();
   const totalTon=selTon*dagen;
+  const effVw=siV2State.stap2aModus==='huidig'?{}:siV2State.vw;
   let remCap=0;
   DATA.clusters.forEach((c,ci)=>c.verwerkers.forEach((v,vi)=>{
-    const vs=siV2State.vw[`${ci}-${vi}`],cap=v.capaciteitTonDag||0;
+    const vs=effVw[`${ci}-${vi}`],cap=v.capaciteitTonDag||0;
     remCap+=vs?cap*(SI_FACTOR[vs.type]||0):cap;
   }));
-  const maxType=Object.values(siV2State.vw).reduce((m,v)=>Math.max(m,v.type||0),0);
-  const hasV=Object.keys(siV2State.vw).length>0;
+  const maxType=Object.values(effVw).reduce((m,v)=>Math.max(m,v.type||0),0);
+  const hasV=Object.keys(effVw).length>0;
   const disruptionFactor=hasV?(SI_FACTOR[maxType]!==undefined?SI_FACTOR[maxType]:1):1;
   const eigenPct=siV2State.eigenPct!==undefined?siV2State.eigenPct:60;
   const externNLPct=siV2State.externNLPct??0;
@@ -2510,6 +2598,14 @@ function siDemoCard(){
 }
 
 function siUpdateDyn(){
+  // Stap 1 modus toggle visibility
+  const s1modus=document.getElementById('si-s1-modus');
+  if(s1modus)s1modus.style.display=siV2State.ws.size>0?'':'none';
+  const s1aanp=document.getElementById('si-s1-aanp');
+  if(s1aanp)s1aanp.style.display=siV2State.stap1Modus==='aanpassen'&&siV2State.ws.size>0?'':'none';
+  const _s1sl=document.getElementById('si-s1-pct-slider'),_s1vl=document.getElementById('si-s1-pct-val');
+  if(_s1sl)_s1sl.value=siV2State.slibAanpPct||0;
+  if(_s1vl)_s1vl.textContent=(siV2State.slibAanpPct>0?'+':'')+(siV2State.slibAanpPct||0)+'%';
   // Sync alle sliders en labels met siV2State
   const _sl2c=document.getElementById('si-2c-slider'),_lb2c=document.getElementById('si-2c-lbl');
   if(_sl2c)_sl2c.value=siV2State.dagen||14;
@@ -2521,7 +2617,8 @@ function siUpdateDyn(){
   if(_slDE)_slDE.value=siV2State.externDEPct??40;
   if(_vDE)_vDE.textContent=(siV2State.externDEPct??40)+'%';
   siRenderDagenCalc();
-  const hasV2=Object.keys(siV2State.vw).length>0;
+  const effVwKeys=siV2State.stap2aModus==='huidig'?0:Object.keys(siV2State.vw).length;
+  const hasV2=effVwKeys>0;
   ['si-s2b'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('si-dimmed',!hasV2);});
   if(siV2State.ws.size===0){
     document.getElementById('si-opvang-3a').innerHTML='<div class="si-placeholder">Selecteer een waterschap om te beginnen</div>';
