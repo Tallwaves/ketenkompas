@@ -839,6 +839,8 @@
   .adm-panel{width:100%}
   .adm-tab-section-hdr{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--kk-blue);padding:10px 0 6px;margin:8px 0 10px;border-bottom:2px solid var(--kk-blue);opacity:.85}
   .adm-nav{display:flex;gap:4px;margin-bottom:18px;border-bottom:2px solid var(--line);padding-bottom:0;flex-wrap:wrap}
+  .adm-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start}
+  @media(max-width:900px){.adm-cols{grid-template-columns:1fr}}
   .adm-nav-btn{padding:9px 18px;border:none;background:none;font-family:var(--font);font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;border-radius:6px 6px 0 0;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;white-space:nowrap}
   .adm-nav-btn:hover{color:var(--ink);background:var(--surface-2)}
   .adm-nav-btn.active{color:var(--kk-blue);border-bottom-color:var(--kk-blue);background:none}
@@ -3711,20 +3713,22 @@ function renderAdminPanel(){
       </nav>
 
       <div data-adm-sec="kto">
-        <div class="adm-section">
-          <div class="adm-section-title">Waterschap tonnages</div>
-          <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Dagelijkse slibproductie per waterschap (ton/dag)</div>
-          ${wsRows}
-        </div>
-        <div class="adm-section">
-          <div class="adm-section-title">Verwerkers &amp; installaties</div>
-          <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Status, capaciteit en onderhoud per verwerkingsinstallatie</div>
-          ${clInst}
-        </div>
-        <div class="adm-section">
-          <div class="adm-section-title">Cluster opslaglocaties</div>
-          <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Tijdelijke en tussenopslag op clusterniveau</div>
-          ${clOpslag||'<div style="font-size:13px;color:var(--ink-faint)">Geen opslaglocaties gedefinieerd</div>'}
+        <div class="adm-cols">
+          <div class="adm-section" style="margin-bottom:0">
+            <div class="adm-section-title">Waterschap tonnages</div>
+            <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Dagelijkse slibproductie per waterschap (ton/dag)</div>
+            ${wsRows}
+          </div>
+          <div class="adm-section" style="margin-bottom:0">
+            <div class="adm-section-title">Verwerkers &amp; installaties</div>
+            <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Status, capaciteit en onderhoud per verwerkingsinstallatie</div>
+            ${clInst}
+          </div>
+          <div class="adm-section" style="margin-bottom:0">
+            <div class="adm-section-title">Cluster opslaglocaties</div>
+            <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Tijdelijke en tussenopslag op clusterniveau</div>
+            ${clOpslag||'<div style="font-size:13px;color:var(--ink-faint)">Geen opslaglocaties gedefinieerd</div>'}
+          </div>
         </div>
       </div>
 
