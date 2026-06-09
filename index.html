@@ -782,7 +782,8 @@
   .rp-st-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint)}
   .rp-st-meta{font-size:10px;color:var(--ink-soft);display:flex;justify-content:space-between}
   .rp-st-nvt{font-size:11px;color:var(--ink-faint);font-style:italic;padding:2px 0}
-  .rp-ph-card{border:1.5px dashed;border-radius:var(--radius);padding:20px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:90px}
+  .rp-ph-card{border:1.5px dashed;border-radius:var(--radius);padding:20px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:90px;cursor:pointer;transition:opacity .15s}
+  .rp-ph-card:hover{opacity:.75}
   .rp-ph-icon{font-size:26px;font-weight:300;line-height:1;margin-bottom:6px}
   .rp-ph-line1{font-size:12px;font-weight:600;margin-bottom:4px}
   .rp-ph-line2{font-size:10px;color:var(--ink-faint);line-height:1.4}
@@ -835,8 +836,12 @@
   nav.tabs button[data-v="beheer"]{color:var(--kk-brons-licht)}
   nav.tabs button[data-v="beheer"].active{background:rgba(168,132,44,.18);color:var(--kk-brons-licht)}
   /* ---------- ADMIN PANEL ---------- */
-  .adm-panel{max-width:820px}
+  .adm-panel{width:100%}
   .adm-tab-section-hdr{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--kk-blue);padding:10px 0 6px;margin:8px 0 10px;border-bottom:2px solid var(--kk-blue);opacity:.85}
+  .adm-nav{display:flex;gap:4px;margin-bottom:18px;border-bottom:2px solid var(--line);padding-bottom:0;flex-wrap:wrap}
+  .adm-nav-btn{padding:9px 18px;border:none;background:none;font-family:var(--font);font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;border-radius:6px 6px 0 0;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;white-space:nowrap}
+  .adm-nav-btn:hover{color:var(--ink);background:var(--surface-2)}
+  .adm-nav-btn.active{color:var(--kk-blue);border-bottom-color:var(--kk-blue);background:none}
   .adm-section{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
   .adm-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
   .adm-cluster-nm{font-size:12px;font-weight:600;color:var(--ink-soft);margin:12px 0 5px;padding-bottom:3px;border-bottom:1px solid var(--line-soft)}
@@ -1572,7 +1577,7 @@ function renderRobuust(){
     if(!d||d.gesloten)return `<div class="rp-st-block"><div class="rp-st-nvt">n.v.t. — gesloten</div></div>`;
     return `<div class="rp-st-block">${stBar('Kwiklimiet',d.kwik_h,d.kwik_max,'mg/kg ds')}${stBar('Arseenlimiet',d.ars_h,d.ars_max,'mg/kg ds')}<div class="rp-st-row"><div class="rp-st-meta"><span class="rp-st-lbl">PFAS-limiet</span><span>${pfasBadge(d.pfas)}</span></div></div></div>`;
   };
-  const phCard=(bClr,iClr,l1,l2)=>`<div class="rp-ph-card" style="border-color:${bClr};background:${bClr}1a"><div class="rp-ph-icon" style="color:${iClr}">+</div><div class="rp-ph-line1" style="color:${iClr}">${l1}</div>${l2?`<div class="rp-ph-line2">${l2}</div>`:''}</div>`;
+  const phCard=(bClr,iClr,l1,l2)=>`<div class="rp-ph-card" style="border-color:${bClr};background:${bClr}1a" onclick="activateTab('beheer')" title="Klik om naar Beheer te gaan"><div class="rp-ph-icon" style="color:${iClr}">+</div><div class="rp-ph-line1" style="color:${iClr}">${l1}</div>${l2?`<div class="rp-ph-line2">${l2}</div>`:''}<div class="rp-ph-line2" style="margin-top:6px;color:${iClr};opacity:.7">→ Beheer tab</div></div>`;
 
   // SUBSECTIE A
   const subA=[
@@ -3698,113 +3703,124 @@ function renderAdminPanel(){
 
   pw.innerHTML=`
     <div class="adm-panel">
+      <nav class="adm-nav">
+        <button class="adm-nav-btn" data-adm-tab="kto"    onclick="admSwitchTab('kto')">Ketenoverzicht</button>
+        <button class="adm-nav-btn" data-adm-tab="rp"     onclick="admSwitchTab('rp')">Robuust Plan</button>
+        <button class="adm-nav-btn" data-adm-tab="alg"    onclick="admSwitchTab('alg')">Algemeen &amp; Scenario's</button>
+        <button class="adm-nav-btn" data-adm-tab="toegang" onclick="admSwitchTab('toegang')">Toegang</button>
+      </nav>
 
-      <div class="adm-section">
-        <div class="adm-section-title">Algemeen</div>
-        <div class="adm-field-row"><label>Stand-datum</label>
-          <input type="date" id="adm-datum" value="${DATA.standDatum||''}" class="adm-txt" style="max-width:180px"></div>
-        <div class="adm-field-row"><label>Alert titel</label>
-          <input type="text" id="adm-ka-titel" value="${ka.titel||''}" class="adm-txt"></div>
-        <div style="margin-top:4px">
-          <div style="font-size:10px;font-weight:600;color:var(--danger-ink);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Actuele verstoringen</div>
-          ${(ka.verstoringen||[]).map((v,i)=>`<div class="adm-tl-row">
-            <select id="adm-ka-v-${i}-status" class="adm-sel" style="flex:0 0 90px">
-              <option value="danger"${v.status==='danger'?' selected':''}>🔴 kritiek</option>
-              <option value="warning"${v.status==='warning'?' selected':''}>🟠 gepland</option>
-            </select>
-            <input type="text" id="adm-ka-v-${i}-tekst" value="${v.tekst||''}" class="adm-txt" style="flex:1">
-          </div>`).join('')}
+      <div data-adm-sec="kto">
+        <div class="adm-section">
+          <div class="adm-section-title">Waterschap tonnages</div>
+          <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Dagelijkse slibproductie per waterschap (ton/dag)</div>
+          ${wsRows}
         </div>
-        <div style="margin-top:6px">
-          <div style="font-size:10px;font-weight:600;color:var(--warn-ink);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Ketenrisico's</div>
-          ${(ka.risicos||[]).map((r,i)=>`
-            <input type="text" id="adm-ka-r-${i}" value="${r||''}" class="adm-txt" style="margin-bottom:4px">`).join('')}
+        <div class="adm-section">
+          <div class="adm-section-title">Verwerkers &amp; installaties</div>
+          <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Status, capaciteit en onderhoud per verwerkingsinstallatie</div>
+          ${clInst}
         </div>
-        <div style="margin-top:6px">
-          <div style="font-size:10px;font-weight:600;color:var(--kk-blue);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Strategische inzichten</div>
-          ${(ka.inzichten||[]).map((ins,i)=>`
-            <input type="text" id="adm-ka-i-${i}" value="${ins||''}" class="adm-txt" style="margin-bottom:4px">`).join('')}
+        <div class="adm-section">
+          <div class="adm-section-title">Cluster opslaglocaties</div>
+          <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Tijdelijke en tussenopslag op clusterniveau</div>
+          ${clOpslag||'<div style="font-size:13px;color:var(--ink-faint)">Geen opslaglocaties gedefinieerd</div>'}
         </div>
-        <div class="adm-field-row"><label>Noodbuffer basis (ton)</label>
-          <input type="number" id="adm-noodbasis" value="${DATA.noodBasis}" class="adm-num"></div>
       </div>
 
-      <div class="adm-tab-section-hdr">Ketenoverzicht</div>
-
-      <div class="adm-section">
-        <div class="adm-section-title">Waterschap tonnages</div>
-        <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Dagelijkse slibproductie per waterschap (ton/dag)</div>
-        ${wsRows}
-      </div>
-
-      <div class="adm-section">
-        <div class="adm-section-title">Verwerkers &amp; installaties</div>
-        <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Status, capaciteit en onderhoud per verwerkingsinstallatie</div>
-        ${clInst}
-      </div>
-
-      <div class="adm-section">
-        <div class="adm-section-title">Cluster opslaglocaties</div>
-        <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Tijdelijke en tussenopslag op clusterniveau</div>
-        ${clOpslag||'<div style="font-size:13px;color:var(--ink-faint)">Geen opslaglocaties gedefinieerd</div>'}
-      </div>
-
-      <div class="adm-tab-section-hdr">Robuust Plan</div>
-
-      <div class="adm-section">
-        <div class="adm-section-title">Opvangcapaciteit — Richtlijn 7%</div>
-        <div style="font-size:12px;color:var(--ink-faint);margin-bottom:12px">AQM incidentenopslaglocaties per scenario type (UvW-richtlijn 7% landelijke productie)</div>
-        ${_opvSetH('a','Set A — Standaard incidentenopslag (type 1–3)')}
-        ${_opvSetH('b','Set B — Kwaliteitsroute (type 4)')}
-        ${_opvSetH('c','Set C — Specialistische route (type 5)')}
-      </div>
-
-      <div class="adm-section">
-        <div class="adm-section-title">Calamiteiten opslag</div>
-        <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Totale incidentenopslagcapaciteit en huidige bezetting</div>
-        <div class="adm-field-row"><label>Bezet (ton)</label>
-          <input type="number" id="adm-cal-bezet" value="${DATA.calamiteitenOpslagBezet||0}" class="adm-num"></div>
-        <div class="adm-field-row"><label>Totale capaciteit (ton)</label>
-          <input type="number" id="adm-cal-totaal" value="${DATA.calamiteitenOpslagTotaal||0}" class="adm-num"></div>
-      </div>
-
-      <div class="adm-section">
-        <div class="adm-section-title">Noodopslag — Rijksverantwoordelijkheid</div>
-        <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Noodopvang bij grote calamiteiten (art. 10.37 Wm)</div>
-        <table class="adm-table">
-          <thead><tr><th>Naam</th><th>Bezet (ton)</th><th>Cap (ton)</th><th>Status</th></tr></thead>
-          <tbody>${noRows}</tbody>
-        </table>
-      </div>
-
-      <div class="adm-section">
-        <div class="adm-section-title">Scenario parameters</div>
-        <table class="adm-table">
-          <thead><tr><th>Scenario</th><th>Wegval (t/dag)</th><th>Opslagverlies (ton)</th></tr></thead>
-          <tbody>${scRows}</tbody>
-        </table>
-      </div>
-
-      <div class="adm-section" id="adm-contact-section">
-        <div class="adm-section-title">Toegang &amp; gebruik</div>
-        <div class="adm-tabs">
-          <button class="adm-tab-btn active" id="adm-tab-btn-verzoeken" onclick="admShowTab('verzoeken')">Toegangsverzoeken <span id="adm-contact-badge"></span></button>
-          <button class="adm-tab-btn" id="adm-tab-btn-inlogmomenten" onclick="admShowTab('inlogmomenten')">Inlogmomenten</button>
-          <button class="adm-tab-btn" id="adm-tab-btn-suggesties" onclick="admShowTab('suggesties')">Suggesties <span id="adm-sg-badge"></span></button>
+      <div data-adm-sec="rp">
+        <div class="adm-section">
+          <div class="adm-section-title">Opvangcapaciteit — Richtlijn 7%</div>
+          <div style="font-size:12px;color:var(--ink-faint);margin-bottom:12px">AQM incidentenopslaglocaties per scenario type (UvW-richtlijn 7% landelijke productie)</div>
+          ${_opvSetH('a','Set A — Standaard incidentenopslag (type 1–3)')}
+          ${_opvSetH('b','Set B — Kwaliteitsroute (type 4)')}
+          ${_opvSetH('c','Set C — Specialistische route (type 5)')}
         </div>
-        <div id="adm-tab-verzoeken">
-          <div id="adm-contact-list" style="font-size:13px;color:var(--ink-faint)">Laden…</div>
+        <div class="adm-section">
+          <div class="adm-section-title">Calamiteiten opslag</div>
+          <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Totale incidentenopslagcapaciteit en huidige bezetting</div>
+          <div class="adm-field-row"><label>Bezet (ton)</label>
+            <input type="number" id="adm-cal-bezet" value="${DATA.calamiteitenOpslagBezet||0}" class="adm-num"></div>
+          <div class="adm-field-row"><label>Totale capaciteit (ton)</label>
+            <input type="number" id="adm-cal-totaal" value="${DATA.calamiteitenOpslagTotaal||0}" class="adm-num"></div>
         </div>
-        <div id="adm-tab-inlogmomenten" style="display:none">
-          <div id="adm-loginlog-list" style="font-size:13px;color:var(--ink-faint)">Laden…</div>
+        <div class="adm-section">
+          <div class="adm-section-title">Noodopslag — Rijksverantwoordelijkheid</div>
+          <div style="font-size:12px;color:var(--ink-faint);margin-bottom:10px">Noodopvang bij grote calamiteiten (art. 10.37 Wm)</div>
+          <table class="adm-table">
+            <thead><tr><th>Naam</th><th>Bezet (ton)</th><th>Cap (ton)</th><th>Status</th></tr></thead>
+            <tbody>${noRows}</tbody>
+          </table>
         </div>
-        <div id="adm-tab-suggesties" style="display:none">
-          <div id="adm-sg-list" style="font-size:13px;color:var(--ink-faint)">Laden…</div>
+      </div>
+
+      <div data-adm-sec="alg">
+        <div class="adm-section">
+          <div class="adm-section-title">Algemeen</div>
+          <div class="adm-field-row"><label>Stand-datum</label>
+            <input type="date" id="adm-datum" value="${DATA.standDatum||''}" class="adm-txt" style="max-width:180px"></div>
+          <div class="adm-field-row"><label>Alert titel</label>
+            <input type="text" id="adm-ka-titel" value="${ka.titel||''}" class="adm-txt"></div>
+          <div style="margin-top:4px">
+            <div style="font-size:10px;font-weight:600;color:var(--danger-ink);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Actuele verstoringen</div>
+            ${(ka.verstoringen||[]).map((v,i)=>`<div class="adm-tl-row">
+              <select id="adm-ka-v-${i}-status" class="adm-sel" style="flex:0 0 90px">
+                <option value="danger"${v.status==='danger'?' selected':''}>🔴 kritiek</option>
+                <option value="warning"${v.status==='warning'?' selected':''}>🟠 gepland</option>
+              </select>
+              <input type="text" id="adm-ka-v-${i}-tekst" value="${v.tekst||''}" class="adm-txt" style="flex:1">
+            </div>`).join('')}
+          </div>
+          <div style="margin-top:6px">
+            <div style="font-size:10px;font-weight:600;color:var(--warn-ink);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Ketenrisico's</div>
+            ${(ka.risicos||[]).map((r,i)=>`
+              <input type="text" id="adm-ka-r-${i}" value="${r||''}" class="adm-txt" style="margin-bottom:4px">`).join('')}
+          </div>
+          <div style="margin-top:6px">
+            <div style="font-size:10px;font-weight:600;color:var(--kk-blue);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Strategische inzichten</div>
+            ${(ka.inzichten||[]).map((ins,i)=>`
+              <input type="text" id="adm-ka-i-${i}" value="${ins||''}" class="adm-txt" style="margin-bottom:4px">`).join('')}
+          </div>
+          <div class="adm-field-row"><label>Noodbuffer basis (ton)</label>
+            <input type="number" id="adm-noodbasis" value="${DATA.noodBasis}" class="adm-num"></div>
+        </div>
+        <div class="adm-section">
+          <div class="adm-section-title">Scenario parameters</div>
+          <table class="adm-table">
+            <thead><tr><th>Scenario</th><th>Wegval (t/dag)</th><th>Opslagverlies (ton)</th></tr></thead>
+            <tbody>${scRows}</tbody>
+          </table>
+        </div>
+      </div>
+
+      <div data-adm-sec="toegang">
+        <div class="adm-section" id="adm-contact-section">
+          <div class="adm-section-title">Toegang &amp; gebruik</div>
+          <div class="adm-tabs">
+            <button class="adm-tab-btn active" id="adm-tab-btn-verzoeken" onclick="admShowTab('verzoeken')">Toegangsverzoeken <span id="adm-contact-badge"></span></button>
+            <button class="adm-tab-btn" id="adm-tab-btn-inlogmomenten" onclick="admShowTab('inlogmomenten')">Inlogmomenten</button>
+            <button class="adm-tab-btn" id="adm-tab-btn-suggesties" onclick="admShowTab('suggesties')">Suggesties <span id="adm-sg-badge"></span></button>
+          </div>
+          <div id="adm-tab-verzoeken">
+            <div id="adm-contact-list" style="font-size:13px;color:var(--ink-faint)">Laden…</div>
+          </div>
+          <div id="adm-tab-inlogmomenten" style="display:none">
+            <div id="adm-loginlog-list" style="font-size:13px;color:var(--ink-faint)">Laden…</div>
+          </div>
+          <div id="adm-tab-suggesties" style="display:none">
+            <div id="adm-sg-list" style="font-size:13px;color:var(--ink-faint)">Laden…</div>
+          </div>
         </div>
       </div>
 
       <button class="adm-save" id="adm-save-btn" onclick="saveToCloud()">Opslaan naar cloud ↑</button>
     </div>`;
+  admSwitchTab('kto');
+}
+
+function admSwitchTab(t){
+  document.querySelectorAll('.adm-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.admTab===t));
+  document.querySelectorAll('[data-adm-sec]').forEach(s=>{s.style.display=s.dataset.admSec===t?'':'none';});
 }
 
 function collectAdminData(){
