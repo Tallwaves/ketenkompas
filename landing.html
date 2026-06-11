@@ -63,7 +63,8 @@ nav.scrolled .nav-cta{background:var(--ink);color:var(--paper)!important}
 .hero{min-height:100vh;background:linear-gradient(180deg,#0A1628 0%,#0C1B30 55%,#10243C 100%);color:var(--paper);position:relative;overflow:hidden;
 display:flex;flex-direction:column;padding:0 clamp(24px,5vw,64px)}
 .hero-compass{position:absolute;right:-10vw;top:30%;transform:translateY(-50%);width:min(54vw,720px);height:min(54vw,720px);opacity:.34;pointer-events:none;z-index:1}
-.hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:clamp(100px,12vh,150px);padding-bottom:clamp(32px,4vh,60px)}
+.hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;flex:1;display:grid;grid-template-columns:1fr 420px;gap:clamp(32px,5vw,72px);align-items:center;padding-top:clamp(100px,12vh,150px);padding-bottom:clamp(32px,4vh,60px)}
+.hero-left{display:flex;flex-direction:column}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:34px}
 .hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--gold)}
 h1{font-family:var(--serif);font-weight:400;font-size:clamp(40px,5.6vw,76px);line-height:1.06;letter-spacing:-.025em;max-width:15ch;margin-bottom:28px}
@@ -85,6 +86,67 @@ h1 em{font-style:italic;font-weight:300;color:var(--gold-soft)}
 .portal-meta b{display:block;color:rgba(250,248,243,.85);font-weight:500;font-size:13px;letter-spacing:.04em}
 .portal-meta a{color:var(--gold-soft);text-decoration:none;border-bottom:1px solid rgba(229,213,176,.3);transition:border-color .25s}
 .portal-meta a:hover{border-bottom-color:var(--gold-soft)}
+
+/* ── scenario-tile ───────────── */
+.sr-tile{position:relative;border-radius:20px;overflow:hidden;border:1px solid rgba(200,160,80,.28);backdrop-filter:blur(12px);background:rgba(10,22,40,.55);padding:28px 28px 24px;cursor:pointer;transition:border-color .3s,transform .3s,box-shadow .3s;align-self:stretch;display:flex;flex-direction:column}
+.sr-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--teal-bright));opacity:.8}
+.sr-tile:hover{border-color:rgba(200,160,80,.55);transform:translateY(-4px);box-shadow:0 32px 80px -24px rgba(0,0,0,.6)}
+.sr-tile-tag{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.sr-tile-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.sr-tile h3{font-family:var(--serif);font-weight:400;font-size:clamp(21px,2vw,26px);letter-spacing:-.015em;line-height:1.15;margin-bottom:12px;color:var(--paper)}
+.sr-tile h3 em{font-style:italic;font-weight:300;color:var(--gold-soft)}
+.sr-tile-sub{font-size:14px;font-weight:300;color:var(--mist);line-height:1.65;margin-bottom:22px}
+.sr-types{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:26px;flex:1}
+.sr-types li{display:flex;align-items:baseline;gap:10px;font-size:13.5px;color:rgba(250,248,243,.75);font-weight:300}
+.sr-types li::before{content:'—';color:var(--gold);flex-shrink:0;opacity:.7}
+.sr-cta{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--gold);border-radius:100px;color:var(--ink);font-size:14px;font-weight:600;letter-spacing:.01em;margin-top:auto;transition:transform .2s,box-shadow .2s}
+.sr-tile:hover .sr-cta{transform:translateY(-1px);box-shadow:0 10px 24px -8px rgba(200,160,80,.5)}
+.sr-cta-arrow{font-size:18px;transition:transform .2s}
+.sr-tile:hover .sr-cta-arrow{transform:translateX(3px)}
+
+/* ── scenario-modal ──────────── */
+.sm-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:flex-end;padding:16px;background:rgba(10,22,40,.65);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .35s}
+.sm-overlay.open{opacity:1;pointer-events:all}
+.sm-panel{width:100%;max-width:540px;max-height:calc(100vh - 32px);overflow-y:auto;background:#0D1E33;border:1px solid rgba(200,160,80,.28);border-radius:22px;box-shadow:0 60px 120px -30px rgba(0,0,0,.8);transform:translateX(40px);transition:transform .4s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column}
+.sm-overlay.open .sm-panel{transform:none}
+.sm-panel-top{position:relative;padding:30px 32px 0;flex-shrink:0}
+.sm-panel-top::before{content:'';position:absolute;top:0;left:32px;right:32px;height:1px;background:linear-gradient(90deg,var(--gold),var(--teal-bright),transparent);opacity:.7}
+.sm-close{position:absolute;top:20px;right:24px;background:rgba(250,248,243,.08);border:1px solid rgba(250,248,243,.12);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--mist);font-size:20px;line-height:1;transition:background .2s,color .2s}
+.sm-close:hover{background:rgba(250,248,243,.16);color:var(--paper)}
+.sm-kicker{font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.sm-title{font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.5vw,30px);letter-spacing:-.015em;line-height:1.15;color:var(--paper);margin-bottom:8px}
+.sm-title em{font-style:italic;font-weight:300;color:var(--gold-soft)}
+.sm-intro{font-size:14px;font-weight:300;color:var(--mist);line-height:1.65;margin-bottom:0;padding-bottom:24px;border-bottom:1px solid rgba(250,248,243,.08)}
+.sm-body{padding:24px 32px 32px;display:flex;flex-direction:column;gap:14px}
+.sm-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sm-field{display:flex;flex-direction:column;gap:6px}
+.sm-field.full{grid-column:1/-1}
+.sm-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(143,163,184,.8)}
+.sm-req{color:var(--gold);margin-left:2px}
+.sm-inp,.sm-sel,.sm-txt{font-family:var(--sans);font-size:14px;color:var(--paper);background:rgba(10,22,40,.7);border:1px solid rgba(250,248,243,.14);border-radius:10px;padding:11px 14px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%;box-sizing:border-box}
+.sm-inp::placeholder,.sm-txt::placeholder{color:rgba(143,163,184,.5)}
+.sm-inp:focus,.sm-sel:focus,.sm-txt:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,160,80,.15)}
+.sm-sel{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%238FA3B8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.sm-sel option{background:#0D1E33;color:var(--paper)}
+.sm-txt{resize:vertical;min-height:90px;line-height:1.55}
+.sm-urgency{display:flex;gap:8px}
+.sm-urg-btn{flex:1;padding:9px 6px;border-radius:100px;border:1px solid rgba(250,248,243,.14);background:transparent;color:var(--mist);font-size:13px;font-family:var(--sans);cursor:pointer;transition:all .2s;text-align:center}
+.sm-urg-btn.active{border-color:var(--gold);background:rgba(200,160,80,.15);color:var(--gold);font-weight:600}
+.sm-submit{padding:16px;border-radius:100px;border:none;background:var(--gold);color:var(--ink);font-size:15px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:transform .2s,box-shadow .2s;letter-spacing:.01em;margin-top:4px}
+.sm-submit:hover{transform:translateY(-2px);box-shadow:0 12px 28px -8px rgba(200,160,80,.5)}
+.sm-submit:disabled{opacity:.55;cursor:wait;transform:none;box-shadow:none}
+.sm-msg{font-size:13.5px;text-align:center;min-height:18px;color:var(--teal-bright)}
+.sm-msg.err{color:#F09595}
+.sm-success{display:none;flex-direction:column;align-items:center;text-align:center;padding:40px 32px 48px;gap:16px}
+.sm-success.show{display:flex}
+.sm-success-icon{width:60px;height:60px;border-radius:50%;background:rgba(93,202,165,.12);border:1px solid rgba(93,202,165,.3);display:flex;align-items:center;justify-content:center;font-size:28px}
+.sm-success h3{font-family:var(--serif);font-size:24px;font-weight:400;color:var(--paper)}
+.sm-success p{font-size:14px;font-weight:300;color:var(--mist);max-width:36ch;line-height:1.65}
+@media(max-width:1000px){
+  .hero-inner{grid-template-columns:1fr}
+  .sr-tile{display:none}
+}
+@media(max-width:600px){.sm-row{grid-template-columns:1fr}.sm-panel{border-radius:16px 16px 0 0;max-height:90vh}.sm-overlay{align-items:flex-end;padding:0}}
 
 .hero-ticker{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;
 border-top:1px solid var(--line-light);padding:28px 0 40px;
@@ -364,18 +426,33 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
   </svg>
 
   <div class="hero-inner">
-    <div class="hero-eyebrow rv">Ketenregie-instrument · Nederlandse slibketen</div>
-    <h1 class="rv rv-d1">Het scenario-instrument voor de <em>Nederlandse slibketen.</em></h1>
-    <p class="hero-sub rv rv-d2">KetenKompas brengt zuiveringen, verwerkingsroutes en opslaglocaties samen in één doorrekenbaar beeld. Verstoringen worden doorgerekend op zuiveringsniveau en <strong>vertaald naar een bestuurlijke rapportage.</strong></p>
-    <div class="portal rv rv-d3">
-      <div class="portal-status"><span class="pdot"></span>Instrument operationeel · stand juni 2026</div>
-      <div class="portal-row">
-        <a class="btn-gold" href="https://slib.ketenkompas.nl">Naar het instrument <span>→</span></a>
-        <div class="portal-meta">
-          <b>slib.ketenkompas.nl</b>
-          Nog geen toegangscode? <a href="https://slib.ketenkompas.nl">Toegang aanvragen</a>
+    <div class="hero-left">
+      <div class="hero-eyebrow rv">Ketenregie-instrument · Nederlandse slibketen</div>
+      <h1 class="rv rv-d1">Het scenario-instrument voor de <em>Nederlandse slibketen.</em></h1>
+      <p class="hero-sub rv rv-d2">KetenKompas brengt zuiveringen, verwerkingsroutes en opslaglocaties samen in één doorrekenbaar beeld. Verstoringen worden doorgerekend op zuiveringsniveau en <strong>vertaald naar een bestuurlijke rapportage.</strong></p>
+      <div class="portal rv rv-d3">
+        <div class="portal-status"><span class="pdot"></span>Instrument operationeel · stand juni 2026</div>
+        <div class="portal-row">
+          <a class="btn-gold" href="https://slib.ketenkompas.nl">Naar het instrument <span>→</span></a>
+          <div class="portal-meta">
+            <b>slib.ketenkompas.nl</b>
+            Nog geen toegangscode? <a href="https://slib.ketenkompas.nl">Toegang aanvragen</a>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="sr-tile rv rv-d2" onclick="openScenarioModal()" role="button" tabindex="0" aria-label="Scenario aanvragen openen">
+      <div class="sr-tile-tag">Sectorbreed toegankelijk</div>
+      <h3>Scenario laten <em>doorrekenen</em></h3>
+      <p class="sr-tile-sub">Geen toegang tot het instrument? Dien een verzoek in — wij rekenen het scenario door en leveren een bestuurlijke rapportage.</p>
+      <ul class="sr-types">
+        <li>Verstoringsanalyse (uitval verwerker of route)</li>
+        <li>Capaciteitsanalyse toekomstige slibstromen</li>
+        <li>Robuustheidstoets Robuust Plan Slib II</li>
+        <li>Bevolkingsgroei of exportscenario</li>
+        <li>Eigen scenario op maat</li>
+      </ul>
+      <div class="sr-cta"><span>Verzoek indienen</span><span class="sr-cta-arrow">→</span></div>
     </div>
   </div>
 
@@ -607,6 +684,85 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
   <div class="foot-giant" aria-hidden="true"><span>Keten<i>Kompas</i></span></div>
 </footer>
 
+<!-- ════════ SCENARIO-AANVRAAG MODAL ════════ -->
+<div class="sm-overlay" id="smOverlay" role="dialog" aria-modal="true" aria-labelledby="smTitle">
+  <div class="sm-panel">
+    <div class="sm-panel-top">
+      <button class="sm-close" onclick="closeScenarioModal()" aria-label="Sluiten">×</button>
+      <div class="sm-kicker">Scenario aanvragen</div>
+      <div class="sm-title" id="smTitle">Welk scenario mogen <em>wij doorrekenen?</em></div>
+      <p class="sm-intro">Beschrijf je situatie zo concreet mogelijk. We nemen contact op om het scenario te verfijnen en de doorrekening te plannen. Geen toegangscode nodig.</p>
+    </div>
+    <div class="sm-body" id="smForm">
+      <div class="sm-row">
+        <div class="sm-field">
+          <label class="sm-label">Naam<span class="sm-req">*</span></label>
+          <input class="sm-inp" id="sm-naam" type="text" placeholder="Je volledige naam" autocomplete="name">
+        </div>
+        <div class="sm-field">
+          <label class="sm-label">Functie / Rol</label>
+          <input class="sm-inp" id="sm-functie" type="text" placeholder="Bijv. Beleidsadviseur">
+        </div>
+      </div>
+      <div class="sm-row">
+        <div class="sm-field">
+          <label class="sm-label">Organisatie<span class="sm-req">*</span></label>
+          <input class="sm-inp" id="sm-org" type="text" placeholder="Waterschap / bedrijf" autocomplete="organization">
+        </div>
+        <div class="sm-field">
+          <label class="sm-label">Waterschap(pen) / Regio</label>
+          <input class="sm-inp" id="sm-regio" type="text" placeholder="Bijv. AGV, HDSR">
+        </div>
+      </div>
+      <div class="sm-row">
+        <div class="sm-field">
+          <label class="sm-label">E-mailadres<span class="sm-req">*</span></label>
+          <input class="sm-inp" id="sm-email" type="email" placeholder="naam@organisatie.nl" autocomplete="email">
+        </div>
+        <div class="sm-field">
+          <label class="sm-label">Telefoonnummer</label>
+          <input class="sm-inp" id="sm-tel" type="tel" placeholder="+31 6 …" autocomplete="tel">
+        </div>
+      </div>
+      <div class="sm-field full">
+        <label class="sm-label">Type scenario<span class="sm-req">*</span></label>
+        <select class="sm-sel" id="sm-type">
+          <option value="" disabled selected>Selecteer een type scenario</option>
+          <option value="verstoring">Verstoringsanalyse — uitval verwerker of route</option>
+          <option value="capaciteit">Capaciteitsanalyse — toekomstige slibstromen</option>
+          <option value="robuustheid">Robuustheidstoets — Robuust Plan Slib II</option>
+          <option value="bevolking">Bevolkingsgroei of exportscenario</option>
+          <option value="maatwerk">Eigen scenario op maat</option>
+          <option value="anders">Anders</option>
+        </select>
+      </div>
+      <div class="sm-field full">
+        <label class="sm-label">Beschrijving van het scenario<span class="sm-req">*</span></label>
+        <textarea class="sm-txt" id="sm-desc" placeholder="Beschrijf het scenario zo concreet mogelijk: welke zuivering, welke verstoring of vraag, welke periode, wat is de aanleiding…"></textarea>
+      </div>
+      <div class="sm-field full">
+        <label class="sm-label">Gewenste opleverdatum</label>
+        <input class="sm-inp" id="sm-datum" type="date">
+      </div>
+      <div class="sm-field full">
+        <label class="sm-label">Urgentie</label>
+        <div class="sm-urgency">
+          <button class="sm-urg-btn active" data-urg="normaal" onclick="setUrgentie(this)">Normaal</button>
+          <button class="sm-urg-btn" data-urg="hoog" onclick="setUrgentie(this)">Hoog</button>
+          <button class="sm-urg-btn" data-urg="acuut" onclick="setUrgentie(this)">Acuut</button>
+        </div>
+      </div>
+      <div class="sm-msg" id="sm-msg"></div>
+      <button class="sm-submit" id="sm-submit" onclick="submitScenarioRequest()">Verzoek versturen →</button>
+    </div>
+    <div class="sm-success" id="smSuccess">
+      <div class="sm-success-icon">✓</div>
+      <h3>Verzoek ontvangen</h3>
+      <p>We nemen binnen twee werkdagen contact op om het scenario te bespreken en de doorrekening in te plannen.</p>
+    </div>
+  </div>
+</div>
+
 <script>
 const nav=document.getElementById('nav');
 addEventListener('scroll',()=>{
@@ -655,6 +811,87 @@ const rose=document.getElementById('compassRose');
 addEventListener('scroll',()=>{
   if(rose){rose.style.transform=`rotate(${scrollY*0.04}deg)`;rose.style.transformOrigin='300px 300px'}
 },{passive:true});
+
+/* ── scenario modal ── */
+let smUrgentie='normaal';
+
+function openScenarioModal(){
+  document.getElementById('smOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeScenarioModal(){
+  document.getElementById('smOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('smOverlay').addEventListener('click',e=>{
+  if(e.target===e.currentTarget)closeScenarioModal();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')closeScenarioModal();
+});
+document.querySelector('.sr-tile').addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();openScenarioModal();}
+});
+
+function setUrgentie(btn){
+  document.querySelectorAll('.sm-urg-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  smUrgentie=btn.dataset.urg;
+}
+
+async function submitScenarioRequest(){
+  const naam=document.getElementById('sm-naam').value.trim();
+  const org=document.getElementById('sm-org').value.trim();
+  const email=document.getElementById('sm-email').value.trim();
+  const type=document.getElementById('sm-type').value;
+  const desc=document.getElementById('sm-desc').value.trim();
+  const msg=document.getElementById('sm-msg');
+
+  if(!naam||!org||!email||!type||!desc){
+    msg.className='sm-msg err';
+    msg.textContent='Vul naam, organisatie, e-mailadres, type en beschrijving in.';
+    return;
+  }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    msg.className='sm-msg err';msg.textContent='Voer een geldig e-mailadres in.';return;
+  }
+
+  const btn=document.getElementById('sm-submit');
+  btn.disabled=true;btn.textContent='Versturen…';
+  msg.className='sm-msg';msg.textContent='';
+
+  const payload={
+    naam,
+    organisatie:org,
+    functie:document.getElementById('sm-functie').value.trim(),
+    regio:document.getElementById('sm-regio').value.trim(),
+    email,
+    telefoon:document.getElementById('sm-tel').value.trim(),
+    type,
+    beschrijving:desc,
+    opleverdatum:document.getElementById('sm-datum').value||null,
+    urgentie:smUrgentie,
+    ts:Date.now()
+  };
+
+  try{
+    const r=await fetch('/api/scenario-request',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    if(r.ok){
+      document.getElementById('smForm').style.display='none';
+      document.getElementById('smSuccess').classList.add('show');
+    }else{
+      throw new Error();
+    }
+  }catch{
+    msg.className='sm-msg err';
+    msg.textContent='Er ging iets mis — probeer het opnieuw of mail ons direct.';
+    btn.disabled=false;btn.textContent='Verzoek versturen →';
+  }
+}
 </script>
 </body>
 </html>
