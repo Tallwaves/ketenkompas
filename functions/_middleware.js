@@ -1,5 +1,4 @@
-const PROTECTED = 'slib.ketenkompas.nl';
-const LOGIN_HOST = 'ketenkompas.nl';
+const SLIB_HOST = 'slib.ketenkompas.nl';
 
 export async function onRequest({ request, env, next }) {
   const url = new URL(request.url);
@@ -9,8 +8,14 @@ export async function onRequest({ request, env, next }) {
     return next();
   }
 
-  // Serve landing page at the root of the public domain
-  if (url.hostname === LOGIN_HOST && (url.pathname === '/' || url.pathname === '')) {
+  // slib subdomain: always pass through to the app (handles its own login overlay)
+  if (url.hostname === SLIB_HOST) {
+    return next();
+  }
+
+  // All other hosts (ketenkompas.nl AND *.pages.dev preview URLs):
+  // serve landing page at root so previews also show the landing page.
+  if (url.pathname === '/' || url.pathname === '') {
     const landingUrl = new URL('/landing.html', request.url);
     if (env.ASSETS) {
       return env.ASSETS.fetch(new Request(landingUrl.toString(), request));
@@ -18,9 +23,6 @@ export async function onRequest({ request, env, next }) {
     return Response.redirect(landingUrl.toString(), 302);
   }
 
-  // For the slib subdomain: always pass through to the app.
-  // The app itself checks /api/session at startup and shows the login overlay
-  // when no valid session exists.
   return next();
 }
 
