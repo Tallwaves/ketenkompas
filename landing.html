@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KetenKompas — Inzicht en richting in de slibketen</title>
+<title>KetenKompas — Scenario-instrument voor de Nederlandse slibketen</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Albert+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -63,19 +63,29 @@ nav.scrolled .nav-cta{background:var(--ink);color:var(--paper)!important}
 .hero{min-height:100vh;background:linear-gradient(180deg,#0A1628 0%,#0C1B30 55%,#10243C 100%);color:var(--paper);position:relative;overflow:hidden;
 display:flex;flex-direction:column;padding:0 clamp(24px,5vw,64px)}
 .hero-compass{position:absolute;right:-10vw;top:30%;transform:translateY(-50%);width:min(54vw,720px);height:min(54vw,720px);opacity:.34;pointer-events:none;z-index:1}
-.hero-land{position:absolute;left:0;right:0;bottom:0;width:100%;height:min(52vh,460px);pointer-events:none;z-index:1}
 .hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:clamp(100px,12vh,150px);padding-bottom:clamp(32px,4vh,60px)}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:34px}
 .hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--gold)}
-h1{font-family:var(--serif);font-weight:400;font-size:clamp(44px,6.4vw,88px);line-height:1.04;letter-spacing:-.025em;max-width:13ch;margin-bottom:30px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(40px,5.6vw,76px);line-height:1.06;letter-spacing:-.025em;max-width:15ch;margin-bottom:28px}
 h1 em{font-style:italic;font-weight:300;color:var(--gold-soft)}
-.hero-sub{font-size:clamp(17px,1.5vw,20px);font-weight:300;color:var(--mist);max-width:46ch;margin-bottom:44px;line-height:1.7}
+.hero-sub{font-size:clamp(17px,1.5vw,20px);font-weight:300;color:var(--mist);max-width:50ch;margin-bottom:40px;line-height:1.7}
 .hero-sub strong{color:var(--paper);font-weight:500}
-.hero-actions{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
 .btn-gold{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--ink);background:var(--gold);border:none;padding:17px 34px;border-radius:100px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:transform .25s,box-shadow .25s}
 .btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 32px -8px rgba(200,160,80,.45)}
 .btn-ghost{font-size:15px;font-weight:500;color:var(--paper);text-decoration:none;padding:17px 10px;display:inline-flex;align-items:center;gap:8px;opacity:.8;transition:opacity .25s,gap .25s}
 .btn-ghost:hover{opacity:1;gap:12px}
+
+/* ── voorportaal ─────────────── */
+.portal{background:rgba(250,248,243,.045);border:1px solid var(--line-light);border-radius:18px;padding:24px 26px 22px;max-width:600px;backdrop-filter:blur(8px)}
+.portal-status{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);margin-bottom:18px}
+.pdot{width:8px;height:8px;border-radius:50%;background:#3FBF8F;box-shadow:0 0 0 4px rgba(63,191,143,.15);animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(63,191,143,.15)}50%{box-shadow:0 0 0 7px rgba(63,191,143,.07)}}
+.portal-row{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.portal-meta{font-size:13.5px;color:var(--mist);line-height:1.7}
+.portal-meta b{display:block;color:rgba(250,248,243,.85);font-weight:500;font-size:13px;letter-spacing:.04em}
+.portal-meta a{color:var(--gold-soft);text-decoration:none;border-bottom:1px solid rgba(229,213,176,.3);transition:border-color .25s}
+.portal-meta a:hover{border-bottom-color:var(--gold-soft)}
+
 .hero-ticker{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;
 border-top:1px solid var(--line-light);padding:28px 0 40px;
 display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:34px}
@@ -84,15 +94,29 @@ display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:34px}
 .tick b span{color:var(--gold)}
 .tick small{font-size:13px;color:var(--mist);font-weight:400;letter-spacing:.02em}
 
-/* ── wind turbines ───────────── */
-.hero-turbines{position:absolute;left:0;right:0;bottom:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}
+/* ── ketennetwerk ────────────── */
+.hero-net{position:absolute;left:0;right:0;bottom:0;width:100%;height:min(62vh,520px);pointer-events:none;z-index:1}
+.cta-net{position:absolute;left:0;right:0;top:0;width:100%;height:60%;pointer-events:none;opacity:.85}
+@keyframes spin{to{transform:rotate(360deg)}}
+.quote{position:relative;overflow:hidden}
+.quote-clarifier{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(120vw,860px);height:min(120vw,860px);pointer-events:none}
+.quote-clarifier .arm{animation:spin 90s linear infinite;transform-origin:400px 400px}
+.quote blockquote,.quote cite{position:relative;z-index:2}
 
-/* ── marquee ─────────────────── */
-.strip{background:var(--gold);color:var(--ink);overflow:hidden;padding:15px 0;position:relative}
-.strip-track{display:flex;gap:64px;white-space:nowrap;animation:marquee 36s linear infinite;width:max-content}
-.strip-track span{font-size:13.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:64px}
-.strip-track span::after{content:'✦';font-size:11px}
-@keyframes marquee{to{transform:translateX(-50%)}}
+/* ── module-index (vervangt marquee) ── */
+.modbar{background:var(--paper-warm);border-bottom:1px solid var(--line)}
+.modbar-inner{max-width:1280px;margin:0 auto;padding:20px clamp(24px,5vw,64px);
+display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;position:relative}
+.modbar-inner::before{content:'';position:absolute;left:clamp(24px,5vw,64px);right:clamp(24px,5vw,64px);top:50%;height:1px;background:var(--line)}
+.mod,.modbar-label{position:relative;background:var(--paper-warm);padding:0 14px}
+.modbar-label{padding-left:0}
+.mod::before{content:'';position:absolute;left:0;top:50%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;background:var(--gold)}
+@media(max-width:760px){.modbar-inner::before,.mod::before{display:none}.mod,.modbar-label{padding:0}}
+.mod{display:flex;align-items:baseline;gap:11px;font-size:12.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ink);text-decoration:none;transition:color .25s}
+.mod:hover{color:var(--teal)}
+.mod i{font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--gold);font-weight:400;letter-spacing:0;text-transform:none}
+.modbar-label{font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#8A94A2}
+@media(max-width:760px){.modbar-inner{justify-content:flex-start;row-gap:12px}}
 
 section{padding:clamp(90px,11vw,150px) clamp(24px,5vw,64px)}
 .wrap{max-width:1280px;margin:0 auto}
@@ -202,8 +226,7 @@ transform:perspective(1600px) rotateX(4deg);transform-origin:top}
 .quote cite b{display:block;font-size:15px;color:var(--ink);font-weight:600;margin-bottom:3px}
 
 /* ── cta ─────────────────────── */
-.cta{background:linear-gradient(180deg,#0A1628 0%,#0E2138 100%);color:var(--paper);position:relative;overflow:hidden;text-align:center;padding-bottom:clamp(150px,20vw,260px)}
-.cta-land{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:min(40vh,340px);pointer-events:none;opacity:.8}
+.cta{background:linear-gradient(180deg,#0A1628 0%,#0E2138 100%);color:var(--paper);position:relative;overflow:hidden;text-align:center;padding-bottom:clamp(110px,13vw,180px)}
 .cta .wrap{position:relative;z-index:2}
 .cta h2{font-size:clamp(38px,5vw,68px);max-width:17ch;margin:0 auto 26px}
 .cta h2 em{color:var(--gold-soft)}
@@ -212,11 +235,10 @@ transform:perspective(1600px) rotateX(4deg);transform-origin:top}
 .cta-note{margin-top:28px;font-size:13.5px;color:var(--mist);opacity:.8}
 
 /* ── footer ──────────────────── */
-footer{background:#060E1C;color:var(--mist)}
+footer{background:#060E1C;color:var(--mist);overflow:hidden}
 .foot-accent{height:3px;background:linear-gradient(90deg,var(--gold) 0%,var(--teal-bright) 60%,transparent 100%);opacity:.7}
 .foot-main{max-width:1280px;margin:0 auto;padding:64px clamp(24px,5vw,64px) 0;
 display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(28px,4vw,64px);align-items:start}
-.foot-brand-col{}
 .foot-brand{display:flex;align-items:center;gap:12px;color:var(--paper);font-size:19px;margin-bottom:16px}
 .foot-mission{font-size:14px;line-height:1.8;max-width:30ch;color:rgba(143,163,184,.8);margin-bottom:24px}
 .foot-pills{display:flex;flex-wrap:wrap;gap:7px}
@@ -225,9 +247,16 @@ display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(28px,4vw,64px);al
 .foot-col-hdr{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,248,243,.38);margin-bottom:4px;font-weight:500}
 .foot-col a{font-size:14px;color:rgba(143,163,184,.75);text-decoration:none;transition:color .2s;line-height:1.5}
 .foot-col a:hover{color:var(--paper)}
-.foot-divider{max-width:1280px;margin:52px auto 0;height:1px;background:rgba(250,248,243,.08);padding:0 clamp(24px,5vw,64px)}
-.foot-bottom{max-width:1280px;margin:0 auto;padding:22px clamp(24px,5vw,64px) 48px;font-size:12.5px;color:rgba(143,163,184,.45);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
-.foot-bottom-logo{display:flex;align-items:center;gap:8px;opacity:.4}
+.foot-divider{max-width:1280px;margin:52px auto 0;height:1px;background:rgba(250,248,243,.08)}
+.foot-bottom{max-width:1280px;margin:0 auto;padding:22px clamp(24px,5vw,64px) 0;font-size:12.5px;color:rgba(143,163,184,.45);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.foot-bottom-status{display:flex;align-items:center;gap:8px}
+.foot-bottom-status .pdot{width:6px;height:6px;box-shadow:none;animation:none}
+
+/* groot afgesneden woordmerk — framer-stijl */
+.foot-giant{position:relative;margin-top:34px;pointer-events:none;user-select:none}
+.foot-giant span{display:block;font-family:var(--serif);font-weight:400;font-size:clamp(76px,14.5vw,230px);line-height:.74;letter-spacing:-.045em;white-space:nowrap;text-align:center;
+color:rgba(250,248,243,.055);transform:translateY(20%)}
+.foot-giant span i{font-style:italic;color:rgba(200,160,80,.12)}
 @media(max-width:900px){.foot-main{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.foot-main{grid-template-columns:1fr}}
 </style>
@@ -249,52 +278,6 @@ display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(28px,4vw,64px);al
       <circle cx="32" cy="32" r="3.6" fill="#0A1628" stroke="currentColor" stroke-width="1.6"/>
     </symbol>
 
-    <symbol id="nl-land" viewBox="0 0 1440 460" preserveAspectRatio="xMidYMax slice">
-      <g stroke="#FAF8F3" fill="none" stroke-linecap="round">
-        <path d="M0 268 H1440" stroke-opacity=".1" stroke-width="1"/>
-        <path d="M0 252 Q140 244 290 250 T620 248 T980 252 T1440 247" stroke-opacity=".06" stroke-width="1"/>
-        <g stroke-opacity=".08">
-          <path d="M60 262 q14 -12 28 0"/><path d="M96 262 q14 -14 28 0"/><path d="M132 262 q12 -10 24 0"/>
-          <path d="M1290 260 q14 -12 28 0"/><path d="M1326 260 q16 -15 32 0"/>
-        </g>
-        <g stroke-opacity=".3" stroke-width="1.4">
-          <path d="M460 96 q9 7 18 0"/><path d="M492 84 q8 6 16 0"/><path d="M438 116 q7 5 14 0"/>
-        </g>
-        <g stroke-opacity=".12" stroke-width="1.2">
-          <path d="M210 268 V216"/><path d="M203 222 l7 -8 7 8"/>
-          <line x1="210" y1="196" x2="232" y2="218"/><line x1="232" y1="196" x2="210" y2="218"/>
-        </g>
-        <g stroke-width="1.4" stroke-opacity=".22">
-          <rect x="1058" y="226" width="64" height="42" fill="#0A1628" stroke-opacity=".3"/>
-          <line x1="1058" y1="226" x2="1090" y2="200" stroke-opacity=".25"/>
-          <line x1="1122" y1="226" x2="1090" y2="200" stroke-opacity=".25"/>
-          <line x1="1072" y1="268" x2="1072" y2="226"/><line x1="1108" y1="268" x2="1108" y2="226"/>
-          <rect x="1066" y="240" width="12" height="14" fill="#0A1628"/>
-          <rect x="1102" y="240" width="12" height="14" fill="#0A1628"/>
-        </g>
-        <g stroke-opacity=".1" stroke-width="1.2">
-          <path d="M348 268 l5 -44 h20 l5 44" fill="#0A1628"/>
-          <path d="M351 248 q12 -9 24 0"/>
-          <line x1="363" y1="222" x2="345" y2="204"/><line x1="363" y1="222" x2="382" y2="205"/>
-          <line x1="363" y1="222" x2="344" y2="239"/><line x1="363" y1="222" x2="381" y2="240"/>
-        </g>
-        <g stroke-opacity=".07">
-          <path d="M0 292 H1440"/><path d="M0 316 H1440"/>
-        </g>
-        <g stroke-opacity=".09" stroke-width="1">
-          <path d="M40 340 h120"/><path d="M220 348 h180"/><path d="M520 338 h90"/><path d="M760 352 h200"/><path d="M1080 342 h140"/><path d="M1300 354 h110"/>
-          <path d="M120 372 h160"/><path d="M420 380 h120"/><path d="M700 374 h90"/><path d="M940 384 h180"/><path d="M1240 376 h120"/>
-          <path d="M60 408 h100"/><path d="M340 414 h140"/><path d="M640 406 h110"/><path d="M900 418 h120"/><path d="M1160 410 h150"/>
-        </g>
-        <g stroke="#C8A050" stroke-opacity=".22" stroke-width="1.2">
-          <path d="M560 346 h54"/><path d="M1010 378 h44"/><path d="M260 404 h36"/>
-        </g>
-        <g stroke-opacity=".18" stroke-width="1.1">
-          <path d="M88 430 q-4 -34 -10 -52"/><path d="M101 432 q0 -40 4 -58"/><path d="M114 430 q5 -32 14 -48"/>
-          <path d="M1358 434 q-3 -30 -9 -46"/><path d="M1372 436 q1 -36 6 -52"/>
-        </g>
-      </g>
-    </symbol>
   </defs>
 </svg>
 
@@ -312,7 +295,7 @@ display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(28px,4vw,64px);al
   </div>
 </nav>
 
-<!-- ════════ HERO ════════ -->
+<!-- ════════ HERO / VOORPORTAAL ════════ -->
 <header class="hero">
   <svg class="hero-compass" id="heroCompass" viewBox="0 0 600 600" fill="none">
     <circle cx="300" cy="300" r="280" stroke="#FAF8F3" stroke-opacity=".07" stroke-width="1"/>
@@ -335,44 +318,64 @@ display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(28px,4vw,64px);al
     <circle cx="300" cy="300" r="9" fill="#0A1628" stroke="#C8A050" stroke-width="2"/>
   </svg>
 
-  <svg class="hero-land"><use href="#nl-land"/></svg>
-  <svg class="hero-turbines" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMax slice" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- Turbine A — tall, left -->
-    <line x1="236" y1="682" x2="252" y2="370" stroke="#FAF8F3" stroke-opacity=".18" stroke-width="4"/>
-    <g>
-      <animateTransform attributeName="transform" type="rotate" from="0 252 370" to="360 252 370" dur="16s" repeatCount="indefinite"/>
-      <line x1="252" y1="370" x2="252" y2="256" stroke="#FAF8F3" stroke-opacity=".28" stroke-width="2.5"/>
-      <line x1="252" y1="370" x2="153" y2="428" stroke="#FAF8F3" stroke-opacity=".28" stroke-width="2.5"/>
-      <line x1="252" y1="370" x2="351" y2="428" stroke="#FAF8F3" stroke-opacity=".28" stroke-width="2.5"/>
-      <circle cx="252" cy="370" r="6" fill="#C8A050" fill-opacity=".55"/>
+  <svg class="hero-net" viewBox="0 0 1440 520" preserveAspectRatio="xMidYMax slice" fill="none" font-family="Albert Sans,sans-serif">
+    <defs>
+      <path id="kp1" d="M120 390 C 220 360, 320 310, 430 290"/>
+      <path id="kp3" d="M430 290 C 580 320, 760 330, 905 340"/>
+      <path id="kp6" d="M905 340 C 1010 310, 1120 275, 1230 250"/>
+    </defs>
+    <g stroke="#FAF8F3" stroke-opacity=".1" stroke-width="1">
+      <use href="#kp1"/>
+      <path d="M250 240 C 310 260, 370 275, 430 290"/>
+      <path d="M60 220 C 180 240, 300 270, 430 290"/>
+      <use href="#kp3"/>
+      <path d="M610 200 C 700 250, 800 300, 905 340"/>
+      <path d="M700 420 C 770 395, 840 365, 905 340"/>
+      <path d="M820 180 C 850 240, 880 290, 905 340"/>
+      <use href="#kp6"/>
+      <path d="M1050 440 C 1110 380, 1170 305, 1230 250"/>
+      <path d="M1340 380 C 1305 340, 1270 290, 1230 250"/>
     </g>
-    <!-- Turbine B — medium, centre-left -->
-    <line x1="538" y1="672" x2="550" y2="440" stroke="#FAF8F3" stroke-opacity=".13" stroke-width="3"/>
-    <g>
-      <animateTransform attributeName="transform" type="rotate" from="0 550 440" to="360 550 440" dur="22s" repeatCount="indefinite"/>
-      <line x1="550" y1="440" x2="550" y2="356" stroke="#FAF8F3" stroke-opacity=".2" stroke-width="2"/>
-      <line x1="550" y1="440" x2="477" y2="482" stroke="#FAF8F3" stroke-opacity=".2" stroke-width="2"/>
-      <line x1="550" y1="440" x2="623" y2="482" stroke="#FAF8F3" stroke-opacity=".2" stroke-width="2"/>
-      <circle cx="550" cy="440" r="4.5" fill="#C8A050" fill-opacity=".4"/>
+    <g fill="#FAF8F3" fill-opacity=".3">
+      <circle cx="120" cy="390" r="3"/><circle cx="250" cy="240" r="3"/><circle cx="60" cy="220" r="2.5"/>
+      <circle cx="610" cy="200" r="3"/><circle cx="700" cy="420" r="3"/><circle cx="820" cy="180" r="2.5"/>
+      <circle cx="1050" cy="440" r="3"/><circle cx="1340" cy="380" r="3"/>
     </g>
-    <!-- Turbine C — small, right -->
-    <line x1="952" y1="665" x2="960" y2="498" stroke="#FAF8F3" stroke-opacity=".09" stroke-width="2"/>
-    <g>
-      <animateTransform attributeName="transform" type="rotate" from="0 960 498" to="360 960 498" dur="13s" repeatCount="indefinite"/>
-      <line x1="960" y1="498" x2="960" y2="440" stroke="#FAF8F3" stroke-opacity=".14" stroke-width="1.5"/>
-      <line x1="960" y1="498" x2="910" y2="527" stroke="#FAF8F3" stroke-opacity=".14" stroke-width="1.5"/>
-      <line x1="960" y1="498" x2="1010" y2="527" stroke="#FAF8F3" stroke-opacity=".14" stroke-width="1.5"/>
-      <circle cx="960" cy="498" r="3.5" fill="#C8A050" fill-opacity=".35"/>
+    <g stroke="#C8A050" stroke-opacity=".5" fill="none" stroke-width="1.2">
+      <circle cx="430" cy="290" r="8"/><circle cx="905" cy="340" r="9"/><circle cx="1230" cy="250" r="7"/>
     </g>
+    <g fill="#C8A050" fill-opacity=".45">
+      <circle cx="430" cy="290" r="2.6"/><circle cx="905" cy="340" r="3"/><circle cx="1230" cy="250" r="2.4"/>
+    </g>
+    <g fill="#FAF8F3" fill-opacity=".28" font-size="10" letter-spacing="3">
+      <text x="448" y="278">ZUIVERING</text>
+      <text x="924" y="328">VERWERKING</text>
+      <text x="1248" y="240">OPSLAG</text>
+    </g>
+    <circle r="2.4" fill="#C8A050" fill-opacity=".85">
+      <animateMotion dur="11s" repeatCount="indefinite"><mpath href="#kp3"/></animateMotion>
+    </circle>
+    <circle r="2.2" fill="#C8A050" fill-opacity=".7">
+      <animateMotion dur="14s" begin="3s" repeatCount="indefinite"><mpath href="#kp6"/></animateMotion>
+    </circle>
+    <circle r="2" fill="#C8A050" fill-opacity=".6">
+      <animateMotion dur="17s" begin="6s" repeatCount="indefinite"><mpath href="#kp1"/></animateMotion>
+    </circle>
   </svg>
 
   <div class="hero-inner">
     <div class="hero-eyebrow rv">Ketenregie-instrument · Nederlandse slibketen</div>
-    <h1 class="rv rv-d1">De slibketen heeft <em>geen wachttijd.</em><br>Ons beeld evenmin.</h1>
-    <p class="hero-sub rv rv-d2">Bij elke verstoring begint hetzelfde belrondje: wie heeft capaciteit, waar is ruimte, hoeveel dagen hebben we? <strong>KetenKompas rekent het door voordat de telefoon gaat</strong> — van zuivering tot incidentenopslag, vertaald naar bestuurstaal.</p>
-    <div class="hero-actions rv rv-d3">
-      <a class="btn-gold" href="#toegang">Vraag toegang aan <span>→</span></a>
-      <a class="btn-ghost" href="#case">Bekijk de praktijkcase <span>↓</span></a>
+    <h1 class="rv rv-d1">Het scenario-instrument voor de <em>Nederlandse slibketen.</em></h1>
+    <p class="hero-sub rv rv-d2">KetenKompas brengt zuiveringen, verwerkingsroutes en opslaglocaties samen in één doorrekenbaar beeld. Verstoringen worden doorgerekend op zuiveringsniveau en <strong>vertaald naar een bestuurlijke rapportage.</strong></p>
+    <div class="portal rv rv-d3">
+      <div class="portal-status"><span class="pdot"></span>Instrument operationeel · stand juni 2026</div>
+      <div class="portal-row">
+        <a class="btn-gold" href="https://slib.ketenkompas.nl">Naar het instrument <span>→</span></a>
+        <div class="portal-meta">
+          <b>slib.ketenkompas.nl</b>
+          Nog geen toegangscode? <a href="https://slib.ketenkompas.nl">Toegang aanvragen</a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -380,15 +383,18 @@ display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(28px,4vw,64px);al
     <div class="tick"><b data-count="21">0</b><small>waterschappen in beeld</small></div>
     <div class="tick"><b><span data-count="320">0</span>+ <span style="font-size:.5em">RWZI's</span></b><small>zuiveringen gekoppeld aan verwerkingsroutes</small></div>
     <div class="tick"><b data-count="3" data-suffix=" richtlijnen">0</b><small>Robuust Plan Slib II doorlopend getoetst</small></div>
-    <div class="tick"><b data-count="4" data-suffix=" min">0</b><small>van verstoring tot bestuurlijk rapport</small></div>
+    <div class="tick"><b data-count="4" data-suffix=" modules">0</b><small>van ketenoverzicht tot rapportage</small></div>
   </div>
 </header>
 
-<!-- ════════ STRIP ════════ -->
-<div class="strip" aria-hidden="true">
-  <div class="strip-track">
-    <span>Scenario-analyse</span><span>Robuust Plan Slib II</span><span>Incidentenopslag</span><span>Bestuurlijke duiding</span><span>Capaciteitsanalyse</span><span>Ketenoverzicht</span>
-    <span>Scenario-analyse</span><span>Robuust Plan Slib II</span><span>Incidentenopslag</span><span>Bestuurlijke duiding</span><span>Capaciteitsanalyse</span><span>Ketenoverzicht</span>
+<!-- ════════ MODULE-INDEX ════════ -->
+<div class="modbar" aria-label="Modules">
+  <div class="modbar-inner">
+    <span class="modbar-label">Modules</span>
+    <a class="mod" href="#instrument"><i>01</i>Ketenoverzicht</a>
+    <a class="mod" href="#instrument"><i>02</i>Scenario-analyse</a>
+    <a class="mod" href="#instrument"><i>03</i>Robuust Plan Slib II</a>
+    <a class="mod" href="#instrument"><i>04</i>Bestuurlijke rapportage</a>
   </div>
 </div>
 
@@ -474,7 +480,7 @@ display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(28px,4vw,64px);al
 </section>
 
 <!-- ════════ HOE ════════ -->
-<section class="how">
+<section class="how" id="hoe">
   <div class="wrap">
     <div class="kicker rv">Werkwijze</div>
     <h2 class="rv rv-d1">Van verstoring naar <em>handelingsperspectief</em> in vier stappen</h2>
@@ -505,19 +511,50 @@ display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(28px,4vw,64px);al
 
 <!-- ════════ QUOTE ════════ -->
 <section class="quote">
+  <svg class="quote-clarifier" viewBox="0 0 800 800" fill="none" aria-hidden="true">
+    <g stroke="#0A1628">
+      <circle cx="400" cy="400" r="140" stroke-opacity=".07"/>
+      <circle cx="400" cy="400" r="210" stroke-opacity=".06"/>
+      <circle cx="400" cy="400" r="280" stroke-opacity=".05"/>
+      <circle cx="400" cy="400" r="350" stroke-opacity=".04"/>
+      <g class="arm" stroke-opacity=".1" stroke-width="2">
+        <line x1="400" y1="400" x2="400" y2="52"/>
+        <line x1="400" y1="400" x2="748" y2="400" stroke-opacity=".06" stroke-width="1.4"/>
+      </g>
+      <circle cx="400" cy="400" r="5" fill="#0A1628" fill-opacity=".1" stroke="none"/>
+      <circle cx="400" cy="400" r="2" fill="#C8A050" fill-opacity=".4" stroke="none"/>
+    </g>
+  </svg>
   <blockquote class="rv">"Minder afhankelijk van ad-hoc oplossingen. Knelpunten en alternatieve routes <em>al in kaart</em> voordat het incident zich aandient."</blockquote>
   <cite class="rv rv-d1"><b>Gizan Ezra</b>Initiatiefnemer KetenKompas · Strategisch Contractmanager Ketenregie</cite>
 </section>
 
-<!-- ════════ CTA ════════ -->
+<!-- ════════ TOEGANG ════════ -->
 <section class="cta" id="toegang">
-  <svg class="cta-land"><use href="#nl-land"/></svg>
+  <svg class="cta-net" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMin slice" fill="none" aria-hidden="true">
+    <defs><path id="cnp" d="M180 60 C 360 110, 540 170, 718 208"/></defs>
+    <g stroke="#FAF8F3" stroke-opacity=".09" stroke-width="1">
+      <use href="#cnp"/>
+      <path d="M420 30 C 520 90, 620 160, 718 208"/>
+      <path d="M1260 70 C 1080 115, 900 175, 722 208"/>
+      <path d="M1020 26 C 920 90, 820 160, 722 208"/>
+    </g>
+    <g fill="#FAF8F3" fill-opacity=".3">
+      <circle cx="180" cy="60" r="2.6"/><circle cx="420" cy="30" r="2.4"/>
+      <circle cx="1260" cy="70" r="2.6"/><circle cx="1020" cy="26" r="2.4"/>
+    </g>
+    <circle cx="720" cy="208" r="8" stroke="#C8A050" stroke-opacity=".5" stroke-width="1.2"/>
+    <circle cx="720" cy="208" r="2.6" fill="#C8A050" fill-opacity=".5"/>
+    <circle r="2.2" fill="#C8A050" fill-opacity=".75">
+      <animateMotion dur="9s" repeatCount="indefinite"><mpath href="#cnp"/></animateMotion>
+    </circle>
+  </svg>
   <div class="wrap">
-    <h2 class="rv">De volgende verstoring komt.<br>De vraag is of we <em>vooruit</em> kijken.</h2>
-    <p class="rv rv-d1">KetenKompas is beschikbaar voor waterschappen, verwerkers en ketenpartners. Vraag toegang aan en verken het instrument met de actuele ketendata.</p>
+    <h2 class="rv">Direct naar het <em>instrument.</em></h2>
+    <p class="rv rv-d1">KetenKompas is beschikbaar voor waterschappen, verwerkers en ketenpartners. Inloggen met een toegangscode — of vraag toegang aan via de inlogpagina.</p>
     <div class="cta-row rv rv-d2">
-      <a class="btn-gold" href="https://slib.ketenkompas.nl">Inloggen en naar het instrument <span>→</span></a>
-      <a class="btn-ghost" href="#voorwie">Meer informatie <span>↓</span></a>
+      <a class="btn-gold" href="https://slib.ketenkompas.nl">Inloggen <span>→</span></a>
+      <a class="btn-ghost" href="https://slib.ketenkompas.nl">Toegang aanvragen <span>→</span></a>
     </div>
     <div class="cta-note rv rv-d3">Sectorinstrument voor de Nederlandse slibketen</div>
   </div>
@@ -557,19 +594,17 @@ display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(28px,4vw,64px);al
     <div class="foot-col">
       <span class="foot-col-hdr">Toegang</span>
       <a href="https://slib.ketenkompas.nl">Inloggen</a>
-      <a href="#toegang">Toegang aanvragen</a>
+      <a href="https://slib.ketenkompas.nl">Toegang aanvragen</a>
       <a href="#toegang">Demonstratie plannen</a>
     </div>
   </div>
   <div class="foot-divider"></div>
   <div class="foot-bottom">
     <span>© 2026 KetenKompas</span>
+    <div class="foot-bottom-status"><span class="pdot"></span><span>Instrument operationeel · stand juni 2026</span></div>
     <span>Sectorinstrument voor de Nederlandse slibketen</span>
-    <div class="foot-bottom-logo">
-      <svg class="kk-mark" width="18" height="18"><use href="#kk-rose"/></svg>
-      <span style="font-size:11px;letter-spacing:.08em">KETENKOMPAS</span>
-    </div>
   </div>
+  <div class="foot-giant" aria-hidden="true"><span>Keten<i>Kompas</i></span></div>
 </footer>
 
 <script>
