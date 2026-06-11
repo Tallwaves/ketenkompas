@@ -16,11 +16,11 @@ export async function onRequest({ request, env, next }) {
   // All other hosts (ketenkompas.nl AND *.pages.dev preview URLs):
   // serve landing page at root so previews also show the landing page.
   if (url.pathname === '/' || url.pathname === '') {
-    const landingUrl = new URL('/landing.html', request.url);
+    url.pathname = '/landing.html';
     if (env.ASSETS) {
-      return env.ASSETS.fetch(new Request(landingUrl.toString(), request));
+      return env.ASSETS.fetch(url.toString());
     }
-    return Response.redirect(landingUrl.toString(), 302);
+    return Response.redirect(url.toString(), 302);
   }
 
   return next();
