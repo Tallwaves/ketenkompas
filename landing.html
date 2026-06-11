@@ -61,10 +61,10 @@ nav.scrolled .nav-cta{background:var(--ink);color:var(--paper)!important}
 
 /* ── hero ────────────────────── */
 .hero{min-height:100vh;background:linear-gradient(180deg,#0A1628 0%,#0C1B30 55%,#10243C 100%);color:var(--paper);position:relative;overflow:hidden;
-display:flex;flex-direction:column;justify-content:center;padding:150px clamp(24px,5vw,64px) 0}
+display:flex;flex-direction:column;padding:0 clamp(24px,5vw,64px)}
 .hero-compass{position:absolute;right:-10vw;top:30%;transform:translateY(-50%);width:min(54vw,720px);height:min(54vw,720px);opacity:.34;pointer-events:none;z-index:1}
 .hero-land{position:absolute;left:0;right:0;bottom:0;width:100%;height:min(52vh,460px);pointer-events:none;z-index:1}
-.hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%}
+.hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:clamp(100px,12vh,150px);padding-bottom:clamp(32px,4vh,60px)}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:34px}
 .hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--gold)}
 h1{font-family:var(--serif);font-weight:400;font-size:clamp(44px,6.4vw,88px);line-height:1.04;letter-spacing:-.025em;max-width:13ch;margin-bottom:30px}
@@ -76,13 +76,16 @@ h1 em{font-style:italic;font-weight:300;color:var(--gold-soft)}
 .btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 32px -8px rgba(200,160,80,.45)}
 .btn-ghost{font-size:15px;font-weight:500;color:var(--paper);text-decoration:none;padding:17px 10px;display:inline-flex;align-items:center;gap:8px;opacity:.8;transition:opacity .25s,gap .25s}
 .btn-ghost:hover{opacity:1;gap:12px}
-.hero-ticker{position:relative;z-index:2;max-width:1280px;margin:90px auto 0;width:100%;
-border-top:1px solid var(--line-light);padding:30px 0 52px;
+.hero-ticker{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;
+border-top:1px solid var(--line-light);padding:28px 0 40px;
 display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:34px}
 .tick{display:flex;flex-direction:column;gap:5px}
 .tick b{font-family:var(--serif);font-size:clamp(26px,2.6vw,36px);font-weight:500;letter-spacing:-.02em;color:var(--paper)}
 .tick b span{color:var(--gold)}
 .tick small{font-size:13px;color:var(--mist);font-weight:400;letter-spacing:.02em}
+
+/* ── wind turbines ───────────── */
+.hero-turbines{position:absolute;left:0;right:0;bottom:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}
 
 /* ── marquee ─────────────────── */
 .strip{background:var(--gold);color:var(--ink);overflow:hidden;padding:15px 0;position:relative}
@@ -209,16 +212,24 @@ transform:perspective(1600px) rotateX(4deg);transform-origin:top}
 .cta-note{margin-top:28px;font-size:13.5px;color:var(--mist);opacity:.8}
 
 /* ── footer ──────────────────── */
-footer{background:#0A1628;color:var(--mist);padding:0 clamp(24px,5vw,64px) 56px}
-.foot{max-width:1280px;margin:0 auto;border-top:1px solid var(--line-light);padding-top:44px;
-display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
-.foot-brand{display:flex;align-items:center;gap:12px;color:var(--paper);font-size:19px}
-.foot p{font-size:13.5px;line-height:1.8;max-width:32ch}
-.foot-col{display:flex;flex-direction:column;gap:9px}
-.foot-col span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(250,248,243,.45);margin-bottom:6px}
-.foot-col a{font-size:14px;color:var(--mist);text-decoration:none;transition:color .25s}
+footer{background:#060E1C;color:var(--mist)}
+.foot-accent{height:3px;background:linear-gradient(90deg,var(--gold) 0%,var(--teal-bright) 60%,transparent 100%);opacity:.7}
+.foot-main{max-width:1280px;margin:0 auto;padding:64px clamp(24px,5vw,64px) 0;
+display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(28px,4vw,64px);align-items:start}
+.foot-brand-col{}
+.foot-brand{display:flex;align-items:center;gap:12px;color:var(--paper);font-size:19px;margin-bottom:16px}
+.foot-mission{font-size:14px;line-height:1.8;max-width:30ch;color:rgba(143,163,184,.8);margin-bottom:24px}
+.foot-pills{display:flex;flex-wrap:wrap;gap:7px}
+.foot-pill{font-size:11px;font-weight:500;letter-spacing:.08em;border:1px solid rgba(250,248,243,.14);border-radius:100px;padding:4px 11px;color:rgba(250,248,243,.5)}
+.foot-col{display:flex;flex-direction:column;gap:11px}
+.foot-col-hdr{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,248,243,.38);margin-bottom:4px;font-weight:500}
+.foot-col a{font-size:14px;color:rgba(143,163,184,.75);text-decoration:none;transition:color .2s;line-height:1.5}
 .foot-col a:hover{color:var(--paper)}
-.foot-bottom{max-width:1280px;margin:48px auto 0;font-size:12.5px;color:rgba(143,163,184,.6);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.foot-divider{max-width:1280px;margin:52px auto 0;height:1px;background:rgba(250,248,243,.08);padding:0 clamp(24px,5vw,64px)}
+.foot-bottom{max-width:1280px;margin:0 auto;padding:22px clamp(24px,5vw,64px) 48px;font-size:12.5px;color:rgba(143,163,184,.45);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.foot-bottom-logo{display:flex;align-items:center;gap:8px;opacity:.4}
+@media(max-width:900px){.foot-main{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.foot-main{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -253,21 +264,13 @@ display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-
           <path d="M210 268 V216"/><path d="M203 222 l7 -8 7 8"/>
           <line x1="210" y1="196" x2="232" y2="218"/><line x1="232" y1="196" x2="210" y2="218"/>
         </g>
-        <g stroke-width="1.6">
-          <path d="M1064 268 l9 -86 h36 l9 86" stroke-opacity=".34" fill="#0A1628"/>
-          <path d="M1069 230 h44" stroke-opacity=".22"/>
-          <path d="M1073 182 q18 -16 36 0" stroke-opacity=".34"/>
-          <line x1="1091" y1="174" x2="1042" y2="120" stroke-opacity=".4"/>
-          <line x1="1091" y1="174" x2="1145" y2="125" stroke-opacity=".4"/>
-          <line x1="1091" y1="174" x2="1037" y2="223" stroke-opacity=".4"/>
-          <line x1="1091" y1="174" x2="1140" y2="228" stroke-opacity=".4"/>
-          <g stroke-opacity=".26" stroke-width="1.1">
-            <line x1="1042" y1="120" x2="1056" y2="133"/><line x1="1049" y1="127" x2="1035" y2="141"/>
-            <line x1="1145" y1="125" x2="1131" y2="138"/><line x1="1138" y1="132" x2="1152" y2="146"/>
-            <line x1="1037" y1="223" x2="1051" y2="209"/><line x1="1044" y1="216" x2="1030" y2="202"/>
-            <line x1="1140" y1="228" x2="1126" y2="214"/><line x1="1133" y1="221" x2="1147" y2="207"/>
-          </g>
-          <circle cx="1091" cy="174" r="4" stroke-opacity=".5" fill="#C8A050" fill-opacity=".55" stroke-width="1"/>
+        <g stroke-width="1.4" stroke-opacity=".22">
+          <rect x="1058" y="226" width="64" height="42" fill="#0A1628" stroke-opacity=".3"/>
+          <line x1="1058" y1="226" x2="1090" y2="200" stroke-opacity=".25"/>
+          <line x1="1122" y1="226" x2="1090" y2="200" stroke-opacity=".25"/>
+          <line x1="1072" y1="268" x2="1072" y2="226"/><line x1="1108" y1="268" x2="1108" y2="226"/>
+          <rect x="1066" y="240" width="12" height="14" fill="#0A1628"/>
+          <rect x="1102" y="240" width="12" height="14" fill="#0A1628"/>
         </g>
         <g stroke-opacity=".1" stroke-width="1.2">
           <path d="M348 268 l5 -44 h20 l5 44" fill="#0A1628"/>
@@ -333,11 +336,40 @@ display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-
   </svg>
 
   <svg class="hero-land"><use href="#nl-land"/></svg>
+  <svg class="hero-turbines" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMax slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Turbine A — tall, left -->
+    <line x1="236" y1="682" x2="252" y2="370" stroke="#FAF8F3" stroke-opacity=".18" stroke-width="4"/>
+    <g>
+      <animateTransform attributeName="transform" type="rotate" from="0 252 370" to="360 252 370" dur="16s" repeatCount="indefinite"/>
+      <line x1="252" y1="370" x2="252" y2="256" stroke="#FAF8F3" stroke-opacity=".28" stroke-width="2.5"/>
+      <line x1="252" y1="370" x2="153" y2="428" stroke="#FAF8F3" stroke-opacity=".28" stroke-width="2.5"/>
+      <line x1="252" y1="370" x2="351" y2="428" stroke="#FAF8F3" stroke-opacity=".28" stroke-width="2.5"/>
+      <circle cx="252" cy="370" r="6" fill="#C8A050" fill-opacity=".55"/>
+    </g>
+    <!-- Turbine B — medium, centre-left -->
+    <line x1="538" y1="672" x2="550" y2="440" stroke="#FAF8F3" stroke-opacity=".13" stroke-width="3"/>
+    <g>
+      <animateTransform attributeName="transform" type="rotate" from="0 550 440" to="360 550 440" dur="22s" repeatCount="indefinite"/>
+      <line x1="550" y1="440" x2="550" y2="356" stroke="#FAF8F3" stroke-opacity=".2" stroke-width="2"/>
+      <line x1="550" y1="440" x2="477" y2="482" stroke="#FAF8F3" stroke-opacity=".2" stroke-width="2"/>
+      <line x1="550" y1="440" x2="623" y2="482" stroke="#FAF8F3" stroke-opacity=".2" stroke-width="2"/>
+      <circle cx="550" cy="440" r="4.5" fill="#C8A050" fill-opacity=".4"/>
+    </g>
+    <!-- Turbine C — small, right -->
+    <line x1="952" y1="665" x2="960" y2="498" stroke="#FAF8F3" stroke-opacity=".09" stroke-width="2"/>
+    <g>
+      <animateTransform attributeName="transform" type="rotate" from="0 960 498" to="360 960 498" dur="13s" repeatCount="indefinite"/>
+      <line x1="960" y1="498" x2="960" y2="440" stroke="#FAF8F3" stroke-opacity=".14" stroke-width="1.5"/>
+      <line x1="960" y1="498" x2="910" y2="527" stroke="#FAF8F3" stroke-opacity=".14" stroke-width="1.5"/>
+      <line x1="960" y1="498" x2="1010" y2="527" stroke="#FAF8F3" stroke-opacity=".14" stroke-width="1.5"/>
+      <circle cx="960" cy="498" r="3.5" fill="#C8A050" fill-opacity=".35"/>
+    </g>
+  </svg>
 
   <div class="hero-inner">
     <div class="hero-eyebrow rv">Ketenregie-instrument · Nederlandse slibketen</div>
-    <h1 class="rv rv-d1">De slibketen heeft <em>geen wachttijd.</em><br>Uw inzicht ook niet.</h1>
-    <p class="hero-sub rv rv-d2">Bij elke verstoring begint hetzelfde belrondje: wie heeft capaciteit, waar is ruimte, hoeveel dagen hebben we? <strong>KetenKompas rekent het door voordat u de telefoon pakt</strong> — van zuivering tot incidentenopslag, vertaald naar bestuurstaal.</p>
+    <h1 class="rv rv-d1">De slibketen heeft <em>geen wachttijd.</em><br>Ons beeld evenmin.</h1>
+    <p class="hero-sub rv rv-d2">Bij elke verstoring begint hetzelfde belrondje: wie heeft capaciteit, waar is ruimte, hoeveel dagen hebben we? <strong>KetenKompas rekent het door voordat de telefoon gaat</strong> — van zuivering tot incidentenopslag, vertaald naar bestuurstaal.</p>
     <div class="hero-actions rv rv-d3">
       <a class="btn-gold" href="#toegang">Vraag toegang aan <span>→</span></a>
       <a class="btn-ghost" href="#case">Bekijk de praktijkcase <span>↓</span></a>
@@ -461,7 +493,7 @@ display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-
     <div class="kicker rv">Voor wie</div>
     <h2 class="rv rv-d1">Gebouwd voor iedereen die de keten <em>draaiend</em> houdt</h2>
     <div class="who-grid">
-      <div class="who-card rv"><span class="num">— 01</span><h3>Waterschappen</h3><p>Direct zicht op de eigen positie in de keten en de consequenties van verstoringen voor uw zuiveringen.</p>
+      <div class="who-card rv"><span class="num">— 01</span><h3>Waterschappen</h3><p>Direct zicht op de eigen positie in de keten en de consequenties van verstoringen voor de zuiveringen.</p>
         <ul><li>Robuustheidstoets per waterschap</li><li>Scenario's op RWZI-niveau</li><li>Rapportage voor DB en AB</li></ul></div>
       <div class="who-card rv rv-d1"><span class="num">— 02</span><h3>Verwerkers & ketenpartners</h3><p>Capaciteit, bezetting en achtervang in samenhang — onderbouwing voor operationele én contractuele keuzes.</p>
         <ul><li>Bezetting opslaglocaties in beeld</li><li>Incidentenopslag in context</li><li>Achtervangroutes doorgerekend</li></ul></div>
@@ -481,7 +513,7 @@ display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-
 <section class="cta" id="toegang">
   <svg class="cta-land"><use href="#nl-land"/></svg>
   <div class="wrap">
-    <h2 class="rv">De volgende verstoring komt.<br>De vraag is of u <em>vooruit</em> kunt kijken.</h2>
+    <h2 class="rv">De volgende verstoring komt.<br>De vraag is of we <em>vooruit</em> kijken.</h2>
     <p class="rv rv-d1">KetenKompas is beschikbaar voor waterschappen, verwerkers en ketenpartners. Vraag toegang aan en verken het instrument met de actuele ketendata.</p>
     <div class="cta-row rv rv-d2">
       <a class="btn-gold" href="https://slib.ketenkompas.nl">Inloggen en naar het instrument <span>→</span></a>
@@ -493,30 +525,50 @@ display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-
 
 <!-- ════════ FOOTER ════════ -->
 <footer>
-  <div class="foot">
-    <div>
+  <div class="foot-accent"></div>
+  <div class="foot-main">
+    <div class="foot-brand-col">
       <div class="foot-brand">
-        <svg class="kk-mark" width="28" height="28"><use href="#kk-rose"/></svg>
+        <svg class="kk-mark" width="30" height="30"><use href="#kk-rose"/></svg>
         <span class="kk-word"><b>Keten<i>Kompas</i></b><small>Nederlandse waterketen</small></span>
       </div>
-      <p style="margin-top:16px">Inzicht en richting in de slibketen.</p>
+      <p class="foot-mission">Samen houden we de slibketen in beeld — van zuivering tot opslag, van verstoring tot handelingsperspectief.</p>
+      <div class="foot-pills">
+        <span class="foot-pill">Waterschappen</span>
+        <span class="foot-pill">Verwerkers</span>
+        <span class="foot-pill">Regiegroep</span>
+        <span class="foot-pill">Unie van Waterschappen</span>
+      </div>
     </div>
     <div class="foot-col">
-      <span>Instrument</span>
+      <span class="foot-col-hdr">Instrument</span>
       <a href="#instrument">Ketenoverzicht</a>
       <a href="#instrument">Scenario-analyse</a>
-      <a href="#instrument">Robuust Plan</a>
-      <a href="#instrument">Rapportage</a>
+      <a href="#instrument">Robuust Plan Slib II</a>
+      <a href="#instrument">Bestuurlijke rapportage</a>
     </div>
     <div class="foot-col">
-      <span>Contact</span>
+      <span class="foot-col-hdr">Over</span>
+      <a href="#probleem">Waarom KetenKompas</a>
+      <a href="#case">Praktijkcase</a>
+      <a href="#voorwie">Voor wie</a>
+      <a href="#hoe">Werkwijze</a>
+    </div>
+    <div class="foot-col">
+      <span class="foot-col-hdr">Toegang</span>
       <a href="https://slib.ketenkompas.nl">Inloggen</a>
       <a href="#toegang">Toegang aanvragen</a>
+      <a href="#toegang">Demonstratie plannen</a>
     </div>
   </div>
+  <div class="foot-divider"></div>
   <div class="foot-bottom">
     <span>© 2026 KetenKompas</span>
-    <span>Gebouwd voor de Nederlandse watersector</span>
+    <span>Sectorinstrument voor de Nederlandse slibketen</span>
+    <div class="foot-bottom-logo">
+      <svg class="kk-mark" width="18" height="18"><use href="#kk-rose"/></svg>
+      <span style="font-size:11px;letter-spacing:.08em">KETENKOMPAS</span>
+    </div>
   </div>
 </footer>
 
