@@ -9,6 +9,15 @@ export async function onRequest({ request, env, next }) {
     return next();
   }
 
+  // Serve landing page at the root of the public domain
+  if (url.hostname === LOGIN_HOST && (url.pathname === '/' || url.pathname === '')) {
+    const landingUrl = new URL('/landing.html', request.url);
+    if (env.ASSETS) {
+      return env.ASSETS.fetch(new Request(landingUrl.toString(), request));
+    }
+    return Response.redirect(landingUrl.toString(), 302);
+  }
+
   // Only enforce sessions on the slib subdomain
   if (url.hostname !== PROTECTED) {
     return next();

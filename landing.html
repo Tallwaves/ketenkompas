@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KetenKompas — Inzicht en richting in de slibketen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Albert+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A1628;
+  --ink-soft:#142336;
+  --paper:#FAF8F3;
+  --paper-warm:#F4F0E6;
+  --gold:#C8A050;
+  --gold-soft:#E5D5B0;
+  --teal:#0F6E56;
+  --teal-bright:#5DCAA5;
+  --mist:#8FA3B8;
+  --line:rgba(10,22,40,.12);
+  --line-light:rgba(250,248,243,.14);
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Albert Sans',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--gold);color:var(--ink)}
+
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.035;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.rv.in{opacity:1;transform:none}
+.rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.22s}.rv-d3{transition-delay:.34s}.rv-d4{transition-delay:.46s}
+
+/* ── logo ─────────────────────── */
+.kk-mark{display:inline-block;flex-shrink:0}
+.kk-word{display:flex;flex-direction:column;line-height:1.1}
+.kk-word b{font-family:var(--sans);font-weight:700;letter-spacing:-.01em}
+.kk-word b i{font-style:normal;color:var(--gold)}
+.kk-word small{font-size:.42em;font-weight:500;letter-spacing:.34em;text-transform:uppercase;opacity:.65;margin-top:3px}
+
+/* ── nav ─────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 clamp(24px,5vw,64px);
+display:flex;align-items:center;justify-content:space-between;height:80px;
+background:rgba(250,248,243,0);backdrop-filter:blur(0);border-bottom:1px solid transparent;
+transition:background .4s,backdrop-filter .4s,border-color .4s}
+nav.scrolled{background:rgba(250,248,243,.88);backdrop-filter:blur(14px);border-color:var(--line)}
+.nav-logo{text-decoration:none;display:flex;align-items:center;gap:13px;color:var(--paper);transition:color .4s;font-size:21px}
+nav.scrolled .nav-logo{color:var(--ink)}
+.nav-links{display:flex;align-items:center;gap:36px}
+.nav-links a{font-size:14px;font-weight:500;color:var(--paper);text-decoration:none;letter-spacing:.01em;opacity:.75;transition:opacity .25s,color .4s}
+nav.scrolled .nav-links a{color:var(--ink)}
+.nav-links a:hover{opacity:1}
+.nav-cta{color:var(--ink)!important;background:var(--gold);padding:11px 22px;border-radius:100px;opacity:1!important;font-weight:600!important;transition:transform .25s!important}
+nav.scrolled .nav-cta{background:var(--ink);color:var(--paper)!important}
+.nav-cta:hover{transform:translateY(-1px)}
+@media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
+
+/* ── hero ────────────────────── */
+.hero{min-height:100vh;background:linear-gradient(180deg,#0A1628 0%,#0C1B30 55%,#10243C 100%);color:var(--paper);position:relative;overflow:hidden;
+display:flex;flex-direction:column;justify-content:center;padding:150px clamp(24px,5vw,64px) 0}
+.hero-compass{position:absolute;right:-10vw;top:30%;transform:translateY(-50%);width:min(54vw,720px);height:min(54vw,720px);opacity:.34;pointer-events:none;z-index:1}
+.hero-land{position:absolute;left:0;right:0;bottom:0;width:100%;height:min(52vh,460px);pointer-events:none;z-index:1}
+.hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:34px}
+.hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--gold)}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(44px,6.4vw,88px);line-height:1.04;letter-spacing:-.025em;max-width:13ch;margin-bottom:30px}
+h1 em{font-style:italic;font-weight:300;color:var(--gold-soft)}
+.hero-sub{font-size:clamp(17px,1.5vw,20px);font-weight:300;color:var(--mist);max-width:46ch;margin-bottom:44px;line-height:1.7}
+.hero-sub strong{color:var(--paper);font-weight:500}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.btn-gold{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--ink);background:var(--gold);border:none;padding:17px 34px;border-radius:100px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:transform .25s,box-shadow .25s}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 32px -8px rgba(200,160,80,.45)}
+.btn-ghost{font-size:15px;font-weight:500;color:var(--paper);text-decoration:none;padding:17px 10px;display:inline-flex;align-items:center;gap:8px;opacity:.8;transition:opacity .25s,gap .25s}
+.btn-ghost:hover{opacity:1;gap:12px}
+.hero-ticker{position:relative;z-index:2;max-width:1280px;margin:90px auto 0;width:100%;
+border-top:1px solid var(--line-light);padding:30px 0 52px;
+display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:34px}
+.tick{display:flex;flex-direction:column;gap:5px}
+.tick b{font-family:var(--serif);font-size:clamp(26px,2.6vw,36px);font-weight:500;letter-spacing:-.02em;color:var(--paper)}
+.tick b span{color:var(--gold)}
+.tick small{font-size:13px;color:var(--mist);font-weight:400;letter-spacing:.02em}
+
+/* ── marquee ─────────────────── */
+.strip{background:var(--gold);color:var(--ink);overflow:hidden;padding:15px 0;position:relative}
+.strip-track{display:flex;gap:64px;white-space:nowrap;animation:marquee 36s linear infinite;width:max-content}
+.strip-track span{font-size:13.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:64px}
+.strip-track span::after{content:'✦';font-size:11px}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+section{padding:clamp(90px,11vw,150px) clamp(24px,5vw,64px)}
+.wrap{max-width:1280px;margin:0 auto}
+.kicker{font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:10px;margin-bottom:26px}
+.kicker::before{content:'';width:36px;height:1px;background:var(--teal)}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(34px,4vw,56px);line-height:1.1;letter-spacing:-.02em}
+h2 em{font-style:italic;font-weight:300;color:var(--teal)}
+
+/* ── probleem ────────────────── */
+.problem{background:var(--paper);position:relative}
+.problem-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(40px,6vw,100px);align-items:start}
+.problem-copy p{font-size:18px;font-weight:300;color:#3D4D60;margin-top:28px;max-width:52ch}
+.problem-copy p strong{font-weight:600;color:var(--ink)}
+.bignum{border-top:1px solid var(--line);padding:30px 0 8px;margin-top:8px}
+.bignum:first-child{border-top:none;margin-top:0}
+.bignum b{font-family:var(--serif);font-size:clamp(52px,5.4vw,84px);font-weight:300;line-height:1;letter-spacing:-.03em;color:var(--ink);display:block}
+.bignum b i{font-style:normal;color:var(--gold);font-size:.5em;vertical-align:.45em;margin-left:2px}
+.bignum p{font-size:15px;color:#5A6B7E;margin-top:10px;max-width:34ch}
+@media(max-width:860px){.problem-grid{grid-template-columns:1fr}}
+
+/* ── dashboard showcase ──────── */
+.show{background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
+.show .kicker{color:var(--gold)}.show .kicker::before{background:var(--gold)}
+.show h2 em{color:var(--gold-soft)}
+.show-head{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,80px);align-items:end;margin-bottom:70px;position:relative;z-index:2}
+.show-head p{font-size:17px;font-weight:300;color:var(--mist);max-width:44ch;line-height:1.7}
+.browser{position:relative;border-radius:14px;overflow:hidden;background:#0D1E33;
+border:1px solid rgba(250,248,243,.1);box-shadow:0 60px 120px -40px rgba(0,0,0,.7);
+transform:perspective(1600px) rotateX(4deg);transform-origin:top}
+.browser-bar{display:flex;align-items:center;gap:8px;padding:13px 18px;background:#0A1628;border-bottom:1px solid rgba(250,248,243,.08)}
+.dot{width:10px;height:10px;border-radius:50%}
+.url{margin-left:14px;font-size:12px;color:var(--mist);background:rgba(250,248,243,.06);padding:5px 16px;border-radius:6px;letter-spacing:.02em}
+.dash{padding:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.dcard{background:rgba(250,248,243,.045);border:1px solid rgba(250,248,243,.08);border-radius:10px;padding:18px 18px 16px}
+.dcard small{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);display:block;margin-bottom:8px}
+.dcard b{font-family:var(--serif);font-size:26px;font-weight:500;color:var(--paper)}
+.dcard.ok b{color:var(--teal-bright)}.dcard.warn b{color:var(--gold)}
+.dbar{grid-column:1/-1;background:rgba(250,248,243,.045);border:1px solid rgba(250,248,243,.08);border-radius:10px;padding:20px 18px 22px}
+.dbar small{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);display:block;margin-bottom:14px}
+.brow{display:grid;grid-template-columns:200px 1fr 64px;align-items:center;gap:14px;margin-top:11px;font-size:12.5px}
+.brow span:first-child{color:rgba(250,248,243,.82)}
+.btrack{height:7px;background:rgba(250,248,243,.08);border-radius:10px;overflow:hidden}
+.bfill{height:100%;border-radius:10px;background:var(--teal-bright);width:0;transition:width 1.4s cubic-bezier(.16,1,.3,1)}
+.bfill.warn{background:var(--gold)}.bfill.crit{background:#E24B4A}
+.brow span:last-child{text-align:right;color:var(--mist);font-variant-numeric:tabular-nums}
+.float-card{position:absolute;background:var(--paper);color:var(--ink);border-radius:12px;padding:16px 20px;box-shadow:0 24px 64px -16px rgba(0,0,0,.55);font-size:13px;z-index:3}
+.float-card b{font-family:var(--serif);font-size:19px;display:block;margin-top:2px}
+.fc1{top:14%;right:clamp(8px,3vw,40px);transform:rotate(2deg)}
+.fc2{bottom:10%;left:clamp(8px,3vw,40px);transform:rotate(-2deg)}
+.fc1 b{color:var(--teal)}.fc2 b{color:#A3622D}
+@media(max-width:860px){.show-head{grid-template-columns:1fr}.dash{grid-template-columns:repeat(2,1fr)}.float-card{display:none}.browser{transform:none}.brow{grid-template-columns:130px 1fr 50px}}
+
+/* ── case ────────────────────── */
+.case{background:var(--paper-warm)}
+.case-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(40px,6vw,100px)}
+.case-meta{position:sticky;top:120px;align-self:start}
+.case-date{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--teal);margin-bottom:18px}
+.case-meta h2{margin-bottom:24px}
+.case-meta>p{font-size:17px;font-weight:300;color:#3D4D60;max-width:40ch}
+.tl{border-left:1px solid rgba(10,22,40,.18);padding-left:clamp(28px,3vw,48px);display:flex;flex-direction:column;gap:42px}
+.tl-item{position:relative}
+.tl-item::before{content:'';position:absolute;left:calc(-1*clamp(28px,3vw,48px) - 5.5px);top:8px;width:10px;height:10px;border-radius:50%;background:var(--paper-warm);border:2px solid var(--teal)}
+.tl-item.gold::before{border-color:var(--gold);background:var(--gold)}
+.tl-time{font-size:12.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:8px}
+.tl-item.gold .tl-time{color:#A3782B}
+.tl-item h3{font-family:var(--serif);font-size:23px;font-weight:500;letter-spacing:-.01em;margin-bottom:8px}
+.tl-item p{font-size:15.5px;font-weight:300;color:#48586B;max-width:52ch}
+.tl-quote{background:var(--ink);color:var(--paper);border-radius:14px;padding:30px 32px;margin-top:6px}
+.tl-quote p{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--paper);max-width:none;line-height:1.55}
+.tl-quote small{display:block;margin-top:14px;font-size:13px;color:var(--mist);font-style:normal;font-family:var(--sans)}
+@media(max-width:860px){.case-grid{grid-template-columns:1fr}.case-meta{position:static}}
+
+/* ── werkwijze ───────────────── */
+.how{background:var(--ink);color:var(--paper)}
+.how .kicker{color:var(--gold)}.how .kicker::before{background:var(--gold)}
+.how h2{max-width:18ch}.how h2 em{color:var(--gold-soft)}
+.steps{margin-top:80px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line-light)}
+.step{padding:38px clamp(18px,2.4vw,34px) 8px;border-left:1px solid var(--line-light);position:relative;transition:background .35s}
+.step:first-child{border-left:none}
+.step:hover{background:rgba(250,248,243,.035)}
+.step i{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--gold);display:block;margin-bottom:50px}
+.step h3{font-family:var(--serif);font-size:22px;font-weight:500;letter-spacing:-.01em;margin-bottom:12px}
+.step p{font-size:14.5px;font-weight:300;color:var(--mist);line-height:1.65}
+@media(max-width:980px){.steps{grid-template-columns:repeat(2,1fr)}.step:nth-child(3){border-left:none}}
+@media(max-width:560px){.steps{grid-template-columns:1fr}.step{border-left:none;border-top:1px solid var(--line-light)}}
+
+/* ── voor wie ────────────────── */
+.who{background:var(--paper)}
+.who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:70px}
+.who-card{border:1px solid var(--line);border-radius:18px;padding:38px 34px 34px;background:var(--paper);transition:transform .35s,box-shadow .35s,border-color .35s;position:relative;overflow:hidden}
+.who-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--teal);transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.who-card:hover{transform:translateY(-6px);box-shadow:0 28px 60px -24px rgba(10,22,40,.18);border-color:transparent}
+.who-card:hover::before{transform:scaleX(1)}
+.who-card .num{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--gold);display:block;margin-bottom:40px}
+.who-card h3{font-family:var(--serif);font-size:25px;font-weight:500;letter-spacing:-.01em;margin-bottom:14px}
+.who-card p{font-size:15px;font-weight:300;color:#48586B;line-height:1.7}
+.who-card ul{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:9px}
+.who-card li{font-size:14px;color:var(--ink);display:flex;gap:10px;align-items:baseline}
+.who-card li::before{content:'—';color:var(--teal);flex-shrink:0}
+@media(max-width:860px){.who-grid{grid-template-columns:1fr}}
+
+/* ── quote ───────────────────── */
+.quote{background:var(--paper-warm);text-align:center}
+.quote blockquote{font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(26px,3.4vw,44px);line-height:1.3;letter-spacing:-.01em;max-width:24ch;margin:0 auto;color:var(--ink)}
+.quote blockquote em{color:var(--teal);font-style:italic}
+.quote cite{display:block;margin-top:34px;font-style:normal;font-size:14px;color:#5A6B7E;letter-spacing:.04em}
+.quote cite b{display:block;font-size:15px;color:var(--ink);font-weight:600;margin-bottom:3px}
+
+/* ── cta ─────────────────────── */
+.cta{background:linear-gradient(180deg,#0A1628 0%,#0E2138 100%);color:var(--paper);position:relative;overflow:hidden;text-align:center;padding-bottom:clamp(150px,20vw,260px)}
+.cta-land{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:min(40vh,340px);pointer-events:none;opacity:.8}
+.cta .wrap{position:relative;z-index:2}
+.cta h2{font-size:clamp(38px,5vw,68px);max-width:17ch;margin:0 auto 26px}
+.cta h2 em{color:var(--gold-soft)}
+.cta p{font-size:18px;font-weight:300;color:var(--mist);max-width:46ch;margin:0 auto 46px}
+.cta-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.cta-note{margin-top:28px;font-size:13.5px;color:var(--mist);opacity:.8}
+
+/* ── footer ──────────────────── */
+footer{background:#0A1628;color:var(--mist);padding:0 clamp(24px,5vw,64px) 56px}
+.foot{max-width:1280px;margin:0 auto;border-top:1px solid var(--line-light);padding-top:44px;
+display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-brand{display:flex;align-items:center;gap:12px;color:var(--paper);font-size:19px}
+.foot p{font-size:13.5px;line-height:1.8;max-width:32ch}
+.foot-col{display:flex;flex-direction:column;gap:9px}
+.foot-col span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(250,248,243,.45);margin-bottom:6px}
+.foot-col a{font-size:14px;color:var(--mist);text-decoration:none;transition:color .25s}
+.foot-col a:hover{color:var(--paper)}
+.foot-bottom{max-width:1280px;margin:48px auto 0;font-size:12.5px;color:rgba(143,163,184,.6);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<!-- ── herbruikbare symbolen: logo + polderlandschap ── -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="kk-rose" viewBox="0 0 64 64">
+      <polygon points="32,1 36.5,27 32,33 27.5,27" fill="#C8A050"/>
+      <polygon points="32,63 36.5,37 32,31 27.5,37" fill="currentColor" opacity=".92"/>
+      <polygon points="3,32 27,27.5 33,32 27,36.5" fill="currentColor" opacity=".92"/>
+      <polygon points="61,32 37,27.5 31,32 37,36.5" fill="currentColor" opacity=".92"/>
+      <polygon points="13,13 28.5,23.5 23.5,28.5" fill="currentColor" opacity=".45"/>
+      <polygon points="51,13 35.5,23.5 40.5,28.5" fill="currentColor" opacity=".45"/>
+      <polygon points="13,51 23.5,35.5 28.5,40.5" fill="currentColor" opacity=".45"/>
+      <polygon points="51,51 40.5,35.5 35.5,40.5" fill="currentColor" opacity=".45"/>
+      <circle cx="32" cy="32" r="3.6" fill="#0A1628" stroke="currentColor" stroke-width="1.6"/>
+    </symbol>
+
+    <symbol id="nl-land" viewBox="0 0 1440 460" preserveAspectRatio="xMidYMax slice">
+      <g stroke="#FAF8F3" fill="none" stroke-linecap="round">
+        <path d="M0 268 H1440" stroke-opacity=".1" stroke-width="1"/>
+        <path d="M0 252 Q140 244 290 250 T620 248 T980 252 T1440 247" stroke-opacity=".06" stroke-width="1"/>
+        <g stroke-opacity=".08">
+          <path d="M60 262 q14 -12 28 0"/><path d="M96 262 q14 -14 28 0"/><path d="M132 262 q12 -10 24 0"/>
+          <path d="M1290 260 q14 -12 28 0"/><path d="M1326 260 q16 -15 32 0"/>
+        </g>
+        <g stroke-opacity=".3" stroke-width="1.4">
+          <path d="M460 96 q9 7 18 0"/><path d="M492 84 q8 6 16 0"/><path d="M438 116 q7 5 14 0"/>
+        </g>
+        <g stroke-opacity=".12" stroke-width="1.2">
+          <path d="M210 268 V216"/><path d="M203 222 l7 -8 7 8"/>
+          <line x1="210" y1="196" x2="232" y2="218"/><line x1="232" y1="196" x2="210" y2="218"/>
+        </g>
+        <g stroke-width="1.6">
+          <path d="M1064 268 l9 -86 h36 l9 86" stroke-opacity=".34" fill="#0A1628"/>
+          <path d="M1069 230 h44" stroke-opacity=".22"/>
+          <path d="M1073 182 q18 -16 36 0" stroke-opacity=".34"/>
+          <line x1="1091" y1="174" x2="1042" y2="120" stroke-opacity=".4"/>
+          <line x1="1091" y1="174" x2="1145" y2="125" stroke-opacity=".4"/>
+          <line x1="1091" y1="174" x2="1037" y2="223" stroke-opacity=".4"/>
+          <line x1="1091" y1="174" x2="1140" y2="228" stroke-opacity=".4"/>
+          <g stroke-opacity=".26" stroke-width="1.1">
+            <line x1="1042" y1="120" x2="1056" y2="133"/><line x1="1049" y1="127" x2="1035" y2="141"/>
+            <line x1="1145" y1="125" x2="1131" y2="138"/><line x1="1138" y1="132" x2="1152" y2="146"/>
+            <line x1="1037" y1="223" x2="1051" y2="209"/><line x1="1044" y1="216" x2="1030" y2="202"/>
+            <line x1="1140" y1="228" x2="1126" y2="214"/><line x1="1133" y1="221" x2="1147" y2="207"/>
+          </g>
+          <circle cx="1091" cy="174" r="4" stroke-opacity=".5" fill="#C8A050" fill-opacity=".55" stroke-width="1"/>
+        </g>
+        <g stroke-opacity=".1" stroke-width="1.2">
+          <path d="M348 268 l5 -44 h20 l5 44" fill="#0A1628"/>
+          <path d="M351 248 q12 -9 24 0"/>
+          <line x1="363" y1="222" x2="345" y2="204"/><line x1="363" y1="222" x2="382" y2="205"/>
+          <line x1="363" y1="222" x2="344" y2="239"/><line x1="363" y1="222" x2="381" y2="240"/>
+        </g>
+        <g stroke-opacity=".07">
+          <path d="M0 292 H1440"/><path d="M0 316 H1440"/>
+        </g>
+        <g stroke-opacity=".09" stroke-width="1">
+          <path d="M40 340 h120"/><path d="M220 348 h180"/><path d="M520 338 h90"/><path d="M760 352 h200"/><path d="M1080 342 h140"/><path d="M1300 354 h110"/>
+          <path d="M120 372 h160"/><path d="M420 380 h120"/><path d="M700 374 h90"/><path d="M940 384 h180"/><path d="M1240 376 h120"/>
+          <path d="M60 408 h100"/><path d="M340 414 h140"/><path d="M640 406 h110"/><path d="M900 418 h120"/><path d="M1160 410 h150"/>
+        </g>
+        <g stroke="#C8A050" stroke-opacity=".22" stroke-width="1.2">
+          <path d="M560 346 h54"/><path d="M1010 378 h44"/><path d="M260 404 h36"/>
+        </g>
+        <g stroke-opacity=".18" stroke-width="1.1">
+          <path d="M88 430 q-4 -34 -10 -52"/><path d="M101 432 q0 -40 4 -58"/><path d="M114 430 q5 -32 14 -48"/>
+          <path d="M1358 434 q-3 -30 -9 -46"/><path d="M1372 436 q1 -36 6 -52"/>
+        </g>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<nav id="nav">
+  <a class="nav-logo" href="#">
+    <svg class="kk-mark" width="34" height="34"><use href="#kk-rose"/></svg>
+    <span class="kk-word"><b>Keten<i>Kompas</i></b><small>Nederlandse waterketen</small></span>
+  </a>
+  <div class="nav-links">
+    <a href="#probleem">Waarom</a>
+    <a href="#instrument">Het instrument</a>
+    <a href="#case">Praktijkcase</a>
+    <a href="#voorwie">Voor wie</a>
+    <a class="nav-cta" href="#toegang">Vraag toegang aan</a>
+  </div>
+</nav>
+
+<!-- ════════ HERO ════════ -->
+<header class="hero">
+  <svg class="hero-compass" id="heroCompass" viewBox="0 0 600 600" fill="none">
+    <circle cx="300" cy="300" r="280" stroke="#FAF8F3" stroke-opacity=".07" stroke-width="1"/>
+    <circle cx="300" cy="300" r="225" stroke="#FAF8F3" stroke-opacity=".09" stroke-width="1"/>
+    <circle cx="300" cy="300" r="160" stroke="#FAF8F3" stroke-opacity=".07" stroke-width="1"/>
+    <g id="compassRose">
+      <line x1="300" y1="20" x2="300" y2="580" stroke="#FAF8F3" stroke-opacity=".07"/>
+      <line x1="20" y1="300" x2="580" y2="300" stroke="#FAF8F3" stroke-opacity=".07"/>
+      <line x1="102" y1="102" x2="498" y2="498" stroke="#FAF8F3" stroke-opacity=".05"/>
+      <line x1="498" y1="102" x2="102" y2="498" stroke="#FAF8F3" stroke-opacity=".05"/>
+      <polygon points="300,60 328,272 300,300 272,272" fill="#C8A050" fill-opacity=".85"/>
+      <polygon points="300,540 328,328 300,300 272,328" fill="#FAF8F3" fill-opacity=".18"/>
+      <polygon points="60,300 272,272 300,300 272,328" fill="#FAF8F3" fill-opacity=".18"/>
+      <polygon points="540,300 328,272 300,300 328,328" fill="#FAF8F3" fill-opacity=".18"/>
+      <polygon points="155,155 268,238 238,268" fill="#FAF8F3" fill-opacity=".1"/>
+      <polygon points="445,155 332,238 362,268" fill="#FAF8F3" fill-opacity=".1"/>
+      <polygon points="155,445 238,332 268,362" fill="#FAF8F3" fill-opacity=".1"/>
+      <polygon points="445,445 332,362 362,332" fill="#FAF8F3" fill-opacity=".1"/>
+    </g>
+    <circle cx="300" cy="300" r="9" fill="#0A1628" stroke="#C8A050" stroke-width="2"/>
+  </svg>
+
+  <svg class="hero-land"><use href="#nl-land"/></svg>
+
+  <div class="hero-inner">
+    <div class="hero-eyebrow rv">Ketenregie-instrument · Nederlandse slibketen</div>
+    <h1 class="rv rv-d1">De slibketen heeft <em>geen wachttijd.</em><br>Uw inzicht ook niet.</h1>
+    <p class="hero-sub rv rv-d2">Bij elke verstoring begint hetzelfde belrondje: wie heeft capaciteit, waar is ruimte, hoeveel dagen hebben we? <strong>KetenKompas rekent het door voordat u de telefoon pakt</strong> — van zuivering tot incidentenopslag, vertaald naar bestuurstaal.</p>
+    <div class="hero-actions rv rv-d3">
+      <a class="btn-gold" href="#toegang">Vraag toegang aan <span>→</span></a>
+      <a class="btn-ghost" href="#case">Bekijk de praktijkcase <span>↓</span></a>
+    </div>
+  </div>
+
+  <div class="hero-ticker rv rv-d4">
+    <div class="tick"><b data-count="21">0</b><small>waterschappen in beeld</small></div>
+    <div class="tick"><b><span data-count="320">0</span>+ <span style="font-size:.5em">RWZI's</span></b><small>zuiveringen gekoppeld aan verwerkingsroutes</small></div>
+    <div class="tick"><b data-count="3" data-suffix=" richtlijnen">0</b><small>Robuust Plan Slib II doorlopend getoetst</small></div>
+    <div class="tick"><b data-count="4" data-suffix=" min">0</b><small>van verstoring tot bestuurlijk rapport</small></div>
+  </div>
+</header>
+
+<!-- ════════ STRIP ════════ -->
+<div class="strip" aria-hidden="true">
+  <div class="strip-track">
+    <span>Scenario-analyse</span><span>Robuust Plan Slib II</span><span>Incidentenopslag</span><span>Bestuurlijke duiding</span><span>Capaciteitsanalyse</span><span>Ketenoverzicht</span>
+    <span>Scenario-analyse</span><span>Robuust Plan Slib II</span><span>Incidentenopslag</span><span>Bestuurlijke duiding</span><span>Capaciteitsanalyse</span><span>Ketenoverzicht</span>
+  </div>
+</div>
+
+<!-- ════════ PROBLEEM ════════ -->
+<section class="problem" id="probleem">
+  <div class="wrap">
+    <div class="problem-grid">
+      <div class="problem-copy">
+        <div class="kicker rv">Waarom dit instrument bestaat</div>
+        <h2 class="rv rv-d1">De kennis zit in de keten. Het overzicht <em>nergens.</em></h2>
+        <p class="rv rv-d2">Slibproductie, verwerkingscapaciteit, opslaglocaties en incidentenafspraken zijn verdeeld over waterschappen, verwerkers en landelijke partijen. Bij een verstoring moet dat overzicht <strong>onder tijdsdruk telefonisch worden gereconstrueerd</strong> — elke keer opnieuw.</p>
+        <p class="rv rv-d3">KetenKompas brengt die versnipperde werkelijkheid samen in één doorrekenbaar beeld. Niet als statisch rapport, maar als <strong>levend instrument</strong> dat met de keten meebeweegt.</p>
+      </div>
+      <div>
+        <div class="bignum rv"><b>21</b><p>waterschappen, elk met een eigen deel van het totaalbeeld</p></div>
+        <div class="bignum rv rv-d1"><b>5<i>+</i></b><p>partijen nodig om bij één incident het beeld te reconstrueren</p></div>
+        <div class="bignum rv rv-d2"><b>0</b><p>gedeelde doorrekenomgevingen voor de keten — tot nu</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ DASHBOARD ════════ -->
+<section class="show" id="instrument">
+  <div class="wrap">
+    <div class="show-head">
+      <div>
+        <div class="kicker rv">Het instrument</div>
+        <h2 class="rv rv-d1">Eén keten.<br>Eén <em>kompas.</em></h2>
+      </div>
+      <p class="rv rv-d2">Ketenoverzicht, Robuust Plan-toetsing, scenario-doorrekening en bestuurlijke rapportage — vier instrumenten in één omgeving, gebouwd op de werkelijke structuur van de Nederlandse slibketen.</p>
+    </div>
+
+    <div style="position:relative" class="rv rv-d2">
+      <div class="float-card fc1">Buffer bij verstoring<b>99 dagen</b></div>
+      <div class="float-card fc2">Aanbevolen route<b>Incidentenopslag Noord</b></div>
+      <div class="browser">
+        <div class="browser-bar">
+          <div class="dot" style="background:#E24B4A"></div>
+          <div class="dot" style="background:#EF9F27"></div>
+          <div class="dot" style="background:#1D9E75"></div>
+          <div class="url">slib.ketenkompas.nl — voorbeeldscenario: uitval verwerkingsroute</div>
+        </div>
+        <div class="dash">
+          <div class="dcard"><small>Totale slibstroom</small><b>30 t/dag</b></div>
+          <div class="dcard warn"><small>Dagelijks overschot</small><b>30 t/dag</b></div>
+          <div class="dcard ok"><small>Opvang beschikbaar</small><b>Ruim voldoende</b></div>
+          <div class="dcard ok"><small>Urgentie</small><b>Beheersbaar</b></div>
+          <div class="dbar">
+            <small>Beschikbare opvangopties — bezetting (voorbeeld)</small>
+            <div class="brow"><span>Silo-opslag op locatie</span><div class="btrack"><div class="bfill" data-w="85%"></div></div><span>85%</span></div>
+            <div class="brow"><span>Incidentenopslag — Noord</span><div class="btrack"><div class="bfill" data-w="58%"></div></div><span>58%</span></div>
+            <div class="brow"><span>Incidentenopslag — Oost</span><div class="btrack"><div class="bfill warn" data-w="67%"></div></div><span>67%</span></div>
+            <div class="brow"><span>Regionale achtervang</span><div class="btrack"><div class="bfill crit" data-w="100%"></div></div><span>—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CASE ════════ -->
+<section class="case" id="case">
+  <div class="wrap">
+    <div class="case-grid">
+      <div class="case-meta">
+        <div class="kicker rv">Praktijkcase</div>
+        <div class="case-date rv rv-d1">Voorjaar 2026 — een gewone vrijdag</div>
+        <h2 class="rv rv-d1">Geen oefening.<br>Een <em>echte</em> verstoring.</h2>
+        <p class="rv rv-d2">Ongepland onderhoud bij meerdere verwerkers tegelijk. Slib van een zuivering met afwijkende eigenschappen — ongeschikt voor de reguliere route — kan tijdelijk nergens heen.</p>
+      </div>
+      <div class="tl">
+        <div class="tl-item rv"><div class="tl-time">Begin van de ochtend — De melding</div><h3>Honderden tonnen zonder bestemming</h3><p>De keten wordt geïnformeerd. De vraag die iedereen tegelijk stelt: hoeveel ruimte hebben we eigenlijk — en waar?</p></div>
+        <div class="tl-item gold rv"><div class="tl-time">Binnen het uur — De doorrekening</div><h3>Scenario ingevoerd in KetenKompas</h3><p>Zuivering, verstoring en duur geselecteerd. Het instrument rekent door: dagelijks overschot, opslagbehoefte, beschikbare routes en de resterende buffer in dagen.</p></div>
+        <div class="tl-item rv"><div class="tl-time">Dezelfde dag — Het rapport</div><h3>Bestuurlijke rapportage gegenereerd</h3><p>Capaciteitsanalyse, aanbevolen opvangroute, tijdlijn en concrete actiepunten — wie, wat, wanneer, en wie geïnformeerd moet worden. Klaar om te delen met management en regiegroep.</p></div>
+        <div class="tl-quote rv">
+          <p>"De incidentenopslag biedt voldoende buffer, mits tijdig geactiveerd. Verken eerst de inzet van eigen opslag, zodat aanspraak op de landelijke capaciteit beperkt blijft."</p>
+          <small>— Bestuurlijke duiding, automatisch gegenereerd uit het scenario</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ HOE ════════ -->
+<section class="how">
+  <div class="wrap">
+    <div class="kicker rv">Werkwijze</div>
+    <h2 class="rv rv-d1">Van verstoring naar <em>handelingsperspectief</em> in vier stappen</h2>
+    <div class="steps">
+      <div class="step rv"><i>Stap één</i><h3>Selecteer de keten</h3><p>Kies waterschap en zuivering. Het instrument kent de werkelijke slibstromen, clusters en verwerkingsroutes.</p></div>
+      <div class="step rv rv-d1"><i>Stap twee</i><h3>Definieer de verstoring</h3><p>Verwerker uitgevallen? Exportroute dicht? Stel het scenario samen met werkelijke capaciteiten en duur.</p></div>
+      <div class="step rv rv-d2"><i>Stap drie</i><h3>Reken het door</h3><p>Overschot, opslagbehoefte, beschikbare routes en buffer in dagen — direct inzichtelijk, inclusief aanbevolen opvangoptie.</p></div>
+      <div class="step rv rv-d3"><i>Stap vier</i><h3>Deel het rapport</h3><p>Eén klik: een bestuurlijke rapportage met duiding, tijdlijn en actiepunten. Klaar voor DB, AB of regiegroep.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ VOOR WIE ════════ -->
+<section class="who" id="voorwie">
+  <div class="wrap">
+    <div class="kicker rv">Voor wie</div>
+    <h2 class="rv rv-d1">Gebouwd voor iedereen die de keten <em>draaiend</em> houdt</h2>
+    <div class="who-grid">
+      <div class="who-card rv"><span class="num">— 01</span><h3>Waterschappen</h3><p>Direct zicht op de eigen positie in de keten en de consequenties van verstoringen voor uw zuiveringen.</p>
+        <ul><li>Robuustheidstoets per waterschap</li><li>Scenario's op RWZI-niveau</li><li>Rapportage voor DB en AB</li></ul></div>
+      <div class="who-card rv rv-d1"><span class="num">— 02</span><h3>Verwerkers & ketenpartners</h3><p>Capaciteit, bezetting en achtervang in samenhang — onderbouwing voor operationele én contractuele keuzes.</p>
+        <ul><li>Bezetting opslaglocaties in beeld</li><li>Incidentenopslag in context</li><li>Achtervangroutes doorgerekend</li></ul></div>
+      <div class="who-card rv rv-d2"><span class="num">— 03</span><h3>Regiegroep & Unie</h3><p>Het gedeelde beeld dat nu per incident telefonisch wordt gereconstrueerd — permanent beschikbaar.</p>
+        <ul><li>Landelijk ketenoverzicht</li><li>Toetsing Robuust Plan Slib II</li><li>Eén taal richting bestuurders</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ QUOTE ════════ -->
+<section class="quote">
+  <blockquote class="rv">"Minder afhankelijk van ad-hoc oplossingen. Knelpunten en alternatieve routes <em>al in kaart</em> voordat het incident zich aandient."</blockquote>
+  <cite class="rv rv-d1"><b>Gizan Ezra</b>Initiatiefnemer KetenKompas · Strategisch Contractmanager Ketenregie</cite>
+</section>
+
+<!-- ════════ CTA ════════ -->
+<section class="cta" id="toegang">
+  <svg class="cta-land"><use href="#nl-land"/></svg>
+  <div class="wrap">
+    <h2 class="rv">De volgende verstoring komt.<br>De vraag is of u <em>vooruit</em> kunt kijken.</h2>
+    <p class="rv rv-d1">KetenKompas is beschikbaar voor waterschappen, verwerkers en ketenpartners. Vraag toegang aan en verken het instrument met de actuele ketendata.</p>
+    <div class="cta-row rv rv-d2">
+      <a class="btn-gold" href="https://slib.ketenkompas.nl">Ga naar het instrument <span>→</span></a>
+      <a class="btn-ghost" href="#voorwie">Meer informatie <span>↓</span></a>
+    </div>
+    <div class="cta-note rv rv-d3">Sectorinstrument voor de Nederlandse slibketen · initiatief vanuit AGV</div>
+  </div>
+</section>
+
+<!-- ════════ FOOTER ════════ -->
+<footer>
+  <div class="foot">
+    <div>
+      <div class="foot-brand">
+        <svg class="kk-mark" width="28" height="28"><use href="#kk-rose"/></svg>
+        <span class="kk-word"><b>Keten<i>Kompas</i></b><small>Nederlandse waterketen</small></span>
+      </div>
+      <p style="margin-top:16px">Inzicht en richting in de slibketen.</p>
+    </div>
+    <div class="foot-col">
+      <span>Instrument</span>
+      <a href="#instrument">Ketenoverzicht</a>
+      <a href="#instrument">Scenario-analyse</a>
+      <a href="#instrument">Robuust Plan</a>
+      <a href="#instrument">Rapportage</a>
+    </div>
+    <div class="foot-col">
+      <span>Contact</span>
+      <a href="https://slib.ketenkompas.nl">slib.ketenkompas.nl</a>
+      <a href="#toegang">Toegang aanvragen</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 KetenKompas</span>
+    <span>Gebouwd voor de Nederlandse watersector</span>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled',scrollY>40);
+},{passive:true});
+
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:.15});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+const dashWrap=document.querySelector('.browser');
+if(dashWrap){
+  const io2=new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){
+      dashWrap.querySelectorAll('.bfill').forEach(b=>b.style.width=b.dataset.w);
+      io2.unobserve(dashWrap);
+    }});
+  },{threshold:.3});
+  io2.observe(dashWrap);
+}
+
+const counters=document.querySelectorAll('[data-count]');
+const io3=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target,end=+el.dataset.count,suf=el.dataset.suffix||'';
+    const t0=performance.now(),dur=1600;
+    function tick(t){
+      const p=Math.min((t-t0)/dur,1),ease=1-Math.pow(1-p,3);
+      el.textContent=Math.round(end*ease)+suf;
+      if(p<1)requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    io3.unobserve(el);
+  });
+},{threshold:.5});
+counters.forEach(c=>io3.observe(c));
+
+const rose=document.getElementById('compassRose');
+addEventListener('scroll',()=>{
+  if(rose){rose.style.transform=`rotate(${scrollY*0.04}deg)`;rose.style.transformOrigin='300px 300px'}
+},{passive:true});
+</script>
+</body>
+</html>
