@@ -18,28 +18,9 @@ export async function onRequest({ request, env, next }) {
     return Response.redirect(landingUrl.toString(), 302);
   }
 
-  // Only enforce sessions on the slib subdomain
-  if (url.hostname !== PROTECTED) {
-    return next();
-  }
-
-  const token = parseCookie(request.headers.get('Cookie') || '', 'kk_session');
-  if (!token) {
-    return Response.redirect(`https://${LOGIN_HOST}/`, 302);
-  }
-
-  try {
-    const raw = await env.KK_KV.get('kk_session_' + token);
-    if (!raw) return Response.redirect(`https://${LOGIN_HOST}/`, 302);
-    const session = JSON.parse(raw);
-    if (session.expires < Date.now()) {
-      await env.KK_KV.delete('kk_session_' + token);
-      return Response.redirect(`https://${LOGIN_HOST}/`, 302);
-    }
-  } catch {
-    return Response.redirect(`https://${LOGIN_HOST}/`, 302);
-  }
-
+  // For the slib subdomain: always pass through to the app.
+  // The app itself checks /api/session at startup and shows the login overlay
+  // when no valid session exists.
   return next();
 }
 

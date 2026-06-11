@@ -1367,14 +1367,18 @@ async function tryLogin(){
   const hn=window.location.hostname;
   const err=document.getElementById('err');
 
-  if(hn==='ketenkompas.nl'||hn==='www.ketenkompas.nl'){
+  if(hn==='slib.ketenkompas.nl'||hn==='ketenkompas.nl'||hn==='www.ketenkompas.nl'){
     // Productie: sessie aanmaken via server
     const btn=document.querySelector('#login button[onclick="tryLogin()"]')||document.querySelector('.lc-box button');
     if(btn){btn.disabled=true;btn.textContent='Bezig…';}
     try{
       const r=await fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({wachtwoord:v})});
       const res=await r.json();
-      if(res.ok){window.location.href=res.redirect;return;}
+      if(res.ok){
+        if(hn==='slib.ketenkompas.nl'){showApp();}
+        else{window.location.href=res.redirect;}
+        return;
+      }
       err.textContent='Onjuiste toegangscode';
     }catch(e){err.textContent='Verbindingsfout, probeer opnieuw.';}
     if(btn){btn.disabled=false;btn.textContent='Toegang tot dashboard';}
@@ -4338,16 +4342,19 @@ async function siDeleteScenario(naam){
 (function(){
   const hn=window.location.hostname;
   if(hn==='slib.ketenkompas.nl'){
-    // Middleware heeft sessie al gevalideerd — direct dashboard tonen
-    showApp();
+    // Check session — app handles login overlay when none exists
+    fetch('/api/session',{credentials:'include'})
+      .then(r=>r.json())
+      .then(res=>{if(res.ok)showApp();})
+      .catch(()=>{});
   }else if(hn==='ketenkompas.nl'||hn==='www.ketenkompas.nl'){
-    // Alleen loginpagina tonen; controleer of er al een geldige sessie is
+    // Public domain: check for existing session and auto-redirect to app
     fetch('/api/session',{credentials:'include'})
       .then(r=>r.json())
       .then(res=>{if(res.ok)window.location.href='https://slib.ketenkompas.nl/';})
       .catch(()=>{});
   }else{
-    // Dev / localhost: gebruik sessionStorage
+    // Dev / localhost: use sessionStorage
     if(sessionStorage.getItem('kk_auth')==='1'){showApp();}
   }
 })();
