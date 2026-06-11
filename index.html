@@ -13,6 +13,9 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="/ketenkompas-brand/app-icon.svg">
 <meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Albert+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     /* KetenKompas brand tokens — Marine & Brons */
@@ -55,48 +58,67 @@
   html,body{height:100%}
   body{font-family:var(--font);color:var(--ink);background:var(--surface-2);line-height:1.5;-webkit-font-smoothing:antialiased}
 
-  /* ---------- LOGIN ---------- */
-  #login{position:fixed;inset:0;background:var(--kk-ink);display:flex;align-items:center;justify-content:center;z-index:100;padding:24px;background-image:url('https://images.unsplash.com/photo-1595267688272-883f691e4af8?auto=format&fit=crop&w=1920&q=80');background-size:cover;background-position:center}
-  #login::before{content:'';position:absolute;inset:0;background:rgba(11,42,64,.82);z-index:0}
-  #login>*{position:relative;z-index:1}
-  .lc{width:100%;max-width:400px}
-  .lc-header{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:20px}
-  .lc-logo{width:48px;height:48px;flex-shrink:0}
-  .lc-brand{display:flex;flex-direction:column}
-  .lc-name{font-size:26px;font-weight:600;color:#fff;letter-spacing:-.02em;line-height:1.1}
-  .lc-name span{color:var(--kk-brons)}
-  .lc-sub{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9ab8d0;margin-top:3px}
-  .lc-divider{height:1px;background:rgba(44,94,132,.5);margin-bottom:22px}
-  .lc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-  .lc-stat{background:rgba(20,58,86,.9);border:1px solid rgba(44,94,132,.6);border-radius:10px;padding:14px 10px;text-align:center}
-  .lc-stat-val{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
-  .lc-stat-val.green{color:#46b554}
-  .lc-stat-val.amber{color:#d4893c}
-  .lc-stat-lbl{font-size:11px;color:#9ab8d0;letter-spacing:.03em}
-  .lc-box{background:rgba(20,58,86,.9);border:1px solid rgba(44,94,132,.6);border-radius:12px;padding:20px}
-  .lc-access-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ab8d0;margin-bottom:8px}
-  .lc-box input{width:100%;height:46px;border-radius:8px;border:1px solid rgba(44,94,132,.35);background:var(--kk-ink);color:#fff;padding:0 14px;font-size:15px;font-family:var(--font);outline:none;transition:border-color .15s;box-sizing:border-box}
-  .lc-box input:focus{border-color:var(--kk-brons)}
-  .lc-box input::placeholder{color:#7a9ab5}
-  .lc-box button{width:100%;height:46px;margin-top:10px;border:none;border-radius:8px;background:var(--kk-brons);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
-  .lc-box button:hover{background:var(--kk-brons-licht)}
-  .lc-btn-sec{background:transparent!important;border:1px solid rgba(44,94,132,.6)!important;color:#9ab8d0!important;font-weight:500!important}
-  .lc-btn-sec:hover{background:var(--bg-soft)!important;border-color:#3a5a72!important}
-  .lc-contact{max-height:0;overflow:hidden;transition:max-height .3s ease}
-  .lc-contact.open{max-height:320px}
-  .lc-contact-inner{padding-top:12px;border-top:1px solid rgba(44,94,132,.4);margin-top:10px}
-  .lc-field{margin-bottom:8px}
-  .lc-field-lbl{display:block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--kk-light);margin-bottom:5px}
-  .lc-field-inp{width:100%;height:40px;border-radius:7px;border:1px solid rgba(44,94,132,.35);background:var(--kk-ink);color:#fff;padding:0 12px;font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s;box-sizing:border-box}
-  .lc-field-inp:focus{border-color:var(--kk-brons)}
-  .lc-field-inp::placeholder{color:#5d7388}
-  .lc-btn-send{width:100%;height:42px;margin-top:6px;border:none;border-radius:8px;background:var(--kk-brons);color:var(--kk-navy);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
-  .lc-btn-send:hover{background:var(--kk-brons-licht)}
-  .lc-btn-send:disabled{background:#3a7a65;cursor:not-allowed}
-  .lc-contact-msg{font-size:12px;margin-top:9px;min-height:0}
-  .lc-err{color:#f09595;font-size:12px;margin-top:10px;min-height:16px}
-  .lc-foot{margin-top:18px;font-size:11px;color:#9ab8d0;display:flex;align-items:center;justify-content:center;gap:6px}
-  .lc-foot-dot{width:6px;height:6px;border-radius:50%;background:var(--kk-brons);flex-shrink:0}
+  /* ---------- LOGIN — landing page design language ---------- */
+  #login{position:fixed;inset:0;z-index:100;overflow:hidden auto;display:flex;flex-direction:column;
+    background:linear-gradient(180deg,#0A1628 0%,#0C1B30 55%,#10243C 100%);
+    color:#FAF8F3;font-family:'Albert Sans',var(--font);padding:0 clamp(24px,5vw,64px)}
+  #login::before{content:'';position:fixed;inset:0;pointer-events:none;opacity:.035;z-index:3;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .lg-compass{position:absolute;right:-13vw;top:50%;transform:translateY(-50%);width:min(58vw,760px);height:min(58vw,760px);opacity:.3;pointer-events:none;z-index:1}
+  .lg-rose{animation:lgspin 140s linear infinite;transform-origin:300px 300px}
+  @keyframes lgspin{to{transform:rotate(360deg)}}
+  .lg-net{position:absolute;left:0;right:0;bottom:0;width:100%;height:min(52vh,440px);pointer-events:none;z-index:1}
+  .lg-inner{position:relative;z-index:2;flex:1;display:flex;align-items:center;width:100%;max-width:1180px;margin:0 auto;padding:clamp(70px,9vh,120px) 0 clamp(28px,4vh,60px)}
+  .lg-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:clamp(40px,6vw,110px);align-items:center;width:100%}
+  .lg-logo{display:flex;align-items:center;gap:13px;margin-bottom:clamp(28px,5vh,46px)}
+  .lg-word{font-size:22px;font-weight:700;letter-spacing:-.01em;color:#FAF8F3}
+  .lg-word i{font-style:normal;color:#C8A050}
+  .lg-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#C8A050;margin-bottom:24px}
+  .lg-eyebrow::before{content:'';width:36px;height:1px;background:#C8A050}
+  .lg-title{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:clamp(34px,4.4vw,58px);line-height:1.07;letter-spacing:-.02em;margin-bottom:20px;max-width:16ch}
+  .lg-title em{font-style:italic;font-weight:300;color:#E5D5B0}
+  .lg-sub{font-size:clamp(15px,1.3vw,17.5px);font-weight:300;color:#8FA3B8;max-width:44ch;line-height:1.7}
+  .lg-ticks{display:flex;gap:clamp(26px,3.5vw,56px);margin-top:clamp(26px,4.5vh,40px);padding-top:clamp(20px,3vh,28px);border-top:1px solid rgba(250,248,243,.14)}
+  .lg-tick b{font-family:'Fraunces',Georgia,serif;font-size:clamp(24px,2.2vw,32px);font-weight:500;color:#FAF8F3;display:block;line-height:1.15;letter-spacing:-.02em}
+  .lg-tick small{font-size:12.5px;color:#8FA3B8;letter-spacing:.02em}
+  .lc-box{background:rgba(250,248,243,.045);border:1px solid rgba(250,248,243,.14);border-radius:20px;padding:clamp(26px,3vw,36px) clamp(24px,2.8vw,34px) 26px;backdrop-filter:blur(10px);box-shadow:0 40px 90px -30px rgba(0,0,0,.6)}
+  .lc-status{display:flex;align-items:center;gap:9px;font-size:11.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#8FA3B8;margin-bottom:24px}
+  .lc-dot{width:8px;height:8px;border-radius:50%;background:#3FBF8F;box-shadow:0 0 0 4px rgba(63,191,143,.15);animation:lgpulse 2.6s ease-in-out infinite;flex-shrink:0}
+  @keyframes lgpulse{0%,100%{box-shadow:0 0 0 4px rgba(63,191,143,.15)}50%{box-shadow:0 0 0 7px rgba(63,191,143,.07)}}
+  .lc-access-lbl{display:block;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,248,243,.45);margin-bottom:9px}
+  .lc-box>input{width:100%;height:52px;border-radius:12px;border:1px solid rgba(250,248,243,.16);background:rgba(10,22,40,.55);color:#FAF8F3;padding:0 16px;font-size:15px;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;box-sizing:border-box}
+  .lc-box>input:focus{border-color:#C8A050;box-shadow:0 0 0 3px rgba(200,160,80,.18)}
+  .lc-box>input::placeholder{color:rgba(143,163,184,.6)}
+  .lc-btn-main{width:100%;height:52px;margin-top:12px;border:none;border-radius:100px;background:#C8A050;color:#0A1628;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;letter-spacing:.01em;transition:transform .2s,box-shadow .2s}
+  .lc-btn-main:hover{transform:translateY(-1px);box-shadow:0 12px 28px -8px rgba(200,160,80,.45)}
+  .lc-btn-main:disabled{opacity:.6;cursor:wait;transform:none;box-shadow:none}
+  .lc-err{color:#F09595;font-size:13px;margin-top:10px;min-height:18px}
+  .lc-sep{display:flex;align-items:center;gap:12px;margin:10px 0 12px;font-size:12.5px;color:rgba(143,163,184,.7)}
+  .lc-sep::before,.lc-sep::after{content:'';flex:1;height:1px;background:rgba(250,248,243,.1)}
+  .lc-btn-sec{width:100%;height:46px;border-radius:100px;border:1px solid rgba(250,248,243,.18);background:transparent;color:rgba(250,248,243,.8);font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;transition:border-color .2s,color .2s}
+  .lc-btn-sec:hover{border-color:#E5D5B0;color:#FAF8F3}
+  .lc-contact{max-height:0;overflow:hidden;transition:max-height .35s ease}
+  .lc-contact.open{max-height:360px}
+  .lc-contact-inner{padding-top:16px;border-top:1px solid rgba(250,248,243,.1);margin-top:14px}
+  .lc-field{margin-bottom:10px}
+  .lc-field-lbl{display:block;font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(143,163,184,.8);margin-bottom:5px}
+  .lc-field-inp{width:100%;height:44px;border-radius:10px;border:1px solid rgba(250,248,243,.14);background:rgba(10,22,40,.55);color:#FAF8F3;padding:0 13px;font-size:13.5px;font-family:inherit;outline:none;transition:border-color .2s;box-sizing:border-box}
+  .lc-field-inp:focus{border-color:#C8A050}
+  .lc-field-inp::placeholder{color:rgba(143,163,184,.55)}
+  .lc-btn-send{width:100%;height:46px;margin-top:6px;border:none;border-radius:100px;background:#C8A050;color:#0A1628;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:transform .2s,box-shadow .2s}
+  .lc-btn-send:hover{transform:translateY(-1px);box-shadow:0 10px 24px -8px rgba(200,160,80,.4)}
+  .lc-btn-send:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+  .lc-contact-msg{font-size:12.5px;margin-top:9px;min-height:0}
+  .lg-foot{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 0 24px;font-size:12px;color:rgba(143,163,184,.75);letter-spacing:.02em}
+  .lc-foot-dot{width:6px;height:6px;border-radius:50%;background:#C8A050;flex-shrink:0}
+  @media(max-width:920px){
+    .lg-grid{grid-template-columns:1fr;gap:34px}
+    .lg-inner{align-items:flex-start;padding-top:56px}
+    .lg-compass{opacity:.16;right:-34vw;top:36%}
+    .lg-ticks{display:none}
+    .lg-logo{margin-bottom:24px}
+    .lg-title{font-size:clamp(30px,8vw,40px)}
+  }
 
   /* ---------- APP SHELL ---------- */
   #app{display:none;min-height:100vh;flex-direction:column}
@@ -943,45 +965,119 @@
 
 <!-- LOGIN -->
 <div id="login">
-  <div class="lc">
-    <div class="lc-header">
-      <svg class="lc-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="47" stroke="#2A4A66" stroke-width="1.4"/>
-        <circle cx="50" cy="50" r="40.5" stroke="#2A4A66" stroke-width="0.8"/>
-        <line x1="50" y1="3" x2="50" y2="8" stroke="#DCE8F1" stroke-width="1.4"/><line x1="97" y1="50" x2="92" y2="50" stroke="#DCE8F1" stroke-width="1.4"/><line x1="50" y1="97" x2="50" y2="92" stroke="#DCE8F1" stroke-width="1.4"/><line x1="3" y1="50" x2="8" y2="50" stroke="#DCE8F1" stroke-width="1.4"/>
-        <polygon points="50,50 67,33 52.8,40.1" fill="#9FCDEA"/><polygon points="50,50 67,33 59.9,47.2" fill="#C7DFEE"/><polygon points="50,50 67,67 59.9,52.8" fill="#9FCDEA"/><polygon points="50,50 67,67 52.8,59.9" fill="#C7DFEE"/><polygon points="50,50 33,67 47.2,59.9" fill="#9FCDEA"/><polygon points="50,50 33,67 40.1,52.8" fill="#C7DFEE"/><polygon points="50,50 33,33 40.1,47.2" fill="#9FCDEA"/><polygon points="50,50 33,33 47.2,40.1" fill="#C7DFEE"/>
-        <polygon points="50,50 50,8 43,38" fill="#D7B45D"/><polygon points="50,50 50,8 57,38" fill="#D7B45D" opacity="0.82"/><polygon points="50,50 92,50 62,43" fill="#FFFFFF"/><polygon points="50,50 92,50 62,57" fill="#DCE8F1"/><polygon points="50,50 50,92 57,62" fill="#FFFFFF"/><polygon points="50,50 50,92 43,62" fill="#DCE8F1"/><polygon points="50,50 8,50 38,57" fill="#FFFFFF"/><polygon points="50,50 8,50 38,43" fill="#DCE8F1"/>
-        <circle cx="50" cy="50" r="4.4" fill="#0B2A40" stroke="#FFFFFF" stroke-width="1.6"/>
-      </svg>
-      <div class="lc-brand">
-        <div class="lc-name">Keten<span>Kompas</span></div>
-        <div class="lc-sub">Nederlandse Waterketen</div>
-      </div>
-    </div>
-    <div class="lc-divider"></div>
-    <div class="lc-stats">
-      <div class="lc-stat"><div class="lc-stat-val green">4</div><div class="lc-stat-lbl">clusters</div></div>
-      <div class="lc-stat"><div class="lc-stat-val green">21</div><div class="lc-stat-lbl">waterschappen</div></div>
-      <div class="lc-stat"><div class="lc-stat-val amber">!</div><div class="lc-stat-lbl">actieve risico's</div></div>
-    </div>
-    <div class="lc-box">
-      <div class="lc-access-lbl">Toegang</div>
-      <input type="password" id="pw" placeholder="Toegangscode" autocomplete="current-password" onkeydown="if(event.key==='Enter')tryLogin()">
-      <button onclick="tryLogin()">Toegang tot dashboard</button>
-      <button class="lc-btn-sec" onclick="toggleContact()">Toegang aanvragen</button>
-      <div class="lc-contact" id="lc-contact">
-        <div class="lc-contact-inner">
-          <div class="lc-field"><label class="lc-field-lbl">Naam</label><input type="text" id="lc-naam" class="lc-field-inp" placeholder="Uw naam"></div>
-          <div class="lc-field"><label class="lc-field-lbl">Organisatie</label><input type="text" id="lc-org" class="lc-field-inp" placeholder="Waterschap / organisatie"></div>
-          <div class="lc-field"><label class="lc-field-lbl">E-mailadres</label><input type="email" id="lc-email" class="lc-field-inp" placeholder="uw@email.nl"></div>
-          <button class="lc-btn-send" id="lc-send-btn" onclick="sendContactForm()">Verzoek versturen</button>
+  <svg class="lg-compass" viewBox="0 0 600 600" fill="none" aria-hidden="true">
+    <circle cx="300" cy="300" r="280" stroke="#FAF8F3" stroke-opacity=".07" stroke-width="1"/>
+    <circle cx="300" cy="300" r="225" stroke="#FAF8F3" stroke-opacity=".09" stroke-width="1"/>
+    <circle cx="300" cy="300" r="160" stroke="#FAF8F3" stroke-opacity=".07" stroke-width="1"/>
+    <g class="lg-rose">
+      <line x1="300" y1="20" x2="300" y2="580" stroke="#FAF8F3" stroke-opacity=".07"/>
+      <line x1="20" y1="300" x2="580" y2="300" stroke="#FAF8F3" stroke-opacity=".07"/>
+      <line x1="102" y1="102" x2="498" y2="498" stroke="#FAF8F3" stroke-opacity=".05"/>
+      <line x1="498" y1="102" x2="102" y2="498" stroke="#FAF8F3" stroke-opacity=".05"/>
+      <polygon points="300,60 328,272 300,300 272,272" fill="#C8A050" fill-opacity=".85"/>
+      <polygon points="300,540 328,328 300,300 272,328" fill="#FAF8F3" fill-opacity=".18"/>
+      <polygon points="60,300 272,272 300,300 272,328" fill="#FAF8F3" fill-opacity=".18"/>
+      <polygon points="540,300 328,272 300,300 328,328" fill="#FAF8F3" fill-opacity=".18"/>
+      <polygon points="155,155 268,238 238,268" fill="#FAF8F3" fill-opacity=".1"/>
+      <polygon points="445,155 332,238 362,268" fill="#FAF8F3" fill-opacity=".1"/>
+      <polygon points="155,445 238,332 268,362" fill="#FAF8F3" fill-opacity=".1"/>
+      <polygon points="445,445 332,362 362,332" fill="#FAF8F3" fill-opacity=".1"/>
+    </g>
+    <circle cx="300" cy="300" r="9" fill="#0A1628" stroke="#C8A050" stroke-width="2"/>
+  </svg>
+
+  <svg class="lg-net" viewBox="0 0 1440 520" preserveAspectRatio="xMidYMax slice" fill="none" font-family="Albert Sans,sans-serif" aria-hidden="true">
+    <defs>
+      <path id="lgp1" d="M120 390 C 220 360, 320 310, 430 290"/>
+      <path id="lgp3" d="M430 290 C 580 320, 760 330, 905 340"/>
+      <path id="lgp6" d="M905 340 C 1010 310, 1120 275, 1230 250"/>
+    </defs>
+    <g stroke="#FAF8F3" stroke-opacity=".1" stroke-width="1">
+      <use href="#lgp1"/>
+      <path d="M250 240 C 310 260, 370 275, 430 290"/>
+      <path d="M60 220 C 180 240, 300 270, 430 290"/>
+      <use href="#lgp3"/>
+      <path d="M610 200 C 700 250, 800 300, 905 340"/>
+      <path d="M700 420 C 770 395, 840 365, 905 340"/>
+      <path d="M820 180 C 850 240, 880 290, 905 340"/>
+      <use href="#lgp6"/>
+      <path d="M1050 440 C 1110 380, 1170 305, 1230 250"/>
+      <path d="M1340 380 C 1305 340, 1270 290, 1230 250"/>
+    </g>
+    <g fill="#FAF8F3" fill-opacity=".3">
+      <circle cx="120" cy="390" r="3"/><circle cx="250" cy="240" r="3"/><circle cx="60" cy="220" r="2.5"/>
+      <circle cx="610" cy="200" r="3"/><circle cx="700" cy="420" r="3"/><circle cx="820" cy="180" r="2.5"/>
+      <circle cx="1050" cy="440" r="3"/><circle cx="1340" cy="380" r="3"/>
+    </g>
+    <g stroke="#C8A050" stroke-opacity=".5" fill="none" stroke-width="1.2">
+      <circle cx="430" cy="290" r="8"/><circle cx="905" cy="340" r="9"/><circle cx="1230" cy="250" r="7"/>
+    </g>
+    <g fill="#C8A050" fill-opacity=".45">
+      <circle cx="430" cy="290" r="2.6"/><circle cx="905" cy="340" r="3"/><circle cx="1230" cy="250" r="2.4"/>
+    </g>
+    <g fill="#FAF8F3" fill-opacity=".28" font-size="10" letter-spacing="3">
+      <text x="448" y="278">ZUIVERING</text>
+      <text x="924" y="328">VERWERKING</text>
+      <text x="1248" y="240">OPSLAG</text>
+    </g>
+    <circle r="2.4" fill="#C8A050" fill-opacity=".85">
+      <animateMotion dur="11s" repeatCount="indefinite"><mpath href="#lgp3"/></animateMotion>
+    </circle>
+    <circle r="2.2" fill="#C8A050" fill-opacity=".7">
+      <animateMotion dur="14s" begin="3s" repeatCount="indefinite"><mpath href="#lgp6"/></animateMotion>
+    </circle>
+    <circle r="2" fill="#C8A050" fill-opacity=".6">
+      <animateMotion dur="17s" begin="6s" repeatCount="indefinite"><mpath href="#lgp1"/></animateMotion>
+    </circle>
+  </svg>
+
+  <div class="lg-inner">
+    <div class="lg-grid">
+      <div>
+        <div class="lg-logo">
+          <svg width="38" height="38" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+            <polygon points="32,1 36.5,27 32,33 27.5,27" fill="#C8A050"/>
+            <polygon points="32,63 36.5,37 32,31 27.5,37" fill="#FAF8F3" opacity=".92"/>
+            <polygon points="3,32 27,27.5 33,32 27,36.5" fill="#FAF8F3" opacity=".92"/>
+            <polygon points="61,32 37,27.5 31,32 37,36.5" fill="#FAF8F3" opacity=".92"/>
+            <polygon points="13,13 28.5,23.5 23.5,28.5" fill="#FAF8F3" opacity=".45"/>
+            <polygon points="51,13 35.5,23.5 40.5,28.5" fill="#FAF8F3" opacity=".45"/>
+            <polygon points="13,51 23.5,35.5 28.5,40.5" fill="#FAF8F3" opacity=".45"/>
+            <polygon points="51,51 40.5,35.5 35.5,40.5" fill="#FAF8F3" opacity=".45"/>
+            <circle cx="32" cy="32" r="3.6" fill="#0A1628" stroke="#FAF8F3" stroke-width="1.6"/>
+          </svg>
+          <span class="lg-word">Keten<i>Kompas</i></span>
+        </div>
+        <div class="lg-eyebrow">Ketenregie-instrument · Nederlandse slibketen</div>
+        <div class="lg-title">Welkom bij het <em>instrument.</em></div>
+        <p class="lg-sub">Eén doorrekenbaar beeld van zuiveringen, verwerkingsroutes en opslaglocaties. Log in met je toegangscode om verder te gaan.</p>
+        <div class="lg-ticks">
+          <div class="lg-tick"><b>21</b><small>waterschappen</small></div>
+          <div class="lg-tick"><b>4</b><small>clusters</small></div>
+          <div class="lg-tick"><b>320+</b><small>RWZI's</small></div>
         </div>
       </div>
-      <div class="lc-contact-msg" id="lc-contact-msg"></div>
-      <div class="lc-err" id="err"></div>
+      <div class="lc-box">
+        <div class="lc-status"><span class="lc-dot"></span>Instrument operationeel · stand juni 2026</div>
+        <label class="lc-access-lbl" for="pw">Toegangscode</label>
+        <input type="password" id="pw" placeholder="Voer je toegangscode in" autocomplete="current-password" onkeydown="if(event.key==='Enter')tryLogin()">
+        <button class="lc-btn-main" onclick="tryLogin()">Toegang tot dashboard</button>
+        <div class="lc-err" id="err"></div>
+        <div class="lc-sep"><span>Nog geen toegangscode?</span></div>
+        <button class="lc-btn-sec" onclick="toggleContact()">Toegang aanvragen</button>
+        <div class="lc-contact" id="lc-contact">
+          <div class="lc-contact-inner">
+            <div class="lc-field"><label class="lc-field-lbl">Naam</label><input type="text" id="lc-naam" class="lc-field-inp" placeholder="Je naam"></div>
+            <div class="lc-field"><label class="lc-field-lbl">Organisatie</label><input type="text" id="lc-org" class="lc-field-inp" placeholder="Waterschap / organisatie"></div>
+            <div class="lc-field"><label class="lc-field-lbl">E-mailadres</label><input type="email" id="lc-email" class="lc-field-inp" placeholder="naam@organisatie.nl"></div>
+            <button class="lc-btn-send" id="lc-send-btn" onclick="sendContactForm()">Verzoek versturen</button>
+          </div>
+        </div>
+        <div class="lc-contact-msg" id="lc-contact-msg"></div>
+      </div>
     </div>
-    <div class="lc-foot"><span class="lc-foot-dot"></span>Voor de waterschappen die de keten beheren · 2026</div>
   </div>
+  <div class="lg-foot"><span class="lc-foot-dot"></span>Voor de waterschappen die de keten beheren · 2026</div>
 </div>
 
 <!-- APP -->
@@ -1351,7 +1447,7 @@ async function sendContactForm(){
     const r=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({naam,organisatie:org,email})});
     if(r.ok){
       document.getElementById('lc-contact').classList.remove('open');
-      msg.style.color='var(--kk-brons)';
+      msg.style.color='#E5D5B0';
       msg.textContent='Verzoek ontvangen — je hoort snel van ons';
     }else{
       msg.style.color='#f09595';msg.textContent='Er ging iets mis — probeer het opnieuw';
