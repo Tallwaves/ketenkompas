@@ -13,10 +13,10 @@ export async function onRequest({ request, env, next }) {
     return next();
   }
 
-  // Root → redirect to /slib where the landing page lives
+  // Root → serve home.html (KetenKompas landing) without redirecting
   if (url.pathname === '/' || url.pathname === '') {
-    const target = new URL('/slib', url);
-    return Response.redirect(target.toString(), 302);
+    const homeUrl = new URL('/home', url);
+    return env.ASSETS.fetch(homeUrl.toString());
   }
 
   return next();
