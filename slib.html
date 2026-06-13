@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SlibKompas — Scenario-instrument voor de Nederlandse slibketen</title>
+<meta name="description" content="SlibKompas brengt zuiveringen, verwerkingsroutes en opslaglocaties samen in één doorrekenbaar beeld. Scenario-analyse, robuustheidstoets en bestuurlijke rapportage voor de Nederlandse slibketen — voor waterschappen, verwerkers en ketenpartners.">
+<meta name="keywords" content="slibketen, waterschappen, scenario-analyse, robuust plan slib, slibverwerking, ketenoverzicht, bestuurlijke rapportage, incidentenopslag, Nederlandse slibketen">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ketenkompas.nl/slib">
+<meta name="author" content="KetenKompas">
+
+<!-- ── Favicon ── -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A1628'/%3E%3Cpolygon points='32,4 36,26 32,32 28,26' fill='%23C8A050'/%3E%3Cpolygon points='32,60 36,38 32,32 28,38' fill='%23FAF8F3' opacity='.9'/%3E%3Cpolygon points='4,32 26,28 32,32 26,36' fill='%23FAF8F3' opacity='.9'/%3E%3Cpolygon points='60,32 38,28 32,32 38,36' fill='%23FAF8F3' opacity='.9'/%3E%3Ccircle cx='32' cy='32' r='3.5' fill='%230A1628' stroke='%23C8A050' stroke-width='1.5'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230A1628'/%3E%3Cpolygon points='90,14 100,74 90,90 80,74' fill='%23C8A050'/%3E%3Cpolygon points='90,166 100,106 90,90 80,106' fill='%23FAF8F3' opacity='.9'/%3E%3Cpolygon points='14,90 74,80 90,90 74,100' fill='%23FAF8F3' opacity='.9'/%3E%3Cpolygon points='166,90 106,80 90,90 106,100' fill='%23FAF8F3' opacity='.9'/%3E%3Ccircle cx='90' cy='90' r='10' fill='%230A1628' stroke='%23C8A050' stroke-width='4'/%3E%3C/svg%3E">
+
+<!-- ── Open Graph ── -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ketenkompas.nl/slib">
+<meta property="og:site_name" content="KetenKompas">
+<meta property="og:title" content="KetenKompas — Scenario-instrument voor de Nederlandse slibketen">
+<meta property="og:description" content="SlibKompas brengt zuiveringen, verwerkingsroutes en opslaglocaties samen in één doorrekenbaar beeld. Scenario-analyse en bestuurlijke rapportage voor de Nederlandse slibketen.">
+<meta property="og:image" content="https://ketenkompas.nl/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="nl_NL">
+
+<!-- ── Twitter Card ── -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="KetenKompas — Scenario-instrument voor de Nederlandse slibketen">
+<meta name="twitter:description" content="SlibKompas brengt zuiveringen, verwerkingsroutes en opslaglocaties samen in één doorrekenbaar beeld. Scenario-analyse en bestuurlijke rapportage voor 21 waterschappen.">
+<meta name="twitter:image" content="https://ketenkompas.nl/og-image.svg">
+
+<!-- ── JSON-LD Structured Data ── -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://ketenkompas.nl/#website",
+      "url": "https://ketenkompas.nl/slib",
+      "name": "KetenKompas",
+      "description": "Scenario-instrument voor de Nederlandse slibketen",
+      "inLanguage": "nl-NL"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://ketenkompas.nl/#app",
+      "name": "KetenKompas",
+      "url": "https://slib.ketenkompas.nl/",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": "SlibKompas brengt zuiveringen, verwerkingsroutes en opslaglocaties samen in één doorrekenbaar beeld. Verstoringen worden doorgerekend op zuiveringsniveau en vertaald naar een bestuurlijke rapportage voor waterschappen, verwerkers en ketenpartners.",
+      "offers": {
+        "@type": "Offer",
+        "availability": "https://schema.org/InStock",
+        "price": "0",
+        "priceCurrency": "EUR"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "KetenKompas",
+        "url": "https://ketenkompas.nl/slib"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://ketenkompas.nl/#org",
+      "name": "KetenKompas",
+      "url": "https://ketenkompas.nl/slib",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://ketenkompas.nl/og-image.svg"
+      },
+      "description": "Sectorinstrument voor de Nederlandse slibketen — voor waterschappen, verwerkers, regiegroep en Unie van Waterschappen."
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Albert+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A1628;
+  --ink-soft:#142336;
+  --paper:#FAF8F3;
+  --paper-warm:#F4F0E6;
+  --gold:#5BA3D9;
+  --gold-soft:#B8D9F0;
+  --teal:#1A6FAD;
+  --teal-bright:#7EC4E8;
+  --mist:#8FA3B8;
+  --line:rgba(10,22,40,.12);
+  --line-light:rgba(250,248,243,.14);
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Albert Sans',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--gold);color:var(--ink)}
+
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.035;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.rv.in{opacity:1;transform:none}
+.rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.22s}.rv-d3{transition-delay:.34s}.rv-d4{transition-delay:.46s}
+
+/* ── logo ─────────────────────── */
+.kk-mark{display:inline-block;flex-shrink:0}
+.kk-word{display:flex;flex-direction:column;line-height:1.1}
+.kk-word b{font-family:var(--sans);font-weight:700;letter-spacing:-.01em}
+.kk-word b i{font-style:normal;color:var(--gold)}
+.kk-word small{font-size:.42em;font-weight:500;letter-spacing:.34em;text-transform:uppercase;opacity:.65;margin-top:3px}
+
+/* ── nav ─────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 clamp(24px,5vw,64px);
+display:flex;align-items:center;justify-content:space-between;height:80px;
+background:rgba(250,248,243,0);backdrop-filter:blur(0);border-bottom:1px solid transparent;
+transition:background .4s,backdrop-filter .4s,border-color .4s}
+nav.scrolled{background:rgba(250,248,243,.88);backdrop-filter:blur(14px);border-color:var(--line)}
+.nav-logo{text-decoration:none;display:flex;align-items:center;gap:13px;color:var(--paper);transition:color .4s;font-size:21px}
+nav.scrolled .nav-logo{color:var(--ink)}
+.nav-links{display:flex;align-items:center;gap:36px}
+.nav-links a{font-size:14px;font-weight:500;color:var(--paper);text-decoration:none;letter-spacing:.01em;opacity:.75;transition:opacity .25s,color .4s}
+nav.scrolled .nav-links a{color:var(--ink)}
+.nav-links a:hover{opacity:1}
+.nav-cta{color:var(--ink)!important;background:var(--gold);padding:11px 22px;border-radius:100px;opacity:1!important;font-weight:600!important;transition:transform .25s!important}
+nav.scrolled .nav-cta{background:var(--ink);color:var(--paper)!important}
+.nav-cta:hover{transform:translateY(-1px)}
+@media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
+
+/* ── hero ────────────────────── */
+.hero{min-height:100vh;background:linear-gradient(180deg,#0A1628 0%,#0C1B30 55%,#10243C 100%);color:var(--paper);position:relative;overflow:hidden;
+display:flex;flex-direction:column;padding:0 clamp(24px,5vw,64px)}
+.hero-compass{position:absolute;right:-10vw;top:30%;transform:translateY(-50%);width:min(54vw,720px);height:min(54vw,720px);opacity:.34;pointer-events:none;z-index:1}
+.hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;flex:1;display:grid;grid-template-columns:1fr 420px;gap:clamp(32px,5vw,72px);align-items:center;padding-top:clamp(100px,12vh,150px);padding-bottom:clamp(32px,4vh,60px)}
+.hero-left{display:flex;flex-direction:column}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:34px}
+.hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--gold)}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(40px,5.6vw,76px);line-height:1.06;letter-spacing:-.025em;max-width:15ch;margin-bottom:28px}
+h1 em{font-style:italic;font-weight:300;color:var(--gold-soft)}
+.hero-sub{font-size:clamp(17px,1.5vw,20px);font-weight:300;color:var(--mist);max-width:50ch;margin-bottom:40px;line-height:1.7}
+.hero-sub strong{color:var(--paper);font-weight:500}
+.btn-gold{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--ink);background:var(--gold);border:none;padding:17px 34px;border-radius:100px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:transform .25s,box-shadow .25s}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 32px -8px rgba(91,163,217,.45)}
+.btn-ghost{font-size:15px;font-weight:500;color:var(--paper);text-decoration:none;padding:17px 10px;display:inline-flex;align-items:center;gap:8px;opacity:.8;transition:opacity .25s,gap .25s}
+.btn-ghost:hover{opacity:1;gap:12px}
+
+/* ── voorportaal ─────────────── */
+.portal{background:rgba(250,248,243,.045);border:1px solid var(--line-light);border-radius:18px;padding:24px 26px 22px;max-width:600px;backdrop-filter:blur(8px)}
+.portal-status{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);margin-bottom:18px}
+.pdot{width:8px;height:8px;border-radius:50%;background:#3FBF8F;box-shadow:0 0 0 4px rgba(63,191,143,.15);animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(63,191,143,.15)}50%{box-shadow:0 0 0 7px rgba(63,191,143,.07)}}
+.portal-row{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.portal-meta{font-size:13.5px;color:var(--mist);line-height:1.7}
+.portal-meta b{display:block;color:rgba(250,248,243,.85);font-weight:500;font-size:13px;letter-spacing:.04em}
+.portal-meta a{color:var(--gold-soft);text-decoration:none;border-bottom:1px solid rgba(184,217,240,.3);transition:border-color .25s}
+.portal-meta a:hover{border-bottom-color:var(--gold-soft)}
+
+/* ── scenario-tile ───────────── */
+.sr-tile{position:relative;border-radius:20px;overflow:hidden;border:1px solid rgba(91,163,217,.28);backdrop-filter:blur(12px);background:rgba(10,22,40,.55);padding:28px 28px 24px;cursor:pointer;transition:border-color .3s,transform .3s,box-shadow .3s;align-self:stretch;display:flex;flex-direction:column}
+.sr-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--teal-bright));opacity:.8}
+.sr-tile:hover{border-color:rgba(91,163,217,.55);transform:translateY(-4px);box-shadow:0 32px 80px -24px rgba(0,0,0,.6)}
+.sr-tile-tag{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.sr-tile-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.sr-tile h3{font-family:var(--serif);font-weight:400;font-size:clamp(21px,2vw,26px);letter-spacing:-.015em;line-height:1.15;margin-bottom:12px;color:var(--paper)}
+.sr-tile h3 em{font-style:italic;font-weight:300;color:var(--gold-soft)}
+.sr-tile-sub{font-size:14px;font-weight:300;color:var(--mist);line-height:1.65;margin-bottom:22px}
+.sr-types{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:26px;flex:1}
+.sr-types li{display:flex;align-items:baseline;gap:10px;font-size:13.5px;color:rgba(250,248,243,.75);font-weight:300}
+.sr-types li::before{content:'—';color:var(--gold);flex-shrink:0;opacity:.7}
+.sr-cta{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--gold);border-radius:100px;color:var(--ink);font-size:14px;font-weight:600;letter-spacing:.01em;margin-top:auto;transition:transform .2s,box-shadow .2s}
+.sr-tile:hover .sr-cta{transform:translateY(-1px);box-shadow:0 10px 24px -8px rgba(91,163,217,.5)}
+.sr-cta-arrow{font-size:18px;transition:transform .2s}
+.sr-tile:hover .sr-cta-arrow{transform:translateX(3px)}
+
+/* ── scenario-modal ──────────── */
+.sm-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:flex-end;padding:16px;background:rgba(10,22,40,.65);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .35s}
+.sm-overlay.open{opacity:1;pointer-events:all}
+.sm-panel{width:100%;max-width:540px;max-height:calc(100vh - 32px);overflow-y:auto;background:#0D1E33;border:1px solid rgba(91,163,217,.28);border-radius:22px;box-shadow:0 60px 120px -30px rgba(0,0,0,.8);transform:translateX(40px);transition:transform .4s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column}
+.sm-overlay.open .sm-panel{transform:none}
+.sm-panel-top{position:relative;padding:30px 32px 0;flex-shrink:0}
+.sm-panel-top::before{content:'';position:absolute;top:0;left:32px;right:32px;height:1px;background:linear-gradient(90deg,var(--gold),var(--teal-bright),transparent);opacity:.7}
+.sm-close{position:absolute;top:20px;right:24px;background:rgba(250,248,243,.08);border:1px solid rgba(250,248,243,.12);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--mist);font-size:20px;line-height:1;transition:background .2s,color .2s}
+.sm-close:hover{background:rgba(250,248,243,.16);color:var(--paper)}
+.sm-kicker{font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.sm-title{font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.5vw,30px);letter-spacing:-.015em;line-height:1.15;color:var(--paper);margin-bottom:8px}
+.sm-title em{font-style:italic;font-weight:300;color:var(--gold-soft)}
+.sm-intro{font-size:14px;font-weight:300;color:var(--mist);line-height:1.65;margin-bottom:0;padding-bottom:24px;border-bottom:1px solid rgba(250,248,243,.08)}
+.sm-body{padding:24px 32px 32px;display:flex;flex-direction:column;gap:14px}
+.sm-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sm-field{display:flex;flex-direction:column;gap:6px}
+.sm-field.full{grid-column:1/-1}
+.sm-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(143,163,184,.8)}
+.sm-req{color:var(--gold);margin-left:2px}
+.sm-inp,.sm-sel,.sm-txt{font-family:var(--sans);font-size:14px;color:var(--paper);background:rgba(10,22,40,.7);border:1px solid rgba(250,248,243,.14);border-radius:10px;padding:11px 14px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%;box-sizing:border-box}
+.sm-inp::placeholder,.sm-txt::placeholder{color:rgba(143,163,184,.5)}
+.sm-inp:focus,.sm-sel:focus,.sm-txt:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(91,163,217,.15)}
+.sm-sel{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%238FA3B8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.sm-sel option{background:#0D1E33;color:var(--paper)}
+.sm-txt{resize:vertical;min-height:90px;line-height:1.55}
+.sm-urgency{display:flex;gap:8px}
+.sm-urg-btn{flex:1;padding:9px 6px;border-radius:100px;border:1px solid rgba(250,248,243,.14);background:transparent;color:var(--mist);font-size:13px;font-family:var(--sans);cursor:pointer;transition:all .2s;text-align:center}
+.sm-urg-btn.active{border-color:var(--gold);background:rgba(91,163,217,.15);color:var(--gold);font-weight:600}
+.sm-submit{padding:16px;border-radius:100px;border:none;background:var(--gold);color:var(--ink);font-size:15px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:transform .2s,box-shadow .2s;letter-spacing:.01em;margin-top:4px}
+.sm-submit:hover{transform:translateY(-2px);box-shadow:0 12px 28px -8px rgba(91,163,217,.5)}
+.sm-submit:disabled{opacity:.55;cursor:wait;transform:none;box-shadow:none}
+.sm-msg{font-size:13.5px;text-align:center;min-height:18px;color:var(--teal-bright)}
+.sm-msg.err{color:#F09595}
+.sm-success{display:none;flex-direction:column;align-items:center;text-align:center;padding:40px 32px 48px;gap:16px}
+.sm-success.show{display:flex}
+.sm-success-icon{width:60px;height:60px;border-radius:50%;background:rgba(93,202,165,.12);border:1px solid rgba(93,202,165,.3);display:flex;align-items:center;justify-content:center;font-size:28px}
+.sm-success h3{font-family:var(--serif);font-size:24px;font-weight:400;color:var(--paper)}
+.sm-success p{font-size:14px;font-weight:300;color:var(--mist);max-width:36ch;line-height:1.65}
+@media(max-width:1000px){
+  .hero-inner{grid-template-columns:1fr}
+  .sr-tile{display:none}
+}
+@media(max-width:600px){.sm-row{grid-template-columns:1fr}.sm-panel{border-radius:16px 16px 0 0;max-height:90vh}.sm-overlay{align-items:flex-end;padding:0}}
+
+.hero-ticker{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;
+border-top:1px solid var(--line-light);padding:28px 0 40px;
+display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:34px}
+.tick{display:flex;flex-direction:column;gap:5px}
+.tick b{font-family:var(--serif);font-size:clamp(26px,2.6vw,36px);font-weight:500;letter-spacing:-.02em;color:var(--paper)}
+.tick b span{color:var(--gold)}
+.tick small{font-size:13px;color:var(--mist);font-weight:400;letter-spacing:.02em}
+
+/* ── ketennetwerk ────────────── */
+.hero-net{position:absolute;left:0;right:0;bottom:0;width:100%;height:min(62vh,520px);pointer-events:none;z-index:1}
+.cta-net{position:absolute;left:0;right:0;top:0;width:100%;height:60%;pointer-events:none;opacity:.85}
+@keyframes spin{to{transform:rotate(360deg)}}
+.quote{position:relative;overflow:hidden}
+.quote-clarifier{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(120vw,860px);height:min(120vw,860px);pointer-events:none}
+.quote-clarifier .arm{animation:spin 90s linear infinite;transform-origin:400px 400px}
+.quote blockquote,.quote cite{position:relative;z-index:2}
+
+/* ── module-index (vervangt marquee) ── */
+.modbar{background:var(--paper-warm);border-bottom:1px solid var(--line)}
+.modbar-inner{max-width:1280px;margin:0 auto;padding:20px clamp(24px,5vw,64px);
+display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;position:relative}
+.modbar-inner::before{content:'';position:absolute;left:clamp(24px,5vw,64px);right:clamp(24px,5vw,64px);top:50%;height:1px;background:var(--line)}
+.mod,.modbar-label{position:relative;background:var(--paper-warm);padding:0 14px}
+.modbar-label{padding-left:0}
+.mod::before{content:'';position:absolute;left:0;top:50%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;background:var(--gold)}
+@media(max-width:760px){.modbar-inner::before,.mod::before{display:none}.mod,.modbar-label{padding:0}}
+.mod{display:flex;align-items:baseline;gap:11px;font-size:12.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ink);text-decoration:none;transition:color .25s}
+.mod:hover{color:var(--teal)}
+.mod i{font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--gold);font-weight:400;letter-spacing:0;text-transform:none}
+.modbar-label{font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#8A94A2}
+@media(max-width:760px){.modbar-inner{justify-content:flex-start;row-gap:12px}}
+
+section{padding:clamp(90px,11vw,150px) clamp(24px,5vw,64px)}
+.wrap{max-width:1280px;margin:0 auto}
+.kicker{font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:10px;margin-bottom:26px}
+.kicker::before{content:'';width:36px;height:1px;background:var(--teal)}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(34px,4vw,56px);line-height:1.1;letter-spacing:-.02em}
+h2 em{font-style:italic;font-weight:300;color:var(--teal)}
+
+/* ── probleem ────────────────── */
+.problem{background:var(--paper);position:relative}
+.problem-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(40px,6vw,100px);align-items:start}
+.problem-copy p{font-size:18px;font-weight:300;color:#3D4D60;margin-top:28px;max-width:52ch}
+.problem-copy p strong{font-weight:600;color:var(--ink)}
+.bignum{border-top:1px solid var(--line);padding:30px 0 8px;margin-top:8px}
+.bignum:first-child{border-top:none;margin-top:0}
+.bignum b{font-family:var(--serif);font-size:clamp(52px,5.4vw,84px);font-weight:300;line-height:1;letter-spacing:-.03em;color:var(--ink);display:block}
+.bignum b i{font-style:normal;color:var(--gold);font-size:.5em;vertical-align:.45em;margin-left:2px}
+.bignum p{font-size:15px;color:#5A6B7E;margin-top:10px;max-width:34ch}
+@media(max-width:860px){.problem-grid{grid-template-columns:1fr}}
+
+/* ── dashboard showcase ──────── */
+.show{background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
+.show .kicker{color:var(--gold)}.show .kicker::before{background:var(--gold)}
+.show h2 em{color:var(--gold-soft)}
+.show-head{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,80px);align-items:end;margin-bottom:70px;position:relative;z-index:2}
+.show-head p{font-size:17px;font-weight:300;color:var(--mist);max-width:44ch;line-height:1.7}
+.browser{position:relative;border-radius:14px;overflow:hidden;background:#0D1E33;
+border:1px solid rgba(250,248,243,.1);box-shadow:0 60px 120px -40px rgba(0,0,0,.7);
+transform:perspective(1600px) rotateX(4deg);transform-origin:top}
+.browser-bar{display:flex;align-items:center;gap:8px;padding:13px 18px;background:#0A1628;border-bottom:1px solid rgba(250,248,243,.08)}
+.dot{width:10px;height:10px;border-radius:50%}
+.url{margin-left:14px;font-size:12px;color:var(--mist);background:rgba(250,248,243,.06);padding:5px 16px;border-radius:6px;letter-spacing:.02em}
+.dash{padding:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.dcard{background:rgba(250,248,243,.045);border:1px solid rgba(250,248,243,.08);border-radius:10px;padding:18px 18px 16px}
+.dcard small{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);display:block;margin-bottom:8px}
+.dcard b{font-family:var(--serif);font-size:26px;font-weight:500;color:var(--paper)}
+.dcard.ok b{color:var(--teal-bright)}.dcard.warn b{color:var(--gold)}
+.dbar{grid-column:1/-1;background:rgba(250,248,243,.045);border:1px solid rgba(250,248,243,.08);border-radius:10px;padding:20px 18px 22px}
+.dbar small{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);display:block;margin-bottom:14px}
+.brow{display:grid;grid-template-columns:200px 1fr 64px;align-items:center;gap:14px;margin-top:11px;font-size:12.5px}
+.brow span:first-child{color:rgba(250,248,243,.82)}
+.btrack{height:7px;background:rgba(250,248,243,.08);border-radius:10px;overflow:hidden}
+.bfill{height:100%;border-radius:10px;background:var(--teal-bright);width:0;transition:width 1.4s cubic-bezier(.16,1,.3,1)}
+.bfill.warn{background:var(--gold)}.bfill.crit{background:#E24B4A}
+.brow span:last-child{text-align:right;color:var(--mist);font-variant-numeric:tabular-nums}
+.float-card{position:absolute;background:var(--paper);color:var(--ink);border-radius:12px;padding:16px 20px;box-shadow:0 24px 64px -16px rgba(0,0,0,.55);font-size:13px;z-index:3}
+.float-card b{font-family:var(--serif);font-size:19px;display:block;margin-top:2px}
+.fc1{top:14%;right:clamp(8px,3vw,40px);transform:rotate(2deg)}
+.fc2{bottom:10%;left:clamp(8px,3vw,40px);transform:rotate(-2deg)}
+.fc1 b{color:var(--teal)}.fc2 b{color:#1A6FAD}
+@media(max-width:860px){.show-head{grid-template-columns:1fr}.dash{grid-template-columns:repeat(2,1fr)}.float-card{display:none}.browser{transform:none}.brow{grid-template-columns:130px 1fr 50px}}
+
+/* ── case ────────────────────── */
+.case{background:var(--paper-warm)}
+.case-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(40px,6vw,100px)}
+.case-meta{position:sticky;top:120px;align-self:start}
+.case-date{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--teal);margin-bottom:18px}
+.case-meta h2{margin-bottom:24px}
+.case-meta>p{font-size:17px;font-weight:300;color:#3D4D60;max-width:40ch}
+.tl{border-left:1px solid rgba(10,22,40,.18);padding-left:clamp(28px,3vw,48px);display:flex;flex-direction:column;gap:42px}
+.tl-item{position:relative}
+.tl-item::before{content:'';position:absolute;left:calc(-1*clamp(28px,3vw,48px) - 5.5px);top:8px;width:10px;height:10px;border-radius:50%;background:var(--paper-warm);border:2px solid var(--teal)}
+.tl-item.gold::before{border-color:var(--gold);background:var(--gold)}
+.tl-time{font-size:12.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:8px}
+.tl-item.gold .tl-time{color:#1A6FAD}
+.tl-item h3{font-family:var(--serif);font-size:23px;font-weight:500;letter-spacing:-.01em;margin-bottom:8px}
+.tl-item p{font-size:15.5px;font-weight:300;color:#48586B;max-width:52ch}
+.tl-quote{background:var(--ink);color:var(--paper);border-radius:14px;padding:30px 32px;margin-top:6px}
+.tl-quote p{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--paper);max-width:none;line-height:1.55}
+.tl-quote small{display:block;margin-top:14px;font-size:13px;color:var(--mist);font-style:normal;font-family:var(--sans)}
+@media(max-width:860px){.case-grid{grid-template-columns:1fr}.case-meta{position:static}}
+
+/* ── werkwijze ───────────────── */
+.how{background:var(--ink);color:var(--paper)}
+.how .kicker{color:var(--gold)}.how .kicker::before{background:var(--gold)}
+.how h2{max-width:18ch}.how h2 em{color:var(--gold-soft)}
+.steps{margin-top:80px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line-light)}
+.step{padding:38px clamp(18px,2.4vw,34px) 8px;border-left:1px solid var(--line-light);position:relative;transition:background .35s}
+.step:first-child{border-left:none}
+.step:hover{background:rgba(250,248,243,.035)}
+.step i{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--gold);display:block;margin-bottom:50px}
+.step h3{font-family:var(--serif);font-size:22px;font-weight:500;letter-spacing:-.01em;margin-bottom:12px}
+.step p{font-size:14.5px;font-weight:300;color:var(--mist);line-height:1.65}
+@media(max-width:980px){.steps{grid-template-columns:repeat(2,1fr)}.step:nth-child(3){border-left:none}}
+@media(max-width:560px){.steps{grid-template-columns:1fr}.step{border-left:none;border-top:1px solid var(--line-light)}}
+
+/* ── voor wie ────────────────── */
+.who{background:var(--paper)}
+.who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:70px}
+.who-card{border:1px solid var(--line);border-radius:18px;padding:38px 34px 34px;background:var(--paper);transition:transform .35s,box-shadow .35s,border-color .35s;position:relative;overflow:hidden}
+.who-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--teal);transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.who-card:hover{transform:translateY(-6px);box-shadow:0 28px 60px -24px rgba(10,22,40,.18);border-color:transparent}
+.who-card:hover::before{transform:scaleX(1)}
+.who-card .num{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--gold);display:block;margin-bottom:40px}
+.who-card h3{font-family:var(--serif);font-size:25px;font-weight:500;letter-spacing:-.01em;margin-bottom:14px}
+.who-card p{font-size:15px;font-weight:300;color:#48586B;line-height:1.7}
+.who-card ul{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:9px}
+.who-card li{font-size:14px;color:var(--ink);display:flex;gap:10px;align-items:baseline}
+.who-card li::before{content:'—';color:var(--teal);flex-shrink:0}
+@media(max-width:860px){.who-grid{grid-template-columns:1fr}}
+
+/* ── quote ───────────────────── */
+.quote{background:var(--paper-warm);text-align:center}
+.quote blockquote{font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(26px,3.4vw,44px);line-height:1.3;letter-spacing:-.01em;max-width:24ch;margin:0 auto;color:var(--ink)}
+.quote blockquote em{color:var(--teal);font-style:italic}
+.quote cite{display:block;margin-top:34px;font-style:normal;font-size:14px;color:#5A6B7E;letter-spacing:.04em}
+.quote cite b{display:block;font-size:15px;color:var(--ink);font-weight:600;margin-bottom:3px}
+
+/* ── cta ─────────────────────── */
+.cta{background:linear-gradient(180deg,#0A1628 0%,#0E2138 100%);color:var(--paper);position:relative;overflow:hidden;text-align:center;padding-bottom:clamp(110px,13vw,180px)}
+.cta .wrap{position:relative;z-index:2}
+.cta h2{font-size:clamp(38px,5vw,68px);max-width:17ch;margin:0 auto 26px}
+.cta h2 em{color:var(--gold-soft)}
+.cta p{font-size:18px;font-weight:300;color:var(--mist);max-width:46ch;margin:0 auto 46px}
+.cta-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.cta-note{margin-top:28px;font-size:13.5px;color:var(--mist);opacity:.8}
+
+/* ── footer ──────────────────── */
+footer{background:#060E1C;color:var(--mist);overflow:hidden}
+.foot-accent{height:3px;background:linear-gradient(90deg,var(--gold) 0%,var(--teal-bright) 60%,transparent 100%);opacity:.7}
+.foot-main{max-width:1280px;margin:0 auto;padding:64px clamp(24px,5vw,64px) 0;
+display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(28px,4vw,64px);align-items:start}
+.foot-brand{display:flex;align-items:center;gap:12px;color:var(--paper);font-size:19px;margin-bottom:16px}
+.foot-mission{font-size:14px;line-height:1.8;max-width:30ch;color:rgba(143,163,184,.8);margin-bottom:24px}
+.foot-pills{display:flex;flex-wrap:wrap;gap:7px}
+.foot-pill{font-size:11px;font-weight:500;letter-spacing:.08em;border:1px solid rgba(250,248,243,.14);border-radius:100px;padding:4px 11px;color:rgba(250,248,243,.5)}
+.foot-col{display:flex;flex-direction:column;gap:11px}
+.foot-col-hdr{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,248,243,.38);margin-bottom:4px;font-weight:500}
+.foot-col a{font-size:14px;color:rgba(143,163,184,.75);text-decoration:none;transition:color .2s;line-height:1.5}
+.foot-col a:hover{color:var(--paper)}
+.foot-divider{max-width:1280px;margin:52px auto 0;height:1px;background:rgba(250,248,243,.08)}
+.foot-bottom{max-width:1280px;margin:0 auto;padding:22px clamp(24px,5vw,64px) 0;font-size:12.5px;color:rgba(143,163,184,.45);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.foot-bottom-status{display:flex;align-items:center;gap:8px}
+.foot-bottom-status .pdot{width:6px;height:6px;box-shadow:none;animation:none}
+
+/* groot afgesneden woordmerk — framer-stijl */
+.foot-giant{position:relative;margin-top:34px;pointer-events:none;user-select:none}
+.foot-giant span{display:block;font-family:var(--serif);font-weight:400;font-size:clamp(76px,14.5vw,230px);line-height:.74;letter-spacing:-.045em;white-space:nowrap;text-align:center;
+color:rgba(250,248,243,.055);transform:translateY(20%)}
+.foot-giant span i{font-style:italic;color:rgba(91,163,217,.12)}
+@media(max-width:900px){.foot-main{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.foot-main{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ── herbruikbare symbolen: logo + polderlandschap ── -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="kk-rose" viewBox="0 0 64 64">
+      <polygon points="32,1 36.5,27 32,33 27.5,27" fill="#5BA3D9"/>
+      <polygon points="32,63 36.5,37 32,31 27.5,37" fill="currentColor" opacity=".92"/>
+      <polygon points="3,32 27,27.5 33,32 27,36.5" fill="currentColor" opacity=".92"/>
+      <polygon points="61,32 37,27.5 31,32 37,36.5" fill="currentColor" opacity=".92"/>
+      <polygon points="13,13 28.5,23.5 23.5,28.5" fill="currentColor" opacity=".45"/>
+      <polygon points="51,13 35.5,23.5 40.5,28.5" fill="currentColor" opacity=".45"/>
+      <polygon points="13,51 23.5,35.5 28.5,40.5" fill="currentColor" opacity=".45"/>
+      <polygon points="51,51 40.5,35.5 35.5,40.5" fill="currentColor" opacity=".45"/>
+      <circle cx="32" cy="32" r="3.6" fill="#0A1628" stroke="currentColor" stroke-width="1.6"/>
+    </symbol>
+
+  </defs>
+</svg>
+
+<nav id="nav">
+  <a class="nav-logo" href="#">
+    <svg class="kk-mark" width="34" height="34"><use href="#kk-rose"/></svg>
+    <span class="kk-word"><b>Slib<i>Kompas</i></b></span>
+  </a>
+  <div class="nav-links">
+    <a href="#probleem">Waarom</a>
+    <a href="#instrument">Het instrument</a>
+    <a href="#case">Praktijkcase</a>
+    <a href="#voorwie">Voor wie</a>
+    <a class="nav-cta" href="https://slib.ketenkompas.nl">Inloggen</a>
+  </div>
+</nav>
+
+<!-- ════════ HERO / VOORPORTAAL ════════ -->
+<header class="hero">
+  <svg class="hero-compass" id="heroCompass" viewBox="0 0 600 600" fill="none">
+    <circle cx="300" cy="300" r="280" stroke="#FAF8F3" stroke-opacity=".07" stroke-width="1"/>
+    <circle cx="300" cy="300" r="225" stroke="#FAF8F3" stroke-opacity=".09" stroke-width="1"/>
+    <circle cx="300" cy="300" r="160" stroke="#FAF8F3" stroke-opacity=".07" stroke-width="1"/>
+    <g id="compassRose">
+      <line x1="300" y1="20" x2="300" y2="580" stroke="#FAF8F3" stroke-opacity=".07"/>
+      <line x1="20" y1="300" x2="580" y2="300" stroke="#FAF8F3" stroke-opacity=".07"/>
+      <line x1="102" y1="102" x2="498" y2="498" stroke="#FAF8F3" stroke-opacity=".05"/>
+      <line x1="498" y1="102" x2="102" y2="498" stroke="#FAF8F3" stroke-opacity=".05"/>
+      <polygon points="300,60 328,272 300,300 272,272" fill="#5BA3D9" fill-opacity=".85"/>
+      <polygon points="300,540 328,328 300,300 272,328" fill="#FAF8F3" fill-opacity=".18"/>
+      <polygon points="60,300 272,272 300,300 272,328" fill="#FAF8F3" fill-opacity=".18"/>
+      <polygon points="540,300 328,272 300,300 328,328" fill="#FAF8F3" fill-opacity=".18"/>
+      <polygon points="155,155 268,238 238,268" fill="#FAF8F3" fill-opacity=".1"/>
+      <polygon points="445,155 332,238 362,268" fill="#FAF8F3" fill-opacity=".1"/>
+      <polygon points="155,445 238,332 268,362" fill="#FAF8F3" fill-opacity=".1"/>
+      <polygon points="445,445 332,362 362,332" fill="#FAF8F3" fill-opacity=".1"/>
+    </g>
+    <circle cx="300" cy="300" r="9" fill="#0A1628" stroke="#5BA3D9" stroke-width="2"/>
+  </svg>
+
+  <svg class="hero-net" viewBox="0 0 1440 520" preserveAspectRatio="xMidYMax slice" fill="none" font-family="Albert Sans,sans-serif">
+    <defs>
+      <path id="kp1" d="M120 390 C 220 360, 320 310, 430 290"/>
+      <path id="kp3" d="M430 290 C 580 320, 760 330, 905 340"/>
+      <path id="kp6" d="M905 340 C 1010 310, 1120 275, 1230 250"/>
+    </defs>
+    <g stroke="#FAF8F3" stroke-opacity=".1" stroke-width="1">
+      <use href="#kp1"/>
+      <path d="M250 240 C 310 260, 370 275, 430 290"/>
+      <path d="M60 220 C 180 240, 300 270, 430 290"/>
+      <use href="#kp3"/>
+      <path d="M610 200 C 700 250, 800 300, 905 340"/>
+      <path d="M700 420 C 770 395, 840 365, 905 340"/>
+      <path d="M820 180 C 850 240, 880 290, 905 340"/>
+      <use href="#kp6"/>
+      <path d="M1050 440 C 1110 380, 1170 305, 1230 250"/>
+      <path d="M1340 380 C 1305 340, 1270 290, 1230 250"/>
+    </g>
+    <g fill="#FAF8F3" fill-opacity=".3">
+      <circle cx="120" cy="390" r="3"/><circle cx="250" cy="240" r="3"/><circle cx="60" cy="220" r="2.5"/>
+      <circle cx="610" cy="200" r="3"/><circle cx="700" cy="420" r="3"/><circle cx="820" cy="180" r="2.5"/>
+      <circle cx="1050" cy="440" r="3"/><circle cx="1340" cy="380" r="3"/>
+    </g>
+    <g stroke="#5BA3D9" stroke-opacity=".5" fill="none" stroke-width="1.2">
+      <circle cx="430" cy="290" r="8"/><circle cx="905" cy="340" r="9"/><circle cx="1230" cy="250" r="7"/>
+    </g>
+    <g fill="#5BA3D9" fill-opacity=".45">
+      <circle cx="430" cy="290" r="2.6"/><circle cx="905" cy="340" r="3"/><circle cx="1230" cy="250" r="2.4"/>
+    </g>
+    <g fill="#FAF8F3" fill-opacity=".28" font-size="10" letter-spacing="3">
+      <text x="448" y="278">ZUIVERING</text>
+      <text x="924" y="328">VERWERKING</text>
+      <text x="1248" y="240">OPSLAG</text>
+    </g>
+    <circle r="2.4" fill="#5BA3D9" fill-opacity=".85">
+      <animateMotion dur="11s" repeatCount="indefinite"><mpath href="#kp3"/></animateMotion>
+    </circle>
+    <circle r="2.2" fill="#5BA3D9" fill-opacity=".7">
+      <animateMotion dur="14s" begin="3s" repeatCount="indefinite"><mpath href="#kp6"/></animateMotion>
+    </circle>
+    <circle r="2" fill="#5BA3D9" fill-opacity=".6">
+      <animateMotion dur="17s" begin="6s" repeatCount="indefinite"><mpath href="#kp1"/></animateMotion>
+    </circle>
+  </svg>
+
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow rv">Ketenregie-instrument · Nederlandse slibketen</div>
+      <h1 class="rv rv-d1">Het scenario-instrument voor de <em>Nederlandse slibketen.</em></h1>
+      <p class="hero-sub rv rv-d2">SlibKompas brengt zuiveringen, verwerkingsroutes en opslaglocaties samen in één doorrekenbaar beeld. Verstoringen worden doorgerekend op zuiveringsniveau en <strong>vertaald naar een bestuurlijke rapportage.</strong></p>
+      <div class="portal rv rv-d3">
+        <div class="portal-status"><span class="pdot"></span>Instrument operationeel · stand juni 2026</div>
+        <div class="portal-row">
+          <a class="btn-gold" href="https://slib.ketenkompas.nl">Naar het instrument <span>→</span></a>
+          <div class="portal-meta">
+            <b>slib.ketenkompas.nl</b>
+            Nog geen toegangscode? <a href="https://slib.ketenkompas.nl">Toegang aanvragen</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sr-tile rv rv-d2" onclick="openScenarioModal()" role="button" tabindex="0" aria-label="Scenario aanvragen openen">
+      <div class="sr-tile-tag">Sectorbreed toegankelijk</div>
+      <h3>Scenario laten <em>doorrekenen</em></h3>
+      <p class="sr-tile-sub">Geen toegang tot het instrument? Dien een verzoek in — wij rekenen het scenario door en leveren een bestuurlijke rapportage.</p>
+      <ul class="sr-types">
+        <li>Verstoringsanalyse (uitval verwerker of route)</li>
+        <li>Capaciteitsanalyse toekomstige slibstromen</li>
+        <li>Robuustheidstoets Robuust Plan Slib II</li>
+        <li>Bevolkingsgroei of exportscenario</li>
+        <li>Eigen scenario op maat</li>
+      </ul>
+      <div class="sr-cta"><span>Verzoek indienen</span><span class="sr-cta-arrow">→</span></div>
+    </div>
+  </div>
+
+  <div class="hero-ticker rv rv-d4">
+    <div class="tick"><b data-count="21">0</b><small>waterschappen in beeld</small></div>
+    <div class="tick"><b><span data-count="320">0</span>+ <span style="font-size:.5em">RWZI's</span></b><small>zuiveringen gekoppeld aan verwerkingsroutes</small></div>
+    <div class="tick"><b data-count="3" data-suffix=" richtlijnen">0</b><small>Robuust Plan Slib II doorlopend getoetst</small></div>
+    <div class="tick"><b data-count="4" data-suffix=" modules">0</b><small>van ketenoverzicht tot rapportage</small></div>
+  </div>
+</header>
+
+<!-- ════════ MODULE-INDEX ════════ -->
+<div class="modbar" aria-label="Modules">
+  <div class="modbar-inner">
+    <span class="modbar-label">Modules</span>
+    <a class="mod" href="#instrument"><i>01</i>Ketenoverzicht</a>
+    <a class="mod" href="#instrument"><i>02</i>Scenario-analyse</a>
+    <a class="mod" href="#instrument"><i>03</i>Robuust Plan Slib II</a>
+    <a class="mod" href="#instrument"><i>04</i>Bestuurlijke rapportage</a>
+  </div>
+</div>
+
+<!-- ════════ PROBLEEM ════════ -->
+<section class="problem" id="probleem">
+  <div class="wrap">
+    <div class="problem-grid">
+      <div class="problem-copy">
+        <div class="kicker rv">Waarom dit instrument bestaat</div>
+        <h2 class="rv rv-d1">De kennis zit in de keten. Het overzicht <em>nergens.</em></h2>
+        <p class="rv rv-d2">Slibproductie, verwerkingscapaciteit, opslaglocaties en incidentenafspraken zijn verdeeld over waterschappen, verwerkers en landelijke partijen. Bij een verstoring moet dat overzicht <strong>onder tijdsdruk telefonisch worden gereconstrueerd</strong> — elke keer opnieuw.</p>
+        <p class="rv rv-d3">SlibKompas brengt die versnipperde werkelijkheid samen in één doorrekenbaar beeld. Niet als statisch rapport, maar als <strong>levend instrument</strong> dat met de keten meebeweegt.</p>
+      </div>
+      <div>
+        <div class="bignum rv"><b>21</b><p>waterschappen, elk met een eigen deel van het totaalbeeld</p></div>
+        <div class="bignum rv rv-d1"><b>5<i>+</i></b><p>partijen nodig om bij één incident het beeld te reconstrueren</p></div>
+        <div class="bignum rv rv-d2"><b>0</b><p>gedeelde doorrekenomgevingen voor de keten — tot nu</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ DASHBOARD ════════ -->
+<section class="show" id="instrument">
+  <div class="wrap">
+    <div class="show-head">
+      <div>
+        <div class="kicker rv">Het instrument</div>
+        <h2 class="rv rv-d1">Eén keten.<br>Eén <em>kompas.</em></h2>
+      </div>
+      <p class="rv rv-d2">Ketenoverzicht, Robuust Plan-toetsing, scenario-doorrekening en bestuurlijke rapportage — vier instrumenten in één omgeving, gebouwd op de werkelijke structuur van de Nederlandse slibketen.</p>
+    </div>
+
+    <div style="position:relative" class="rv rv-d2">
+      <div class="float-card fc1">Buffer bij verstoring<b>99 dagen</b></div>
+      <div class="float-card fc2">Aanbevolen route<b>Incidentenopslag Noord</b></div>
+      <div class="browser">
+        <div class="browser-bar">
+          <div class="dot" style="background:#E24B4A"></div>
+          <div class="dot" style="background:#EF9F27"></div>
+          <div class="dot" style="background:#1D9E75"></div>
+          <div class="url">slib.ketenkompas.nl — voorbeeldscenario: uitval verwerkingsroute</div>
+        </div>
+        <div class="dash">
+          <div class="dcard"><small>Totale slibstroom</small><b>30 t/dag</b></div>
+          <div class="dcard warn"><small>Dagelijks overschot</small><b>30 t/dag</b></div>
+          <div class="dcard ok"><small>Opvang beschikbaar</small><b>Ruim voldoende</b></div>
+          <div class="dcard ok"><small>Urgentie</small><b>Beheersbaar</b></div>
+          <div class="dbar">
+            <small>Beschikbare opvangopties — bezetting (voorbeeld)</small>
+            <div class="brow"><span>Silo-opslag op locatie</span><div class="btrack"><div class="bfill" data-w="85%"></div></div><span>85%</span></div>
+            <div class="brow"><span>Incidentenopslag — Noord</span><div class="btrack"><div class="bfill" data-w="58%"></div></div><span>58%</span></div>
+            <div class="brow"><span>Incidentenopslag — Oost</span><div class="btrack"><div class="bfill warn" data-w="67%"></div></div><span>67%</span></div>
+            <div class="brow"><span>Regionale achtervang</span><div class="btrack"><div class="bfill crit" data-w="100%"></div></div><span>—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CASE ════════ -->
+<section class="case" id="case">
+  <div class="wrap">
+    <div class="case-grid">
+      <div class="case-meta">
+        <div class="kicker rv">Praktijkcase</div>
+        <div class="case-date rv rv-d1">Voorjaar 2026 — een gewone vrijdag</div>
+        <h2 class="rv rv-d1">Geen oefening.<br>Een <em>echte</em> verstoring.</h2>
+        <p class="rv rv-d2">Ongepland onderhoud bij meerdere verwerkers tegelijk. Slib van een zuivering met afwijkende eigenschappen — ongeschikt voor de reguliere route — kan tijdelijk nergens heen.</p>
+      </div>
+      <div class="tl">
+        <div class="tl-item rv"><div class="tl-time">Begin van de ochtend — De melding</div><h3>Honderden tonnen zonder bestemming</h3><p>De keten wordt geïnformeerd. De vraag die iedereen tegelijk stelt: hoeveel ruimte hebben we eigenlijk — en waar?</p></div>
+        <div class="tl-item gold rv"><div class="tl-time">Binnen het uur — De doorrekening</div><h3>Scenario ingevoerd in SlibKompas</h3><p>Zuivering, verstoring en duur geselecteerd. Het instrument rekent door: dagelijks overschot, opslagbehoefte, beschikbare routes en de resterende buffer in dagen.</p></div>
+        <div class="tl-item rv"><div class="tl-time">Dezelfde dag — Het rapport</div><h3>Bestuurlijke rapportage gegenereerd</h3><p>Capaciteitsanalyse, aanbevolen opvangroute, tijdlijn en concrete actiepunten — wie, wat, wanneer, en wie geïnformeerd moet worden. Klaar om te delen met management en regiegroep.</p></div>
+        <div class="tl-quote rv">
+          <p>"De incidentenopslag biedt voldoende buffer, mits tijdig geactiveerd. Verken eerst de inzet van eigen opslag, zodat aanspraak op de landelijke capaciteit beperkt blijft."</p>
+          <small>— Bestuurlijke duiding, automatisch gegenereerd uit het scenario</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ HOE ════════ -->
+<section class="how" id="hoe">
+  <div class="wrap">
+    <div class="kicker rv">Werkwijze</div>
+    <h2 class="rv rv-d1">Van verstoring naar <em>handelingsperspectief</em> in vier stappen</h2>
+    <div class="steps">
+      <div class="step rv"><i>Stap één</i><h3>Selecteer de keten</h3><p>Kies waterschap en zuivering. Het instrument kent de werkelijke slibstromen, clusters en verwerkingsroutes.</p></div>
+      <div class="step rv rv-d1"><i>Stap twee</i><h3>Definieer de verstoring</h3><p>Verwerker uitgevallen? Exportroute dicht? Stel het scenario samen met werkelijke capaciteiten en duur.</p></div>
+      <div class="step rv rv-d2"><i>Stap drie</i><h3>Reken het door</h3><p>Overschot, opslagbehoefte, beschikbare routes en buffer in dagen — direct inzichtelijk, inclusief aanbevolen opvangoptie.</p></div>
+      <div class="step rv rv-d3"><i>Stap vier</i><h3>Deel het rapport</h3><p>Eén klik: een bestuurlijke rapportage met duiding, tijdlijn en actiepunten. Klaar voor DB, AB of regiegroep.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ VOOR WIE ════════ -->
+<section class="who" id="voorwie">
+  <div class="wrap">
+    <div class="kicker rv">Voor wie</div>
+    <h2 class="rv rv-d1">Gebouwd voor iedereen die de keten <em>draaiend</em> houdt</h2>
+    <div class="who-grid">
+      <div class="who-card rv"><span class="num">— 01</span><h3>Waterschappen</h3><p>Direct zicht op de eigen positie in de keten en de consequenties van verstoringen voor de zuiveringen.</p>
+        <ul><li>Robuustheidstoets per waterschap</li><li>Scenario's op RWZI-niveau</li><li>Rapportage voor DB en AB</li></ul></div>
+      <div class="who-card rv rv-d1"><span class="num">— 02</span><h3>Verwerkers & ketenpartners</h3><p>Capaciteit, bezetting en achtervang in samenhang — onderbouwing voor operationele én contractuele keuzes.</p>
+        <ul><li>Bezetting opslaglocaties in beeld</li><li>Incidentenopslag in context</li><li>Achtervangroutes doorgerekend</li></ul></div>
+      <div class="who-card rv rv-d2"><span class="num">— 03</span><h3>Regiegroep & Unie</h3><p>Het gedeelde beeld dat nu per incident telefonisch wordt gereconstrueerd — permanent beschikbaar.</p>
+        <ul><li>Landelijk ketenoverzicht</li><li>Toetsing Robuust Plan Slib II</li><li>Eén taal richting bestuurders</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ QUOTE ════════ -->
+<section class="quote">
+  <svg class="quote-clarifier" viewBox="0 0 800 800" fill="none" aria-hidden="true">
+    <g stroke="#0A1628">
+      <circle cx="400" cy="400" r="140" stroke-opacity=".07"/>
+      <circle cx="400" cy="400" r="210" stroke-opacity=".06"/>
+      <circle cx="400" cy="400" r="280" stroke-opacity=".05"/>
+      <circle cx="400" cy="400" r="350" stroke-opacity=".04"/>
+      <g class="arm" stroke-opacity=".1" stroke-width="2">
+        <line x1="400" y1="400" x2="400" y2="52"/>
+        <line x1="400" y1="400" x2="748" y2="400" stroke-opacity=".06" stroke-width="1.4"/>
+      </g>
+      <circle cx="400" cy="400" r="5" fill="#0A1628" fill-opacity=".1" stroke="none"/>
+      <circle cx="400" cy="400" r="2" fill="#5BA3D9" fill-opacity=".4" stroke="none"/>
+    </g>
+  </svg>
+  <blockquote class="rv">"Minder afhankelijk van ad-hoc oplossingen. Knelpunten en alternatieve routes <em>al in kaart</em> voordat het incident zich aandient."</blockquote>
+  <cite class="rv rv-d1"><b>Gizan Ezra</b>Initiatiefnemer KetenKompas · Strategisch Contractmanager Ketenregie</cite>
+</section>
+
+<!-- ════════ TOEGANG ════════ -->
+<section class="cta" id="toegang">
+  <svg class="cta-net" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMin slice" fill="none" aria-hidden="true">
+    <defs><path id="cnp" d="M180 60 C 360 110, 540 170, 718 208"/></defs>
+    <g stroke="#FAF8F3" stroke-opacity=".09" stroke-width="1">
+      <use href="#cnp"/>
+      <path d="M420 30 C 520 90, 620 160, 718 208"/>
+      <path d="M1260 70 C 1080 115, 900 175, 722 208"/>
+      <path d="M1020 26 C 920 90, 820 160, 722 208"/>
+    </g>
+    <g fill="#FAF8F3" fill-opacity=".3">
+      <circle cx="180" cy="60" r="2.6"/><circle cx="420" cy="30" r="2.4"/>
+      <circle cx="1260" cy="70" r="2.6"/><circle cx="1020" cy="26" r="2.4"/>
+    </g>
+    <circle cx="720" cy="208" r="8" stroke="#5BA3D9" stroke-opacity=".5" stroke-width="1.2"/>
+    <circle cx="720" cy="208" r="2.6" fill="#5BA3D9" fill-opacity=".5"/>
+    <circle r="2.2" fill="#5BA3D9" fill-opacity=".75">
+      <animateMotion dur="9s" repeatCount="indefinite"><mpath href="#cnp"/></animateMotion>
+    </circle>
+  </svg>
+  <div class="wrap">
+    <h2 class="rv">Direct naar het <em>instrument.</em></h2>
+    <p class="rv rv-d1">SlibKompas is beschikbaar voor waterschappen, verwerkers en ketenpartners. Inloggen met een toegangscode — of vraag toegang aan via de inlogpagina.</p>
+    <div class="cta-row rv rv-d2">
+      <a class="btn-gold" href="https://slib.ketenkompas.nl">Inloggen <span>→</span></a>
+      <a class="btn-ghost" href="https://slib.ketenkompas.nl">Toegang aanvragen <span>→</span></a>
+    </div>
+    <div class="cta-note rv rv-d3">Sectorinstrument voor de Nederlandse slibketen</div>
+  </div>
+</section>
+
+<!-- ════════ FOOTER ════════ -->
+<footer>
+  <div class="foot-accent"></div>
+  <div class="foot-main">
+    <div class="foot-brand-col">
+      <div class="foot-brand">
+        <svg class="kk-mark" width="30" height="30"><use href="#kk-rose"/></svg>
+        <span class="kk-word"><b>Slib<i>Kompas</i></b><small>Powered by KetenKompas</small></span>
+      </div>
+      <p class="foot-mission">Samen houden we de slibketen in beeld — van zuivering tot opslag, van verstoring tot handelingsperspectief.</p>
+      <div class="foot-pills">
+        <span class="foot-pill">Waterschappen</span>
+        <span class="foot-pill">Verwerkers</span>
+        <span class="foot-pill">Regiegroep</span>
+        <span class="foot-pill">Unie van Waterschappen</span>
+      </div>
+    </div>
+    <div class="foot-col">
+      <span class="foot-col-hdr">Instrument</span>
+      <a href="#instrument">Ketenoverzicht</a>
+      <a href="#instrument">Scenario-analyse</a>
+      <a href="#instrument">Robuust Plan Slib II</a>
+      <a href="#instrument">Bestuurlijke rapportage</a>
+    </div>
+    <div class="foot-col">
+      <span class="foot-col-hdr">Over</span>
+      <a href="#probleem">Waarom SlibKompas</a>
+      <a href="#case">Praktijkcase</a>
+      <a href="#voorwie">Voor wie</a>
+      <a href="#hoe">Werkwijze</a>
+    </div>
+    <div class="foot-col">
+      <span class="foot-col-hdr">Toegang</span>
+      <a href="https://slib.ketenkompas.nl">Inloggen</a>
+      <a href="https://slib.ketenkompas.nl">Toegang aanvragen</a>
+      <a href="#toegang">Demonstratie plannen</a>
+    </div>
+  </div>
+  <div class="foot-divider"></div>
+  <div class="foot-bottom">
+    <span>© 2026 KetenKompas</span>
+    <div class="foot-bottom-status"><span class="pdot"></span><span>Instrument operationeel · stand juni 2026</span></div>
+    <span>Sectorinstrument voor de Nederlandse slibketen</span>
+  </div>
+  <div class="foot-giant" aria-hidden="true"><span>Slib<i>Kompas</i></span></div>
+</footer>
+
+<!-- ════════ SCENARIO-AANVRAAG MODAL ════════ -->
+<div class="sm-overlay" id="smOverlay" role="dialog" aria-modal="true" aria-labelledby="smTitle">
+  <div class="sm-panel">
+    <div class="sm-panel-top">
+      <button class="sm-close" onclick="closeScenarioModal()" aria-label="Sluiten">×</button>
+      <div class="sm-kicker">Scenario aanvragen</div>
+      <div class="sm-title" id="smTitle">Welk scenario mogen <em>wij doorrekenen?</em></div>
+      <p class="sm-intro">Beschrijf je situatie zo concreet mogelijk. We nemen contact op om het scenario te verfijnen en de doorrekening te plannen. Geen toegangscode nodig.</p>
+    </div>
+    <div class="sm-body" id="smForm">
+      <div class="sm-row">
+        <div class="sm-field">
+          <label class="sm-label">Naam<span class="sm-req">*</span></label>
+          <input class="sm-inp" id="sm-naam" type="text" placeholder="Je volledige naam" autocomplete="name">
+        </div>
+        <div class="sm-field">
+          <label class="sm-label">Functie / Rol</label>
+          <input class="sm-inp" id="sm-functie" type="text" placeholder="Bijv. Beleidsadviseur">
+        </div>
+      </div>
+      <div class="sm-row">
+        <div class="sm-field">
+          <label class="sm-label">Organisatie<span class="sm-req">*</span></label>
+          <input class="sm-inp" id="sm-org" type="text" placeholder="Waterschap / bedrijf" autocomplete="organization">
+        </div>
+        <div class="sm-field">
+          <label class="sm-label">Waterschap(pen) / Regio</label>
+          <input class="sm-inp" id="sm-regio" type="text" placeholder="Bijv. AGV, HDSR">
+        </div>
+      </div>
+      <div class="sm-row">
+        <div class="sm-field">
+          <label class="sm-label">E-mailadres<span class="sm-req">*</span></label>
+          <input class="sm-inp" id="sm-email" type="email" placeholder="naam@organisatie.nl" autocomplete="email">
+        </div>
+        <div class="sm-field">
+          <label class="sm-label">Telefoonnummer</label>
+          <input class="sm-inp" id="sm-tel" type="tel" placeholder="+31 6 …" autocomplete="tel">
+        </div>
+      </div>
+      <div class="sm-field full">
+        <label class="sm-label">Type scenario<span class="sm-req">*</span></label>
+        <select class="sm-sel" id="sm-type">
+          <option value="" disabled selected>Selecteer een type scenario</option>
+          <option value="verstoring">Verstoringsanalyse — uitval verwerker of route</option>
+          <option value="capaciteit">Capaciteitsanalyse — toekomstige slibstromen</option>
+          <option value="robuustheid">Robuustheidstoets — Robuust Plan Slib II</option>
+          <option value="bevolking">Bevolkingsgroei of exportscenario</option>
+          <option value="maatwerk">Eigen scenario op maat</option>
+          <option value="anders">Anders</option>
+        </select>
+      </div>
+      <div class="sm-field full">
+        <label class="sm-label">Beschrijving van het scenario<span class="sm-req">*</span></label>
+        <textarea class="sm-txt" id="sm-desc" placeholder="Beschrijf het scenario zo concreet mogelijk: welke zuivering, welke verstoring of vraag, welke periode, wat is de aanleiding…"></textarea>
+      </div>
+      <div class="sm-field full">
+        <label class="sm-label">Gewenste opleverdatum</label>
+        <input class="sm-inp" id="sm-datum" type="date">
+      </div>
+      <div class="sm-field full">
+        <label class="sm-label">Urgentie</label>
+        <div class="sm-urgency">
+          <button class="sm-urg-btn active" data-urg="normaal" onclick="setUrgentie(this)">Normaal</button>
+          <button class="sm-urg-btn" data-urg="hoog" onclick="setUrgentie(this)">Hoog</button>
+          <button class="sm-urg-btn" data-urg="acuut" onclick="setUrgentie(this)">Acuut</button>
+        </div>
+      </div>
+      <div class="sm-msg" id="sm-msg"></div>
+      <button class="sm-submit" id="sm-submit" onclick="submitScenarioRequest()">Verzoek versturen →</button>
+    </div>
+    <div class="sm-success" id="smSuccess">
+      <div class="sm-success-icon">✓</div>
+      <h3>Verzoek ontvangen</h3>
+      <p>We nemen binnen twee werkdagen contact op om het scenario te bespreken en de doorrekening in te plannen.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled',scrollY>40);
+},{passive:true});
+
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:.15});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+const dashWrap=document.querySelector('.browser');
+if(dashWrap){
+  const io2=new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){
+      dashWrap.querySelectorAll('.bfill').forEach(b=>b.style.width=b.dataset.w);
+      io2.unobserve(dashWrap);
+    }});
+  },{threshold:.3});
+  io2.observe(dashWrap);
+}
+
+const counters=document.querySelectorAll('[data-count]');
+const io3=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target,end=+el.dataset.count,suf=el.dataset.suffix||'';
+    const t0=performance.now(),dur=1600;
+    function tick(t){
+      const p=Math.min((t-t0)/dur,1),ease=1-Math.pow(1-p,3);
+      el.textContent=Math.round(end*ease)+suf;
+      if(p<1)requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    io3.unobserve(el);
+  });
+},{threshold:.5});
+counters.forEach(c=>io3.observe(c));
+
+const rose=document.getElementById('compassRose');
+addEventListener('scroll',()=>{
+  if(rose){rose.style.transform=`rotate(${scrollY*0.04}deg)`;rose.style.transformOrigin='300px 300px'}
+},{passive:true});
+
+/* ── scenario modal ── */
+let smUrgentie='normaal';
+
+function openScenarioModal(){
+  document.getElementById('smOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeScenarioModal(){
+  document.getElementById('smOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('smOverlay').addEventListener('click',e=>{
+  if(e.target===e.currentTarget)closeScenarioModal();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')closeScenarioModal();
+});
+document.querySelector('.sr-tile').addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();openScenarioModal();}
+});
+
+function setUrgentie(btn){
+  document.querySelectorAll('.sm-urg-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  smUrgentie=btn.dataset.urg;
+}
+
+async function submitScenarioRequest(){
+  const naam=document.getElementById('sm-naam').value.trim();
+  const org=document.getElementById('sm-org').value.trim();
+  const email=document.getElementById('sm-email').value.trim();
+  const type=document.getElementById('sm-type').value;
+  const desc=document.getElementById('sm-desc').value.trim();
+  const msg=document.getElementById('sm-msg');
+
+  if(!naam||!org||!email||!type||!desc){
+    msg.className='sm-msg err';
+    msg.textContent='Vul naam, organisatie, e-mailadres, type en beschrijving in.';
+    return;
+  }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    msg.className='sm-msg err';msg.textContent='Voer een geldig e-mailadres in.';return;
+  }
+
+  const btn=document.getElementById('sm-submit');
+  btn.disabled=true;btn.textContent='Versturen…';
+  msg.className='sm-msg';msg.textContent='';
+
+  const payload={
+    naam,
+    organisatie:org,
+    functie:document.getElementById('sm-functie').value.trim(),
+    regio:document.getElementById('sm-regio').value.trim(),
+    email,
+    telefoon:document.getElementById('sm-tel').value.trim(),
+    type,
+    beschrijving:desc,
+    opleverdatum:document.getElementById('sm-datum').value||null,
+    urgentie:smUrgentie,
+    ts:Date.now()
+  };
+
+  try{
+    const r=await fetch('/api/scenario-request',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    if(r.ok){
+      document.getElementById('smForm').style.display='none';
+      document.getElementById('smSuccess').classList.add('show');
+    }else{
+      throw new Error();
+    }
+  }catch{
+    msg.className='sm-msg err';
+    msg.textContent='Er ging iets mis — probeer het opnieuw of mail ons direct.';
+    btn.disabled=false;btn.textContent='Verzoek versturen →';
+  }
+}
+</script>
+</body>
+</html>
