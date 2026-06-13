@@ -1,5 +1,9 @@
 const SLIB_HOST = 'slib.ketenkompas.nl';
 
+// Zet op true om ketenkompas.nl/ door te sturen naar /slib
+// Zet op false om de gouden KetenKompas landingpage op root te tonen
+const REDIRECT_ROOT_TO_SLIB = true;
+
 export async function onRequest({ request, env, next }) {
   const url = new URL(request.url);
 
@@ -13,10 +17,12 @@ export async function onRequest({ request, env, next }) {
     return next();
   }
 
-  // Root → serve home.html (KetenKompas landing) without redirecting
+  // Root: redirect naar /slib of toon home.html, afhankelijk van de toggle
   if (url.pathname === '/' || url.pathname === '') {
-    const homeUrl = new URL('/home', url);
-    return env.ASSETS.fetch(homeUrl.toString());
+    if (REDIRECT_ROOT_TO_SLIB) {
+      return Response.redirect(new URL('/slib', url).toString(), 302);
+    }
+    return env.ASSETS.fetch(new URL('/home', url).toString());
   }
 
   return next();
