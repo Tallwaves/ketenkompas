@@ -2,6 +2,6 @@
   "name": "ketenkompas",
   "private": true,
   "scripts": {
-    "build": "mkdir -p dist && cp index.html landing.html robots.txt sitemap.xml og-image.svg dist/"
+    "build": "mkdir -p dist && cp index.html slib.html robots.txt sitemap.xml og-image.svg dist/"
   }
 }

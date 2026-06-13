@@ -13,23 +13,11 @@ export async function onRequest({ request, env, next }) {
     return next();
   }
 
-  // All other hosts (ketenkompas.nl AND *.pages.dev preview URLs):
-  // serve landing page at root so previews also show the landing page.
+  // Root → redirect to /slib where the landing page lives
   if (url.pathname === '/' || url.pathname === '') {
-    url.pathname = '/landing.html';
-    if (env.ASSETS) {
-      return env.ASSETS.fetch(url.toString());
-    }
-    return Response.redirect(url.toString(), 302);
+    const target = new URL('/slib', url);
+    return Response.redirect(target.toString(), 302);
   }
 
   return next();
-}
-
-function parseCookie(header, name) {
-  for (const part of header.split(';')) {
-    const i = part.indexOf('=');
-    if (i > 0 && part.slice(0, i).trim() === name) return part.slice(i + 1).trim();
-  }
-  return null;
 }
