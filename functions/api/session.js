@@ -84,7 +84,7 @@ export async function onRequestPost({ request, env }) {
   );
 
   return new Response(
-    JSON.stringify({ ok: true, redirect: 'https://slib.ketenkompas.nl/' }),
+    JSON.stringify({ ok: true, redirect: 'https://portal.ketenkompas.nl/' }),
     { status: 200, headers: { ...HEADERS, 'Set-Cookie': setCookie(token) } }
   );
 }

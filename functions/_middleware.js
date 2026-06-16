@@ -1,4 +1,4 @@
-const SLIB_HOST = 'slib.ketenkompas.nl';
+const SLIB_HOST = 'portal.ketenkompas.nl';
 
 // Zet op true om ketenkompas.nl/ door te sturen naar /slib
 // Zet op false om de gouden KetenKompas landingpage op root te tonen
