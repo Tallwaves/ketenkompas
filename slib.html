@@ -259,36 +259,30 @@ nav.scrolled .nav-award-txt small{color:#8A94A2}
 @media(max-width:520px){.nav-award{padding:6px;gap:0}.nav-award-txt{display:none}}
 
 /* ── nominatie-band ──────────── */
-.nomi{background:var(--paper);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
-.nomi-inner{max-width:1180px;margin:0 auto;padding:clamp(40px,6vw,68px) clamp(24px,5vw,64px);
-  display:grid;grid-template-columns:auto 1px 1fr;gap:clamp(32px,5vw,72px);align-items:center}
-.nomi-mark{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
-.nomi-laurel{width:54px;height:54px;color:var(--gold)}
-.nomi-eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--teal)}
-.nomi-mark h2{font-family:var(--serif);font-weight:400;font-size:clamp(21px,2.3vw,28px);line-height:1.18;letter-spacing:-.01em;color:var(--ink);max-width:13ch}
-.nomi-mark h2 em{font-style:italic;color:var(--teal)}
-.nomi-mark p{font-size:14.5px;font-weight:300;color:#43586E;max-width:34ch;margin-top:2px}
-.nomi-divider{width:1px;align-self:stretch;background:var(--line)}
-.nomi-orgs{display:flex;flex-direction:column;gap:18px}
-.nomi-orgs-hdr{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:#8A94A2}
-.nomi-org-grid{display:flex;flex-wrap:wrap;gap:14px 0;align-items:center}
-.nomi-org{display:flex;align-items:center;gap:11px;padding:0 22px;position:relative}
-.nomi-org:first-child{padding-left:0}
-.nomi-org:not(:last-child)::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);width:1px;height:26px;background:var(--line)}
-.nomi-org-ico{width:30px;height:30px;flex-shrink:0;color:var(--teal);opacity:.85}
-.nomi-org-txt{display:flex;flex-direction:column;line-height:1.2}
-.nomi-org-txt b{font-size:13.5px;font-weight:600;letter-spacing:-.005em;color:var(--ink)}
-.nomi-org-txt small{font-size:10.5px;letter-spacing:.04em;color:#8A94A2}
-@media(max-width:860px){
-  .nomi-inner{grid-template-columns:1fr;gap:30px}
-  .nomi-divider{display:none}
-  .nomi-org{padding:0 16px}
-  .nomi-org:not(:last-child)::after{height:20px}
-}
+.nomi{background:var(--paper-warm);border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.nomi::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% -10%,rgba(91,163,217,.10),transparent 60%)}
+.nomi-inner{position:relative;max-width:740px;margin:0 auto;padding:clamp(54px,8vw,92px) clamp(24px,5vw,64px);
+  display:flex;flex-direction:column;align-items:center;text-align:center}
+.nomi-emblem{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:26px}
+.nomi-branch{width:clamp(46px,6vw,62px);height:auto;color:var(--gold)}
+.nomi-rose{display:flex;align-items:center;justify-content:center;width:clamp(48px,7vw,60px);height:clamp(48px,7vw,60px);
+  border-radius:50%;border:1px solid rgba(91,163,217,.4);background:var(--paper);color:var(--gold);
+  box-shadow:0 8px 26px -12px rgba(26,111,173,.4)}
+.nomi-rose svg{width:clamp(30px,4vw,40px);height:clamp(30px,4vw,40px)}
+.nomi-eyebrow{font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:16px}
+.nomi-inner h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4.4vw,46px);line-height:1.1;letter-spacing:-.02em;color:var(--ink)}
+.nomi-inner h2 em{font-style:italic;color:var(--teal)}
+.nomi-inner>p{font-size:clamp(15px,1.4vw,17px);font-weight:300;color:#43586E;max-width:46ch;margin:22px auto 0;line-height:1.65}
+.nomi-orgs{margin-top:clamp(34px,5vw,46px);padding-top:clamp(26px,3vw,34px);width:100%;
+  border-top:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:16px}
+.nomi-orgs-hdr{font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#8A94A2}
+.nomi-org-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:13px 16px}
+.nomi-org-row>span:not(.nomi-dot){font-size:14.5px;font-weight:500;letter-spacing:.005em;color:var(--ink-soft)}
+.nomi-dot{width:4px;height:4px;border-radius:50%;background:var(--gold);flex-shrink:0;opacity:.7}
 @media(max-width:560px){
-  .nomi-org-grid{gap:18px 0}
-  .nomi-org{padding:0;flex:0 0 100%}
-  .nomi-org:not(:last-child)::after{display:none}
+  .nomi-org-row{flex-direction:column;gap:11px}
+  .nomi-dot{display:none}
 }
 
 /* ── module-index (vervangt marquee) ── */
@@ -428,14 +422,10 @@ footer{background:#060E1C;color:var(--mist);overflow:hidden}
 .foot-main{max-width:1280px;margin:0 auto;padding:64px clamp(24px,5vw,64px) 0;
 display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(28px,4vw,64px);align-items:start}
 .foot-brand{display:flex;align-items:center;gap:12px;color:var(--paper);font-size:19px;margin-bottom:16px}
+.foot-brand .kk-word small{font-size:10px;letter-spacing:.1em;text-transform:none;opacity:1;color:var(--gold-soft);font-weight:500}
 .foot-mission{font-size:14px;line-height:1.8;max-width:30ch;color:rgba(143,163,184,.8);margin-bottom:24px}
 .foot-pills{display:flex;flex-wrap:wrap;gap:7px}
 .foot-pill{font-size:11px;font-weight:500;letter-spacing:.08em;border:1px solid rgba(250,248,243,.14);border-radius:100px;padding:4px 11px;color:rgba(250,248,243,.5)}
-.foot-nomi{display:inline-flex;align-items:center;gap:9px;margin-top:20px;text-decoration:none;
-  font-size:12px;letter-spacing:.01em;color:rgba(250,248,243,.55);transition:color .25s}
-.foot-nomi:hover{color:rgba(250,248,243,.85)}
-.foot-nomi svg{width:17px;height:17px;flex-shrink:0;color:var(--gold)}
-.foot-nomi b{font-weight:600;color:var(--gold-soft)}
 .foot-col{display:flex;flex-direction:column;gap:11px}
 .foot-col-hdr{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,248,243,.38);margin-bottom:4px;font-weight:500}
 .foot-col a{font-size:14px;color:rgba(143,163,184,.75);text-decoration:none;transition:color .2s;line-height:1.5}
@@ -619,38 +609,47 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
 
 <!-- ════════ NOMINATIE ════════ -->
 <section class="nomi" id="nominatie" aria-label="Nominatie Waterinnovatieprijs 2026">
-  <div class="nomi-inner">
-    <div class="nomi-mark rv">
-      <svg class="nomi-laurel" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M6.5 3.5C4 5.5 3 9 3.6 12.2c.6 3 2.6 5.7 5.4 7.3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-        <path d="M17.5 3.5C20 5.5 21 9 20.4 12.2c-.6 3-2.6 5.7-5.4 7.3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-        <path d="M9 20.5h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-        <path d="M12 6.5l1.3 2.6 2.9.4-2.1 2 .5 2.9-2.6-1.4-2.6 1.4.5-2.9-2.1-2 2.9-.4L12 6.5z" fill="currentColor"/>
+  <div class="nomi-inner rv">
+    <div class="nomi-emblem">
+      <svg class="nomi-branch nomi-branch-l" viewBox="0 0 80 130" fill="none" aria-hidden="true">
+        <path d="M62 124C38 110 24 84 24 56 24 38 30 20 42 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".55"/>
+        <g fill="currentColor">
+          <ellipse cx="48" cy="112" rx="9" ry="3.4" transform="rotate(-28 48 112)"/>
+          <ellipse cx="38" cy="98" rx="9.5" ry="3.6" transform="rotate(-40 38 98)"/>
+          <ellipse cx="31" cy="82" rx="10" ry="3.7" transform="rotate(-54 31 82)"/>
+          <ellipse cx="27" cy="65" rx="10" ry="3.7" transform="rotate(-68 27 65)"/>
+          <ellipse cx="26" cy="48" rx="9.5" ry="3.6" transform="rotate(-82 26 48)"/>
+          <ellipse cx="29" cy="32" rx="9" ry="3.4" transform="rotate(-96 29 32)"/>
+          <ellipse cx="35" cy="18" rx="8" ry="3" transform="rotate(-110 35 18)"/>
+        </g>
       </svg>
-      <div class="nomi-eyebrow">Erkenning</div>
-      <h2>Genomineerd voor de <em>Waterinnovatieprijs 2026.</em></h2>
-      <p>SlibKompas is door de Nederlandse waterschappen voorgedragen als vernieuwend instrument voor toekomstbestendig ketenbeheer.</p>
+      <span class="nomi-rose"><svg viewBox="0 0 64 64" width="40" height="40"><use href="#kk-rose"/></svg></span>
+      <svg class="nomi-branch nomi-branch-r" viewBox="0 0 80 130" fill="none" aria-hidden="true">
+        <path d="M18 124C42 110 56 84 56 56 56 38 50 20 38 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".55"/>
+        <g fill="currentColor">
+          <ellipse cx="32" cy="112" rx="9" ry="3.4" transform="rotate(28 32 112)"/>
+          <ellipse cx="42" cy="98" rx="9.5" ry="3.6" transform="rotate(40 42 98)"/>
+          <ellipse cx="49" cy="82" rx="10" ry="3.7" transform="rotate(54 49 82)"/>
+          <ellipse cx="53" cy="65" rx="10" ry="3.7" transform="rotate(68 53 65)"/>
+          <ellipse cx="54" cy="48" rx="9.5" ry="3.6" transform="rotate(82 54 48)"/>
+          <ellipse cx="51" cy="32" rx="9" ry="3.4" transform="rotate(96 51 32)"/>
+          <ellipse cx="45" cy="18" rx="8" ry="3" transform="rotate(110 45 18)"/>
+        </g>
+      </svg>
     </div>
-    <div class="nomi-divider" aria-hidden="true"></div>
-    <div class="nomi-orgs rv rv-d2">
-      <div class="nomi-orgs-hdr">Een initiatief van</div>
-      <div class="nomi-org-grid">
-        <div class="nomi-org">
-          <svg class="nomi-org-ico" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M4 21c2.5-2.5 5-2.5 7.5 0S16.5 23.5 19 21s5-2.5 7.5 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 26c2.5-2.5 5-2.5 7.5 0S16.5 28.5 19 26s5-2.5 7.5 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".5"/><path d="M16 5v9M16 5l3.5 2.5M16 5l-3.5 2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div class="nomi-org-txt"><b>Unie van Waterschappen</b><small>Initiatiefnemer</small></div>
-        </div>
-        <div class="nomi-org">
-          <svg class="nomi-org-ico" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="1.6"/><path d="M16 5v22M5 16h22" stroke="currentColor" stroke-width="1.6"/><path d="M9 9c3 2 11 2 14 0M9 23c3-2 11-2 14 0" stroke="currentColor" stroke-width="1.6" opacity=".6"/></svg>
-          <div class="nomi-org-txt"><b>STOWA</b><small>Kennisprogramma</small></div>
-        </div>
-        <div class="nomi-org">
-          <svg class="nomi-org-ico" viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect x="6" y="11" width="20" height="15" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M16 5l9 6H7l9-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M11 16v6M16 16v6M21 16v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          <div class="nomi-org-txt"><b>Het Waterschapshuis</b><small>Digitale uitvoering</small></div>
-        </div>
-        <div class="nomi-org">
-          <svg class="nomi-org-ico" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 4l11 4v2H5V8l11-4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 12v10M14 12v10M18 12v10M24 12v10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M5 24h22v2H5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-          <div class="nomi-org-txt"><b>Ned. Waterschapsbank</b><small>Partner</small></div>
-        </div>
+    <div class="nomi-eyebrow">Genomineerd · 2026</div>
+    <h2>Waterinnovatieprijs <em>2026.</em></h2>
+    <p>SlibKompas is door de Nederlandse waterschappen voorgedragen als vernieuwend instrument voor toekomstbestendig ketenbeheer.</p>
+    <div class="nomi-orgs">
+      <span class="nomi-orgs-hdr">Een initiatief van</span>
+      <div class="nomi-org-row">
+        <span>Unie van Waterschappen</span>
+        <span class="nomi-dot" aria-hidden="true"></span>
+        <span>STOWA</span>
+        <span class="nomi-dot" aria-hidden="true"></span>
+        <span>Het Waterschapshuis</span>
+        <span class="nomi-dot" aria-hidden="true"></span>
+        <span>Nederlandse Waterschapsbank</span>
       </div>
     </div>
   </div>
@@ -825,7 +824,7 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
     <div class="foot-brand-col">
       <div class="foot-brand">
         <svg class="kk-mark" width="30" height="30"><use href="#kk-rose"/></svg>
-        <span class="kk-word"><b>Slib<i>Kompas</i></b><small>Powered by KetenKompas</small></span>
+        <span class="kk-word"><b>Slib<i>Kompas</i></b><small>Genomineerd · Waterinnovatieprijs 2026</small></span>
       </div>
       <p class="foot-mission">Samen houden we de slibketen in beeld — van zuivering tot opslag, van verstoring tot handelingsperspectief.</p>
       <div class="foot-pills">
@@ -834,15 +833,6 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
         <span class="foot-pill">Regiegroep</span>
         <span class="foot-pill">Unie van Waterschappen</span>
       </div>
-      <a class="foot-nomi" href="#nominatie">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M6.5 3.5C4 5.5 3 9 3.6 12.2c.6 3 2.6 5.7 5.4 7.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-          <path d="M17.5 3.5C20 5.5 21 9 20.4 12.2c-.6 3-2.6 5.7-5.4 7.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-          <path d="M9 20.5h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-          <path d="M12 6.5l1.3 2.6 2.9.4-2.1 2 .5 2.9-2.6-1.4-2.6 1.4.5-2.9-2.1-2 2.9-.4L12 6.5z" fill="currentColor"/>
-        </svg>
-        <span>Genomineerd · <b>Waterinnovatieprijs 2026</b></span>
-      </a>
     </div>
     <div class="foot-col">
       <span class="foot-col-hdr">Instrument</span>
