@@ -243,9 +243,21 @@ display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:34px}
 
 /* ── nominatie-band ──────────── */
 .nomi{background:var(--paper-warm);border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
-.nomi::before{content:'';position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(120% 90% at 50% -10%,rgba(91,163,217,.10),transparent 60%)}
-.nomi-inner{position:relative;max-width:740px;margin:0 auto;padding:clamp(54px,8vw,92px) clamp(24px,5vw,64px);
+/* achtergrondafbeelding: vervang de URL met de directe images.unsplash.com CDN-URL van foto Ac97OqAWDvg */
+.nomi-photo{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:url('https://images.unsplash.com/photo-1621600411688-4be93cd68504?auto=format&fit=crop&w=1920&q=60');
+  background-size:cover;background-position:center 55%;
+  opacity:.11;
+  filter:grayscale(20%) brightness(1.05) saturate(.8);
+  transform:scale(1.05);
+  transition:transform 16s ease}
+.nomi:hover .nomi-photo{transform:scale(1.0)}
+.nomi::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:
+    linear-gradient(to bottom,var(--paper-warm) 0%,transparent 18%,transparent 80%,var(--paper-warm) 100%),
+    radial-gradient(ellipse 100% 60% at 50% 50%,transparent 35%,var(--paper-warm) 95%)}
+.nomi-inner{position:relative;z-index:2;max-width:740px;margin:0 auto;padding:clamp(54px,8vw,92px) clamp(24px,5vw,64px);
   display:flex;flex-direction:column;align-items:center;text-align:center}
 .nomi-emblem{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:26px}
 .nomi-branch{width:clamp(46px,6vw,62px);height:auto;color:var(--gold)}
@@ -581,6 +593,7 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
 
 <!-- ════════ NOMINATIE ════════ -->
 <section class="nomi" id="nominatie" aria-label="Nominatie Waterinnovatieprijs 2026">
+  <div class="nomi-photo" aria-hidden="true"></div>
   <div class="nomi-inner rv">
     <div class="nomi-emblem">
       <svg class="nomi-branch nomi-branch-l" viewBox="0 0 80 130" fill="none" aria-hidden="true">
