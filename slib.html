@@ -258,12 +258,10 @@ display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:34px}
     radial-gradient(ellipse 100% 60% at 50% 50%,transparent 35%,var(--paper-warm) 95%)}
 .nomi-inner{position:relative;z-index:2;max-width:740px;margin:0 auto;padding:clamp(54px,8vw,92px) clamp(24px,5vw,64px);
   display:flex;flex-direction:column;align-items:center;text-align:center}
-.nomi-emblem{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:26px}
-.nomi-branch{width:clamp(46px,6vw,62px);height:auto;color:var(--gold)}
-.nomi-rose{display:flex;align-items:center;justify-content:center;width:clamp(48px,7vw,60px);height:clamp(48px,7vw,60px);
-  border-radius:50%;border:1px solid rgba(91,163,217,.4);background:var(--paper);color:var(--gold);
-  box-shadow:0 8px 26px -12px rgba(26,111,173,.4)}
-.nomi-rose svg{width:clamp(30px,4vw,40px);height:clamp(30px,4vw,40px)}
+.nomi-emblem{display:flex;align-items:center;justify-content:center;margin-bottom:28px}
+.nomi-seal{width:clamp(138px,18vw,170px);height:auto;
+  filter:drop-shadow(0 16px 34px rgba(26,111,173,.20))}
+.nomi-seal .seal-txt{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase}
 .nomi-eyebrow{font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:16px}
 .nomi-inner h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4.4vw,46px);line-height:1.1;letter-spacing:-.02em;color:var(--ink)}
 .nomi-inner h2 em{font-style:italic;color:var(--teal)}
@@ -595,30 +593,35 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
   <div class="nomi-photo" aria-hidden="true"></div>
   <div class="nomi-inner rv">
     <div class="nomi-emblem">
-      <svg class="nomi-branch nomi-branch-l" viewBox="0 0 80 130" fill="none" aria-hidden="true">
-        <path d="M62 124C38 110 24 84 24 56 24 38 30 20 42 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".55"/>
-        <g fill="currentColor">
-          <ellipse cx="48" cy="112" rx="9" ry="3.4" transform="rotate(-28 48 112)"/>
-          <ellipse cx="38" cy="98" rx="9.5" ry="3.6" transform="rotate(-40 38 98)"/>
-          <ellipse cx="31" cy="82" rx="10" ry="3.7" transform="rotate(-54 31 82)"/>
-          <ellipse cx="27" cy="65" rx="10" ry="3.7" transform="rotate(-68 27 65)"/>
-          <ellipse cx="26" cy="48" rx="9.5" ry="3.6" transform="rotate(-82 26 48)"/>
-          <ellipse cx="29" cy="32" rx="9" ry="3.4" transform="rotate(-96 29 32)"/>
-          <ellipse cx="35" cy="18" rx="8" ry="3" transform="rotate(-110 35 18)"/>
+      <svg class="nomi-seal" viewBox="0 0 200 200" role="img" aria-label="Genomineerd voor de Waterinnovatieprijs 2026">
+        <defs>
+          <path id="seal-top" d="M 28 100 A 72 72 0 0 1 172 100"/>
+          <path id="seal-bot" d="M 28 100 A 72 72 0 0 0 172 100"/>
+        </defs>
+        <!-- buitenring -->
+        <circle cx="100" cy="100" r="97" fill="none" stroke="var(--teal)" stroke-width="1" opacity=".4"/>
+        <!-- getikte rand -->
+        <circle cx="100" cy="100" r="92.5" fill="none" stroke="var(--teal)" stroke-width="5" stroke-dasharray="1.6 6.5" opacity=".26"/>
+        <!-- tekstband-randen -->
+        <circle cx="100" cy="100" r="84" fill="none" stroke="var(--gold)" stroke-width="1" opacity=".4"/>
+        <circle cx="100" cy="100" r="62" fill="none" stroke="var(--gold)" stroke-width="1" opacity=".4"/>
+        <!-- omcirkelde tekst -->
+        <text class="seal-txt" fill="var(--teal)">
+          <textPath href="#seal-top" startOffset="50%" text-anchor="middle">Waterinnovatieprijs</textPath>
+        </text>
+        <text class="seal-txt" fill="var(--teal)">
+          <textPath href="#seal-bot" startOffset="50%" text-anchor="middle">Genomineerd · 2026</textPath>
+        </text>
+        <!-- ster-scheidingen op 3 en 9 uur -->
+        <g fill="var(--gold)">
+          <path transform="translate(21,100)" d="M0,-4.6 L1.1,-1.1 L4.6,0 L1.1,1.1 L0,4.6 L-1.1,1.1 L-4.6,0 L-1.1,-1.1 Z"/>
+          <path transform="translate(179,100)" d="M0,-4.6 L1.1,-1.1 L4.6,0 L1.1,1.1 L0,4.6 L-1.1,1.1 L-4.6,0 L-1.1,-1.1 Z"/>
         </g>
-      </svg>
-      <span class="nomi-rose"><svg viewBox="0 0 64 64" width="40" height="40"><use href="#kk-rose"/></svg></span>
-      <svg class="nomi-branch nomi-branch-r" viewBox="0 0 80 130" fill="none" aria-hidden="true">
-        <path d="M18 124C42 110 56 84 56 56 56 38 50 20 38 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".55"/>
-        <g fill="currentColor">
-          <ellipse cx="32" cy="112" rx="9" ry="3.4" transform="rotate(28 32 112)"/>
-          <ellipse cx="42" cy="98" rx="9.5" ry="3.6" transform="rotate(40 42 98)"/>
-          <ellipse cx="49" cy="82" rx="10" ry="3.7" transform="rotate(54 49 82)"/>
-          <ellipse cx="53" cy="65" rx="10" ry="3.7" transform="rotate(68 53 65)"/>
-          <ellipse cx="54" cy="48" rx="9.5" ry="3.6" transform="rotate(82 54 48)"/>
-          <ellipse cx="51" cy="32" rx="9" ry="3.4" transform="rotate(96 51 32)"/>
-          <ellipse cx="45" cy="18" rx="8" ry="3" transform="rotate(110 45 18)"/>
-        </g>
+        <!-- middenmedaillon -->
+        <circle cx="100" cy="100" r="55" fill="var(--paper)"/>
+        <circle cx="100" cy="100" r="55" fill="none" stroke="var(--gold)" stroke-width="1" opacity=".55"/>
+        <!-- kompasroos -->
+        <g style="color:var(--teal)"><use href="#kk-rose" x="66" y="66" width="68" height="68"/></g>
       </svg>
     </div>
     <div class="nomi-eyebrow">Genomineerd · 2026</div>
