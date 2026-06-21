@@ -243,10 +243,10 @@ display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:34px}
 
 /* ── nominatie-band ──────────── */
 .nomi{background:var(--paper-warm);border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
-/* achtergrondafbeelding: vervang de URL met de directe images.unsplash.com CDN-URL van foto Ac97OqAWDvg */
+/* achtergrondafbeelding: zet hieronder de directe images.unsplash.com CDN-URL van foto Ac97OqAWDvg (Ivan Bandura, "Filtration ponds") */
 .nomi-photo{
   position:absolute;inset:0;pointer-events:none;
-  background-image:url('https://images.unsplash.com/photo-1621600411688-4be93cd68504?auto=format&fit=crop&w=1920&q=60');
+  background-image:var(--nomi-bg,none);
   background-size:cover;background-position:center 55%;
   opacity:.11;
   filter:grayscale(20%) brightness(1.05) saturate(.8);
