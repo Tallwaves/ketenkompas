@@ -241,23 +241,6 @@ display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:34px}
 .quote-clarifier .arm{animation:spin 90s linear infinite;transform-origin:400px 400px}
 .quote blockquote,.quote cite{position:relative;z-index:2}
 
-/* ── nominatie-badge (nav) ───── */
-.nav-left{display:flex;align-items:center;gap:clamp(12px,1.6vw,20px)}
-.nav-award{display:inline-flex;align-items:center;gap:9px;text-decoration:none;
-  padding:6px 14px 6px 11px;border-radius:100px;
-  border:1px solid rgba(91,163,217,.34);background:rgba(91,163,217,.09);
-  transition:background .25s,border-color .25s,transform .25s}
-.nav-award:hover{background:rgba(91,163,217,.16);border-color:rgba(91,163,217,.55);transform:translateY(-1px)}
-.nav-award svg{width:17px;height:17px;flex-shrink:0;color:var(--gold)}
-.nav-award-txt{display:flex;flex-direction:column;line-height:1.16}
-.nav-award-txt b{font-size:11.5px;font-weight:600;letter-spacing:.005em;color:var(--gold-soft);transition:color .4s}
-.nav-award-txt small{font-size:9px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:rgba(250,248,243,.6);transition:color .4s}
-nav.scrolled .nav-award{border-color:rgba(91,163,217,.4);background:rgba(91,163,217,.1)}
-nav.scrolled .nav-award-txt b{color:var(--teal)}
-nav.scrolled .nav-award-txt small{color:#8A94A2}
-@media(max-width:760px){.nav-award-txt small{display:none}}
-@media(max-width:520px){.nav-award{padding:6px;gap:0}.nav-award-txt{display:none}}
-
 /* ── nominatie-band ──────────── */
 .nomi{background:var(--paper-warm);border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
 .nomi::before{content:'';position:absolute;inset:0;pointer-events:none;
@@ -465,21 +448,10 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
 </svg>
 
 <nav id="nav">
-  <div class="nav-left">
-    <a class="nav-logo" href="#">
-      <svg class="kk-mark" width="34" height="34"><use href="#kk-rose"/></svg>
-      <span class="kk-word"><b>Slib<i>Kompas</i></b></span>
-    </a>
-    <a class="nav-award" href="#nominatie" aria-label="Genomineerd voor de Waterinnovatieprijs 2026">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M6.5 3.5C4 5.5 3 9 3.6 12.2c.6 3 2.6 5.7 5.4 7.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M17.5 3.5C20 5.5 21 9 20.4 12.2c-.6 3-2.6 5.7-5.4 7.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M9 20.5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M12 6.5l1.3 2.6 2.9.4-2.1 2 .5 2.9-2.6-1.4-2.6 1.4.5-2.9-2.1-2 2.9-.4L12 6.5z" fill="currentColor"/>
-      </svg>
-      <span class="nav-award-txt"><b>Genomineerd</b><small>Waterinnovatieprijs 2026</small></span>
-    </a>
-  </div>
+  <a class="nav-logo" href="#">
+    <svg class="kk-mark" width="34" height="34"><use href="#kk-rose"/></svg>
+    <span class="kk-word"><b>Slib<i>Kompas</i></b></span>
+  </a>
   <div class="nav-links">
     <a href="#probleem">Waarom</a>
     <a href="#instrument">Het instrument</a>
