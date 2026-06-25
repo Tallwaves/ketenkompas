@@ -1060,5 +1060,16 @@ async function submitScenarioRequest(){
   }
 }
 </script>
+<script>
+/* Preview/dev: houd login-links binnen dezelfde deployment i.p.v. naar productie te springen.
+   Op productie (ketenkompas.nl / portal.ketenkompas.nl) blijven de links ongewijzigd. */
+(function(){
+  var hn=location.hostname;
+  if(hn==='ketenkompas.nl'||hn==='www.ketenkompas.nl'||hn==='portal.ketenkompas.nl')return;
+  document.querySelectorAll('a[href*="portal.ketenkompas.nl"]').forEach(function(a){
+    a.setAttribute('href','/index.html');
+  });
+})();
+</script>
 </body>
 </html>
