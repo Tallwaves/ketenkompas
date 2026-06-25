@@ -975,7 +975,7 @@ async function submitScenarioRequest(){
   var hn=location.hostname;
   if(hn==='ketenkompas.nl'||hn==='www.ketenkompas.nl'||hn==='portal.ketenkompas.nl')return;
   document.querySelectorAll('a[href*="portal.ketenkompas.nl"]').forEach(function(a){
-    a.setAttribute('href','/index.html');
+    a.setAttribute('href','/portal');
   });
 })();
 </script>
