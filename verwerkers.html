@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statusregistratie eindverwerking — SlibKompas voor verwerkers</title>
+<meta name="description" content="Digitaal registratieformulier voor slibverwerkers. Lever je tweewekelijkse statusupdate eindverwerking één keer aan — de gegevens stromen automatisch door naar KetenKompas én naar Z-info, het datasysteem van de waterschappen. Geen Excel meer.">
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://ketenkompas.nl/slib/verwerkers">
+
+<!-- ── Favicon ── -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A1628'/%3E%3Cpolygon points='32,4 36,26 32,32 28,26' fill='%23C8A050'/%3E%3Cpolygon points='32,60 36,38 32,32 28,38' fill='%23FAF8F3' opacity='.9'/%3E%3Cpolygon points='4,32 26,28 32,32 26,36' fill='%23FAF8F3' opacity='.9'/%3E%3Cpolygon points='60,32 38,28 32,32 38,36' fill='%23FAF8F3' opacity='.9'/%3E%3Ccircle cx='32' cy='32' r='3.5' fill='%230A1628' stroke='%23C8A050' stroke-width='1.5'/%3E%3C/svg%3E">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ketenkompas.nl/slib/verwerkers">
+<meta property="og:site_name" content="KetenKompas">
+<meta property="og:title" content="Statusregistratie eindverwerking — SlibKompas voor verwerkers">
+<meta property="og:description" content="Lever je tweewekelijkse statusupdate eindverwerking digitaal aan. De gegevens stromen automatisch door naar KetenKompas én naar Z-info.">
+<meta property="og:locale" content="nl_NL">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Albert+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A1628;
+  --ink-soft:#142336;
+  --paper:#FAF8F3;
+  --paper-warm:#F4F0E6;
+  --gold:#5BA3D9;
+  --gold-soft:#B8D9F0;
+  --teal:#1A6FAD;
+  --teal-bright:#7EC4E8;
+  --mist:#8FA3B8;
+  --line:rgba(10,22,40,.12);
+  --line-light:rgba(250,248,243,.14);
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Albert Sans',-apple-system,sans-serif;
+  --ok:#3FBF8F;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--gold);color:var(--ink)}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.035;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.rv.in{opacity:1;transform:none}
+.rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.22s}.rv-d3{transition-delay:.34s}
+
+/* ── logo ── */
+.kk-mark{display:inline-block;flex-shrink:0}
+.kk-word{display:flex;flex-direction:column;line-height:1.1}
+.kk-word b{font-family:var(--sans);font-weight:700;letter-spacing:-.01em}
+.kk-word b i{font-style:normal;color:var(--gold)}
+.kk-word small{font-size:.42em;font-weight:500;letter-spacing:.34em;text-transform:uppercase;opacity:.65;margin-top:3px}
+
+/* ── nav ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 clamp(24px,5vw,64px);
+display:flex;align-items:center;justify-content:space-between;height:80px;
+background:rgba(250,248,243,0);backdrop-filter:blur(0);border-bottom:1px solid transparent;
+transition:background .4s,backdrop-filter .4s,border-color .4s}
+nav.scrolled{background:rgba(250,248,243,.88);backdrop-filter:blur(14px);border-color:var(--line)}
+.nav-logo{text-decoration:none;display:flex;align-items:center;gap:13px;color:var(--paper);transition:color .4s;font-size:21px}
+nav.scrolled .nav-logo{color:var(--ink)}
+.nav-links{display:flex;align-items:center;gap:30px}
+.nav-links a{font-size:14px;font-weight:500;color:var(--paper);text-decoration:none;letter-spacing:.01em;opacity:.75;transition:opacity .25s,color .4s}
+nav.scrolled .nav-links a{color:var(--ink)}
+.nav-links a:hover{opacity:1}
+.nav-cta{color:var(--ink)!important;background:var(--gold);padding:11px 22px;border-radius:100px;opacity:1!important;font-weight:600!important;transition:transform .25s!important}
+nav.scrolled .nav-cta{background:var(--ink);color:var(--paper)!important}
+.nav-cta:hover{transform:translateY(-1px)}
+@media(max-width:820px){.nav-links a:not(.nav-cta){display:none}}
+
+/* ── hero ── */
+.hero{background:linear-gradient(180deg,#0A1628 0%,#0C1B30 55%,#10243C 100%);color:var(--paper);position:relative;overflow:hidden;padding:clamp(120px,16vh,170px) clamp(24px,5vw,64px) clamp(60px,8vh,90px)}
+.hero-compass{position:absolute;right:-12vw;top:42%;transform:translateY(-50%);width:min(50vw,640px);height:min(50vw,640px);opacity:.28;pointer-events:none;z-index:1}
+.hero-inner{position:relative;z-index:2;max-width:1180px;margin:0 auto;width:100%}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:30px}
+.hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--gold)}
+.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(38px,5.2vw,68px);line-height:1.07;letter-spacing:-.025em;max-width:17ch;margin-bottom:26px}
+.hero h1 em{font-style:italic;font-weight:300;color:var(--gold-soft)}
+.hero-sub{font-size:clamp(16px,1.5vw,20px);font-weight:300;color:var(--mist);max-width:58ch;line-height:1.7}
+.hero-sub strong{color:var(--paper);font-weight:500}
+
+/* ── flow-band: éénmaal invullen → twee systemen ── */
+.flow{position:relative;z-index:2;max-width:1180px;margin:clamp(40px,6vw,60px) auto 0;
+  border-top:1px solid var(--line-light);padding-top:clamp(34px,4vw,44px)}
+.flow-hdr{font-size:11.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mist);margin-bottom:24px}
+.flow-row{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:clamp(10px,2vw,24px)}
+.flow-node{background:rgba(250,248,243,.045);border:1px solid var(--line-light);border-radius:16px;padding:20px 22px;backdrop-filter:blur(8px);min-height:108px;display:flex;flex-direction:column;justify-content:center}
+.flow-node.is-source{border-color:rgba(91,163,217,.4)}
+.flow-node.is-dest{border-color:rgba(63,191,143,.32)}
+.flow-node .fn-tag{font-size:10.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.flow-node.is-dest .fn-tag{color:var(--ok)}
+.fn-tag .fn-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.flow-node b{font-family:var(--serif);font-weight:500;font-size:clamp(17px,1.7vw,21px);color:var(--paper);letter-spacing:-.01em;display:block;line-height:1.2}
+.flow-node span.fn-sub{font-size:13px;font-weight:300;color:var(--mist);margin-top:6px;line-height:1.5}
+.flow-arrow{display:flex;align-items:center;justify-content:center;color:var(--gold);flex-direction:column;gap:4px}
+.flow-arrow svg{width:34px;height:18px}
+.flow-arrow small{font-size:10px;letter-spacing:.06em;color:var(--mist);text-transform:uppercase;font-weight:500}
+.flow-dests{display:flex;flex-direction:column;gap:12px}
+@media(max-width:880px){
+  .flow-row{grid-template-columns:1fr;gap:14px}
+  .flow-arrow{transform:rotate(90deg);padding:2px 0}
+  .flow-arrow small{display:none}
+}
+
+/* ── form section ── */
+.form-sec{background:var(--paper);padding:clamp(56px,7vw,90px) clamp(20px,5vw,64px) clamp(80px,10vw,130px)}
+.form-wrap{max-width:920px;margin:0 auto}
+.form-kicker{font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.form-kicker::before{content:'';width:36px;height:1px;background:var(--teal)}
+.form-wrap h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4vw,48px);line-height:1.1;letter-spacing:-.02em;max-width:18ch}
+.form-wrap h2 em{font-style:italic;font-weight:300;color:var(--teal)}
+.form-lead{font-size:clamp(15px,1.4vw,18px);font-weight:300;color:#3D4D60;max-width:60ch;margin-top:22px;line-height:1.7}
+
+/* prefill-melding */
+.prefill{display:none;align-items:center;gap:12px;margin-top:30px;padding:14px 18px;background:rgba(91,163,217,.08);border:1px solid rgba(91,163,217,.28);border-radius:12px;font-size:13.5px;color:var(--teal);line-height:1.5}
+.prefill.show{display:flex}
+.prefill svg{flex-shrink:0}
+.prefill b{font-weight:600}
+.prefill a{color:var(--teal);font-weight:600;text-decoration:underline;cursor:pointer;margin-left:auto;white-space:nowrap}
+
+/* card / fieldset */
+.fcard{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 30px 70px -40px rgba(10,22,40,.3);margin-top:clamp(34px,5vw,48px);overflow:hidden}
+.fset{padding:clamp(26px,3.4vw,40px) clamp(22px,3.4vw,44px);border-top:1px solid var(--line)}
+.fset:first-child{border-top:none}
+.fset-hd{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.fset-no{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--gold);flex-shrink:0;line-height:1.4}
+.fset-hd h3{font-family:var(--serif);font-weight:500;font-size:clamp(19px,2vw,24px);letter-spacing:-.015em;color:var(--ink)}
+.fset-note{font-size:13.5px;font-weight:300;color:#5A6B7E;margin:0 0 22px 34px;max-width:64ch;line-height:1.6}
+@media(max-width:560px){.fset-note{margin-left:0}}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid.g3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:680px){.grid,.grid.g3{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+.flabel{font-size:11px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:#6B7C8F;display:flex;align-items:center;gap:6px}
+.req{color:var(--gold)}
+.fhint{font-size:11px;font-weight:400;letter-spacing:0;text-transform:none;color:#9AA8B6}
+.inp,.sel,.txt{font-family:var(--sans);font-size:15px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:12px 15px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%;box-sizing:border-box}
+.inp::placeholder,.txt::placeholder{color:#A9B5C2}
+.inp:focus,.sel:focus,.txt:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(91,163,217,.13);background:#fff}
+.sel{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%236B7C8F' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:38px}
+.txt{resize:vertical;min-height:88px;line-height:1.55}
+.inp-unit{position:relative}
+.inp-unit .inp{padding-right:64px}
+.inp-unit .unit{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12.5px;color:#9AA8B6;font-weight:500;pointer-events:none;letter-spacing:.02em}
+
+/* segmented status pills */
+.seg{display:flex;gap:9px;flex-wrap:wrap}
+.seg-btn{flex:1;min-width:120px;padding:11px 10px;border-radius:100px;border:1px solid var(--line);background:var(--paper);color:#5A6B7E;font-size:13.5px;font-family:var(--sans);font-weight:500;cursor:pointer;transition:all .2s;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px}
+.seg-btn .sdot{width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.55}
+.seg-btn:hover{border-color:var(--mist)}
+.seg-btn.active{font-weight:600}
+.seg-btn.active .sdot{opacity:1}
+.seg-btn.active[data-v="normaal"]{border-color:var(--ok);background:rgba(63,191,143,.1);color:#1F8A63}
+.seg-btn.active[data-v="aandacht"]{border-color:var(--gold);background:rgba(91,163,217,.13);color:var(--teal)}
+.seg-btn.active[data-v="knelpunt"]{border-color:#E0894A;background:rgba(224,137,74,.12);color:#C56A2C}
+
+/* derived/total line */
+.derived{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding:15px 18px;background:var(--paper-warm);border:1px solid var(--line);border-radius:12px;flex-wrap:wrap}
+.derived-lbl{font-size:12.5px;font-weight:500;letter-spacing:.04em;color:#5A6B7E;text-transform:uppercase}
+.derived-val{font-family:var(--serif);font-size:26px;font-weight:500;color:var(--ink);letter-spacing:-.01em}
+.derived-val span{font-size:14px;color:#9AA8B6;font-weight:400;margin-left:6px}
+
+/* submit bar */
+.fsubmit{padding:clamp(26px,3.4vw,38px) clamp(22px,3.4vw,44px);background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.fsubmit-left{flex:1;min-width:240px}
+.fsubmit-left b{font-family:var(--serif);font-weight:400;font-size:19px;color:var(--paper);display:block;margin-bottom:6px}
+.fsubmit-left p{font-size:13.5px;font-weight:300;color:var(--mist);line-height:1.6;max-width:46ch}
+.fsubmit-left .dest-chips{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.dest-chip{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:500;letter-spacing:.04em;border:1px solid var(--line-light);border-radius:100px;padding:5px 12px;color:rgba(250,248,243,.7)}
+.dest-chip .dc-dot{width:6px;height:6px;border-radius:50%;background:var(--ok)}
+.btn-gold{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--ink);background:var(--gold);border:none;padding:17px 32px;border-radius:100px;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:transform .25s,box-shadow .25s;white-space:nowrap}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 32px -8px rgba(91,163,217,.45)}
+.btn-gold:disabled{opacity:.6;cursor:wait;transform:none;box-shadow:none}
+
+.form-msg{max-width:920px;margin:18px auto 0;font-size:14px;text-align:center;color:#C56A2C;min-height:20px}
+
+/* success overlay */
+.ok-overlay{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(10,22,40,.72);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .4s}
+.ok-overlay.show{opacity:1;pointer-events:all}
+.ok-panel{width:100%;max-width:540px;background:#0D1E33;border:1px solid rgba(91,163,217,.28);border-radius:24px;box-shadow:0 60px 120px -30px rgba(0,0,0,.8);padding:44px 40px 40px;text-align:center;transform:translateY(28px) scale(.97);transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.ok-overlay.show .ok-panel{transform:none}
+.ok-icon{width:74px;height:74px;border-radius:50%;background:rgba(63,191,143,.12);border:1px solid rgba(63,191,143,.35);display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+.ok-icon svg{width:36px;height:36px}
+.ok-panel h3{font-family:var(--serif);font-weight:400;font-size:28px;color:var(--paper);margin-bottom:12px;letter-spacing:-.015em}
+.ok-panel h3 em{font-style:italic;color:var(--gold-soft)}
+.ok-panel>p{font-size:14.5px;font-weight:300;color:var(--mist);max-width:40ch;margin:0 auto 26px;line-height:1.65}
+.ok-routes{display:flex;flex-direction:column;gap:12px;margin-bottom:30px;text-align:left}
+.ok-route{display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(250,248,243,.04);border:1px solid var(--line-light);border-radius:13px;opacity:0;transform:translateX(-12px);transition:opacity .5s,transform .5s}
+.ok-route.in{opacity:1;transform:none}
+.ok-route-check{width:30px;height:30px;border-radius:50%;background:rgba(63,191,143,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--ok)}
+.ok-route-tx b{font-size:14.5px;font-weight:600;color:var(--paper);display:block}
+.ok-route-tx span{font-size:12.5px;color:var(--mist);font-weight:300}
+.ok-route-stat{margin-left:auto;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ok)}
+.ok-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.ok-btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:13px 24px;border-radius:100px;cursor:pointer;border:none;transition:transform .2s,background .2s}
+.ok-btn.primary{background:var(--gold);color:var(--ink)}
+.ok-btn.primary:hover{transform:translateY(-1px)}
+.ok-btn.ghost{background:transparent;border:1px solid var(--line-light);color:var(--mist)}
+.ok-btn.ghost:hover{color:var(--paper);border-color:var(--mist)}
+
+/* prototype badge */
+.proto{position:fixed;bottom:18px;left:18px;z-index:90;display:flex;align-items:center;gap:9px;font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);background:var(--gold-soft);border:1px solid var(--gold);border-radius:100px;padding:8px 15px;box-shadow:0 8px 24px -8px rgba(10,22,40,.3)}
+.proto .pdot{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:pulse2 2.4s ease-in-out infinite}
+@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.4}}
+@media(max-width:560px){.proto{font-size:10.5px;padding:7px 12px;bottom:12px;left:12px}}
+
+/* footer */
+footer{background:#060E1C;color:var(--mist);overflow:hidden}
+.foot-accent{height:3px;background:linear-gradient(90deg,var(--gold) 0%,var(--teal-bright) 60%,transparent 100%);opacity:.7}
+.foot-main{max-width:1180px;margin:0 auto;padding:60px clamp(24px,5vw,64px) 0;display:flex;align-items:flex-start;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.foot-brand{display:flex;align-items:center;gap:12px;color:var(--paper);font-size:19px;margin-bottom:16px}
+.foot-brand .kk-word small{font-size:10px;letter-spacing:.1em;text-transform:none;opacity:1;color:var(--gold-soft);font-weight:500}
+.foot-mission{font-size:14px;line-height:1.8;max-width:38ch;color:rgba(143,163,184,.8)}
+.foot-links{display:flex;gap:48px;flex-wrap:wrap}
+.foot-col{display:flex;flex-direction:column;gap:11px}
+.foot-col-hdr{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,248,243,.38);margin-bottom:4px;font-weight:500}
+.foot-col a{font-size:14px;color:rgba(143,163,184,.75);text-decoration:none;transition:color .2s;line-height:1.5}
+.foot-col a:hover{color:var(--paper)}
+.foot-bottom{max-width:1180px;margin:0 auto;padding:36px clamp(24px,5vw,64px) 40px;margin-top:44px;border-top:1px solid rgba(250,248,243,.08);font-size:12.5px;color:rgba(143,163,184,.45);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.foot-bottom-status{display:flex;align-items:center;gap:8px}
+.foot-bottom-status .pdot{width:6px;height:6px;border-radius:50%;background:var(--ok)}
+</style>
+</head>
+<body>
+
+<!-- herbruikbaar logo-symbool -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="kk-rose" viewBox="0 0 64 64">
+      <polygon points="32,1 36.5,27 32,33 27.5,27" fill="#5BA3D9"/>
+      <polygon points="32,63 36.5,37 32,31 27.5,37" fill="currentColor" opacity=".92"/>
+      <polygon points="3,32 27,27.5 33,32 27,36.5" fill="currentColor" opacity=".92"/>
+      <polygon points="61,32 37,27.5 31,32 37,36.5" fill="currentColor" opacity=".92"/>
+      <polygon points="13,13 28.5,23.5 23.5,28.5" fill="currentColor" opacity=".45"/>
+      <polygon points="51,13 35.5,23.5 40.5,28.5" fill="currentColor" opacity=".45"/>
+      <polygon points="13,51 23.5,35.5 28.5,40.5" fill="currentColor" opacity=".45"/>
+      <polygon points="51,51 40.5,35.5 35.5,40.5" fill="currentColor" opacity=".45"/>
+      <circle cx="32" cy="32" r="3.6" fill="#0A1628" stroke="currentColor" stroke-width="1.6"/>
+    </symbol>
+  </defs>
+</svg>
+
+<nav id="nav">
+  <a class="nav-logo" href="/slib">
+    <svg class="kk-mark" width="34" height="34"><use href="#kk-rose"/></svg>
+    <span class="kk-word"><b>Slib<i>Kompas</i></b></span>
+  </a>
+  <div class="nav-links">
+    <a href="/slib">Terug naar overzicht</a>
+    <a href="#flow">Hoe het werkt</a>
+    <a class="nav-cta" href="#formulier">Status doorgeven</a>
+  </div>
+</nav>
+
+<!-- ════════ HERO ════════ -->
+<header class="hero">
+  <svg class="hero-compass" id="heroCompass" viewBox="0 0 600 600" fill="none">
+    <circle cx="300" cy="300" r="280" stroke="#FAF8F3" stroke-opacity=".07" stroke-width="1"/>
+    <circle cx="300" cy="300" r="225" stroke="#FAF8F3" stroke-opacity=".09" stroke-width="1"/>
+    <circle cx="300" cy="300" r="160" stroke="#FAF8F3" stroke-opacity=".07" stroke-width="1"/>
+    <g id="compassRose">
+      <line x1="300" y1="20" x2="300" y2="580" stroke="#FAF8F3" stroke-opacity=".07"/>
+      <line x1="20" y1="300" x2="580" y2="300" stroke="#FAF8F3" stroke-opacity=".07"/>
+      <polygon points="300,60 328,272 300,300 272,272" fill="#5BA3D9" fill-opacity=".85"/>
+      <polygon points="300,540 328,328 300,300 272,328" fill="#FAF8F3" fill-opacity=".18"/>
+      <polygon points="60,300 272,272 300,300 272,328" fill="#FAF8F3" fill-opacity=".18"/>
+      <polygon points="540,300 328,272 300,300 328,328" fill="#FAF8F3" fill-opacity=".18"/>
+    </g>
+    <circle cx="300" cy="300" r="9" fill="#0A1628" stroke="#5BA3D9" stroke-width="2"/>
+  </svg>
+
+  <div class="hero-inner">
+    <div class="hero-eyebrow rv">Tweewekelijkse statusregistratie · eindverwerking</div>
+    <h1 class="rv rv-d1">Eén keer invullen.<br><em>Direct in beeld bij de keten.</em></h1>
+    <p class="hero-sub rv rv-d2">Geef je tweewekelijkse statusupdate eindverwerking digitaal door. <strong>De gegevens stromen automatisch door naar KetenKompas</strong> — het ketenregie-instrument — <strong>én naar Z-info</strong>, het centrale datasysteem van de waterschappen. Geen Excel-bestand meer dat elke twee weken rondgaat.</p>
+
+    <!-- flow-band -->
+    <div class="flow rv rv-d3" id="flow">
+      <div class="flow-hdr">Van invulling tot ketenbeeld — automatisch</div>
+      <div class="flow-row">
+        <div class="flow-node is-source">
+          <span class="fn-tag"><span class="fn-dot"></span>Eindverwerker</span>
+          <b>Jij vult dit formulier in</b>
+          <span class="fn-sub">Functioneren, opslag, onderhoud en afzet — in een paar minuten.</span>
+        </div>
+        <div class="flow-arrow">
+          <svg viewBox="0 0 34 18" fill="none"><path d="M2 9h28m0 0l-7-6m7 6l-7 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <small>verwerkt</small>
+        </div>
+        <div class="flow-node">
+          <span class="fn-tag"><span class="fn-dot"></span>KetenKompas</span>
+          <b>Ketenregie-instrument</b>
+          <span class="fn-sub">Direct zichtbaar in het ketenoverzicht en de scenario-analyse.</span>
+        </div>
+        <div class="flow-arrow">
+          <svg viewBox="0 0 34 18" fill="none"><path d="M2 9h28m0 0l-7-6m7 6l-7 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <small>gekoppeld</small>
+        </div>
+        <div class="flow-node is-dest">
+          <span class="fn-tag"><span class="fn-dot"></span>Z-info</span>
+          <b>Datasysteem waterschappen</b>
+          <span class="fn-sub">Dezelfde gegevens landen in het landelijke waterschapssysteem.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ════════ FORMULIER ════════ -->
+<section class="form-sec" id="formulier">
+  <div class="form-wrap">
+    <div class="form-kicker rv">Statusupdate aanleveren</div>
+    <h2 class="rv rv-d1">Tweewekelijkse status <em>eindverwerking</em></h2>
+    <p class="form-lead rv rv-d2">Vul de velden in die voor jouw installatie van toepassing zijn. Je vorige opgave wordt onthouden, zodat je alleen de wijzigingen hoeft door te voeren — net zoals je gewend bent, maar zonder Excel.</p>
+
+    <div class="prefill" id="prefill">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2v8l5 3" stroke="#1A6FAD" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="10" r="8" stroke="#1A6FAD" stroke-width="1.6"/></svg>
+      <span>Je <b>vorige opgave</b> (<span id="prefill-when">vorige periode</span>) is ingeladen. Pas alleen aan wat is veranderd.</span>
+      <a id="prefill-clear">Leeg formulier</a>
+    </div>
+
+    <form class="fcard rv rv-d2" id="regForm" autocomplete="on" novalidate>
+
+      <!-- 0 · Identificatie -->
+      <div class="fset">
+        <div class="fset-hd"><span class="fset-no">00</span><h3>Installatie & rapportageperiode</h3></div>
+        <p class="fset-note">Selecteer je eindverwerker en de week waarop deze opgave betrekking heeft. We vragen twee contactpersonen voor de continuïteit.</p>
+        <div class="grid">
+          <div class="field">
+            <label class="flabel">Eindverwerker <span class="req">*</span></label>
+            <select class="sel" id="f-verwerker" name="verwerker" required>
+              <option value="" disabled selected>Selecteer eindverwerker</option>
+              <option>SNB</option>
+              <option>HVC Dordrecht (SVI)</option>
+              <option>HVC Alkmaar (SDI)</option>
+              <option>GMB Tiel / Zutphen</option>
+              <option>EEW</option>
+              <option>Indaver</option>
+              <option>Unie collectief waterschappen</option>
+              <option value="anders">Anders…</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="flabel">Installatie / locatie</label>
+            <input class="inp" id="f-locatie" name="locatie" type="text" placeholder="Bijv. Moerdijk, Dordrecht">
+          </div>
+          <div class="field">
+            <label class="flabel">Rapportageweek <span class="req">*</span></label>
+            <div class="inp-unit">
+              <input class="inp" id="f-week" name="week" type="number" min="1" max="53" placeholder="26" required>
+              <span class="unit">week</span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="flabel">Jaar</label>
+            <input class="inp" id="f-jaar" name="jaar" type="number" min="2025" max="2030" placeholder="2026">
+          </div>
+          <div class="field">
+            <label class="flabel">Contactpersoon 1 <span class="req">*</span></label>
+            <input class="inp" id="f-c1naam" name="c1naam" type="text" placeholder="Naam" required>
+          </div>
+          <div class="field">
+            <label class="flabel">E-mail contactpersoon 1 <span class="req">*</span></label>
+            <input class="inp" id="f-c1mail" name="c1mail" type="email" placeholder="naam@verwerker.nl" required>
+          </div>
+          <div class="field">
+            <label class="flabel">Contactpersoon 2 <span class="fhint">— continuïteit</span></label>
+            <input class="inp" id="f-c2naam" name="c2naam" type="text" placeholder="Naam (reserve)">
+          </div>
+          <div class="field">
+            <label class="flabel">E-mail contactpersoon 2</label>
+            <input class="inp" id="f-c2mail" name="c2mail" type="email" placeholder="reserve@verwerker.nl">
+          </div>
+        </div>
+      </div>
+
+      <!-- 1 · Functioneren -->
+      <div class="fset">
+        <div class="fset-hd"><span class="fset-no">01</span><h3>Functioneren</h3></div>
+        <p class="fset-note">Bijzonderheden of afwijkingen ten opzichte van de gemiddelde capaciteit, geluiden uit de markt of andere zorgen. Licht toe en geef (verwachte) consequenties aan.</p>
+        <div class="field full" style="margin-bottom:18px">
+          <label class="flabel">Status installatie</label>
+          <div class="seg" id="seg-status" data-name="status">
+            <button type="button" class="seg-btn" data-v="normaal"><span class="sdot"></span>Normaal bedrijf</button>
+            <button type="button" class="seg-btn" data-v="aandacht"><span class="sdot"></span>Aandachtspunt</button>
+            <button type="button" class="seg-btn" data-v="knelpunt"><span class="sdot"></span>Knelpunt</button>
+          </div>
+        </div>
+        <div class="field full">
+          <label class="flabel">Toelichting functioneren</label>
+          <textarea class="txt" id="f-functioneren" name="functioneren" placeholder="Bijv. installatie draait stabiel; geen bijzonderheden. Of: tijdelijk verlaagde capaciteit door…"></textarea>
+        </div>
+      </div>
+
+      <!-- 2 · Verwerkingscapaciteit -->
+      <div class="fset">
+        <div class="fset-hd"><span class="fset-no">02</span><h3>Verwerkingscapaciteit</h3></div>
+        <p class="fset-note">De basisgetallen van je installatie. Gemiddelde capaciteit is je vaste referentie; vul daarnaast in wat er deze periode daadwerkelijk is verwerkt.</p>
+        <div class="grid g3">
+          <div class="field">
+            <label class="flabel">Gem. capaciteit ontwaterd</label>
+            <div class="inp-unit"><input class="inp num" id="f-capontw" name="capontw" type="number" min="0" placeholder="0"><span class="unit">ton/wk</span></div>
+          </div>
+          <div class="field">
+            <label class="flabel">Verwerkt deze periode</label>
+            <div class="inp-unit"><input class="inp num" id="f-verwontw" name="verwontw" type="number" min="0" placeholder="0"><span class="unit">ton</span></div>
+          </div>
+          <div class="field">
+            <label class="flabel">Productie gedroogd <span class="fhint">indien van toepassing</span></label>
+            <div class="inp-unit"><input class="inp num" id="f-prodgedr" name="prodgedr" type="number" min="0" placeholder="0"><span class="unit">ton</span></div>
+          </div>
+        </div>
+        <div class="derived">
+          <span class="derived-lbl">Bezetting t.o.v. gemiddelde capaciteit</span>
+          <span class="derived-val" id="d-bezetting">—<span>%</span></span>
+        </div>
+      </div>
+
+      <!-- 3 · Opslag -->
+      <div class="fset">
+        <div class="fset-hd"><span class="fset-no">03</span><h3>Opslag</h3></div>
+        <p class="fset-note">Hoeveel reguliere opslag is beschikbaar, en hoeveel daarvan is op dit moment bezet?</p>
+        <div class="grid g3">
+          <div class="field">
+            <label class="flabel">Regulier beschikbare opslag</label>
+            <div class="inp-unit"><input class="inp num" id="f-opslagtot" name="opslagtot" type="number" min="0" placeholder="0"><span class="unit">ton</span></div>
+          </div>
+          <div class="field">
+            <label class="flabel">Huidige bezetting opslag</label>
+            <div class="inp-unit"><input class="inp num" id="f-opslagbez" name="opslagbez" type="number" min="0" placeholder="0"><span class="unit">ton</span></div>
+          </div>
+          <div class="field">
+            <label class="flabel">Eenheid opslag</label>
+            <select class="sel" id="f-opslageenh" name="opslageenh">
+              <option>ton ontwaterd</option>
+              <option>ton gedroogd</option>
+            </select>
+          </div>
+        </div>
+        <div class="derived">
+          <span class="derived-lbl">Vrije opslagruimte</span>
+          <span class="derived-val" id="d-opslagvrij">—<span>ton</span></span>
+        </div>
+      </div>
+
+      <!-- 4 · Onderhoud -->
+      <div class="fset">
+        <div class="fset-hd"><span class="fset-no">04</span><h3>Onderhoud & stilstand</h3></div>
+        <p class="fset-note">In welke weken wordt stilstand van (een deel van) de installatie verwacht in verband met onderhoud, en hoeveel capaciteit valt er dan tijdelijk weg?</p>
+        <div class="grid">
+          <div class="field">
+            <label class="flabel">Verwachte stilstand <span class="fhint">week / weken</span></label>
+            <input class="inp" id="f-stilstand" name="stilstand" type="text" placeholder="Bijv. wk 32–34, of: geen">
+          </div>
+          <div class="field">
+            <label class="flabel">Capaciteit die tijdelijk wegvalt</label>
+            <div class="inp-unit"><input class="inp" id="f-wegval" name="wegval" type="number" min="0" placeholder="0"><span class="unit">ton</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 · Opvang onderhoud -->
+      <div class="fset">
+        <div class="fset-hd"><span class="fset-no">05</span><h3>Opvang van wegvallende capaciteit</h3></div>
+        <p class="fset-note">Hoe wordt de wegvallende capaciteit opgevangen — via eigen opslag, export, of een collega-verwerker? Geef bij een collega aan welke.</p>
+        <div class="grid g3">
+          <div class="field">
+            <label class="flabel">Via opslag</label>
+            <div class="inp-unit"><input class="inp" id="f-opvopslag" name="opvopslag" type="number" min="0" placeholder="0"><span class="unit">ton</span></div>
+          </div>
+          <div class="field">
+            <label class="flabel">Via export</label>
+            <div class="inp-unit"><input class="inp" id="f-opvexport" name="opvexport" type="number" min="0" placeholder="0"><span class="unit">ton</span></div>
+          </div>
+          <div class="field">
+            <label class="flabel">Via collega-verwerker</label>
+            <div class="inp-unit"><input class="inp" id="f-opvcollega" name="opvcollega" type="number" min="0" placeholder="0"><span class="unit">ton</span></div>
+          </div>
+          <div class="field full">
+            <label class="flabel">Welke collega-verwerker(s)?</label>
+            <input class="inp" id="f-colleganaam" name="colleganaam" type="text" placeholder="Bijv. SNB, HVC, EEW">
+          </div>
+        </div>
+      </div>
+
+      <!-- 6 · Afzet gedroogd -->
+      <div class="fset">
+        <div class="fset-hd"><span class="fset-no">06</span><h3>Afzet gedroogd slib</h3></div>
+        <p class="fset-note">Zijn er, of voorzien jullie, knelpunten in de afzet van gedroogd slib? Zo ja, licht toe en geef de (verwachte) consequenties aan.</p>
+        <div class="field full">
+          <label class="flabel">Toelichting afzet & mogelijke consequenties</label>
+          <textarea class="txt" id="f-afzet" name="afzet" placeholder="Bijv. afzet verloopt regulier. Of: knelpunt verwacht vanaf wk … door …"></textarea>
+        </div>
+      </div>
+
+      <!-- submit -->
+      <div class="fsubmit">
+        <div class="fsubmit-left">
+          <b>Klaar om door te geven?</b>
+          <p>Bij verzenden wordt je opgave automatisch verwerkt in beide systemen. Je ontvangt een bevestiging per e-mail.</p>
+          <div class="dest-chips">
+            <span class="dest-chip"><span class="dc-dot"></span>KetenKompas</span>
+            <span class="dest-chip"><span class="dc-dot"></span>Z-info</span>
+          </div>
+        </div>
+        <button type="submit" class="btn-gold" id="submitBtn">
+          Status doorgeven
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h11m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </form>
+    <div class="form-msg" id="formMsg"></div>
+  </div>
+</section>
+
+<!-- ════════ SUCCESS OVERLAY ════════ -->
+<div class="ok-overlay" id="okOverlay" role="dialog" aria-modal="true">
+  <div class="ok-panel">
+    <div class="ok-icon">
+      <svg viewBox="0 0 36 36" fill="none"><path d="M9 18.5l6 6 12-13" stroke="#3FBF8F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h3>Statusupdate <em>verzonden</em></h3>
+    <p id="okSummary">Je opgave is verwerkt en automatisch doorgezet naar beide systemen.</p>
+    <div class="ok-routes">
+      <div class="ok-route" id="okR1">
+        <div class="ok-route-check"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ok-route-tx"><b>KetenKompas</b><span>Verwerkt in het ketenoverzicht & scenario-analyse</span></div>
+        <span class="ok-route-stat">Live</span>
+      </div>
+      <div class="ok-route" id="okR2">
+        <div class="ok-route-check"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ok-route-tx"><b>Z-info</b><span>Doorgezet naar het datasysteem van de waterschappen</span></div>
+        <span class="ok-route-stat">Synced</span>
+      </div>
+    </div>
+    <div class="ok-actions">
+      <button class="ok-btn primary" id="okClose">Sluiten</button>
+      <button class="ok-btn ghost" id="okNew">Nieuwe opgave</button>
+    </div>
+  </div>
+</div>
+
+<div class="proto"><span class="pdot"></span>Prototype · demonstratie</div>
+
+<!-- ════════ FOOTER ════════ -->
+<footer>
+  <div class="foot-accent"></div>
+  <div class="foot-main">
+    <div class="foot-brand-col">
+      <div class="foot-brand">
+        <svg class="kk-mark" width="30" height="30"><use href="#kk-rose"/></svg>
+        <span class="kk-word"><b>Slib<i>Kompas</i></b><small>Genomineerd · Waterinnovatieprijs 2026</small></span>
+      </div>
+      <p class="foot-mission">Eén keer aanleveren, overal in beeld — van eindverwerker tot ketenregie en het datasysteem van de waterschappen.</p>
+    </div>
+    <div class="foot-links">
+      <div class="foot-col">
+        <span class="foot-col-hdr">Instrument</span>
+        <a href="/slib">Overzicht</a>
+        <a href="/slib#instrument">Het instrument</a>
+        <a href="/slib#case">Praktijkcase</a>
+      </div>
+      <div class="foot-col">
+        <span class="foot-col-hdr">Voor verwerkers</span>
+        <a href="#formulier">Status doorgeven</a>
+        <a href="#flow">Hoe het werkt</a>
+        <a href="https://portal.ketenkompas.nl">Inloggen portaal</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 KetenKompas</span>
+    <div class="foot-bottom-status"><span class="pdot"></span><span>Prototype · vervangt de tweewekelijkse Excel</span></div>
+    <span>Sectorinstrument voor de Nederlandse slibketen</span>
+  </div>
+</footer>
+
+<script>
+const STORE_KEY='kk_verwerker_status_v1';
+
+/* nav scroll */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>{nav.classList.toggle('scrolled',scrollY>40)},{passive:true});
+
+/* reveal */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* compass parallax */
+const rose=document.getElementById('compassRose');
+addEventListener('scroll',()=>{if(rose){rose.style.transform=`rotate(${scrollY*0.04}deg)`;rose.style.transformOrigin='300px 300px'}},{passive:true});
+
+/* status segmented control */
+let statusVal='';
+const seg=document.getElementById('seg-status');
+seg.querySelectorAll('.seg-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    seg.querySelectorAll('.seg-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');statusVal=b.dataset.v;
+  });
+});
+
+/* live derived values */
+const $=id=>document.getElementById(id);
+function num(id){const v=parseFloat($(id).value);return isNaN(v)?0:v}
+function recompute(){
+  const cap=num('f-capontw'),verw=num('f-verwontw');
+  const bez=$('d-bezetting');
+  if(cap>0&&verw>0){bez.innerHTML=Math.round(verw/cap*100)+'<span>%</span>'}
+  else{bez.innerHTML='—<span>%</span>'}
+  const tot=num('f-opslagtot'),used=num('f-opslagbez');
+  const vrij=$('d-opslagvrij');
+  if(tot>0){const v=Math.max(0,tot-used);vrij.innerHTML=v.toLocaleString('nl-NL')+'<span>ton</span>'}
+  else{vrij.innerHTML='—<span>ton</span>'}
+}
+['f-capontw','f-verwontw','f-opslagtot','f-opslagbez'].forEach(id=>$(id).addEventListener('input',recompute));
+
+/* gather / fill */
+const FIELDS=['verwerker','locatie','week','jaar','c1naam','c1mail','c2naam','c2mail','functioneren','capontw','verwontw','prodgedr','opslagtot','opslagbez','opslageenh','stilstand','wegval','opvopslag','opvexport','opvcollega','colleganaam','afzet'];
+const idOf={verwerker:'f-verwerker',locatie:'f-locatie',week:'f-week',jaar:'f-jaar',c1naam:'f-c1naam',c1mail:'f-c1mail',c2naam:'f-c2naam',c2mail:'f-c2mail',functioneren:'f-functioneren',capontw:'f-capontw',verwontw:'f-verwontw',prodgedr:'f-prodgedr',opslagtot:'f-opslagtot',opslagbez:'f-opslagbez',opslageenh:'f-opslageenh',stilstand:'f-stilstand',wegval:'f-wegval',opvopslag:'f-opvopslag',opvexport:'f-opvexport',opvcollega:'f-opvcollega',colleganaam:'f-colleganaam',afzet:'f-afzet'};
+function gather(){const o={status:statusVal};FIELDS.forEach(f=>o[f]=$(idOf[f]).value);return o}
+function fill(o){
+  FIELDS.forEach(f=>{if(o[f]!==undefined&&o[f]!=='')$(idOf[f]).value=o[f]});
+  if(o.status){const b=seg.querySelector('.seg-btn[data-v="'+o.status+'"]');if(b){b.click()}}
+  recompute();
+}
+
+/* prefill vorige opgave */
+try{
+  const prev=JSON.parse(localStorage.getItem(STORE_KEY)||'null');
+  if(prev&&prev.data){
+    fill(prev.data);
+    const pf=document.getElementById('prefill');pf.classList.add('show');
+    if(prev.savedLabel)document.getElementById('prefill-when').textContent=prev.savedLabel;
+  }
+}catch(e){}
+document.getElementById('prefill-clear').addEventListener('click',()=>{
+  document.getElementById('regForm').reset();
+  seg.querySelectorAll('.seg-btn').forEach(x=>x.classList.remove('active'));statusVal='';
+  recompute();
+  document.getElementById('prefill').classList.remove('show');
+});
+
+/* submit */
+const form=document.getElementById('regForm');
+const msg=document.getElementById('formMsg');
+form.addEventListener('submit',e=>{
+  e.preventDefault();msg.textContent='';
+  const req=[['f-verwerker','Eindverwerker'],['f-week','Rapportageweek'],['f-c1naam','Contactpersoon 1'],['f-c1mail','E-mail contactpersoon 1']];
+  for(const [id,label] of req){
+    if(!$(id).value.trim()){msg.textContent='Vul nog even "'+label+'" in.';$(id).focus();$(id).scrollIntoView({behavior:'smooth',block:'center'});return}
+  }
+  const data=gather();
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true;btn.firstChild.textContent='Verzenden… ';
+  // bewaar als "vorige opgave"
+  const wk=data.week?('week '+data.week+(data.jaar?' · '+data.jaar:'')):'vorige periode';
+  try{localStorage.setItem(STORE_KEY,JSON.stringify({data,savedLabel:wk}))}catch(e){}
+  // gesimuleerde dubbele doorzet (prototype)
+  setTimeout(()=>{
+    btn.disabled=false;btn.firstChild.textContent='Status doorgeven ';
+    openOk(data);
+  },1100);
+});
+
+/* success overlay */
+const okOverlay=document.getElementById('okOverlay');
+function openOk(data){
+  document.getElementById('okSummary').textContent=
+    (data.verwerker||'Je opgave')+' — week '+(data.week||'')+(data.jaar?' ('+data.jaar+')':'')+' is verwerkt en automatisch doorgezet naar beide systemen.';
+  okOverlay.classList.add('show');
+  document.getElementById('okR1').classList.remove('in');
+  document.getElementById('okR2').classList.remove('in');
+  setTimeout(()=>document.getElementById('okR1').classList.add('in'),350);
+  setTimeout(()=>document.getElementById('okR2').classList.add('in'),780);
+}
+function closeOk(){okOverlay.classList.remove('show')}
+document.getElementById('okClose').addEventListener('click',closeOk);
+okOverlay.addEventListener('click',e=>{if(e.target===okOverlay)closeOk()});
+document.getElementById('okNew').addEventListener('click',()=>{
+  closeOk();
+  document.getElementById('prefill-clear').click();
+  document.getElementById('formulier').scrollIntoView({behavior:'smooth'});
+});
+addEventListener('keydown',e=>{if(e.key==='Escape')closeOk()});
+</script>
+</body>
+</html>
