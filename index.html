@@ -182,6 +182,43 @@
   .bl-del:hover{color:var(--kk-alert)}
   .bl-ts{font-size:10.5px;color:var(--ink-faint);margin-top:3px}
   .bl-empty{text-align:center;color:var(--ink-faint);font-size:13.5px;padding:28px 0;border:1px dashed var(--line);border-radius:9px}
+  /* Z-info / data import */
+  .imp-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
+  .imp-zinfo{flex-shrink:0;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border:1px solid var(--kk-brons-licht);padding:4px 11px;border-radius:20px;white-space:nowrap}
+  .imp-drop{position:relative;border:2px dashed var(--line);border-radius:var(--radius-sm);background:var(--surface-2);padding:32px 20px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s,transform .15s}
+  .imp-drop:hover{border-color:var(--kk-brons-licht);background:var(--accent-soft)}
+  .imp-drop.drag{border-color:var(--accent);background:var(--accent-soft);transform:scale(1.005)}
+  .imp-drop-icon{color:var(--accent);margin-bottom:12px;display:flex;justify-content:center}
+  .imp-drop-title{font-size:14px;font-weight:600;color:var(--kk-ink);margin-bottom:5px}
+  .imp-drop-title span{color:var(--accent);text-decoration:underline}
+  .imp-drop-sub{font-size:12px;color:var(--ink-faint)}
+  .imp-result{margin-top:16px}
+  .imp-file-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:9px;background:var(--surface);margin-bottom:12px}
+  .imp-file-ico{flex-shrink:0;color:var(--accent);display:flex}
+  .imp-file-meta{flex:1;min-width:0}
+  .imp-file-name{font-size:13px;font-weight:600;color:var(--kk-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .imp-file-stat{font-size:11.5px;color:var(--ink-faint);margin-top:2px}
+  .imp-file-badge{flex-shrink:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:3px 10px;border-radius:10px}
+  .imp-file-badge.ok{background:var(--ok-bg);color:var(--ok-ink)}
+  .imp-file-badge.warn{background:var(--warn-bg);color:var(--warn-ink)}
+  .imp-prev-wrap{border:1px solid var(--line);border-radius:9px;overflow:hidden}
+  .imp-prev-scroll{overflow:auto;max-height:300px}
+  .imp-prev{border-collapse:collapse;width:100%;font-size:12px}
+  .imp-prev th{position:sticky;top:0;background:var(--surface-2);color:var(--ink-soft);font-weight:700;text-align:left;padding:9px 13px;white-space:nowrap;border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em}
+  .imp-prev td{padding:8px 13px;border-bottom:1px solid var(--line-soft);color:var(--kk-ink);white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+  .imp-prev tbody tr:last-child td{border-bottom:none}
+  .imp-prev tbody tr:nth-child(even){background:var(--line-soft)}
+  .imp-prev-foot{padding:9px 14px;font-size:11.5px;color:var(--ink-faint);background:var(--surface-2);border-top:1px solid var(--line)}
+  .imp-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .imp-btn{padding:10px 18px;border-radius:8px;border:none;font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s}
+  .imp-btn-primary{background:var(--accent);color:#fff}
+  .imp-btn-primary:hover{background:var(--kk-brons-licht)}
+  .imp-btn-ghost{background:none;color:var(--ink-soft);border:1px solid var(--line)}
+  .imp-btn-ghost:hover{background:var(--surface-2)}
+  .imp-msg{font-size:13px;padding:12px 15px;border-radius:9px;line-height:1.5}
+  .imp-msg.ok{background:var(--ok-bg);color:var(--ok-ink);border:1px solid #BcdBbc}
+  .imp-msg.warn{background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--kk-brons-licht)}
+  .imp-msg.err{background:var(--danger-bg);color:var(--danger-ink);border:1px solid #E7B9AC}
   /* Hamburger */
   .ham-btn{display:none;background:none;border:none;cursor:pointer;padding:6px;color:var(--kk-light);flex-shrink:0}
   .ham-btn svg{display:block}
@@ -1204,6 +1241,28 @@
           <button class="bl-add" onclick="blAdd()">+ Toevoegen</button>
         </div>
         <div class="bl-list" id="bl-list"></div>
+      </div>
+      <!-- DATA IMPORT (Z-info) -->
+      <div id="bl-import-section" style="display:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:28px">
+        <div class="imp-head">
+          <div>
+            <div style="font-size:15px;font-weight:700;color:var(--kk-ink);margin-bottom:4px">Data importeren</div>
+            <div style="font-size:13px;color:var(--ink-soft)">Importeer waterschapsdata uit <strong>Z-info</strong> — Excel of CSV</div>
+          </div>
+          <span class="imp-zinfo">Z-info</span>
+        </div>
+        <div class="imp-drop" id="imp-drop" role="button" tabindex="0"
+             onclick="document.getElementById('imp-file').click()"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('imp-file').click()}"
+             ondragover="impDragOver(event)" ondragleave="impDragLeave(event)" ondrop="impDrop(event)">
+          <div class="imp-drop-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div class="imp-drop-title">Sleep een bestand hierheen of <span>blader</span></div>
+          <div class="imp-drop-sub">Ondersteund: .csv, .xlsx, .xls — geëxporteerd uit Z-info</div>
+          <input type="file" id="imp-file" accept=".csv,.xlsx,.xls,text/csv" style="display:none" onchange="impHandleFiles(this.files)">
+        </div>
+        <div class="imp-result" id="imp-result" style="display:none"></div>
       </div>
       <div id="admin-login-wrap"></div>
       <div id="admin-panel-wrap"></div>
@@ -3775,11 +3834,13 @@ function kkSel(id){
 /* ============ ADMIN ============ */
 function renderAdminView(){
   const bl=document.getElementById('bl-section');
+  const imp=document.getElementById('bl-import-section');
   const lw=document.getElementById('admin-login-wrap');
   const pw=document.getElementById('admin-panel-wrap');
   if(!lw||!pw)return;
   if(!sessionStorage.getItem('kk_beheer_auth')){
     if(bl)bl.style.display='none';
+    if(imp)imp.style.display='none';
     lw.innerHTML=`
       <div class="adm-login-wrap">
         <div class="adm-login-box">
@@ -3798,6 +3859,7 @@ function renderAdminView(){
     pw.innerHTML='';
   }else{
     if(bl){bl.style.display='';blRender();}
+    if(imp)imp.style.display='';
     lw.innerHTML='';
     renderAdminPanel();
     loadContactRequests();
@@ -4343,6 +4405,128 @@ async function blDelete(id){
     headers:{'X-Access-Key':TOEGANGSCODE}
   });
   blRender();
+}
+
+/* ============ DATA IMPORT (Z-info) ============ */
+let _impStaged=null;
+function _impEsc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function impDragOver(e){e.preventDefault();const d=document.getElementById('imp-drop');if(d)d.classList.add('drag');}
+function impDragLeave(e){e.preventDefault();const d=document.getElementById('imp-drop');if(d)d.classList.remove('drag');}
+function impDrop(e){
+  e.preventDefault();
+  const d=document.getElementById('imp-drop');if(d)d.classList.remove('drag');
+  if(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files.length)impHandleFiles(e.dataTransfer.files);
+}
+
+function impHandleFiles(files){
+  if(!files||!files.length)return;
+  const f=files[0];
+  const name=f.name.toLowerCase();
+  const res=document.getElementById('imp-result');
+  if(!res)return;
+  res.style.display='';
+  if(name.endsWith('.csv')||f.type==='text/csv'){
+    const rd=new FileReader();
+    rd.onload=()=>{
+      try{const rows=impParseCSV(rd.result);impRenderPreview(f,rows);}
+      catch(err){impRenderMsg('err','Kon het CSV-bestand niet verwerken. Controleer of het een geldig CSV-export uit Z-info is.');}
+    };
+    rd.onerror=()=>impRenderMsg('err','Kon het bestand niet lezen.');
+    rd.readAsText(f);
+  }else if(name.endsWith('.xlsx')||name.endsWith('.xls')){
+    impRenderXlsxNote(f);
+  }else{
+    impRenderMsg('err','Niet-ondersteund bestandstype. Gebruik .csv, .xlsx of .xls.');
+  }
+  // reset zodat hetzelfde bestand opnieuw gekozen kan worden
+  const inp=document.getElementById('imp-file');if(inp)inp.value='';
+}
+
+function impParseCSV(text){
+  text=String(text).replace(/^﻿/,'');
+  const firstLine=(text.split(/\r?\n/).find(l=>l.trim().length))||'';
+  const delim=(firstLine.split(';').length>firstLine.split(',').length)?';':',';
+  const rows=[];let row=[];let cur='';let inQ=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(inQ){
+      if(c==='"'){if(text[i+1]==='"'){cur+='"';i++;}else inQ=false;}
+      else cur+=c;
+    }else{
+      if(c==='"')inQ=true;
+      else if(c===delim){row.push(cur);cur='';}
+      else if(c==='\n'){row.push(cur);rows.push(row);row=[];cur='';}
+      else if(c==='\r'){/* negeren */}
+      else cur+=c;
+    }
+  }
+  if(cur.length||row.length){row.push(cur);rows.push(row);}
+  return rows.filter(r=>r.some(c=>String(c).trim().length)).map(r=>r.map(c=>String(c).trim()));
+}
+
+function impRenderPreview(f,rows){
+  const res=document.getElementById('imp-result');
+  if(!res)return;
+  if(!rows.length){impRenderMsg('err','Het bestand bevat geen herkenbare gegevens.');return;}
+  const header=rows[0];
+  const dataRows=rows.slice(1);
+  const previewRows=dataRows.slice(0,8);
+  _impStaged={file:f.name,header,rows:dataRows};
+  const sizeKb=(f.size/1024).toFixed(1);
+  const th=header.map(h=>`<th>${_impEsc(h||'—')}</th>`).join('');
+  const trs=previewRows.map(r=>`<tr>${header.map((_,ci)=>`<td>${_impEsc(r[ci]!=null?r[ci]:'')}</td>`).join('')}</tr>`).join('');
+  res.innerHTML=`
+    <div class="imp-file-row">
+      <div class="imp-file-ico">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+      </div>
+      <div class="imp-file-meta">
+        <div class="imp-file-name">${_impEsc(f.name)}</div>
+        <div class="imp-file-stat">${dataRows.length} ${dataRows.length===1?'rij':'rijen'} · ${header.length} ${header.length===1?'kolom':'kolommen'} · ${sizeKb} KB</div>
+      </div>
+      <span class="imp-file-badge ok">Gelezen</span>
+    </div>
+    <div class="imp-prev-wrap">
+      <div class="imp-prev-scroll">
+        <table class="imp-prev"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table>
+      </div>
+      <div class="imp-prev-foot">Voorbeeld — eerste ${previewRows.length} van ${dataRows.length} ${dataRows.length===1?'rij':'rijen'}</div>
+    </div>
+    <div class="imp-actions">
+      <button class="imp-btn imp-btn-primary" onclick="impConfirm()">Gegevens overnemen</button>
+      <button class="imp-btn imp-btn-ghost" onclick="impReset()">Annuleren</button>
+    </div>`;
+}
+
+function impRenderXlsxNote(f){
+  _impStaged=null;
+  const sizeKb=(f.size/1024).toFixed(1);
+  impRenderMsg('warn',`<strong>${_impEsc(f.name)}</strong> (${sizeKb} KB) ontvangen. Excel-werkmappen worden nog niet automatisch uitgelezen — exporteer de gegevens in Z-info als <strong>CSV</strong> (Bestand → Exporteren → CSV) en sleep dat bestand hierheen voor een automatische preview.`,true);
+}
+
+function impRenderMsg(type,html,keepReset){
+  const res=document.getElementById('imp-result');
+  if(!res)return;
+  res.style.display='';
+  res.innerHTML=`<div class="imp-msg ${type}">${html}</div>`+
+    (keepReset!==false?`<div class="imp-actions"><button class="imp-btn imp-btn-ghost" onclick="impReset()">Ander bestand kiezen</button></div>`:'');
+}
+
+function impConfirm(){
+  if(!_impStaged)return;
+  const n=_impStaged.rows.length;
+  const res=document.getElementById('imp-result');
+  if(!res)return;
+  res.innerHTML=`<div class="imp-msg ok">✓ <strong>${n} ${n===1?'rij':'rijen'}</strong> ingelezen uit <strong>${_impEsc(_impStaged.file)}</strong> en klaargezet voor verwerking in het ketenmodel.</div>
+    <div class="imp-actions"><button class="imp-btn imp-btn-ghost" onclick="impReset()">Nieuw bestand importeren</button></div>`;
+}
+
+function impReset(){
+  _impStaged=null;
+  const res=document.getElementById('imp-result');
+  if(res){res.style.display='none';res.innerHTML='';}
+  const inp=document.getElementById('imp-file');if(inp)inp.value='';
 }
 
 /* ============ SCENARIO OPSLAAN / LADEN ============ */
