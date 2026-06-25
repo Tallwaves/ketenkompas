@@ -17,6 +17,13 @@ export async function onRequest({ request, env, next }) {
     return next();
   }
 
+  // Portal expliciet bereikbaar op /portal — serveert de app (index.html) op elke host.
+  // Nodig voor preview-deployments (*.pages.dev), waar de hostname-check op SLIB_HOST
+  // niet matcht en /index.html via clean-URLs naar / → /slib zou terugkaatsen.
+  if (url.pathname === '/portal' || url.pathname === '/portal/') {
+    return env.ASSETS.fetch(new URL('/', url).toString());
+  }
+
   // Root: redirect naar /slib of toon home.html, afhankelijk van de toggle
   if (url.pathname === '/' || url.pathname === '') {
     if (REDIRECT_ROOT_TO_SLIB) {
