@@ -119,10 +119,24 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 .kk-word small{font-size:.42em;font-weight:500;letter-spacing:.34em;text-transform:uppercase;opacity:.65;margin-top:3px}
 
 /* ── nav ─────────────────────── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 clamp(24px,5vw,64px);
+/* ── credibility-topbar ──────── */
+.topbar{position:relative;z-index:101;height:40px;background:#060E1C;border-bottom:1px solid rgba(91,163,217,.22);
+display:flex;align-items:center;justify-content:center;padding:0 clamp(16px,4vw,64px);overflow:hidden}
+.topbar::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px;
+background:linear-gradient(90deg,transparent 0%,var(--gold) 35%,var(--teal-bright) 65%,transparent 100%);opacity:.55}
+.topbar-inner{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);max-width:1280px;width:100%;justify-content:center}
+.tb-item{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,248,243,.78);white-space:nowrap}
+.tb-item svg{flex-shrink:0}
+.tb-item b{font-weight:600;color:var(--gold-soft)}
+.tb-sep{width:4px;height:4px;border-radius:50%;background:var(--gold);opacity:.6;flex-shrink:0}
+@media(max-width:900px){.tb-item.tb-pilot{display:none}.tb-sep{display:none}}
+@media(max-width:480px){.tb-item{font-size:9.5px;letter-spacing:.1em}}
+
+nav{position:fixed;top:40px;left:0;right:0;z-index:100;padding:0 clamp(24px,5vw,64px);
 display:flex;align-items:center;justify-content:space-between;height:80px;
 background:rgba(250,248,243,0);backdrop-filter:blur(0);border-bottom:1px solid transparent;
-transition:background .4s,backdrop-filter .4s,border-color .4s}
+transition:background .4s,backdrop-filter .4s,border-color .4s,top .4s}
+nav.scrolled{top:0}
 nav.scrolled{background:rgba(250,248,243,.88);backdrop-filter:blur(14px);border-color:var(--line)}
 .nav-logo{text-decoration:none;display:flex;align-items:center;gap:13px;color:var(--paper);transition:color .4s;font-size:21px}
 nav.scrolled .nav-logo{color:var(--ink)}
@@ -485,6 +499,19 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
 
   </defs>
 </svg>
+
+<div class="topbar" role="note" aria-label="Genomineerd Waterinnovatieprijs 2026 — pilot met Unie van Waterschappen en HVC">
+  <div class="topbar-inner">
+    <span class="tb-item">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 2l2.6 6.2 6.7.5-5.1 4.4 1.6 6.6L12 16.2l-5.8 3.5 1.6-6.6-5.1-4.4 6.7-.5z" fill="#5BA3D9"/>
+      </svg>
+      Genomineerd · <b>Waterinnovatieprijs 2026</b>
+    </span>
+    <span class="tb-sep" aria-hidden="true"></span>
+    <span class="tb-item tb-pilot">In pilot met <b>Unie van Waterschappen</b> &amp; <b>HVC</b></span>
+  </div>
+</div>
 
 <nav id="nav">
   <a class="nav-logo" href="#">
