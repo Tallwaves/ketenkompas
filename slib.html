@@ -293,8 +293,9 @@ display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:34px}
 .nomi-logo-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:clamp(28px,4.5vw,56px)}
 .nomi-logo{height:clamp(30px,3.6vw,40px);width:auto;opacity:.92;transition:opacity .25s,transform .25s}
 .nomi-logo:hover{opacity:1;transform:translateY(-1px)}
-.nomi-logo.uvw{height:clamp(34px,4vw,44px)}
-.nomi-logo.hws{height:clamp(26px,3vw,32px)}
+.nomi-logo.uvw{height:clamp(36px,4.2vw,46px)}
+.nomi-logo.hvc{height:clamp(34px,4vw,44px)}
+.nomi-logo.hws{height:clamp(28px,3.2vw,36px)}
 .nomi-initiatief{font-size:12.5px;font-weight:300;color:#8A94A2;max-width:56ch;text-align:center;line-height:1.6;margin-top:2px}
 @media(max-width:560px){
   .nomi-logo-row{gap:22px 34px}
@@ -679,28 +680,9 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
     <div class="nomi-orgs">
       <span class="nomi-orgs-hdr">Pilot in samenwerking met</span>
       <div class="nomi-logo-row">
-        <!-- Unie van Waterschappen -->
-        <svg class="nomi-logo uvw" viewBox="0 0 342 92" role="img" aria-label="Unie van Waterschappen">
-          <g fill="none" stroke="#00A5E5" stroke-width="7">
-            <path d="M6 10 H50"/>
-            <path d="M6 42 H50"/>
-          </g>
-          <path d="M4 26 q6 -7 12 0 t12 0 t12 0 t12 0" fill="none" stroke="#00A5E5" stroke-width="5" stroke-linecap="round"/>
-          <text x="66" y="34" font-family="'Albert Sans',sans-serif" font-weight="600" font-size="30" letter-spacing="7" fill="#00A5E5">UNIE VAN</text>
-          <text x="2" y="84" font-family="'Albert Sans',sans-serif" font-weight="600" font-size="30" letter-spacing="4.4"><tspan fill="#005A9E">WATER</tspan><tspan fill="#00A5E5">SCHAPPEN</tspan></text>
-        </svg>
-        <!-- HVC -->
-        <svg class="nomi-logo hvc" viewBox="0 0 176 92" role="img" aria-label="HVC">
-          <text x="0" y="74" font-family="'Albert Sans',sans-serif" font-weight="800" font-size="86" letter-spacing="-3"><tspan fill="#1C1C1C">hv</tspan><tspan fill="#EE2E24">c.</tspan></text>
-        </svg>
-        <!-- Het Waterschapshuis -->
-        <svg class="nomi-logo hws" viewBox="0 0 392 64" role="img" aria-label="Het Waterschapshuis">
-          <circle cx="14" cy="20" r="9" fill="#0072BC"/>
-          <circle cx="34" cy="12" r="7" fill="#EF4135"/>
-          <circle cx="30" cy="34" r="10" fill="#F7A800"/>
-          <circle cx="50" cy="26" r="6" fill="#8DC63F"/>
-          <text x="68" y="42" font-family="'Albert Sans',sans-serif" font-weight="600" font-size="30" fill="#5C2D82">hetWaterschapshuis</text>
-        </svg>
+        <img class="nomi-logo uvw" src="/logo-uvw.png" alt="Unie van Waterschappen" loading="lazy" decoding="async">
+        <img class="nomi-logo hvc" src="/logo-hvc.png" alt="HVC" loading="lazy" decoding="async">
+        <img class="nomi-logo hws" src="/logo-waterschapshuis.png" alt="Het Waterschapshuis" loading="lazy" decoding="async">
       </div>
       <p class="nomi-initiatief">De Waterinnovatieprijs is een initiatief van de Unie van Waterschappen, STOWA, Het Waterschapshuis en de Nederlandse Waterschapsbank.</p>
     </div>
