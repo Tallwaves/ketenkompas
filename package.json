@@ -2,6 +2,6 @@
   "name": "ketenkompas",
   "private": true,
   "scripts": {
-    "build": "mkdir -p dist/slib && cp index.html slib.html home.html robots.txt sitemap.xml og-image.svg rwzi.jpg logo-uvw.png logo-hvc.png logo-waterschapshuis.png dist/ && cp verwerkers.html dist/slib/verwerkers.html"
+    "build": "mkdir -p dist/slib && cp index.html slib.html home.html robots.txt sitemap.xml og-image.svg rwzi.jpg logo-uvw.png logo-hvc.png logo-waterschapshuis.png login-waterschappen.jpg login-verwerkers.jpg login-beheerders.jpg dist/ && cp verwerkers.html dist/slib/verwerkers.html"
   }
 }
