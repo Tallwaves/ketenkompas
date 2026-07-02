@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SlibKompas — Scenario-instrument voor de Nederlandse slibketen</title>
-<meta name="description" content="SlibKompas — genomineerd voor de Waterinnovatieprijs 2026 — brengt zuiveringen, verwerkingsroutes en opslaglocaties samen in één doorrekenbaar beeld. Scenario-analyse, robuustheidstoets en bestuurlijke rapportage voor de Nederlandse slibketen — voor waterschappen, verwerkers en ketenpartners.">
+<meta name="description" content="SlibKompas — genomineerd voor de Waterinnovatieprijs 2026 en vanaf juli 2026 in pilot met de Unie van Waterschappen en HVC — brengt zuiveringen, verwerkingsroutes en opslaglocaties samen in één doorrekenbaar beeld. Scenario-analyse, robuustheidstoets en bestuurlijke rapportage voor de Nederlandse slibketen — voor waterschappen, verwerkers en ketenpartners.">
 <meta name="keywords" content="slibketen, waterschappen, scenario-analyse, robuust plan slib, slibverwerking, ketenoverzicht, bestuurlijke rapportage, incidentenopslag, Nederlandse slibketen">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://ketenkompas.nl/slib">
@@ -52,7 +52,7 @@
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
       "description": "SlibKompas brengt zuiveringen, verwerkingsroutes en opslaglocaties samen in één doorrekenbaar beeld. Verstoringen worden doorgerekend op zuiveringsniveau en vertaald naar een bestuurlijke rapportage voor waterschappen, verwerkers en ketenpartners.",
-      "award": "Genomineerd — Waterinnovatieprijs 2026 (Unie van Waterschappen)",
+      "award": "Genomineerd — Waterinnovatieprijs 2026 (Unie van Waterschappen) · Pilot met de Unie van Waterschappen en HVC vanaf juli 2026",
       "offers": {
         "@type": "Offer",
         "availability": "https://schema.org/InStock",
@@ -256,25 +256,49 @@ display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:34px}
   background:
     linear-gradient(to bottom,var(--paper-warm) 0%,transparent 18%,transparent 80%,var(--paper-warm) 100%),
     radial-gradient(ellipse 100% 60% at 50% 50%,transparent 35%,var(--paper-warm) 95%)}
-.nomi-inner{position:relative;z-index:2;max-width:740px;margin:0 auto;padding:clamp(54px,8vw,92px) clamp(24px,5vw,64px);
+.nomi-inner{position:relative;z-index:2;max-width:1020px;margin:0 auto;padding:clamp(54px,8vw,92px) clamp(24px,5vw,64px);
   display:flex;flex-direction:column;align-items:center;text-align:center}
-.nomi-emblem{display:flex;align-items:center;justify-content:center;margin-bottom:28px}
-.nomi-seal{width:clamp(138px,18vw,170px);height:auto;
-  filter:drop-shadow(0 16px 34px rgba(26,111,173,.20))}
-.nomi-seal .seal-txt{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase}
+.nomi-emblem{display:flex;align-items:center;justify-content:center;margin-bottom:30px}
+.nomi-seal{width:clamp(124px,15vw,152px);height:auto;
+  filter:drop-shadow(0 22px 44px rgba(10,22,40,.32))}
+.nomi-seal .seal-txt{font-family:var(--sans);font-size:9.6px;font-weight:600;letter-spacing:2px;text-transform:uppercase}
 .nomi-eyebrow{font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:16px}
 .nomi-inner h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4.4vw,46px);line-height:1.1;letter-spacing:-.02em;color:var(--ink)}
 .nomi-inner h2 em{font-style:italic;color:var(--teal)}
-.nomi-inner>p{font-size:clamp(15px,1.4vw,17px);font-weight:300;color:#43586E;max-width:46ch;margin:22px auto 0;line-height:1.65}
-.nomi-orgs{margin-top:clamp(34px,5vw,46px);padding-top:clamp(26px,3vw,34px);width:100%;
-  border-top:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:16px}
+.nomi-inner>p{font-size:clamp(15px,1.4vw,17px);font-weight:300;color:#43586E;max-width:52ch;margin:22px auto 0;line-height:1.65}
+.nomi-inner>p strong{font-weight:600;color:var(--ink)}
+
+/* ── mijlpalen: van initiatief naar pilot ── */
+.nomi-mile{margin-top:clamp(38px,5vw,52px);width:100%;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;text-align:left;position:relative}
+.nomi-mile::before{content:'';position:absolute;top:5px;left:12.5%;right:12.5%;height:1px;background:var(--line)}
+.nm-item{position:relative;padding:0 clamp(10px,1.6vw,22px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px}
+.nm-dot{width:11px;height:11px;border-radius:50%;background:#C3CEDA;border:2px solid var(--paper-warm);box-shadow:0 0 0 1px rgba(10,22,40,.14);margin-bottom:8px}
+.nm-item.is-done .nm-dot{background:var(--teal-bright);box-shadow:0 0 0 1px rgba(26,111,173,.35)}
+.nm-item.is-now .nm-dot{background:var(--gold);box-shadow:0 0 0 3px rgba(91,163,217,.22),0 0 0 1px rgba(26,111,173,.4)}
+.nm-when{font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#8A94A2}
+.nm-item.is-now .nm-when{color:var(--teal)}
+.nm-item b{font-family:var(--serif);font-weight:500;font-size:clamp(15.5px,1.5vw,18px);letter-spacing:-.01em;color:var(--ink);line-height:1.25}
+.nm-tx{font-size:12.5px;font-weight:300;color:#5A6B7E;line-height:1.55;max-width:24ch}
+@media(max-width:860px){
+  .nomi-mile{grid-template-columns:1fr 1fr;gap:30px 0}
+  .nomi-mile::before{display:none}
+}
+@media(max-width:480px){.nomi-mile{grid-template-columns:1fr}}
+
+/* ── pilotpartners ── */
+.nomi-orgs{margin-top:clamp(38px,5vw,50px);padding-top:clamp(28px,3.4vw,36px);width:100%;
+  border-top:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:22px}
 .nomi-orgs-hdr{font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#8A94A2}
-.nomi-org-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:13px 16px}
-.nomi-org-row>span:not(.nomi-dot){font-size:14.5px;font-weight:500;letter-spacing:.005em;color:var(--ink-soft)}
-.nomi-dot{width:4px;height:4px;border-radius:50%;background:var(--gold);flex-shrink:0;opacity:.7}
+.nomi-logo-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:clamp(28px,4.5vw,56px)}
+.nomi-logo{height:clamp(30px,3.6vw,40px);width:auto;opacity:.92;transition:opacity .25s,transform .25s}
+.nomi-logo:hover{opacity:1;transform:translateY(-1px)}
+.nomi-logo.uvw{height:clamp(36px,4.2vw,46px)}
+.nomi-logo.hvc{height:clamp(34px,4vw,44px)}
+.nomi-logo.hws{height:clamp(28px,3.2vw,36px)}
+.nomi-initiatief{font-size:12.5px;font-weight:300;color:#8A94A2;max-width:56ch;text-align:center;line-height:1.6;margin-top:2px}
 @media(max-width:560px){
-  .nomi-org-row{flex-direction:column;gap:11px}
-  .nomi-dot{display:none}
+  .nomi-logo-row{gap:22px 34px}
 }
 
 /* ── module-index (vervangt marquee) ── */
@@ -588,56 +612,79 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
   </div>
 </div>
 
-<!-- ════════ NOMINATIE ════════ -->
-<section class="nomi" id="nominatie" aria-label="Nominatie Waterinnovatieprijs 2026">
+<!-- ════════ NOMINATIE & PILOT ════════ -->
+<section class="nomi" id="nominatie" aria-label="Genomineerd Waterinnovatieprijs 2026 — pilot met Unie van Waterschappen en HVC">
   <div class="nomi-photo" aria-hidden="true"></div>
   <div class="nomi-inner rv">
     <div class="nomi-emblem">
       <svg class="nomi-seal" viewBox="0 0 200 200" role="img" aria-label="Genomineerd voor de Waterinnovatieprijs 2026">
         <defs>
-          <path id="seal-top" d="M 28 100 A 72 72 0 0 1 172 100"/>
-          <path id="seal-bot" d="M 28 100 A 72 72 0 0 0 172 100"/>
+          <path id="seal-top" d="M 29 100 A 71 71 0 0 1 171 100"/>
+          <path id="seal-bot" d="M 29 100 A 71 71 0 0 0 171 100"/>
         </defs>
-        <!-- buitenring -->
-        <circle cx="100" cy="100" r="97" fill="none" stroke="var(--teal)" stroke-width="1" opacity=".4"/>
-        <!-- getikte rand -->
-        <circle cx="100" cy="100" r="92.5" fill="none" stroke="var(--teal)" stroke-width="5" stroke-dasharray="1.6 6.5" opacity=".26"/>
+        <!-- fijne buitenring -->
+        <circle cx="100" cy="100" r="98" fill="none" stroke="var(--teal)" stroke-width="1" opacity=".28"/>
+        <!-- medaille -->
+        <circle cx="100" cy="100" r="92" fill="var(--ink)"/>
+        <circle cx="100" cy="100" r="92" fill="none" stroke="var(--gold)" stroke-width="1" opacity=".45"/>
         <!-- tekstband-randen -->
-        <circle cx="100" cy="100" r="84" fill="none" stroke="var(--gold)" stroke-width="1" opacity=".4"/>
-        <circle cx="100" cy="100" r="62" fill="none" stroke="var(--gold)" stroke-width="1" opacity=".4"/>
+        <circle cx="100" cy="100" r="83" fill="none" stroke="rgba(250,248,243,.22)" stroke-width="1"/>
+        <circle cx="100" cy="100" r="59" fill="none" stroke="rgba(250,248,243,.22)" stroke-width="1"/>
         <!-- omcirkelde tekst -->
-        <text class="seal-txt" fill="var(--teal)">
+        <text class="seal-txt" fill="rgba(250,248,243,.92)">
           <textPath href="#seal-top" startOffset="50%" text-anchor="middle">Waterinnovatieprijs</textPath>
         </text>
-        <text class="seal-txt" fill="var(--teal)">
+        <text class="seal-txt" fill="var(--gold-soft)">
           <textPath href="#seal-bot" startOffset="50%" text-anchor="middle">Genomineerd · 2026</textPath>
         </text>
-        <!-- ster-scheidingen op 3 en 9 uur -->
+        <!-- ruit-scheidingen op 3 en 9 uur -->
         <g fill="var(--gold)">
-          <path transform="translate(21,100)" d="M0,-4.6 L1.1,-1.1 L4.6,0 L1.1,1.1 L0,4.6 L-1.1,1.1 L-4.6,0 L-1.1,-1.1 Z"/>
-          <path transform="translate(179,100)" d="M0,-4.6 L1.1,-1.1 L4.6,0 L1.1,1.1 L0,4.6 L-1.1,1.1 L-4.6,0 L-1.1,-1.1 Z"/>
+          <path transform="translate(29,100)" d="M0,-3.4 L2.6,0 L0,3.4 L-2.6,0 Z"/>
+          <path transform="translate(171,100)" d="M0,-3.4 L2.6,0 L0,3.4 L-2.6,0 Z"/>
         </g>
-        <!-- middenmedaillon -->
-        <circle cx="100" cy="100" r="55" fill="var(--paper)"/>
-        <circle cx="100" cy="100" r="55" fill="none" stroke="var(--gold)" stroke-width="1" opacity=".55"/>
-        <!-- kompasroos -->
-        <g style="color:var(--teal)"><use href="#kk-rose" x="66" y="66" width="68" height="68"/></g>
+        <!-- kompasroos in het hart -->
+        <g style="color:var(--paper)"><use href="#kk-rose" x="72" y="72" width="56" height="56"/></g>
       </svg>
     </div>
-    <div class="nomi-eyebrow">Genomineerd · 2026</div>
-    <h2>Waterinnovatieprijs <em>2026.</em></h2>
-    <p>SlibKompas is door de Nederlandse waterschappen voorgedragen als vernieuwend instrument voor toekomstbestendig ketenbeheer.</p>
-    <div class="nomi-orgs">
-      <span class="nomi-orgs-hdr">Een initiatief van</span>
-      <div class="nomi-org-row">
-        <span>Unie van Waterschappen</span>
-        <span class="nomi-dot" aria-hidden="true"></span>
-        <span>STOWA</span>
-        <span class="nomi-dot" aria-hidden="true"></span>
-        <span>Het Waterschapshuis</span>
-        <span class="nomi-dot" aria-hidden="true"></span>
-        <span>Nederlandse Waterschapsbank</span>
+    <div class="nomi-eyebrow">Genomineerd · Waterinnovatieprijs 2026</div>
+    <h2>Van nominatie naar <em>pilot in de praktijk.</em></h2>
+    <p>SlibKompas is genomineerd voor de Waterinnovatieprijs 2026 — en de regiegroep van de <strong>Unie van Waterschappen</strong> heeft het pilotvoorstel omarmd. In juli 2026 start een pilot van drie maanden met <strong>HVC</strong> als eerste eindverwerker, waarbij de gegevens via Het Waterschapshuis worden geborgd in Z-info.</p>
+
+    <div class="nomi-mile" role="list" aria-label="Mijlpalen SlibKompas">
+      <div class="nm-item is-done" role="listitem">
+        <span class="nm-dot" aria-hidden="true"></span>
+        <span class="nm-when">2025 · Eigen tijd</span>
+        <b>Eén medewerker</b>
+        <span class="nm-tx">Ontwikkeld vanuit de dagelijkse praktijk van de slibketen</span>
       </div>
+      <div class="nm-item is-done" role="listitem">
+        <span class="nm-dot" aria-hidden="true"></span>
+        <span class="nm-when">Voorjaar 2026</span>
+        <b>Gedragen door de sector</b>
+        <span class="nm-tx">Regiegroep Unie van Waterschappen akkoord met het pilotvoorstel</span>
+      </div>
+      <div class="nm-item is-now" role="listitem">
+        <span class="nm-dot" aria-hidden="true"></span>
+        <span class="nm-when">Juli 2026 · Pilot</span>
+        <b>SlibKompas &times; HVC</b>
+        <span class="nm-tx">Digitale statusuitvraag bij de eerste eindverwerker, drie maanden</span>
+      </div>
+      <div class="nm-item" role="listitem">
+        <span class="nm-dot" aria-hidden="true"></span>
+        <span class="nm-when">Vervolg</span>
+        <b>GR Slibverwerking 2009</b>
+        <span class="nm-tx">Beoogde opschaling naar acht waterschappen en de volledige keten</span>
+      </div>
+    </div>
+
+    <div class="nomi-orgs">
+      <span class="nomi-orgs-hdr">Pilot in samenwerking met</span>
+      <div class="nomi-logo-row">
+        <img class="nomi-logo uvw" src="/logo-uvw.png" alt="Unie van Waterschappen" loading="lazy" decoding="async">
+        <img class="nomi-logo hvc" src="/logo-hvc.png" alt="HVC" loading="lazy" decoding="async">
+        <img class="nomi-logo hws" src="/logo-waterschapshuis.png" alt="Het Waterschapshuis" loading="lazy" decoding="async">
+      </div>
+      <p class="nomi-initiatief">De Waterinnovatieprijs is een initiatief van de Unie van Waterschappen, STOWA, Het Waterschapshuis en de Nederlandse Waterschapsbank.</p>
     </div>
   </div>
 </section>
@@ -811,7 +858,7 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
     <div class="foot-brand-col">
       <div class="foot-brand">
         <svg class="kk-mark" width="30" height="30"><use href="#kk-rose"/></svg>
-        <span class="kk-word"><b>Slib<i>Kompas</i></b><small>Genomineerd · Waterinnovatieprijs 2026</small></span>
+        <span class="kk-word"><b>Slib<i>Kompas</i></b><small>Waterinnovatieprijs 2026 · Pilot met de sector</small></span>
       </div>
       <p class="foot-mission">Samen houden we de slibketen in beeld — van zuivering tot opslag, van verstoring tot handelingsperspectief.</p>
       <div class="foot-pills">
