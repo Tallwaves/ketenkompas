@@ -1291,6 +1291,22 @@
 /* ============ CONFIG ============ */
 const TOEGANGSCODE = "ketenkompas2026";
 
+/* SlibKompas draait op twee domeinfamilies (ketenkompas.nl / slibkompas.nl),
+   elk met een eigen portal.* en publieke host. Cookies zijn niet cross-domain,
+   dus login/redirect moet altijd het huidige domein volgen i.p.v. hardcoded
+   ketenkompas.nl te gebruiken. */
+function kkDomainInfo(){
+  const hn=window.location.hostname;
+  const apex=hn.replace(/^(portal\.|www\.)/,'');
+  const known=(apex==='ketenkompas.nl'||apex==='slibkompas.nl');
+  return {
+    known,
+    isPortal: known && hn===('portal.'+apex),
+    isPublicProd: known && (hn===apex || hn===('www.'+apex)),
+    publicUrl: known ? ('https://'+apex+'/') : null
+  };
+}
+
 /* ============ DATA (pas hier aan) ============ */
 const FALLBACK_DATA = {
   standDatum: "2026-05-24",
@@ -1519,10 +1535,10 @@ async function sendContactForm(){
 }
 async function tryLogin(){
   const v=document.getElementById('pw').value;
-  const hn=window.location.hostname;
+  const di=kkDomainInfo();
   const err=document.getElementById('err');
 
-  if(hn==='portal.ketenkompas.nl'||hn==='ketenkompas.nl'||hn==='www.ketenkompas.nl'){
+  if(di.known){
     // Productie: sessie aanmaken via server
     const btn=document.querySelector('#login button[onclick="tryLogin()"]')||document.querySelector('.lc-box button');
     if(btn){btn.disabled=true;btn.textContent='Bezig…';}
@@ -1530,7 +1546,7 @@ async function tryLogin(){
       const r=await fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({wachtwoord:v})});
       const res=await r.json();
       if(res.ok){
-        if(hn==='portal.ketenkompas.nl'){showApp();}
+        if(di.isPortal){showApp();}
         else{window.location.href=res.redirect;}
         return;
       }
@@ -1553,9 +1569,10 @@ async function tryLogin(){
   err.textContent='Onjuiste toegangscode';
 }
 async function logout(){
-  if(window.location.hostname==='portal.ketenkompas.nl'){
+  const di=kkDomainInfo();
+  if(di.isPortal){
     try{await fetch('/api/session',{method:'DELETE',credentials:'include'});}catch(e){}
-    window.location.href='https://ketenkompas.nl/';
+    window.location.href=di.publicUrl;
   }else{
     sessionStorage.removeItem('kk_auth');location.reload();
   }
@@ -4620,18 +4637,19 @@ async function siDeleteScenario(naam){
 
 /* ============ INIT ============ */
 (function(){
-  const hn=window.location.hostname;
-  if(hn==='portal.ketenkompas.nl'){
+  const di=kkDomainInfo();
+  if(di.isPortal){
     // Check session — app handles login overlay when none exists
     fetch('/api/session',{credentials:'include'})
       .then(r=>r.json())
       .then(res=>{if(res.ok)showApp();})
       .catch(()=>{});
-  }else if(hn==='ketenkompas.nl'||hn==='www.ketenkompas.nl'){
+  }else if(di.isPublicProd){
     // Public domain: check for existing session and auto-redirect to app
+    const apex=window.location.hostname.replace(/^(portal\.|www\.)/,'');
     fetch('/api/session',{credentials:'include'})
       .then(r=>r.json())
-      .then(res=>{if(res.ok)window.location.href='https://portal.ketenkompas.nl/';})
+      .then(res=>{if(res.ok)window.location.href='https://portal.'+apex+'/';})
       .catch(()=>{});
   }else{
     // Dev / localhost: use sessionStorage

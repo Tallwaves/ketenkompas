@@ -4,6 +4,16 @@ const TTL_S  = 7 * 24 * 60 * 60;
 
 const HEADERS = { 'Content-Type': 'application/json' };
 
+// Cookies zijn niet cross-domain: wie inlogt via slibkompas.nl moet een cookie
+// op .slibkompas.nl krijgen, niet op .ketenkompas.nl. Bepaal het apex-domein
+// (zonder portal./www.-prefix) uit de hostname van het inkomende request.
+const KNOWN_APEXES = ['ketenkompas.nl', 'slibkompas.nl'];
+
+function apexFor(hostname) {
+  const stripped = (hostname || '').replace(/^(portal\.|www\.)/, '');
+  return KNOWN_APEXES.includes(stripped) ? stripped : KNOWN_APEXES[0];
+}
+
 function parseCookie(header, name) {
   for (const part of (header || '').split(';')) {
     const i = part.indexOf('=');
@@ -18,12 +28,12 @@ function makeToken() {
   return Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
 }
 
-function setCookie(token) {
-  return `kk_session=${token}; Domain=.ketenkompas.nl; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${TTL_S}`;
+function setCookie(token, apex) {
+  return `kk_session=${token}; Domain=.${apex}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${TTL_S}`;
 }
 
-function clearCookie() {
-  return 'kk_session=; Domain=.ketenkompas.nl; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0';
+function clearCookie(apex) {
+  return `kk_session=; Domain=.${apex}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
 }
 
 // GET — validate existing session (used by ketenkompas.nl to auto-redirect)
@@ -83,9 +93,10 @@ export async function onRequestPost({ request, env }) {
     { expirationTtl: TTL_S }
   );
 
+  const apex = apexFor(new URL(request.url).hostname);
   return new Response(
-    JSON.stringify({ ok: true, redirect: 'https://portal.ketenkompas.nl/' }),
-    { status: 200, headers: { ...HEADERS, 'Set-Cookie': setCookie(token) } }
+    JSON.stringify({ ok: true, redirect: `https://portal.${apex}/` }),
+    { status: 200, headers: { ...HEADERS, 'Set-Cookie': setCookie(token, apex) } }
   );
 }
 
@@ -95,9 +106,10 @@ export async function onRequestDelete({ request, env }) {
   if (token) {
     try { await env.KK_KV.delete('kk_session_' + token); } catch { /* ignore */ }
   }
+  const apex = apexFor(new URL(request.url).hostname);
   return new Response(
     JSON.stringify({ ok: true }),
-    { status: 200, headers: { ...HEADERS, 'Set-Cookie': clearCookie() } }
+    { status: 200, headers: { ...HEADERS, 'Set-Cookie': clearCookie(apex) } }
   );
 }
 

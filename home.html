@@ -969,13 +969,15 @@ async function submitScenarioRequest(){
 }
 </script>
 <script>
-/* Preview/dev: houd login-links binnen dezelfde deployment i.p.v. naar productie te springen.
-   Op productie (ketenkompas.nl / portal.ketenkompas.nl) blijven de links ongewijzigd. */
+/* Portal-links volgen het huidige domein: op ketenkompas.nl naar portal.ketenkompas.nl,
+   op slibkompas.nl naar portal.slibkompas.nl. Op preview/dev-hosts (bv. *.pages.dev)
+   valt dit terug op /portal, dat altijd binnen dezelfde deployment blijft. */
 (function(){
   var hn=location.hostname;
-  if(hn==='ketenkompas.nl'||hn==='www.ketenkompas.nl'||hn==='portal.ketenkompas.nl')return;
+  var apex=hn.replace(/^(portal\.|www\.)/,'');
+  var known=(apex==='ketenkompas.nl'||apex==='slibkompas.nl');
   document.querySelectorAll('a[href*="portal.ketenkompas.nl"]').forEach(function(a){
-    a.setAttribute('href','/portal');
+    a.setAttribute('href', known ? a.getAttribute('href').replace('portal.ketenkompas.nl','portal.'+apex) : '/portal');
   });
 })();
 </script>
