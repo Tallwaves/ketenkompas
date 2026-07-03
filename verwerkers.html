@@ -691,5 +691,21 @@ document.getElementById('okNew').addEventListener('click',()=>{
 });
 addEventListener('keydown',e=>{if(e.key==='Escape')closeOk()});
 </script>
+<script>
+/* Portal- en overzichtslinks volgen het huidige domein: op slibkompas.nl staat het
+   overzicht direct op root (geen /slib-prefix nodig), op ketenkompas.nl blijft dat /slib.
+   Op preview/dev-hosts vallen portal-links terug op /portal. */
+(function(){
+  var hn=location.hostname;
+  var apex=hn.replace(/^(portal\.|www\.)/,'');
+  var known=(apex==='ketenkompas.nl'||apex==='slibkompas.nl');
+  document.querySelectorAll('a[href*="portal.ketenkompas.nl"]').forEach(function(a){
+    a.setAttribute('href', known ? a.getAttribute('href').replace('portal.ketenkompas.nl','portal.'+apex) : '/portal');
+  });
+  if(apex==='slibkompas.nl'){
+    document.querySelectorAll('a[href="/slib"]').forEach(function(a){a.setAttribute('href','/');});
+  }
+})();
+</script>
 </body>
 </html>
