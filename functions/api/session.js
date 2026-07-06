@@ -9,6 +9,13 @@ const HEADERS = { 'Content-Type': 'application/json' };
 // (zonder portal./www.-prefix) uit de hostname van het inkomende request.
 const KNOWN_APEXES = ['ketenkompas.nl', 'slibkompas.nl'];
 
+// Gekozen rol op de loginpagina. Voorlopig informatief (alle rollen delen
+// dezelfde login), maar we bewaren en loggen 'm voor toekomstige differentiatie.
+const ROLLEN = ['waterschappen', 'verwerkers', 'beheerders'];
+function cleanRol(r) {
+  return ROLLEN.includes(r) ? r : null;
+}
+
 function apexFor(hostname) {
   const stripped = (hostname || '').replace(/^(portal\.|www\.)/, '');
   return KNOWN_APEXES.includes(stripped) ? stripped : KNOWN_APEXES[0];
@@ -48,7 +55,7 @@ export async function onRequestGet({ request, env }) {
       await env.KK_KV.delete('kk_session_' + token);
       return json({ ok: false });
     }
-    return json({ ok: true, wie: s.wie });
+    return json({ ok: true, wie: s.wie, rol: s.rol || null });
   } catch {
     return json({ ok: false });
   }
@@ -60,6 +67,7 @@ export async function onRequestPost({ request, env }) {
   try { body = await request.json(); } catch { return json({ ok: false }, 400); }
 
   const { wachtwoord } = body;
+  const rol = cleanRol(body.rol);
   let wie = null;
 
   if (wachtwoord === MASTER) {
@@ -80,7 +88,7 @@ export async function onRequestPost({ request, env }) {
   try {
     const logRaw = await env.KK_KV.get('kk_loginlog');
     const log = logRaw ? JSON.parse(logRaw) : [];
-    log.unshift({ wie, ts: Date.now() });
+    log.unshift({ wie, rol, ts: Date.now() });
     if (log.length > 300) log.splice(300);
     await env.KK_KV.put('kk_loginlog', JSON.stringify(log));
   } catch { /* non-fatal */ }
@@ -89,7 +97,7 @@ export async function onRequestPost({ request, env }) {
   const token = makeToken();
   await env.KK_KV.put(
     'kk_session_' + token,
-    JSON.stringify({ wie, ts: Date.now(), expires: Date.now() + TTL_MS }),
+    JSON.stringify({ wie, rol, ts: Date.now(), expires: Date.now() + TTL_MS }),
     { expirationTtl: TTL_S }
   );
 

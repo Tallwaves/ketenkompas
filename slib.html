@@ -613,7 +613,7 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
     </div>
     <div class="login-panel rv rv-d2" aria-label="Inloggen op SlibKompas">
       <div class="lp-hdr">Inloggen · Kies je omgeving</div>
-      <a class="login-tile" href="https://portal.ketenkompas.nl">
+      <a class="login-tile" href="https://portal.ketenkompas.nl/?rol=waterschappen">
         <img src="/login-waterschappen.jpg" alt="" loading="lazy" decoding="async">
         <span class="lt-body">
           <span class="lt-kicker">Inloggen voor</span>
@@ -622,7 +622,7 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
         </span>
         <span class="lt-arrow" aria-hidden="true">→</span>
       </a>
-      <a class="login-tile" href="https://portal.ketenkompas.nl">
+      <a class="login-tile" href="https://portal.ketenkompas.nl/?rol=verwerkers">
         <img src="/login-verwerkers.jpg" alt="" loading="lazy" decoding="async">
         <span class="lt-body">
           <span class="lt-kicker">Inloggen voor</span>
@@ -631,7 +631,7 @@ color:rgba(250,248,243,.055);transform:translateY(20%)}
         </span>
         <span class="lt-arrow" aria-hidden="true">→</span>
       </a>
-      <a class="login-tile" href="https://portal.ketenkompas.nl">
+      <a class="login-tile" href="https://portal.ketenkompas.nl/?rol=beheerders">
         <img src="/login-beheerders.jpg" alt="" loading="lazy" decoding="async">
         <span class="lt-body">
           <span class="lt-kicker">Inloggen voor</span>
@@ -1163,7 +1163,9 @@ async function submitScenarioRequest(){
   var apex=hn.replace(/^(portal\.|www\.)/,'');
   var known=(apex==='ketenkompas.nl'||apex==='slibkompas.nl');
   document.querySelectorAll('a[href*="portal.ketenkompas.nl"]').forEach(function(a){
-    a.setAttribute('href', known ? a.getAttribute('href').replace('portal.ketenkompas.nl','portal.'+apex) : '/portal');
+    var href=a.getAttribute('href');
+    if(known){ a.setAttribute('href', href.replace('portal.ketenkompas.nl','portal.'+apex)); }
+    else { var q=href.indexOf('?'); a.setAttribute('href','/portal'+(q>=0?href.slice(q):'')); }
   });
 })();
 </script>

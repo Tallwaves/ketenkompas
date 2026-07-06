@@ -6,11 +6,12 @@ const PORTAL_HOSTS = new Set(['portal.' + KETEN_APEX, 'portal.' + SLIB_APEX]);
 // Zet op false om de gouden KetenKompas landingpage op root te tonen
 const REDIRECT_ROOT_TO_SLIB = true;
 
-// Tijdelijke merkverhuizing: stuur ketenkompas.nl (+ www) volledig door naar
-// slibkompas.nl. portal.ketenkompas.nl wordt hierboven al afgevangen en blijft
-// dus gewoon werken (belangrijk voor de lopende pilot). 302 = tijdelijk, zodat
-// browsers de redirect niet permanent cachen en terugdraaien direct effect heeft.
-// Zet op false om ketenkompas.nl weer zelfstandig te tonen.
+// Merkverhuizing: stuur ketenkompas.nl (+ www) volledig door naar slibkompas.nl.
+// portal.ketenkompas.nl wordt hierboven al afgevangen en blijft dus gewoon werken
+// (belangrijk voor de lopende pilot). 301 = permanent, zodat zoekmachines de
+// verhuizing overnemen en de opgebouwde waarde naar slibkompas.nl doorgeven.
+// Zet op false om ketenkompas.nl weer zelfstandig te tonen (let op: browsers
+// cachen een 301 langdurig — een eerder bezochte 301 werkt dan nog even door).
 const REDIRECT_KETEN_TO_SLIB = true;
 
 function isApexOrWww(hostname, apex) {
@@ -50,7 +51,7 @@ export async function onRequest({ request, env, next }) {
     return next();
   }
 
-  // ketenkompas.nl (en www): tijdelijk volledig doorsturen naar slibkompas.nl.
+  // ketenkompas.nl (en www): permanent volledig doorsturen naar slibkompas.nl.
   // Pad-mapping naar de kale URL-structuur van slibkompas.nl:
   //   /slib            -> /
   //   /slib/verwerkers -> /verwerkers
@@ -62,7 +63,7 @@ export async function onRequest({ request, env, next }) {
     } else if (path.startsWith('/slib/')) {
       path = path.slice(5); // '/slib/verwerkers' -> '/verwerkers'
     }
-    return Response.redirect('https://' + SLIB_APEX + path + url.search, 302);
+    return Response.redirect('https://' + SLIB_APEX + path + url.search, 301);
   }
 
   // ketenkompas.nl (en overige hosts): root redirect naar /slib of home.html, afhankelijk van de toggle
