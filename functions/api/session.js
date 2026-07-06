@@ -9,11 +9,21 @@ const HEADERS = { 'Content-Type': 'application/json' };
 // (zonder portal./www.-prefix) uit de hostname van het inkomende request.
 const KNOWN_APEXES = ['ketenkompas.nl', 'slibkompas.nl'];
 
-// Gekozen rol op de loginpagina. Voorlopig informatief (alle rollen delen
-// dezelfde login), maar we bewaren en loggen 'm voor toekomstige differentiatie.
+// Gekozen rol op de loginpagina. Accounts kunnen een eigen (autoritaire) rol
+// dragen; de gekozen pill is dan alleen een fallback voor oudere accounts.
 const ROLLEN = ['waterschappen', 'verwerkers', 'beheerders'];
 function cleanRol(r) {
   return ROLLEN.includes(r) ? r : null;
+}
+
+// Vaste testaccounts (naast MASTER), o.a. voor de pilot-demonstratie.
+// vid = verwerker-id waaronder dashboarddata in KV wordt bewaard.
+const TEST_ACCOUNTS = [
+  { wachtwoord: 'hvc2026', wie: 'HVC · Eindverwerker', rol: 'verwerkers', vid: 'hvc' },
+];
+
+function slugify(s) {
+  return (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'onbekend';
 }
 
 function apexFor(hostname) {
@@ -55,7 +65,7 @@ export async function onRequestGet({ request, env }) {
       await env.KK_KV.delete('kk_session_' + token);
       return json({ ok: false });
     }
-    return json({ ok: true, wie: s.wie, rol: s.rol || null });
+    return json({ ok: true, wie: s.wie, rol: s.rol || null, vid: s.vid || null });
   } catch {
     return json({ ok: false });
   }
@@ -67,22 +77,35 @@ export async function onRequestPost({ request, env }) {
   try { body = await request.json(); } catch { return json({ ok: false }, 400); }
 
   const { wachtwoord } = body;
-  const rol = cleanRol(body.rol);
+  const gekozenRol = cleanRol(body.rol);
   let wie = null;
+  let rol = null;   // autoritaire rol van het account
+  let vid = null;   // verwerker-id voor dashboarddata
 
   if (wachtwoord === MASTER) {
     wie = 'Beheerder';
+    rol = 'beheerders';
   } else {
-    // Check individual passwords
-    try {
-      const raw = await env.KK_KV.get('kk_passwords');
-      const list = raw ? JSON.parse(raw) : [];
-      const match = list.find(p => p.wachtwoord === wachtwoord);
-      if (match) wie = match.naam + (match.organisatie ? ' · ' + match.organisatie : '');
-    } catch { /* ignore */ }
+    const test = TEST_ACCOUNTS.find(t => t.wachtwoord === wachtwoord);
+    if (test) {
+      wie = test.wie; rol = test.rol; vid = test.vid;
+    } else {
+      // Check individual passwords
+      try {
+        const raw = await env.KK_KV.get('kk_passwords');
+        const list = raw ? JSON.parse(raw) : [];
+        const match = list.find(p => p.wachtwoord === wachtwoord);
+        if (match) {
+          wie = match.naam + (match.organisatie ? ' · ' + match.organisatie : '');
+          rol = cleanRol(match.rol);
+          if (rol === 'verwerkers') vid = match.vid || slugify(match.organisatie || match.naam);
+        }
+      } catch { /* ignore */ }
+    }
   }
 
   if (!wie) return json({ ok: false });
+  if (!rol) rol = gekozenRol || 'waterschappen';
 
   // Log login
   try {
@@ -97,13 +120,14 @@ export async function onRequestPost({ request, env }) {
   const token = makeToken();
   await env.KK_KV.put(
     'kk_session_' + token,
-    JSON.stringify({ wie, rol, ts: Date.now(), expires: Date.now() + TTL_MS }),
+    JSON.stringify({ wie, rol, vid, ts: Date.now(), expires: Date.now() + TTL_MS }),
     { expirationTtl: TTL_S }
   );
 
   const apex = apexFor(new URL(request.url).hostname);
+  const bestemming = rol === 'verwerkers' ? `https://portal.${apex}/verwerker` : `https://portal.${apex}/`;
   return new Response(
-    JSON.stringify({ ok: true, redirect: `https://portal.${apex}/` }),
+    JSON.stringify({ ok: true, rol, redirect: bestemming }),
     { status: 200, headers: { ...HEADERS, 'Set-Cookie': setCookie(token, apex) } }
   );
 }

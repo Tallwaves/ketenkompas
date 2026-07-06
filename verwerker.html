@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verwerkersportaal — SlibKompas</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A1628'/%3E%3Cpolygon points='32,4 36,26 32,32 28,26' fill='%23C8A050'/%3E%3Cpolygon points='32,60 36,38 32,32 28,38' fill='%23FAF8F3' opacity='.9'/%3E%3Cpolygon points='4,32 26,28 32,32 26,36' fill='%23FAF8F3' opacity='.9'/%3E%3Cpolygon points='60,32 38,28 32,32 38,36' fill='%23FAF8F3' opacity='.9'/%3E%3Ccircle cx='32' cy='32' r='3.5' fill='%230A1628' stroke='%23C8A050' stroke-width='1.5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Albert+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A1628; --ink2:#0D1E33; --paper:#FAF8F3; --mist:#8FA3B8;
+  --gold:#C8A050; --gold-soft:#E8C888;
+  --ok:#3FBF8F; --warn:#E0894A; --danger:#E24B4A;
+  --line:rgba(250,248,243,.12); --card:rgba(250,248,243,.04);
+  --serif:'Fraunces',Georgia,serif; --sans:'Albert Sans',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:linear-gradient(180deg,#0A1628 0%,#0C1B30 60%,#0A1628 100%);min-height:100vh;color:var(--paper);font-size:15.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+::selection{background:var(--gold);color:var(--ink)}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.03;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* topbar */
+.top{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;
+padding:0 clamp(18px,4vw,44px);height:68px;background:rgba(10,22,40,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-brand{display:flex;align-items:center;gap:12px;font-size:17px;font-weight:700;letter-spacing:-.01em}
+.top-brand i{font-style:normal;color:var(--gold)}
+.top-brand small{font-weight:500;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mist);margin-left:10px;padding-left:12px;border-left:1px solid var(--line)}
+.top-right{display:flex;align-items:center;gap:14px}
+.top-wie{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--mist);background:var(--card);border:1px solid var(--line);border-radius:100px;padding:7px 14px}
+.top-wie .dot{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.top-out{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--mist);background:none;border:1px solid var(--line);border-radius:100px;padding:8px 16px;cursor:pointer;transition:color .2s,border-color .2s}
+.top-out:hover{color:var(--paper);border-color:var(--mist)}
+@media(max-width:640px){.top-wie span.wie-tx{display:none}.top-brand small{display:none}}
+
+.wrap{max-width:1180px;margin:0 auto;padding:clamp(24px,4vw,44px) clamp(18px,4vw,44px) 80px}
+
+/* hero row */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-bottom:18px}
+@media(max-width:900px){.hero{grid-template-columns:1fr}}
+.welk h1{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3.4vw,38px);letter-spacing:-.02em;line-height:1.12}
+.welk h1 em{font-style:italic;color:var(--gold-soft)}
+.welk p{color:var(--mist);font-weight:300;max-width:52ch;margin-top:10px;font-size:14.5px}
+.pilot-chip{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);border:1px solid rgba(200,160,80,.4);border-radius:100px;padding:6px 14px}
+.pilot-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* deadline card */
+.dl{background:linear-gradient(135deg,rgba(200,160,80,.13),rgba(200,160,80,.05));border:1px solid rgba(200,160,80,.4);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:6px}
+.dl-hd{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-soft)}
+.dl-datum{font-family:var(--serif);font-size:clamp(22px,2.4vw,28px);font-weight:500;letter-spacing:-.015em}
+.dl-sub{font-size:13px;color:var(--mist)}
+.dl-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.btn{font-family:var(--sans);font-size:13.5px;font-weight:600;border-radius:100px;padding:11px 20px;cursor:pointer;border:none;transition:transform .2s,box-shadow .2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn.gold{background:var(--gold);color:var(--ink)}
+.btn.gold:hover{transform:translateY(-1px);box-shadow:0 10px 26px -8px rgba(200,160,80,.5)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--mist)}
+.btn.ghost:hover{color:var(--paper);border-color:var(--mist)}
+
+/* cards */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:clamp(20px,2.6vw,28px)}
+.card-hd{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.card-hd svg{flex-shrink:0;color:var(--gold)}
+.card-hd h2{font-family:var(--serif);font-weight:500;font-size:19px;letter-spacing:-.01em}
+.card p.sub{font-size:13.5px;color:var(--mist);font-weight:300;margin-bottom:16px;line-height:1.6}
+
+/* nood card */
+.card.nood{border-color:rgba(226,75,74,.45);background:linear-gradient(135deg,rgba(226,75,74,.1),rgba(226,75,74,.03))}
+.card.nood .card-hd svg{color:var(--danger)}
+.btn.rood{background:var(--danger);color:#fff}
+.btn.rood:hover{transform:translateY(-1px);box-shadow:0 10px 26px -8px rgba(226,75,74,.55)}
+
+/* kalender */
+.kal-legend{display:flex;gap:18px;font-size:11.5px;color:var(--mist);margin:2px 0 14px;flex-wrap:wrap}
+.kal-legend span{display:inline-flex;align-items:center;gap:6px}
+.kal-legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.kal{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.kal-rij{display:flex;align-items:center;gap:8px}
+.kal-q{width:26px;font-size:10.5px;font-weight:600;letter-spacing:.08em;color:var(--mist);flex-shrink:0}
+.kal-cellen{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;flex:1}
+.kal-cel{position:relative;aspect-ratio:1.25/1;border-radius:5px;background:rgba(250,248,243,.06);border:1px solid rgba(250,248,243,.07);
+display:flex;align-items:center;justify-content:center;font-size:9.5px;color:rgba(250,248,243,.4);cursor:default}
+.kal-cel.leeg{background:transparent;border-color:transparent}
+.kal-cel.onderhoud{background:rgba(200,160,80,.4);border-color:rgba(200,160,80,.6);color:var(--ink);font-weight:700;color:#F5E5C0}
+.kal-cel.nu{outline:2px solid var(--ok);outline-offset:1px;color:var(--paper);font-weight:700}
+@media(max-width:720px){.kal-cellen{grid-template-columns:repeat(14,1fr)}.kal-cel{font-size:8px;border-radius:3px}}
+
+/* onderhoud form + lijst */
+.oh-form{display:grid;grid-template-columns:90px 90px 1fr 130px auto;gap:10px;align-items:end;margin-bottom:16px}
+@media(max-width:820px){.oh-form{grid-template-columns:1fr 1fr;}.oh-form .fld.groot{grid-column:1/-1}}
+.fld{display:flex;flex-direction:column;gap:5px}
+.fld label{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mist)}
+.fld input{font-family:var(--sans);font-size:14px;color:var(--paper);background:rgba(10,22,40,.6);border:1px solid var(--line);border-radius:10px;padding:10px 12px;outline:none;width:100%}
+.fld input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,160,80,.15)}
+.oh-lijst{display:flex;flex-direction:column}
+.oh-item{display:flex;align-items:center;gap:14px;padding:11px 0;border-top:1px solid rgba(250,248,243,.08);font-size:13.5px}
+.oh-wk{flex-shrink:0;font-weight:700;color:var(--gold-soft);font-variant-numeric:tabular-nums;min-width:86px}
+.oh-tx{flex:1;color:rgba(250,248,243,.85)}
+.oh-ton{color:var(--mist);white-space:nowrap;font-size:12.5px}
+.oh-del{background:none;border:none;color:var(--mist);cursor:pointer;font-size:16px;padding:4px 8px;border-radius:8px;transition:color .2s,background .2s}
+.oh-del:hover{color:var(--danger);background:rgba(226,75,74,.12)}
+.leeg-melding{font-size:13px;color:var(--mist);opacity:.7;padding:8px 0}
+
+/* requests */
+.rq-form{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.rq-form textarea{font-family:var(--sans);font-size:14px;color:var(--paper);background:rgba(10,22,40,.6);border:1px solid var(--line);border-radius:12px;padding:12px 14px;outline:none;min-height:84px;resize:vertical;line-height:1.55}
+.rq-form textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,160,80,.15)}
+.rq-item{padding:11px 0;border-top:1px solid rgba(250,248,243,.08)}
+.rq-item .tx{font-size:13.5px;color:rgba(250,248,243,.85)}
+.rq-item .ts{font-size:11px;color:var(--mist);margin-top:3px}
+.rq-item .stat{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-soft);border:1px solid rgba(200,160,80,.4);border-radius:100px;padding:2px 9px;margin-left:8px;vertical-align:1px}
+
+/* contact / roadmap */
+.ct-rij{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-top:1px solid rgba(250,248,243,.08);font-size:13.5px}
+.ct-rij:first-of-type{border-top:none}
+.ct-rij svg{flex-shrink:0;margin-top:2px;color:var(--gold)}
+.ct-rij b{display:block;font-size:13.5px;color:var(--paper);font-weight:600}
+.ct-rij span{color:var(--mist);font-size:12.5px}
+.soon{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.soon span{font-size:11px;font-weight:500;letter-spacing:.05em;color:var(--mist);border:1px dashed rgba(250,248,243,.25);border-radius:100px;padding:5px 12px}
+
+.msg{font-size:13px;min-height:18px;margin-top:6px}
+.msg.ok{color:var(--ok)}.msg.err{color:#F09595}
+
+/* modal */
+.mod-ov{position:fixed;inset:0;z-index:200;background:rgba(6,12,24,.75);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .3s}
+.mod-ov.open{opacity:1;pointer-events:all}
+.mod{width:100%;max-width:520px;background:var(--ink2);border:1px solid rgba(226,75,74,.5);border-radius:20px;padding:30px 30px 26px;box-shadow:0 60px 120px -30px rgba(0,0,0,.8);transform:translateY(24px);transition:transform .35s cubic-bezier(.16,1,.3,1);max-height:calc(100vh - 36px);overflow-y:auto}
+.mod-ov.open .mod{transform:none}
+.mod h3{font-family:var(--serif);font-weight:500;font-size:22px;letter-spacing:-.01em;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.mod p.mod-sub{font-size:13.5px;color:var(--mist);font-weight:300;margin-bottom:18px;line-height:1.6}
+.mod .fld{margin-bottom:12px}
+.mod textarea{font-family:var(--sans);font-size:14px;color:var(--paper);background:rgba(10,22,40,.6);border:1px solid var(--line);border-radius:12px;padding:12px 14px;outline:none;min-height:90px;resize:vertical;width:100%;line-height:1.55}
+.mod textarea:focus,.mod input:focus{border-color:var(--danger);box-shadow:0 0 0 3px rgba(226,75,74,.15)}
+.mod-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.mod-row{grid-template-columns:1fr}}
+.mod-acties{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.nood-ok{display:none;text-align:center;padding:10px 4px 4px}
+.nood-ok.show{display:block}
+.nood-ok .ik{width:64px;height:64px;border-radius:50%;background:rgba(63,191,143,.12);border:1px solid rgba(63,191,143,.4);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.nood-ok h4{font-family:var(--serif);font-weight:500;font-size:20px;margin-bottom:8px}
+.nood-ok p{font-size:13.5px;color:var(--mist);line-height:1.65;max-width:38ch;margin:0 auto}
+
+footer{border-top:1px solid var(--line);padding:22px clamp(18px,4vw,44px);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:12px;color:rgba(143,163,184,.55)}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-brand">
+    <svg width="26" height="26" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <polygon points="32,1 36.5,27 32,33 27.5,27" fill="#C8A050"/>
+      <polygon points="32,63 36.5,37 32,31 27.5,37" fill="#FAF8F3" opacity=".92"/>
+      <polygon points="3,32 27,27.5 33,32 27,36.5" fill="#FAF8F3" opacity=".92"/>
+      <polygon points="61,32 37,27.5 31,32 37,36.5" fill="#FAF8F3" opacity=".92"/>
+      <circle cx="32" cy="32" r="3.6" fill="#0A1628" stroke="#FAF8F3" stroke-width="1.6"/>
+    </svg>
+    <span>Slib<i>Kompas</i></span>
+    <small>Verwerkersportaal</small>
+  </div>
+  <div class="top-right">
+    <div class="top-wie"><span class="dot"></span><span class="wie-tx" id="wie">…</span></div>
+    <button class="top-out" onclick="uitloggen()">Uitloggen</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- hero -->
+  <div class="hero">
+    <div class="welk">
+      <h1>Welkom bij je <em>verwerkersomgeving.</em></h1>
+      <p>Geef je tweewekelijkse status door, plan onderhoud vooruit en schakel direct met de regiegroep als de afzet vastloopt — alles op één plek.</p>
+      <span class="pilot-chip"><span class="dot"></span>Pilot · Unie van Waterschappen &amp; HVC</span>
+    </div>
+    <div class="dl">
+      <span class="dl-hd">Volgende statusupdate</span>
+      <span class="dl-datum" id="dl-datum">—</span>
+      <span class="dl-sub" id="dl-sub">Aanleveren op de maandag van elke even week.</span>
+      <div class="dl-row">
+        <a class="btn gold" id="form-cta" href="#" target="_blank" rel="noopener">Formulier openen →</a>
+        <button class="btn ghost" onclick="downloadICS()">Zet in agenda (.ics)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- statusupdate + nood -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hd">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 3v3m8-3v3M4 8h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1zm4 8l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h2>Tweewekelijkse statusupdate</h2>
+      </div>
+      <p class="sub">Functioneren, opslag, onderhoud en afzet — in een paar minuten doorgegeven. Je opgave stroomt automatisch door naar SlibKompas én naar Z-info; je vorige opgave staat alvast klaar zodat je alleen wijzigingen invult.</p>
+      <a class="btn gold" id="form-cta-2" href="#" target="_blank" rel="noopener">Statusupdate doorgeven →</a>
+    </div>
+    <div class="card nood">
+      <div class="card-hd">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M10.3 3.9L1.8 18.3a1.8 1.8 0 001.6 2.7h17.2a1.8 1.8 0 001.6-2.7L13.7 3.9a1.8 1.8 0 00-3.4 0z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h2>Afzet vastgelopen?</h2>
+      </div>
+      <p class="sub">Geen afzetmogelijkheden meer voor het slib? Doe direct aanspraak op het <b>Robuust Plan</b> van de Unie van Waterschappen. De regiegroep wordt per omgaande geïnformeerd en neemt contact op over noodopslag en herverdeling.</p>
+      <button class="btn rood" onclick="openNood()">🚨 Robuust Plan inroepen</button>
+    </div>
+  </div>
+
+  <!-- onderhoudskalender -->
+  <div class="card" style="margin-bottom:18px">
+    <div class="card-hd">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.6 2.6-2.8-2.8 2.4-2.8z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h2>Onderhoudskalender <span id="kal-jaar" style="color:var(--gold-soft)"></span></h2>
+    </div>
+    <p class="sub">Plan stilstand van (een deel van) de installatie vooruit. De regiegroep ziet zo vroegtijdig waar capaciteit wegvalt en kan de keten erop voorbereiden.</p>
+    <div class="kal-legend">
+      <span><i style="background:rgba(200,160,80,.5)"></i>Gepland onderhoud</span>
+      <span><i style="background:transparent;outline:2px solid var(--ok);outline-offset:-2px"></i>Huidige week</span>
+    </div>
+    <div class="kal" id="kal"></div>
+    <div class="oh-form">
+      <div class="fld"><label>Week van</label><input type="number" id="oh-van" min="1" max="53" placeholder="32"></div>
+      <div class="fld"><label>t/m week</label><input type="number" id="oh-tot" min="1" max="53" placeholder="34"></div>
+      <div class="fld groot"><label>Omschrijving</label><input type="text" id="oh-oms" placeholder="Bijv. revisie drooglijn 2" maxlength="300"></div>
+      <div class="fld"><label>Wegval (ton/wk)</label><input type="number" id="oh-ton" min="0" placeholder="0"></div>
+      <button class="btn gold" style="height:41px" onclick="ohToevoegen()">Toevoegen</button>
+    </div>
+    <div class="msg" id="oh-msg"></div>
+    <div class="oh-lijst" id="oh-lijst"></div>
+  </div>
+
+  <!-- requests + contact -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hd">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h2>Verbeterverzoek</h2>
+      </div>
+      <p class="sub">Mis je iets in dit portaal, of kan iets handiger? Je verzoek komt rechtstreeks op de verbeterlijst van het SlibKompas-team.</p>
+      <div class="rq-form">
+        <textarea id="rq-tekst" placeholder="Beschrijf je verzoek of idee…" maxlength="1000"></textarea>
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="btn gold" id="rq-btn" onclick="rqVersturen()">Verzoek versturen</button>
+          <span class="msg" id="rq-msg" style="margin:0"></span>
+        </div>
+      </div>
+      <div id="rq-lijst"></div>
+    </div>
+    <div class="card">
+      <div class="card-hd">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v12H9l-5 4V5z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h2>Contact &amp; keten</h2>
+      </div>
+      <div class="ct-rij">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-8 9a8 8 0 0116 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <div><b>Regiegroep · Unie van Waterschappen</b><span>Eerste aanspreekpunt voor ketenvragen en de pilot — regiegroep@ketenkompas.nl</span></div>
+      </div>
+      <div class="ct-rij">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13H6V3zm9 0v5h5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <div><b>Robuust Plan Slib II</b><span>Richtlijnen voor noodopslag en herverdeling bij uitval — opvraagbaar via de regiegroep</span></div>
+      </div>
+      <div class="ct-rij">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1018 0 9 9 0 00-18 0zm9-5v5l3.5 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <div><b>Z-info · Het Waterschapshuis</b><span>Je opgaven worden centraal geborgd in het datasysteem van de waterschappen</span></div>
+      </div>
+      <div class="soon" aria-label="Binnenkort in dit portaal">
+        <span>Binnenkort: aanleverhistorie</span>
+        <span>Ketenbeeld &amp; vrije opslag sector</span>
+        <span>Z-info synclog</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- nood modal -->
+<div class="mod-ov" id="nood-ov" role="dialog" aria-modal="true" aria-labelledby="nood-titel">
+  <div class="mod">
+    <div id="nood-form">
+      <h3 id="nood-titel">🚨 Robuust Plan inroepen</h3>
+      <p class="mod-sub">Beschrijf de situatie zo concreet mogelijk. Je melding gaat direct naar de regiegroep van de Unie van Waterschappen; zij nemen vandaag nog contact met je op.</p>
+      <div class="fld"><label>Situatie *</label><textarea id="nd-situatie" placeholder="Bijv. afzetroute X per direct gestremd; eigen opslag vol binnen N dagen…"></textarea></div>
+      <div class="mod-row">
+        <div class="fld"><label>Betrokken tonnage (ton/wk)</label><input type="number" id="nd-ton" min="0" placeholder="0"></div>
+        <div class="fld"><label>Verwachte duur</label><input type="text" id="nd-duur" placeholder="Bijv. 2–3 weken" maxlength="120"></div>
+      </div>
+      <div class="fld"><label>Telefoonnummer voor direct contact</label><input type="tel" id="nd-tel" placeholder="+31 6 …" maxlength="40"></div>
+      <div class="msg err" id="nd-msg"></div>
+      <div class="mod-acties">
+        <button class="btn ghost" onclick="sluitNood()">Annuleren</button>
+        <button class="btn rood" id="nd-btn" onclick="noodVersturen()">Melding versturen</button>
+      </div>
+    </div>
+    <div class="nood-ok" id="nood-ok">
+      <div class="ik"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#3FBF8F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h4>Melding verzonden</h4>
+      <p>De regiegroep is geïnformeerd en neemt vandaag nog contact op via het opgegeven nummer. Houd je telefoon bereikbaar.</p>
+      <div class="mod-acties" style="justify-content:center;margin-top:20px">
+        <button class="btn gold" onclick="sluitNood()">Sluiten</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2026 SlibKompas · Verwerkersportaal</span>
+  <span>Pilot met Unie van Waterschappen &amp; HVC — prototype-omgeving</span>
+</footer>
+
+<script>
+/* ---------- host & modus ---------- */
+var APEXES=['ketenkompas.nl','slibkompas.nl'];
+var apex=location.hostname.replace(/^(portal\.|www\.)/,'');
+var LIVE=APEXES.indexOf(apex)>=0;
+var FORM_URL=LIVE?('https://'+(apex==='ketenkompas.nl'?'slibkompas.nl':apex)+'/verwerkers'):'/slib/verwerkers';
+document.getElementById('form-cta').href=FORM_URL;
+document.getElementById('form-cta-2').href=FORM_URL;
+
+var _data={onderhoud:[],requests:[],nood:[]};
+var DEMO_KEY='kk_verwerker_demo_v1';
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+/* ---------- auth guard + data laden ---------- */
+async function init(){
+  if(LIVE){
+    try{
+      var r=await fetch('/api/session',{credentials:'include'});
+      var s=await r.json();
+      if(!s.ok){location.href='https://'+apex+'/';return;}
+      if(s.rol!=='verwerkers'){location.href='/';return;}
+      document.getElementById('wie').textContent=s.wie||'Verwerker';
+      var d=await (await fetch('/api/verwerker',{credentials:'include'})).json();
+      if(d.ok){_data={onderhoud:d.onderhoud,requests:d.requests,nood:d.nood};}
+    }catch(e){/* toon lege staat */}
+  }else{
+    // Preview/dev: demo-modus met lokale opslag
+    if(sessionStorage.getItem('kk_auth_verwerker')!=='1'){location.href='/portal?rol=verwerkers';return;}
+    document.getElementById('wie').textContent='HVC · Eindverwerker (demo)';
+    try{_data=Object.assign(_data,JSON.parse(localStorage.getItem(DEMO_KEY)||'{}'));}catch(e){}
+  }
+  renderAlles();
+}
+function demoSave(){try{localStorage.setItem(DEMO_KEY,JSON.stringify(_data));}catch(e){}}
+
+async function uitloggen(){
+  if(LIVE){try{await fetch('/api/session',{method:'DELETE',credentials:'include'});}catch(e){}location.href='https://'+apex+'/';}
+  else{sessionStorage.removeItem('kk_auth_verwerker');location.href='/portal';}
+}
+
+/* ---------- deadline (maandag van even ISO-week) ---------- */
+function isoWeek(d){
+  var t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  var day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);
+  var y0=new Date(Date.UTC(t.getUTCFullYear(),0,1));
+  return Math.ceil(((t-y0)/864e5+1)/7);
+}
+function volgendeDeadline(){
+  var d=new Date();d.setHours(0,0,0,0);
+  for(var i=0;i<21;i++){
+    var k=new Date(d.getTime()+i*864e5);
+    if(k.getDay()===1&&isoWeek(k)%2===0)return k;
+  }
+  return d;
+}
+(function(){
+  var dl=volgendeDeadline();
+  var dagen=Math.round((dl-new Date().setHours(0,0,0,0))/864e5);
+  document.getElementById('dl-datum').textContent=
+    dl.toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'})+' · week '+isoWeek(dl);
+  document.getElementById('dl-sub').textContent=
+    (dagen===0?'Vandaag':dagen===1?'Morgen':'Over '+dagen+' dagen')+' — aanleveren op de maandag van elke even week.';
+})();
+
+/* ---------- agenda (.ics) ---------- */
+function downloadICS(){
+  var jaar=new Date().getFullYear();
+  var lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//SlibKompas//Verwerkersportaal//NL'];
+  var d=new Date(jaar,0,1);
+  while(d.getFullYear()===jaar){
+    if(d.getDay()===1&&isoWeek(d)%2===0&&d>=new Date(new Date().setHours(0,0,0,0))){
+      var ds=d.toISOString().slice(0,10).replace(/-/g,'');
+      lines.push('BEGIN:VEVENT','UID:slibkompas-'+ds+'@slibkompas.nl',
+        'DTSTART;VALUE=DATE:'+ds,
+        'SUMMARY:SlibKompas — tweewekelijkse statusupdate aanleveren',
+        'DESCRIPTION:Geef de status eindverwerking door via '+(LIVE?FORM_URL:'https://slibkompas.nl/verwerkers'),
+        'END:VEVENT');
+    }
+    d=new Date(d.getTime()+864e5);
+  }
+  lines.push('END:VCALENDAR');
+  var blob=new Blob([lines.join('\r\n')],{type:'text/calendar'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='slibkompas-aanleverdata-'+jaar+'.ics';a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ---------- onderhoudskalender ---------- */
+var JAAR=new Date().getFullYear();
+document.getElementById('kal-jaar').textContent=JAAR;
+function ohWeken(){
+  var set={};
+  _data.onderhoud.forEach(function(o){
+    if((o.jaar||JAAR)!==JAAR)return;
+    for(var w=o.van;w<=o.tot;w++)set[w]=o.omschrijving||'Onderhoud';
+  });
+  return set;
+}
+function renderKal(){
+  var set=ohWeken();var nu=isoWeek(new Date());var nuJaar=new Date().getFullYear()===JAAR;
+  var kwartalen=[[1,13],[14,26],[27,39],[40,53]];
+  document.getElementById('kal').innerHTML=kwartalen.map(function(q,qi){
+    var cellen='';
+    for(var w=q[0];w<=q[1];w++){
+      var cls='kal-cel'+(set[w]?' onderhoud':'')+((nuJaar&&w===nu)?' nu':'');
+      cellen+='<div class="'+cls+'" title="Week '+w+(set[w]?' — '+esc(set[w]):'')+'">'+w+'</div>';
+    }
+    var pad=14-(q[1]-q[0]+1);
+    for(var p=0;p<pad;p++)cellen+='<div class="kal-cel leeg"></div>';
+    return '<div class="kal-rij"><span class="kal-q">Q'+(qi+1)+'</span><div class="kal-cellen">'+cellen+'</div></div>';
+  }).join('');
+}
+function renderOhLijst(){
+  var el=document.getElementById('oh-lijst');
+  var list=_data.onderhoud.slice().sort(function(a,b){return a.van-b.van;});
+  if(!list.length){el.innerHTML='<div class="leeg-melding">Nog geen onderhoud gepland voor '+JAAR+'.</div>';return;}
+  el.innerHTML=list.map(function(o){
+    return '<div class="oh-item">'+
+      '<span class="oh-wk">wk '+o.van+(o.tot>o.van?'–'+o.tot:'')+'</span>'+
+      '<span class="oh-tx">'+esc(o.omschrijving||'Onderhoud')+'</span>'+
+      (o.tonnen?'<span class="oh-ton">−'+o.tonnen+' ton/wk</span>':'')+
+      '<button class="oh-del" title="Verwijderen" onclick="ohVerwijderen(\''+o.id+'\')">×</button>'+
+    '</div>';
+  }).join('');
+}
+async function ohToevoegen(){
+  var van=parseInt(document.getElementById('oh-van').value,10);
+  var tot=parseInt(document.getElementById('oh-tot').value,10)||van;
+  var oms=document.getElementById('oh-oms').value.trim();
+  var ton=parseFloat(document.getElementById('oh-ton').value)||0;
+  var msg=document.getElementById('oh-msg');
+  if(!(van>=1&&van<=53)||tot<van||tot>53){msg.className='msg err';msg.textContent='Vul een geldige weekperiode in (1–53).';return;}
+  var item={van:van,tot:tot,jaar:JAAR,omschrijving:oms,tonnen:ton};
+  if(LIVE){
+    try{
+      var r=await fetch('/api/verwerker',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'onderhoud',item:item})});
+      var res=await r.json();
+      if(!res.ok){msg.className='msg err';msg.textContent='Opslaan mislukt.';return;}
+      _data.onderhoud.push(res.item);
+    }catch(e){msg.className='msg err';msg.textContent='Verbindingsfout.';return;}
+  }else{
+    item.id=Date.now()+'';_data.onderhoud.push(item);demoSave();
+  }
+  msg.className='msg ok';msg.textContent='Onderhoud toegevoegd.';
+  document.getElementById('oh-van').value='';document.getElementById('oh-tot').value='';
+  document.getElementById('oh-oms').value='';document.getElementById('oh-ton').value='';
+  setTimeout(function(){msg.textContent='';},2200);
+  renderKal();renderOhLijst();
+}
+async function ohVerwijderen(id){
+  if(LIVE){
+    try{await fetch('/api/verwerker?type=onderhoud&id='+encodeURIComponent(id),{method:'DELETE',credentials:'include'});}catch(e){}
+  }
+  _data.onderhoud=_data.onderhoud.filter(function(o){return o.id!==id;});
+  if(!LIVE)demoSave();
+  renderKal();renderOhLijst();
+}
+
+/* ---------- verbeterverzoeken ---------- */
+function renderRq(){
+  var el=document.getElementById('rq-lijst');
+  if(!_data.requests.length){el.innerHTML='';return;}
+  el.innerHTML=_data.requests.slice(0,6).map(function(r){
+    return '<div class="rq-item"><span class="tx">'+esc(r.tekst)+'</span><span class="stat">Ontvangen</span>'+
+      '<div class="ts">'+new Date(r.ts).toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric'})+'</div></div>';
+  }).join('');
+}
+async function rqVersturen(){
+  var t=document.getElementById('rq-tekst').value.trim();
+  var msg=document.getElementById('rq-msg');var btn=document.getElementById('rq-btn');
+  if(!t){msg.className='msg err';msg.textContent='Beschrijf eerst je verzoek.';return;}
+  btn.disabled=true;btn.textContent='Versturen…';
+  var item={tekst:t,ts:Date.now(),id:Date.now()+''};
+  if(LIVE){
+    try{
+      var r=await fetch('/api/verwerker',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'request',item:{tekst:t}})});
+      var res=await r.json();
+      if(!res.ok)throw new Error();
+      item=res.item;
+    }catch(e){
+      msg.className='msg err';msg.textContent='Versturen mislukt, probeer opnieuw.';
+      btn.disabled=false;btn.textContent='Verzoek versturen';return;
+    }
+  }
+  _data.requests.unshift(item);
+  if(!LIVE)demoSave();
+  document.getElementById('rq-tekst').value='';
+  msg.className='msg ok';msg.textContent='Ontvangen — het verzoek staat op de verbeterlijst.';
+  btn.disabled=false;btn.textContent='Verzoek versturen';
+  setTimeout(function(){msg.textContent='';},3000);
+  renderRq();
+}
+
+/* ---------- noodknop ---------- */
+function openNood(){
+  document.getElementById('nood-form').style.display='';
+  document.getElementById('nood-ok').classList.remove('show');
+  document.getElementById('nd-msg').textContent='';
+  document.getElementById('nood-ov').classList.add('open');
+}
+function sluitNood(){document.getElementById('nood-ov').classList.remove('open');}
+document.getElementById('nood-ov').addEventListener('click',function(e){if(e.target===this)sluitNood();});
+addEventListener('keydown',function(e){if(e.key==='Escape')sluitNood();});
+async function noodVersturen(){
+  var sit=document.getElementById('nd-situatie').value.trim();
+  var msg=document.getElementById('nd-msg');var btn=document.getElementById('nd-btn');
+  if(!sit){msg.textContent='Beschrijf de situatie.';return;}
+  btn.disabled=true;btn.textContent='Versturen…';
+  var item={situatie:sit,tonnen:parseFloat(document.getElementById('nd-ton').value)||0,
+            duur:document.getElementById('nd-duur').value.trim(),telefoon:document.getElementById('nd-tel').value.trim()};
+  if(LIVE){
+    try{
+      var r=await fetch('/api/verwerker',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'nood',item:item})});
+      var res=await r.json();
+      if(!res.ok)throw new Error();
+    }catch(e){
+      msg.textContent='Versturen mislukt — bel de regiegroep direct.';
+      btn.disabled=false;btn.textContent='Melding versturen';return;
+    }
+  }else{
+    item.id=Date.now()+'';item.ts=Date.now();_data.nood.unshift(item);demoSave();
+  }
+  btn.disabled=false;btn.textContent='Melding versturen';
+  document.getElementById('nd-situatie').value='';document.getElementById('nd-ton').value='';
+  document.getElementById('nd-duur').value='';document.getElementById('nd-tel').value='';
+  document.getElementById('nood-form').style.display='none';
+  document.getElementById('nood-ok').classList.add('show');
+}
+
+function renderAlles(){renderKal();renderOhLijst();renderRq();}
+init();
+</script>
+</body>
+</html>
