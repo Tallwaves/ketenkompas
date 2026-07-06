@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Sitemap: https://ketenkompas.nl/sitemap.xml
+Sitemap: https://slibkompas.nl/sitemap.xml
