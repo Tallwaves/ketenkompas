@@ -1591,7 +1591,8 @@ async function tryLogin(){
       const r=await fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({wachtwoord:v,rol:kkRol})});
       const res=await r.json();
       if(res.ok){
-        if(di.isPortal){showApp();}
+        if(res.rol==='verwerkers'){window.location.href=di.isPortal?'/verwerker':res.redirect;}
+        else if(di.isPortal){showApp();}
         else{window.location.href=res.redirect;}
         return;
       }
@@ -1602,6 +1603,10 @@ async function tryLogin(){
   }
 
   // Dev / localhost: client-side fallback
+  if(v==='hvc2026'){
+    sessionStorage.setItem('kk_auth_verwerker','1');
+    window.location.href='/verwerker';return;
+  }
   if(v===TOEGANGSCODE){
     sessionStorage.setItem('kk_auth','1');
     fetch('/api/loginlog',{method:'POST',headers:{'Content-Type':'application/json','X-Access-Key':TOEGANGSCODE},body:JSON.stringify({wie:'Beheerder',rol:kkRol,ts:Date.now()})}).catch(()=>{});
@@ -4286,12 +4291,16 @@ async function loadContactRequests(){
     ]);
     const list=rC.ok?await rC.json():[];
     const pws=rP.ok?await rP.json():[];
-    const pwMap={};pws.forEach(p=>{pwMap[p.email]=p.wachtwoord;});
+    _admPwList=pws;
+    const pwMap={};pws.forEach(p=>{pwMap[p.email]=p;});
     const badge=document.getElementById('adm-contact-badge');
     if(badge)badge.textContent=list.length?'('+list.length+')':'';
     if(!list.length){el.innerHTML='<div style="color:var(--ink-faint)">Geen verzoeken ontvangen.</div>';return;}
+    const rolSel=(email,huidig)=>`<select onchange="admSetRol('${_kkEsc(email)}',this.value)" title="Rol van dit account" style="font-family:inherit;font-size:11px;padding:4px 6px;border-radius:8px;border:1px solid var(--line-soft);background:var(--paper,#fff);color:var(--ink-soft);cursor:pointer;margin-top:6px">
+      ${['waterschappen','verwerkers','beheerders'].map(r=>`<option value="${r}" ${((huidig||'waterschappen')===r)?'selected':''}>${r.charAt(0).toUpperCase()+r.slice(1,-1)}</option>`).join('')}
+    </select>`;
     el.innerHTML=list.map(v=>{
-      const pw=pwMap[v.email];
+      const acc=pwMap[v.email];
       return `<div style="padding:11px 0;border-bottom:1px solid var(--line-soft)">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
           <div>
@@ -4299,9 +4308,9 @@ async function loadContactRequests(){
             <div style="font-size:12px;color:var(--water);margin-top:2px">${_kkEsc(v.email)}</div>
             <div style="font-size:11px;color:var(--ink-faint);margin-top:2px">${new Date(v.datum).toLocaleString('nl-NL')}</div>
           </div>
-          <div style="flex-shrink:0;padding-top:2px">
-            ${pw
-              ?`<span class="adm-pw-val" data-pw="${_kkEsc(pw)}" onclick="admCopyPw(this)" title="Klik om te kopiëren">${_kkEsc(pw)}</span>`
+          <div style="flex-shrink:0;padding-top:2px;text-align:right">
+            ${acc
+              ?`<span class="adm-pw-val" data-pw="${_kkEsc(acc.wachtwoord)}" onclick="admCopyPw(this)" title="Klik om te kopiëren">${_kkEsc(acc.wachtwoord)}</span><br>${rolSel(v.email,acc.rol)}`
               :`<button class="adm-pw-gen-btn" data-email="${_kkEsc(v.email)}" data-naam="${_kkEsc(v.naam)}" data-org="${_kkEsc(v.organisatie||'')}" onclick="admGenPw(this)">Genereer wachtwoord</button>`
             }
           </div>
@@ -4399,6 +4408,7 @@ async function submitSuggestie(){
   }
 }
 
+let _admPwList=[];
 async function admGenPw(btn){
   const email=btn.dataset.email,naam=btn.dataset.naam,org=btn.dataset.org;
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -4408,10 +4418,22 @@ async function admGenPw(btn){
     await fetch('/api/passwords',{
       method:'POST',
       headers:{'Content-Type':'application/json','X-Access-Key':TOEGANGSCODE},
-      body:JSON.stringify({email,naam,organisatie:org,wachtwoord:pw,aangemaakt:Date.now()})
+      body:JSON.stringify({email,naam,organisatie:org,wachtwoord:pw,rol:'waterschappen',aangemaakt:Date.now()})
     });
     loadContactRequests();
   }catch(e){btn.textContent='Fout';btn.disabled=false;}
+}
+async function admSetRol(email,rol){
+  const acc=_admPwList.find(p=>p.email===email);
+  if(!acc)return;
+  try{
+    await fetch('/api/passwords',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Access-Key':TOEGANGSCODE},
+      body:JSON.stringify({...acc,rol})
+    });
+    acc.rol=rol;
+  }catch(e){alert('Rol opslaan mislukt: '+e.message);}
 }
 
 function admCopyPw(el){
@@ -4685,10 +4707,11 @@ async function siDeleteScenario(naam){
   initRol();
   const di=kkDomainInfo();
   if(di.isPortal){
-    // Check session — app handles login overlay when none exists
+    // Check session — app handles login overlay when none exists.
+    // Verwerkersaccounts horen niet in deze app maar in het verwerkersportaal.
     fetch('/api/session',{credentials:'include'})
       .then(r=>r.json())
-      .then(res=>{if(res.ok)showApp();})
+      .then(res=>{if(res.ok){if(res.rol==='verwerkers'){window.location.href='/verwerker';}else{showApp();}}})
       .catch(()=>{});
   }else if(di.isPublicProd){
     // Public domain: check for existing session and auto-redirect to app
