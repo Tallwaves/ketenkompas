@@ -86,6 +86,13 @@
   .lc-dot{width:8px;height:8px;border-radius:50%;background:#3FBF8F;box-shadow:0 0 0 4px rgba(63,191,143,.15);animation:lgpulse 2.6s ease-in-out infinite;flex-shrink:0}
   @keyframes lgpulse{0%,100%{box-shadow:0 0 0 4px rgba(63,191,143,.15)}50%{box-shadow:0 0 0 7px rgba(63,191,143,.07)}}
   .lc-access-lbl{display:block;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,248,243,.45);margin-bottom:9px}
+  .lc-role-lbl{display:block;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,248,243,.45);margin-bottom:9px}
+  .lc-roles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+  .lc-role{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:13px 6px;border-radius:12px;border:1px solid rgba(250,248,243,.16);background:rgba(10,22,40,.4);color:rgba(250,248,243,.62);font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:border-color .2s,background .2s,color .2s;text-align:center;line-height:1.2}
+  .lc-role svg{width:20px;height:20px;opacity:.7;transition:opacity .2s}
+  .lc-role:hover{border-color:rgba(250,248,243,.32);color:rgba(250,248,243,.85)}
+  .lc-role.active{border-color:#C8A050;background:rgba(200,160,80,.14);color:#E8C888;box-shadow:0 0 0 3px rgba(200,160,80,.12)}
+  .lc-role.active svg{opacity:1}
   .lc-box>input{width:100%;height:52px;border-radius:12px;border:1px solid rgba(250,248,243,.16);background:rgba(10,22,40,.55);color:#FAF8F3;padding:0 16px;font-size:15px;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;box-sizing:border-box}
   .lc-box>input:focus{border-color:#C8A050;box-shadow:0 0 0 3px rgba(200,160,80,.18)}
   .lc-box>input::placeholder{color:rgba(143,163,184,.6)}
@@ -1096,6 +1103,21 @@
       </div>
       <div class="lc-box">
         <div class="lc-status"><span class="lc-dot"></span>Instrument operationeel · stand juni 2026</div>
+        <label class="lc-role-lbl">Ik log in als</label>
+        <div class="lc-roles" id="lc-roles">
+          <button type="button" class="lc-role" data-rol="waterschappen" onclick="setRol('waterschappen')" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 20h18M4 20V9l8-5 8 5v11M9 20v-6h6v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Waterschap
+          </button>
+          <button type="button" class="lc-role" data-rol="verwerkers" onclick="setRol('verwerkers')" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 21h18M5 21V10l5-3v3l5-3v14M9 21v-4M14 13v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Verwerker
+          </button>
+          <button type="button" class="lc-role" data-rol="beheerders" onclick="setRol('beheerders')" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 20a6.5 6.5 0 0113 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            Beheerder
+          </button>
+        </div>
         <label class="lc-access-lbl" for="pw">Toegangscode</label>
         <input type="password" id="pw" placeholder="Voer je toegangscode in" autocomplete="current-password" onkeydown="if(event.key==='Enter')tryLogin()">
         <button class="lc-btn-main" onclick="tryLogin()">Toegang tot dashboard</button>
@@ -1533,6 +1555,29 @@ async function sendContactForm(){
     btn.textContent='Verzoek versturen';btn.disabled=false;
   }
 }
+/* Rolkeuze op de loginpagina — voor nu puur UX (alle rollen dezelfde login),
+   maar de keuze wordt meegestuurd zodat we 'm kunnen loggen en later per rol
+   kunnen differentieren. Vooraf ingesteld via ?rol= (vanaf de homepage-tiles)
+   of onthouden uit een vorige keer. */
+var KK_ROLLEN={waterschappen:'Waterschap',verwerkers:'Verwerker',beheerders:'Beheerder'};
+var kkRol='waterschappen';
+function setRol(r){
+  if(!KK_ROLLEN[r])r='waterschappen';
+  kkRol=r;
+  document.querySelectorAll('.lc-role').forEach(function(b){
+    var on=b.dataset.rol===r;
+    b.classList.toggle('active',on);
+    b.setAttribute('aria-pressed',on?'true':'false');
+  });
+  try{localStorage.setItem('kk_rol',r);}catch(e){}
+}
+function initRol(){
+  var r=null;
+  try{r=new URLSearchParams(location.search).get('rol');}catch(e){}
+  if(!r){try{r=localStorage.getItem('kk_rol');}catch(e){}}
+  setRol(r&&KK_ROLLEN[r]?r:'waterschappen');
+}
+
 async function tryLogin(){
   const v=document.getElementById('pw').value;
   const di=kkDomainInfo();
@@ -1543,7 +1588,7 @@ async function tryLogin(){
     const btn=document.querySelector('#login button[onclick="tryLogin()"]')||document.querySelector('.lc-box button');
     if(btn){btn.disabled=true;btn.textContent='Bezig…';}
     try{
-      const r=await fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({wachtwoord:v})});
+      const r=await fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({wachtwoord:v,rol:kkRol})});
       const res=await r.json();
       if(res.ok){
         if(di.isPortal){showApp();}
@@ -1559,7 +1604,7 @@ async function tryLogin(){
   // Dev / localhost: client-side fallback
   if(v===TOEGANGSCODE){
     sessionStorage.setItem('kk_auth','1');
-    fetch('/api/loginlog',{method:'POST',headers:{'Content-Type':'application/json','X-Access-Key':TOEGANGSCODE},body:JSON.stringify({wie:'Beheerder',ts:Date.now()})}).catch(()=>{});
+    fetch('/api/loginlog',{method:'POST',headers:{'Content-Type':'application/json','X-Access-Key':TOEGANGSCODE},body:JSON.stringify({wie:'Beheerder',rol:kkRol,ts:Date.now()})}).catch(()=>{});
     showApp();return;
   }
   try{
@@ -4637,6 +4682,7 @@ async function siDeleteScenario(naam){
 
 /* ============ INIT ============ */
 (function(){
+  initRol();
   const di=kkDomainInfo();
   if(di.isPortal){
     // Check session — app handles login overlay when none exists
